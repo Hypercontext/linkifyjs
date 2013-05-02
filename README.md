@@ -26,7 +26,7 @@ $(document).ready(function() {
 		<title>jQuery.linkify Test</title>
 	</head>
 	<body>
-    <h1>Linkify Tests</h1>
+    <h1>Linkify Example Web Page</h1>
 		<p class="test-paragraph">This is a test http://www.google.com and also facebook.ca</p>
 		<p class="test-paragraph">Please visit http://www.amazon.ca/?query=fail%20amazingand have the time of your life</p>
     <p class="test-paragraph-2"></p>
@@ -39,7 +39,7 @@ $(document).ready(function() {
 
 #### The Web Page
 ---
-# Linkify Tests
+# Linkify Example Web Page
 
 This is a test [http://www.google.com](http://www.google.com) and also [facebook.ca](http://facebook.ca)
 
