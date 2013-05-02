@@ -1,4 +1,4 @@
-jQuery-linkify — v 0.0.1
+jQuery-linkify — v0.0.1
 ==============
 
 Linkify is a jQuery plugin for finding URLs in plain-text and converting them to HTML links.
