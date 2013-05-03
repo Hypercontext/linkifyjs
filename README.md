@@ -48,7 +48,7 @@ $(document).ready(function() {
 * This is a test [http://www.google.com](http://www.google.com) and also [facebook.ca](http://facebook.ca)
 * Please visit [http://www.amazon.ca/?query=fail%20amazingand](http://www.amazon.ca/?query=fail%20amazingand) have the time of your life
 
-Email [nick@something.ca](mailto:nick@something.ca) and then go to [www.hitsend.com](http://www.hitsend.com)
+Email [nick@something.ca](mailto:nick@something.ca) and then go to [www.hitsend.ca](http://www.hitsend.ca)
 
 ---
 
