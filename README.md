@@ -13,7 +13,7 @@ You can call it on jQuery DOM elements, or on strings using the jQuery namespace
 $(document).ready(function() {
   $('.test-item').linkify();
   $('.test-paragraph').html(
-    jQuery.linkify("Email nick@something.ca and then go to www.hitsend.com")
+    jQuery.linkify("Email nick@something.ca and then go to www.hitsend.ca")
   );
 });
 ```
