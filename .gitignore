@@ -1,0 +1,6 @@
+# Hidden system files
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+Thumbs.DB
