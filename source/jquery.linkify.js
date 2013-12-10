@@ -8,6 +8,7 @@
  */
 
 (function($) {
+	"use strict";
 
 	var linkify = function (inputText, newline) {
 
@@ -21,12 +22,12 @@
 			urlPattern = new RegExp("("+										// 1. Character before the link
 							"\\s|[^a-zA-Z0-9.\\+_\\/\"\\>\\-]|^"+
 							")(?:"+		//Main group
-										"("+									// 2. Email address (optional)
-											"[a-zA-Z0-9\\+_\\-]+"+
-											"(?:"+
-												"\\.[a-zA-Z0-9\\+_\\-]+"+
-											")*@"+
-										")?("+									// 3. Protocol (optional)
+							"("+									// 2. Email address (optional)
+							"[a-zA-Z0-9\\+_\\-]+"+
+							"(?:"+
+							"\\.[a-zA-Z0-9\\+_\\-]+"+
+							")*@"+
+							")?("+									// 3. Protocol (optional)
 											"http:\\/\\/|https:\\/\\/|ftp:\\/\\/"+
 										")?("+									// 4. www (optional)
 											"www\\."+
