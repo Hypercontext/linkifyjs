@@ -6,11 +6,11 @@
  * http://hitsend.ca
  *
  */
- 
+
 (function($) {
 
 	var linkify = function (inputText, newline) {
-		
+
 		if ($.type(inputText) !== 'string') {
 			return inputText;
 		}
@@ -19,8 +19,8 @@
 			attrPattern = /<(a)(?:[^>]*(\shref=['\"][^'\"]*['\"]))?[^>]*?(\/?)>/gi,
 			//imgPattern = /((http|https):\/\/.+\.(jpg|jpeg|gif|png))/gi,
 			urlPattern = new RegExp("("+										// 1. Character before the link
-										"\\s|[^a-zA-Z0-9.\\+_\\/\"\\>\\-]|^"+
-									")(?:"+		//Main group
+							"\\s|[^a-zA-Z0-9.\\+_\\/\"\\>\\-]|^"+
+							")(?:"+		//Main group
 										"("+									// 2. Email address (optional)
 											"[a-zA-Z0-9\\+_\\-]+"+
 											"(?:"+
@@ -48,7 +48,7 @@
 									")("+										// 8. Character after the link
 										"[^a-zA-Z0-9\\+_\\/\"\\<\\-]|$"+
 									")", 'g'),
-									
+
 			// Will be applied after the standard links
 			emailPattern = /(<a href=")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
 
@@ -71,25 +71,25 @@
 
 		return replacedText;
 	};
-	
+
 	$.linkify = linkify; // Is this a bad practice?
 	$.fn.linkify = function(content, text) {
-		
+
 		var _this = this, // The DOM element being called, if any.
 			options = {
 				newLine: '',
 			};
-			
+
 		if ($.type(content) === 'string') {
 			return linkify(content)
 		} else if ($.type(content) === 'object') {
 			options = $.extend(options, content);
-			
+
 			if ($.type(text) === 'string') {
 				return linkify(text);
 			}
 		}
-		
+
 		return _this.each(function() {
 			var item = $(this); // jQuery Object
 			return item.html(function(index, oldHtml) {
@@ -97,5 +97,5 @@
 			});
 		});
 	};
-	
+
  })(jQuery);
