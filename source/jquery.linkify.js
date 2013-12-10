@@ -25,7 +25,7 @@
 							"("+									// 2. Email address (optional)
 							"[a-zA-Z0-9\\+_\\-]+"+
 							"(?:"+
-												"\\.[a-zA-Z0-9\\+_\\-]+"+
+							"\\.[a-zA-Z0-9\\+_\\-]+"+
 											")*@"+
 										")?("+									// 3. Protocol (optional)
 											"http:\\/\\/|https:\\/\\/|ftp:\\/\\/"+
