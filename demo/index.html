@@ -1,19 +1,61 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>jQuery.linkify</title>
-	</head>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/main.css">
+
+    </head>
 	<body>
 
-		<p class="test-paragraph">This is a test http://www.google.com and also facebook.ca</p>
-		<p class="test-paragraph">Please visit http://www.amazon.ca/?query=fail%20amazingand have the time of your Email test@example.com life</p>
+		<header class="title">
+			<h1 id="page-title" class="page-title active">
+				Linkify<br>
+			</h1>
 
-		 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="../src/jquery.linkify.js"></script>
-		<script>
-			$(document).ready(function() {
-				$('.test-paragraph').linkify();
-			});
-		</script>
+		</header>
+
+		<section class="nav-container">
+			<div class="container">
+				<h2 class="page-tagline">
+					Intelligent pattern discovery, made easy<br>
+				</h2>
+				<h3 class="text-center">
+					<a href="https://github.com/HitSend/jQuery-linkify/" class="btn btn-lg btn-primary">
+						<i class="fa fa-github"></i>
+						View GitHub project
+					</a>
+				</h3>
+			</div>
+			<nav class="nav navbar" role="navigation">
+
+			</nav>
+		</section>
+
+		<section id="main" class="container">
+			<p class="lead">
+
+			</p>
+		</section>
+
+		<footer>
+			<div class="container">
+				<small>Powered by SoapBox Innovations, Inc</small>
+			</div>
+		</footer>
+
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<script src="../dist/jquery.linkify.min.js"></script>
+		<script src="js/main.js"></script>
 	</body>
 </html>
