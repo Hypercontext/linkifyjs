@@ -4,3 +4,5 @@
 ._*
 .Trashes
 Thumbs.DB
+node_modules
+bower_components
