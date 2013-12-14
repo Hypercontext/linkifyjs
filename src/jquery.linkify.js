@@ -200,7 +200,7 @@
 		@static
 		@type		RegExp
 	*/
-	Linkified.emailLinkMatch = /(<[a-z]+ href=")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
+	Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
 
 
 	// Plugin definition

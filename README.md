@@ -43,6 +43,6 @@ You can call it on jQuery DOM elements, or on strings using the jQuery namespace
 # Linkify Example Web Page
 
 * This is a test [http://www.google.com](http://www.google.com) and also [facebook.ca](http://facebook.ca)
-* Please visit [http://www.amazon.ca/?query=fail%20amazingand](http://www.amazon.ca/?query=fail%20amazingand) have the time of your life
+* Please visit [http://www.amazon.ca/?query=fail%20amazingand](http://www.amazon.ca/?query=fail%20amazingand) have the time of your life.
 
 ---
