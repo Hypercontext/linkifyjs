@@ -1,0 +1,16 @@
+{
+	"boss": true,
+	"curly": true,
+	"eqeqeq": true,
+	"eqnull": true,
+	"expr": true,
+	"immed": false,
+	"noarg": true,
+	"onevar": true,
+	"smarttabs": true,
+	"trailing": true,
+	"unused": true,
+	"strict": false,
+	"node": true,
+	"jquery": true
+}

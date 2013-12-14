@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jQuery.linkify</title>
+	</head>
+	<body>
+
+		<p class="test-paragraph">This is a test http://www.google.com and also facebook.ca</p>
+		<p class="test-paragraph">Please visit http://www.amazon.ca/?query=fail%20amazingand have the time of your Email test@example.com life</p>
+
+		 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="../src/jquery.linkify.js"></script>
+		<script>
+			$(document).ready(function() {
+				$('.test-paragraph').linkify();
+			});
+		</script>
+	</body>
+</html>
