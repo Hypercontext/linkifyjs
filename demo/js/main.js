@@ -1,6 +1,6 @@
 (function ($) {
 
-	var headerThreshold = 447;
+	var headerThreshold = 422;
 
 	$(window).on('scroll', function () {
 

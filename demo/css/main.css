@@ -10,7 +10,7 @@ html, body {
 body {
 	background: url(../img/logo.png);
 	background-repeat:no-repeat;
-	background-position: center 200px;
+	background-position: center 175px;
 	background-attachment: fixed;
 	background-color: #f5f5f5;
 }
@@ -71,10 +71,10 @@ footer {
 }
 
 .page-title.active {
-	font-size: 100px;
+	font-size: 90px;
 	line-height: 0.6;
-	padding-top: 40px;
-	height: 200px;
+	padding-top: 30px;
+	height: 180px;
 }
 
 .page-title > small {
@@ -82,7 +82,7 @@ footer {
 }
 
 .navbar-fixed-top {
-	top: 150px;
+	top: 130px;
 	border-bottom: 3px solid #eee;
 	-webkit-transition: top 0.3s ease;
 	-moz-transition: top 0.3s ease;
@@ -95,9 +95,9 @@ footer {
 }
 
 .main-section-container {
-	padding-top: 30px;
-	padding-bottom: 30px;
-	margin-top: 600px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 575px;
 }
 
 .page-tagline {
@@ -194,7 +194,7 @@ only screen and (min-device-pixel-ratio: 1.5) {
 		background: url(../img/logo@2x.png);
 		background-size: 650px 400px;
 		background-repeat:no-repeat;
-		background-position: center 200px;
+		background-position: center 175px;
 		background-attachment: fixed;
 		background-color: #f5f5f5;
 	}
