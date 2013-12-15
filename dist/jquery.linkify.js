@@ -69,7 +69,11 @@
 			@method	linkify
 			@return	{String} html
 		*/
-		linkify: function () {
+		linkify: function (options) {
+
+			if (options) {
+				$.extend(this.settings, options);
+			}
 
 			var attr,
 				linkClass = this.settings.linkClass,
@@ -135,7 +139,7 @@
 			// Trim and account for new lines
 			text = text
 				.replace(/^\s+|\s+$/gm, '')
-				.replace(/\n/gi, this.settings.newLine);
+				.replace(/\n/gm, this.settings.newLine);
 
 			if (typeof this.element === 'object') {
 
@@ -217,7 +221,7 @@
 			if (!$.data(this, 'plugin-' + pluginName)) {
 				$.data(this, 'plugin-' + pluginName, new Linkified(this, options));
 			} else {
-				$.data(this, 'plugin-' + pluginName).linkify();
+				$.data(this, 'plugin-' + pluginName).linkify(options);
 			}
 		});
 	};

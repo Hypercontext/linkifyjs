@@ -28,7 +28,7 @@
 					return;
 				}
 
-				$targets = $('[data-linkify-target="' + id + '"]');
+				$targets = $('[data-linkify-demo-target="' + id + '"]');
 				$targets.linkify();
 
 				$this.prop('disabled', true)
@@ -36,6 +36,14 @@
 					.off('click');
 
 			});
+		$('#demo-2-linkifier').on('click', function () {
+			var $this = $(this),
+				$input = $($this.attr('data-linkify-demo-input')),
+				$output = $($this.attr('data-linkify-demo-output'));
+
+			$output.text($input.val());
+			$output.linkify({newLine: '<br>\n'});
+		});
 
 		prettyPrint();
 
