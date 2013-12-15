@@ -6,7 +6,7 @@ Download 1.0.0:
 
 ===
 
-**Jump to **
+__Jump to__
 - [Demo](#demo)
 - [Examples](#examples)
   - [Basic Usage](#basic-usage)
@@ -22,7 +22,7 @@ Linkify is a jQuery plugin for finding URLs in plain-text and converting them to
 
 ### Basic Usage
 
-To detect links within any set of elements, just call $(selector).linkify() on document load.
+To detect links within any set of elements, just call `$(selector).linkify()` on document load.
 
 #### Code
 
@@ -61,7 +61,7 @@ Linkify currently cannot process elements that contain HTML. It will strip out a
 
 ### Usage via HTML attributes
 
-Linkify also provides a DOM data- API. The following code will find links in the #linkify-example paragraph element:
+Linkify also provides a DOM data- API. The following code will find links in the `#linkify-example` paragraph element:
 
 ```html
 <p id="linkify-example" data-linkify="this">
@@ -71,7 +71,7 @@ Linkify also provides a DOM data- API. The following code will find links in the
 </p>
 ```
 
-Pass in a selector instead of this to linkify every element with that selector. The example below linkifies every paragraph and .plain-text element in the bodytag:
+Pass in a selector instead of this to linkify every element with that selector. The example below linkifies every paragraph and `.plain-text` element in the bodytag:
 
 ```html
 <body data-linkify="p, .plain-text">
