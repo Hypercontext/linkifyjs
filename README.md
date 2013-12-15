@@ -6,6 +6,13 @@ Download 1.0.0:
 
 ===
 
+**Jump to **
+- [Demo](#demo)
+- [Examples](#examples)
+  - [Basic Usage](#basic-usage)
+  - [Usage via HTML attributes](#usage-via-html-attributes)
+- [Options](#options)
+
 Linkify is a jQuery plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 
 ## Demo
@@ -93,10 +100,7 @@ $('selector').linkify({
 			<th>Type</th>
 			<th>Default</th>
 			<th>Description</th>
-			<th>
-				Data Attribute (used on the same element as
-				<code>data-linkify</code>)
-			</th>
+			<th>Data Attribute</th>
 		</tr>
 	</thead>
 	<tbody>
