@@ -12,5 +12,8 @@
 	"unused": true,
 	"strict": false,
 	"node": true,
-	"jquery": true
+	"jquery": true,
+	"globals": {
+		"prettyPrint": false
+	}
 }

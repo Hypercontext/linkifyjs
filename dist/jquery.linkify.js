@@ -12,7 +12,7 @@
 	var pluginName = 'linkify',
 		defaults = {
 			tagName: 'a',
-			newLine: '<br>\n',
+			newLine: '\n',
 			target: '_blank',
 			linkClass: null,
 			linkClasses: ['linkified'],
@@ -30,7 +30,7 @@
 
 			{
 				tagName: 'a',
-				newLine: '<br>\n',
+				newLine: '\n',
 				target: '_blank',
 				linkClass: null,
 				linkClasses: ['linkified'],
@@ -53,6 +53,8 @@
 
 	Linkified.prototype = {
 
+		constructor: Linkified,
+
 		/**
 			Initialized
 			@method	init
@@ -67,7 +69,12 @@
 			@method	linkify
 			@return	{String} html
 		*/
-		linkify: function () {
+		linkify: function (options) {
+
+			if (options) {
+				$.extend(this.settings, options);
+			}
+
 			var attr,
 				linkClass = this.settings.linkClass,
 				linkClasses = this.settings.linkClasses || [],
@@ -111,7 +118,7 @@
 					attr,
 					'="',
 					this.settings.linkAttributes[attr]
-						.replace(/"/g, '&quot;')
+						.replace(/\"/g, '&quot;')
 						.replace(/\$/g, '&#36;'),
 					'"'
 				].join(''));
@@ -131,8 +138,8 @@
 
 			// Trim and account for new lines
 			text = text
-				.replace(/^\s+|\s+$/gm, '')
-				.replace(/\n/gi, this.settings.newLine);
+				.replace(/^\s+|\s+$/g, '')
+				.replace(/\n/g, this.settings.newLine);
 
 			if (typeof this.element === 'object') {
 
@@ -205,7 +212,7 @@
 		@static
 		@type		RegExp
 	*/
-	Linkified.emailLinkMatch = /(<[a-z]+ href=")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
+	Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
 
 
 	// Plugin definition
@@ -214,13 +221,32 @@
 			if (!$.data(this, 'plugin-' + pluginName)) {
 				$.data(this, 'plugin-' + pluginName, new Linkified(this, options));
 			} else {
-				$.data(this, 'plugin-' + pluginName).linkify();
+				$.data(this, 'plugin-' + pluginName).linkify(options);
 			}
 		});
 	};
 
 	// Maintain access to the constructor from the plugin
 	$.fn[pluginName].Constructor = Linkified;
+
+	// DOM data- API setup
+	$(window).on('load', function () {
+		$('[data-linkify]').each(function () {
+			var $this = $(this),
+				$target,
+				target = $this.attr('data-linkify'),
+				options = {
+					tagName: $this.attr('data-linkify-tagname') || undefined,
+					newLine: $this.attr('data-linkify-newline') || undefined,
+					target: $this.attr('data-linkify-target') || undefined,
+					linkClass: $this.attr('data-linkify-linkclass') || undefined
+				};
+
+			$target = target === 'this' ? $this : $this.find(target);
+			$target.linkify(options);
+
+		});
+	});
 
 	// Setup click events for linkified elements
 	$('body').on('click', '.linkified', function () {

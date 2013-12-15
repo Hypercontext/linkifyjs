@@ -1,23 +1,24 @@
 {
-	"name": "jQuery-linkify",
-	"title": "Linkify",
-	"description": "Find URLs in plain text and return HTML for discovered links.",
-	"author": "SoapBox Innovations, Inc.",
-	"repository": {
-		"type" : "git",
-		"url" : "http://github.com/HitSend/jQuery-linkify.git"
-	},
-	"homepage": "https://github.com/HitSend/jQuery-linkify/",
-	"version": "1.0.0",
-	"license": "MIT",
-	"devDependencies": {
-		"grunt": "~0.4.1",
-		"grunt-cli": "~0.1.7",
-		"grunt-contrib-jshint": "~0.4.3",
-		"grunt-contrib-concat": "~0.3.0",
-		"grunt-contrib-uglify": "~0.2.0"
-	},
-	"scripts": {
-		"test": "grunt travis --verbose"
-	}
+  "name": "jQuery-linkify",
+  "title": "Linkify",
+  "description": "Find URLs in plain text and return HTML for discovered links.",
+  "author": "SoapBox Innovations, Inc.",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/HitSend/jQuery-linkify.git"
+  },
+  "homepage": "https://github.com/HitSend/jQuery-linkify/",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-cli": "~0.1.7",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-connect": "~0.5.0"
+  },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  }
 }

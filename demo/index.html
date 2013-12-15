@@ -1,19 +1,388 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>jQuery.linkify</title>
-	</head>
-	<body>
+<html class="no-js">
 
-		<p class="test-paragraph">This is a test http://www.google.com and also facebook.ca</p>
-		<p class="test-paragraph">Please visit http://www.amazon.ca/?query=fail%20amazingand have the time of your Email test@example.com life</p>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Linkify by @SoapBoxHQ</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="../src/jquery.linkify.js"></script>
-		<script>
-			$(document).ready(function() {
-				$('.test-paragraph').linkify();
-			});
-		</script>
+        <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/main.css">
+
+    </head>
+
+	<body data-spy="scroll" data-target="#navbar" data-offset="200">
+
+<header class="title">
+	<h1 id="page-title" class="page-title">
+		Linkify<br>
+		<small>a jQuery plugin</small>
+	</h1>
+</header>
+
+<nav id="navbar" class="nav navbar navbar-default navbar-fixed-top top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<span class="navbar-brand">
+				<div class="visible-xs pull-left">
+					<strong>Linkify</strong>&nbsp;
+				</div>
+				a jQuery plugin
+			</span>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li><a href="#demo">Demo</a></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						Examples <b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#examples-basic">Basic</a></li>
+						<li><a href="#examples-attributes">HTML Attributes</a></li>
+					</ul>
+				</li>
+				<li><a href="#options">Options</a></li>
+			</ul>
+		</div>
+	</div>
+
+</nav>
+
+<section class="main-section-container">
+	<div class="container">
+		<h2 class="page-tagline">
+			Intelligent text-pattern discovery, made easy<br>
+		</h2>
+		<h3 class="text-center">
+			<a href="https://github.com/HitSend/jQuery-linkify/" class="btn btn-lg btn-primary">
+				<i class="fa fa-github"></i>
+				View GitHub project
+			</a>
+		</h3>
+		<p class="text-center">
+			Download 1.0.0:
+			<a href="../dist/jquery.linkify.min.js" download="jquery.linkify.min.js">
+				Minified
+			</a>
+			&middot;
+			<a href="../dist/jquery.linkify.js" download="jquery.linkify.js">
+				Source
+			</a>
+		</p>
+	</div>
+
+</section>
+
+<section class="main container">
+
+	<p class="lead">
+		Linkify is a jQuery plugin for finding URLs in plain-text
+		and converting them to HTML links. It works with all valid
+		URLs and email addresses.
+	</p>
+
+</section>
+
+<section class="main container">
+
+	<h3 id="demo">Demo</h3>
+	<br>
+
+	<h4>1. Linkify some paragraphs</h4>
+
+	<div class="row">
+		<div class="col-sm-9">
+			<div class="well demo-well">
+				<p data-linkify-demo-target="demo-1-linkifier">
+					About a year ago Graham and I went to Google IO
+					(https://developers.google.com/events/io/) to
+					learn about some upcoming technology and meet some tech
+					folk in the valley. The experience was great. We met a
+					bunch of great people and got our hands on some new
+					technology — check out this page for more on our experience
+					http://digitalmediazone.ryerson.ca/toronto-incubator/brennans-experience-at-google-io/experience.
+					Beyond everything else, the best thing we
+					got out of that conference was a technology/development
+					mentor &amp; a new startup development process.
+
+				</p>
+				<p data-linkify-demo-target="demo-1-linkifier">
+					As soapboxhq.com grew, we tweaked our development and
+					deployment process as needed. At the very start we used
+					cheap hosting providers such as ca.godaddy.com and
+					learned to deal with their limitations. We knew
+					there were other ways of doing things, but they
+					seemed to add complex rules and process. This
+					worked for us, so why fix it?
+
+				</p>
+				<p data-linkify-demo-target="demo-1-linkifier">
+					We then met Ian (http://iandouglas.com/about/) at
+					Google IO, who agreed to share some
+					of his insight from scaling over and over again. Ian
+					is a senior web developer/architect working over at
+					Sendgrid. Ian is awesome and we really take his advice
+					to heart. He deserves the credit for a lot of what you
+					see below (including the joke I shamelessly stole from
+					him).
+
+				</p>
+
+				<p data-linkify-demo-target="demo-1-linkifier">
+					To see the rest of this post, visit http://soapboxhq.com/blog/startup-development-process-how-we-develop/
+					or email soapbox-dev-team@example.com.
+				</p>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<button id="demo-1-linkifier" class="btn btn-block btn-lg btn-primary linkifier">
+				Loading...
+			</button>
+		</div>
+	</div>
+
+	<br>
+	<h4>2. See if this plugin works for your URL</h4>
+
+	<div class="row">
+		<div class="col-sm-9">
+			<textarea id="demo-2-input" class="form-control" rows="3"></textarea>
+		</div>
+		<div class="col-sm-3">
+			<button id="demo-2-linkifier" class="btn btn-block btn-lg btn-primary" data-linkify-demo-input="#demo-2-input" data-linkify-demo-output="#demo-2-output">
+				Linkify
+			</button>
+		</div>
+	</div>
+
+	<br>
+
+	<h5>Output</h5>
+	<div id="demo-2-output" class="well demo-well">
+		<em class="text-muted">
+			Press "Linkify" to view the result
+		</em>
+	</div>
+
+
+</section>
+
+<section class="main container">
+
+	<h3 id="examples">Examples</h3>
+	<br>
+
+	<h4 id="examples-basic">Basic Usage</h4>
+	<p>
+		To detect links within any set of elements, just call
+		<code>$(selector).linkify()</code>
+		on document load.
+	</p>
+
+	<h5>Code</h5>
+
+<pre class="prettyprint lang-html linenums" data-lang="html">
+&lt;p id="paragraph1"&gt;Check out this link to http://google.com&lt;/p&gt;
+&lt;p id="paragraph2"&gt;You can also email support@example.com to view more.&lt;/p&gt;
+</pre>
+
+<pre class="prettyprint lang-js linenums" data-lang="js">
+$(window).on('load', function () {
+  $('p').linkify();
+});
+</pre>
+
+	<h5>Output</h5>
+
+<pre class="prettyprint lang-html linenums" data-lang="html">
+&lt;p id="paragraph1"&gt;
+  Check out this link to
+  &lt;a href="http://google.com" class="linkified" target="_blank"&gt;
+    http://google.com
+  &lt;/a&gt;
+&lt;/p&gt;
+&lt;p id="paragraph2"&gt;
+  You can also email
+  &lt;a href="mailto:support@example.com" class="linkified"&gt;
+    support@example.com
+  &lt;/a&gt;
+  to view more.
+&lt;/p&gt;
+</pre>
+
+<div class="alert alert-info">
+	<h5>Notice</h5>
+	<p>
+		Linkify currently cannot process elements that contain HTML.
+		It will strip out any tags it encounters before discovering URLs.
+	</p>
+</div>
+
+<br>
+
+	<h4 id="#examples-attributes">Usage via HTML attributes</h4>
+	<p>
+		Linkify also provides a DOM <code>data-</code> API.
+		The following code will find links in the
+		<code>#linkify-example</code> paragraph element:
+	</p>
+
+<pre class="prettyprint lang-html linenums" data-lang="html">
+&lt;p id="linkify-example" data-linkify="this"&gt;
+  Lorem ipsum dolor sit amet, consectetur adipisicing
+  elit, sed do eiusmod tempor incididunt ut labore et
+  dolore magna aliqua.
+&lt;/p&gt;
+</pre>
+
+	<p>
+		Pass in a selector instead of <code>this</code> to linkify every
+		element with that selector. The example below linkifies every
+		paragraph and <code>.plain-text</code> element in the
+		<code>body</code>tag:
+	</p>
+
+<pre class="prettyprint lang-html linenums" data-lang="html">
+&lt;body data-linkify="p, .plain-text"&gt;
+  ...
+&lt;/body&gt;
+</pre>
+
+</section>
+
+<section class="main container">
+
+	<h3 id="options">Options</h3>
+	<p>
+		Linkify is applied with the following default options. Below is a
+		description of each.
+	</p>
+
+<pre class="prettyprint lang-js linenums" data-lang="js">
+$('selector').linkify({
+  tagName: 'a',
+  target: '_blank',
+  newLine: '\n',
+  linkClass: 'linkified',
+  linkAttributes: null
+});
+</pre>
+
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Option</th>
+					<th>Type</th>
+					<th>Default</th>
+					<th>Description</th>
+					<th>
+						Data Attribute (used on the same element as
+						<code>data-linkify</code>)
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>tagName</td>
+					<td>String</td>
+					<td><code>"a"</code></td>
+					<td>
+						The tag that should be used to wrap each URL. This is
+						useful for cases where <code>a</code> tags might be
+						innapropriate, or might syntax problems (e.g., finding
+						URLs inside an <code>a</code> tag).
+					</td>
+					<td>
+						<code class="small">data-linkify-tagname</code>
+					</td>
+				</tr>
+				<tr>
+					<td>target</td>
+					<td>String</td>
+					<td><code>"_blank"</code></td>
+					<td><code>target</code> attribute for each linkified tag.</td>
+					<td><code class="small">data-linkify-target</code></td>
+				</tr>
+				<tr>
+					<td>newLine</td>
+					<td>String</td>
+					<td><code>"\n"</code></td>
+					<td>
+						The character to replace new lines with. Replace with
+						<code>"&lt;br&gt;"</code> to space out multi-line user
+						content.
+					</td>
+					<td><code class="small">data-linkify-newline</code></td>
+				</tr>
+
+				<tr>
+					<td>linkClass</td>
+					<td>String</td>
+					<td><code>"linkified"</code></td>
+					<td>
+						The class to be added to each linkified tag. The default
+						<code>.linkified</code> ensures that each link will be
+						clickable, regardless of the value of <code>tagName</code>.
+					</td>
+					<td><code class="small">data-linkify-linkclass</code></td>
+				</tr>
+
+				<tr>
+					<td>linkAttributes</td>
+					<td>Object</td>
+					<td><code>null</code></td>
+					<td>
+						HTML attributes to add to each linkified tag. In the
+						following example, the <code>tabindex</code> and
+						<code>rel</code> attributes will be added to each link.
+
+<pre class="prettyprint lang-js" data-lang="js">
+$('p').linkify({
+  linkAttributes: {
+    tabindex: 0,
+    rel: 'nofollow'
+  }
+});
+</pre>
+
+					</td>
+					<td>N/A</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<footer>
+	<div class="container">
+		<small>
+			Powered by
+			<a href="http://soapboxhq.com">SoapBox</a>
+		</small>
+	</div>
+</footer>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+<script src="../src/jquery.linkify.js"></script>
+<script src="js/main.js"></script>
+
 	</body>
+
 </html>
