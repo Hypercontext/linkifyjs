@@ -49,22 +49,39 @@ module.exports = function (grunt) {
 			}
 		},
 
+		copy: {
+			main: {
+				src: "dist/jquery.linkify.min.js",
+				dest: "demo/js/jquery.linkify.min.js"
+			},
+		},
+
 		connect: {
 			server: {
 				options: {
 					keepalive: true
 				}
 			}
+		},
+
+		"gh-pages": {
+			options: {
+				base: "demo"
+			},
+			src: ["**"]
 		}
 
 	});
 
 	grunt.loadNpmTasks("grunt-contrib-concat");
+	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-connect");
+	grunt.loadNpmTasks("grunt-gh-pages");
 
-	grunt.registerTask("default", ["jshint", "concat", "uglify"]);
+	grunt.registerTask("default", ["jshint", "concat", "uglify", "copy"]);
 	grunt.registerTask("travis", ["jshint"]);
+	grunt.registerTask("publish", ["default", "gh-pages"]);
 
 };
