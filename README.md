@@ -10,6 +10,9 @@ __Jump to__
   - [Basic Usage](#basic-usage)
   - [Usage via HTML attributes](#usage-via-html-attributes)
 - [Options](#options)
+- [Building](#building)
+- [Testing](#testing)
+- [Authors](#authors)
 
 Linkify is a jQuery plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 
@@ -170,3 +173,38 @@ $('p').linkify({
 		</tr>
 	</tbody>
 </table>
+
+## Building
+
+### Setup
+
+Linkify uses [Grunt](http://gruntjs.com/) for building and testing, and
+[Bower](http://bower.io/) for dependency management. Both can be installed
+via [npm](https://npmjs.org/) by running:
+
+```bash
+npm install -g grunt-cli
+npm install -g bower
+```
+
+Once you have those, navigate into the repo's root directory and run
+`npm install && bower install`.
+
+### Build tasks
+
+Two main tasks are provided for this plugin's development. Each can be
+called by running `grunt taskName` from the repo's root folder.
+
+1. __`default`__: Also available by just calling `grunt`, this task tests
+the plugin code in the `src` folder for JSHint compliance and builds and
+minifies it into the `dist` folder.
+
+2. __`connect`__: Runs a server at
+[localhost:8000](http://localhost:8000/demo/) that can be used for
+running tests and viewing the demo page.
+
+## Testing
+Coming soon.
+
+## Authors
+Linkify is developed, with Love, by [SoapBox Innovations, Inc](http://soapboxhq.com).
