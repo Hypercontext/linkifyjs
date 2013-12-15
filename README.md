@@ -11,6 +11,8 @@ __Jump to__
   - [Usage via HTML attributes](#usage-via-html-attributes)
 - [Options](#options)
 - [Building](#building)
+  - [Setup](#setup)
+  - [Build Tasks](#build-tasks)
 - [Testing](#testing)
 - [Authors](#authors)
 
@@ -188,12 +190,16 @@ npm install -g bower
 ```
 
 Once you have those, navigate into the repo's root directory and run
-`npm install && bower install`.
 
-### Build tasks
+```bash
+npm install && bower install
+```
+
+### Build Tasks
 
 Two main tasks are provided for this plugin's development. Each can be
 called by running `grunt taskName` from the repo's root folder.
+
 
 1. __`default`__: Also available by just calling `grunt`, this task tests
 the plugin code in the `src` folder for JSHint compliance and builds and
