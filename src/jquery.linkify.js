@@ -217,6 +217,25 @@
 	// Maintain access to the constructor from the plugin
 	$.fn[pluginName].Constructor = Linkified;
 
+	// DOM data- API setup
+	$(window).on('load', function () {
+		$('[data-linkify]').each(function () {
+			var $this = $(this),
+				$target,
+				target = $this.attr('data-linkify'),
+				options = {
+					tagName: $this.attr('data-linkify-tagname') || undefined,
+					newLine: $this.attr('data-linkify-newline') || undefined,
+					target: $this.attr('data-linkify-target') || undefined,
+					linkClass: $this.attr('data-linkify-linkclass') || undefined
+				};
+
+			$target = target === 'this' ? $this : $this.find(target);
+			$target.linkify(options);
+
+		});
+	});
+
 	// Setup click events for linkified elements
 	$('body').on('click', '.linkified', function () {
 		var $link = $(this),
