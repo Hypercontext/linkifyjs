@@ -5,7 +5,6 @@
 
 html, body {
 	font-family: 'Roboto', sans-serif;
-	font-weight: 300;
 }
 
 body {
@@ -18,9 +17,16 @@ body {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6,
-button, .btn {
+button, .btn, .navbar-brand {
 	font-family: 'Oswald', sans-serif;
 }
+
+body,
+.form-control,
+.dropdown-menu > li > a {
+	font-weight: 300;
+}
+
 .btn-xl {
 	padding: 15px 24px;
 	font-size: 27px;
@@ -28,9 +34,9 @@ button, .btn {
 	border-radius: 9px;
 }
 
-header, footer, .nav-container {
+header, footer, .main-section-container {
 	background-color: #ffffff;
-	border: 3px solid #eee;s
+	border: 3px solid #eee;
 	border-left: none;
 	border-right: none;
 }
@@ -40,7 +46,7 @@ header {
 	top: 0;
 	left: 0;
 	right: 0;
-	z-index: 1;
+	z-index: 1031;
 	text-align: center;
 	border-top: none;
 }
@@ -63,19 +69,37 @@ footer {
 	-o-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 }
+
 .page-title.active {
 	font-size: 100px;
 	line-height: 0.6;
 	padding-top: 40px;
 	height: 200px;
 }
+
 .page-title > small {
 	font-size: 35%;
 }
 
-.nav-container {
+.navbar-fixed-top {
+	top: 150px;
+	border-bottom: 3px solid #eee;
+	-webkit-transition: top 0.3s ease;
+	-moz-transition: top 0.3s ease;
+	-ms-transition: top 0.3s ease;
+	-o-transition: top 0.3s ease;
+	transition: top 0.3s ease;
+}
+.navbar-fixed-top.top {
+	top: 103px;
+}
+
+.main-section-container {
+	padding-top: 30px;
+	padding-bottom: 30px;
 	margin-top: 600px;
 }
+
 .page-tagline {
 	font-size: 40px;
 	color: #aaaaaa;
@@ -83,8 +107,8 @@ footer {
 }
 
 .main {
-	padding-top: 20px;
-	padding-bottom: 20px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 	border-bottom: 2px solid #e5e5e5;
 	background-color: #f5f5f5;
 }
@@ -95,10 +119,6 @@ footer {
 
 .demo-well {
 	background: #ffffff;
-}
-
-.form-control {
-	font-weight: 300;
 }
 
 footer {

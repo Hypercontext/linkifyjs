@@ -17,18 +17,47 @@
 
     </head>
 
-	<body data-spy="scroll" data-target="#navbar">
+	<body data-spy="scroll" data-target="#navbar" data-offset="200">
 
 <header class="title">
 	<h1 id="page-title" class="page-title">
 		Linkify<br>
-		<small>A jQuery plugin</small>
+		<small>a jQuery plugin</small>
 	</h1>
-
-
 </header>
 
-<section class="nav-container">
+<nav id="navbar" class="nav navbar navbar-default navbar-fixed-top top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<span class="navbar-brand">a jQuery plugin</span>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li>
+					<a href="#demo">Demo</a>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						Examples <b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#examples-basic">Basic</a></li>
+						<li><a href="#examples-attributes">HTML Attributes</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</nav>
+
+<section class="main-section-container">
 	<div class="container">
 		<h2 class="page-tagline">
 			Intelligent text-pattern discovery, made easy<br>
@@ -50,9 +79,7 @@
 			</a>
 		</p>
 	</div>
-	<nav id="navbar" class="nav navbar" role="navigation">
 
-	</nav>
 </section>
 
 <section class="main container">
@@ -67,7 +94,7 @@
 
 <section class="main container">
 
-	<h3 id="linkify-demo">Demo</h3>
+	<h3 id="demo">Demo</h3>
 	<br>
 
 	<h4>1. Linkify some paragraphs</h4>
@@ -151,10 +178,10 @@
 
 <section class="main container">
 
-	<h3 id="linkify-examples">Examples</h3>
+	<h3 id="examples">Examples</h3>
 	<br>
 
-	<h4 id="linkifiy-examples-basic">Basic Usage</h4>
+	<h4 id="examples-basic">Basic Usage</h4>
 	<p>
 		To detect links within any set of elements, just call
 		<code>$(selector).linkify()</code>
@@ -202,7 +229,7 @@ $(window).on('load', function () {
 
 <br>
 
-	<h4>Usage via HTML attributes</h4>
+	<h4 id="#examples-attributes">Usage via HTML attributes</h4>
 	<p>
 		Linkify also provides a DOM <code>data-</code> API.
 		The following code will find links in the
