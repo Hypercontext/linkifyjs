@@ -8,7 +8,8 @@ Download 1.0.0:
 
 Linkify is a jQuery plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 
-## [Demo](https://github.com/HitSend/jQuery-linkify/tree/master/demo)
+## Demo
+[Launch demo](https://github.com/HitSend/jQuery-linkify/tree/master/demo)
 
 ## Examples
 
@@ -94,7 +95,7 @@ $('selector').linkify({
 			<th>Description</th>
 			<th>
 				Data Attribute (used on the same element as
-				`data-linkify`)
+				<code>data-linkify</code>)
 			</th>
 		</tr>
 	</thead>
@@ -102,65 +103,65 @@ $('selector').linkify({
 		<tr>
 			<td>tagName</td>
 			<td>String</td>
-			<td>`"a"`</td>
+			<td><code>"a"</code></td>
 			<td>
 				The tag that should be used to wrap each URL. This is
-				useful for cases where `a` tags might be
+				useful for cases where <code>a</code> tags might be
 				innapropriate, or might syntax problems (e.g., finding
-				URLs inside an `a` tag).
+				URLs inside an <code>a</code> tag).
 			</td>
 			<td>
-				`data-linkify-tagname`
+				<code class="small">data-linkify-tagname</code>
 			</td>
 		</tr>
 		<tr>
 			<td>target</td>
 			<td>String</td>
-			<td>`"_blank"`</td>
-			<td>`target` attribute for each linkified tag.</td>
-			<td>`data-linkify-target`</td>
+			<td><code>"_blank"</code></td>
+			<td><code>target</code> attribute for each linkified tag.</td>
+			<td><code class="small">data-linkify-target</code></td>
 		</tr>
 		<tr>
 			<td>newLine</td>
 			<td>String</td>
-			<td>`"\n"`</td>
+			<td><code>"\n"</code></td>
 			<td>
 				The character to replace new lines with. Replace with
-				`"<br>"` to space out multi-line user
+				<code>"&lt;br&gt;"</code> to space out multi-line user
 				content.
 			</td>
-			<td>`data-linkify-newline`</td>
+			<td><code class="small">data-linkify-newline</code></td>
 		</tr>
 
 		<tr>
 			<td>linkClass</td>
 			<td>String</td>
-			<td>`"linkified"`</td>
+			<td><code>"linkified"</code></td>
 			<td>
 				The class to be added to each linkified tag. The default
-				`.linkified` ensures that each link will be
-				clickable, regardless of the value of `tagName`.
+				<code>.linkified</code> ensures that each link will be
+				clickable, regardless of the value of <code>tagName</code>.
 			</td>
-			<td>`data-linkify-linkclass`</td>
+			<td><code class="small">data-linkify-linkclass</code></td>
 		</tr>
 
 		<tr>
 			<td>linkAttributes</td>
 			<td>Object</td>
-			<td>`null`</td>
+			<td><code>null</code></td>
 			<td>
 				HTML attributes to add to each linkified tag. In the
-				following example, the `tabindex` and
-				`rel` attributes will be added to each link.
+				following example, the <code>tabindex</code> and
+				<code>rel</code> attributes will be added to each link.
 
-				``` javascript
+<pre>
 $('p').linkify({
 	linkAttributes: {
 		tabindex: 0,
 		rel: 'nofollow'
 	}
 });
-				```
+</pre>
 
 			</td>
 			<td>N/A</td>
