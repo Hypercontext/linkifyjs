@@ -12,7 +12,7 @@
 	var pluginName = 'linkify',
 		defaults = {
 			tagName: 'a',
-			newLine: '<br>\n',
+			newLine: '\n',
 			target: '_blank',
 			linkClass: null,
 			linkClasses: ['linkified'],
@@ -53,6 +53,8 @@
 
 	Linkified.prototype = {
 
+		constructor: Linkified,
+
 		/**
 			Initialized
 			@method	init
@@ -68,6 +70,7 @@
 			@return	{String} html
 		*/
 		linkify: function () {
+
 			var attr,
 				linkClass = this.settings.linkClass,
 				linkClasses = this.settings.linkClasses || [],
@@ -111,7 +114,7 @@
 					attr,
 					'="',
 					this.settings.linkAttributes[attr]
-						.replace(/"/g, '&quot;')
+						.replace(/\"/g, '&quot;')
 						.replace(/\$/g, '&#36;'),
 					'"'
 				].join(''));
@@ -205,7 +208,7 @@
 		@static
 		@type		RegExp
 	*/
-	Linkified.emailLinkMatch = /(<[a-z]+ href=")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
+	Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
 
 
 	// Plugin definition

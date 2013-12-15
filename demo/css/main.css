@@ -6,7 +6,7 @@
 body {
 	font-family: 'Roboto', sans-serif;
 	font-weight: 300;
-	background: url(../img/logo.svg);
+	background: url(../img/logo.png);
 	background-repeat:no-repeat;
 	background-position: center 200px;
 	background-color: #f5f5f5;
@@ -25,7 +25,7 @@ h1, h2, h3, h4, h5, h6,
 
 header, footer, .nav-container {
 	background-color: #ffffff;
-	border: 3px solid #eee;
+	border: 3px solid #eee;s
 	border-left: none;
 	border-right: none;
 }
@@ -35,6 +35,7 @@ header {
 	top: 0;
 	left: 0;
 	right: 0;
+	z-index: 1;
 	text-align: center;
 	border-top: none;
 }
@@ -42,6 +43,7 @@ header {
 footer {
 	border-bottom: none;
 }
+
 
 .page-title {
 	margin: 0;
@@ -68,4 +70,98 @@ footer {
 	font-size: 4rem;
 	color: #aaaaaa;
 	text-align: center;
+}
+
+.main {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	border-bottom: 2px solid #e5e5e5;
+}
+
+.main:last-of-type {
+	border-bottom: none;
+}
+
+.demo-well {
+	background: #ffffff;
+}
+
+footer {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align: center;
+}
+
+.prettyprint {
+	color: #535353;
+	background-color: #f8f8f8;
+}
+
+.pln,
+.typ,
+.pun,
+.opn,
+.clo {
+	color: #535353;
+}
+.str,
+.atv {
+	color: #f18900;
+}
+.kwd,
+.tag {
+	color: #446fb0;
+}
+.com,
+.dec,
+.var,
+.linenums {
+	color: #a2a2a2;
+}
+.lit,
+.atn {
+	color: #738d00;
+}
+.fun {
+	color: #8757ad;
+}
+
+.prettyprint .linenums li {
+	 list-style-type: decimal !important;
+	 word-break: break-word;
+	 background-color: #f8f8f8;
+}
+
+pre.prettyprint {
+	border-color: #dddddd;
+	position: relative;
+}
+pre.prettyprint:before {
+	content: attr(data-lang);
+	position: absolute;
+	right: 0;
+	top: 5px;
+	font-size: 15px;
+	font-size: 1rem;
+	height: 30px;
+	height: 2rem;
+	padding: 0 8px;
+	line-height: 2;
+	font-family: 'Oswald', sans-serif;
+	text-transform: uppercase;
+	font-weight: normal;
+	font-style: italic;
+	background-color: #e5e5e5;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min--moz-device-pixel-ratio: 1.5),
+only screen and (min-device-pixel-ratio: 1.5) {
+	body {
+		background: url(../img/logo@2x.png);
+		background-size: 650px 400px;
+		background-repeat:no-repeat;
+		background-position: center 200px;
+		background-color: #f5f5f5;
+	}
 }
