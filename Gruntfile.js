@@ -51,8 +51,8 @@ module.exports = function (grunt) {
 
 		copy: {
 			main: {
-				src: "dist/jquery.linkify.min.js",
-				dest: "demo/js/jquery.linkify.min.js"
+				src: "dist/*",
+				dest: "demo/"
 			},
 		},
 

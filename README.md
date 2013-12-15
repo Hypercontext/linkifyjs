@@ -32,6 +32,9 @@ To detect links within any set of elements, just call `$(selector).linkify()` on
 ```html
 <p id="paragraph1">Check out this link to http://google.com</p>
 <p id="paragraph2">You can also email support@example.com to view more.</p>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="js/jquery.linkify.min.js"></script>
 ```
 
 ```javascript
