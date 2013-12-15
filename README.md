@@ -213,4 +213,4 @@ running tests and viewing the demo page.
 Coming soon.
 
 ## Authors
-Linkify is developed, with Love, by [SoapBox Innovations, Inc](http://soapboxhq.com).
+Linkify is handcrafted with Love by [SoapBox Innovations, Inc](http://soapboxhq.com).
