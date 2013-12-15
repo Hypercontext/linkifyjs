@@ -37,6 +37,16 @@
 				View GitHub project
 			</a>
 		</h3>
+		<p class="text-center">
+			Download 1.0.0:
+			<a href="../dist/jquery.linkify.min.js" download="jquery.linkify.min.js">
+				Minified
+			</a>
+			&middot;
+			<a href="../dist/jquery.linkify.js" download="jquery.linkify.js">
+				Source
+			</a>
+		</p>
 	</div>
 	<nav id="navbar" class="nav navbar" role="navigation">
 
@@ -68,7 +78,7 @@
 					bunch of great people and got our hands on some new
 					technology — check out this page for more on our experience
 					http://digitalmediazone.ryerson.ca/toronto-incubator/brennans-experience-at-google-io/experience.
-					Beyond everything else, the best thi<br>ng we
+					Beyond everything else, the best thing we
 					got out of that conference was a technology/development
 					mentor &amp; a new startup development process.
 
@@ -159,6 +169,15 @@ $(window).on('load', function () {
   to view more.
 &lt;/p&gt;
 </pre>
+
+<div class="alert alert-info">
+	<h5>Notice</h5>
+	<p>
+		Linkify currently cannot process elements that contain HTML.
+		It will strip out any tags it encounters before discovering URLs.
+	</p>
+</div>
+
 <br>
 
 	<h4>Usage via HTML attributes</h4>
