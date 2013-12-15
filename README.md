@@ -201,11 +201,11 @@ Two main tasks are provided for this plugin's development. Each can be
 called by running `grunt taskName` from the repo's root folder.
 
 
-1. __`default`__: Also available by just calling `grunt`, this task tests
+1. `default`: Also available by just calling `grunt`, this task tests
 the plugin code in the `src` folder for JSHint compliance and builds and
 minifies it into the `dist` folder.
 
-2. __`connect`__: Runs a server at
+2. `connect`: Runs a server at
 [localhost:8000](http://localhost:8000/demo/) that can be used for
 running tests and viewing the demo page.
 
