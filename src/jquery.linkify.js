@@ -22,7 +22,7 @@
 
 			{
 				tagName: 'a',
-				newLine: '<br>\n',
+				newLine: '\n',
 				target: '_blank',
 				linkClass: null,
 				linkClasses: ['linkified'],

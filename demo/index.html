@@ -11,7 +11,7 @@
         <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
 
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
         <link href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/main.css">
 
@@ -35,13 +35,16 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<span class="navbar-brand">a jQuery plugin</span>
+			<span class="navbar-brand">
+				<div class="visible-xs pull-left">
+					<strong>Linkify</strong>&nbsp;
+				</div>
+				a jQuery plugin
+			</span>
 		</div>
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li>
-					<a href="#demo">Demo</a>
-				</li>
+				<li><a href="#demo">Demo</a></li>
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 						Examples <b class="caret"></b>
@@ -51,6 +54,7 @@
 						<li><a href="#examples-attributes">HTML Attributes</a></li>
 					</ul>
 				</li>
+				<li><a href="#options">Options</a></li>
 			</ul>
 		</div>
 	</div>
@@ -155,7 +159,7 @@
 
 	<div class="row">
 		<div class="col-sm-9">
-			<textarea id="demo-2-input" class="form-control" rows="3">Linkify the following URL: https://github.com/HitSend/jQuery-linkify/</textarea>
+			<textarea id="demo-2-input" class="form-control" rows="3"></textarea>
 		</div>
 		<div class="col-sm-3">
 			<button id="demo-2-linkifier" class="btn btn-block btn-lg btn-primary" data-linkify-demo-input="#demo-2-input" data-linkify-demo-output="#demo-2-output">
@@ -244,8 +248,123 @@ $(window).on('load', function () {
 &lt;/p&gt;
 </pre>
 
-	<p>To
+	<p>
+		Pass in a selector instead of <code>this</code> to linkify every
+		element with that selector. The example below linkifies every
+		paragraph and <code>.plain-text</code> element in the
+		<code>body</code>tag:
+	</p>
 
+<pre class="prettyprint lang-html linenums" data-lang="html">
+&lt;body data-linkify="p, .plain-text"&gt;
+  ...
+&lt;/body&gt;
+</pre>
+
+</section>
+
+<section class="main container">
+
+	<h3 id="options">Options</h3>
+	<p>
+		Linkify is applied with the following default options. Below is a
+		description of each.
+	</p>
+
+<pre class="prettyprint lang-js linenums" data-lang="js">
+$('selector').linkify({
+  tagName: 'a',
+  target: '_blank',
+  newLine: '\n',
+  linkClass: 'linkified',
+  linkAttributes: null
+});
+</pre>
+
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Option</th>
+					<th>Type</th>
+					<th>Default</th>
+					<th>Description</th>
+					<th>
+						Data Attribute (used on the same element as
+						<code>data-linkify</code>)
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>tagName</td>
+					<td>String</td>
+					<td><code>"a"</code></td>
+					<td>
+						The tag that should be used to wrap each URL. This is
+						useful for cases where <code>a</code> tags might be
+						innapropriate, or might syntax problems (e.g., finding
+						URLs inside an <code>a</code> tag).
+					</td>
+					<td>
+						<code class="small">data-linkify-tagname</code>
+					</td>
+				</tr>
+				<tr>
+					<td>target</td>
+					<td>String</td>
+					<td><code>"_blank"</code></td>
+					<td><code>target</code> attribute for each linkified tag.</td>
+					<td><code class="small">data-linkify-target</code></td>
+				</tr>
+				<tr>
+					<td>newLine</td>
+					<td>String</td>
+					<td><code>"\n"</code></td>
+					<td>
+						The character to replace new lines with. Replace with
+						<code>"&lt;br&gt;"</code> to space out multi-line user
+						content.
+					</td>
+					<td><code class="small">data-linkify-newline</code></td>
+				</tr>
+
+				<tr>
+					<td>linkClass</td>
+					<td>String</td>
+					<td><code>"linkified"</code></td>
+					<td>
+						The class to be added to each linkified tag. The default
+						<code>.linkified</code> ensures that each link will be
+						clickable, regardless of the value of <code>tagName</code>.
+					</td>
+					<td><code class="small">data-linkify-linkclass</code></td>
+				</tr>
+
+				<tr>
+					<td>linkAttributes</td>
+					<td>Object</td>
+					<td><code>null</code></td>
+					<td>
+						HTML attributes to add to each linkified tag. In the
+						following example, the <code>tabindex</code> and
+						<code>rel</code> attributes will be added to each link.
+
+<pre class="prettyprint lang-js" data-lang="js">
+$('p').linkify({
+  linkAttributes: {
+    tabindex: 0,
+    rel: 'nofollow'
+  }
+});
+</pre>
+
+					</td>
+					<td>N/A</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </section>
 
 <footer>

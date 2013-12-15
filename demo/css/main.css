@@ -55,12 +55,11 @@ footer {
 	border-bottom: none;
 }
 
-
 .page-title {
 	margin: 0;
 	font-size: 50px;
 	line-height: 2;
-	height: 100px;
+	height: 0;
 	overflow: hidden;
 
 	-webkit-transition: all 0.3s ease;
@@ -91,7 +90,7 @@ footer {
 	transition: top 0.3s ease;
 }
 .navbar-fixed-top.top {
-	top: 103px;
+	top: 0;
 }
 
 .main-section-container {
@@ -186,6 +185,15 @@ pre.prettyprint:before {
 	font-style: italic;
 	background-color: #e5e5e5;
 }
+@media (min-width: 768px) {
+	.page-title {
+		height: 100px;
+	}
+	.navbar-fixed-top.top {
+		top: 103px;
+	}
+}
+
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
 only screen and (-o-min-device-pixel-ratio: 3/2),
 only screen and (min--moz-device-pixel-ratio: 1.5),

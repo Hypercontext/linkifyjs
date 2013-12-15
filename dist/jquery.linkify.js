@@ -30,7 +30,7 @@
 
 			{
 				tagName: 'a',
-				newLine: '<br>\n',
+				newLine: '\n',
 				target: '_blank',
 				linkClass: null,
 				linkClasses: ['linkified'],
@@ -138,8 +138,8 @@
 
 			// Trim and account for new lines
 			text = text
-				.replace(/^\s+|\s+$/gm, '')
-				.replace(/\n/gm, this.settings.newLine);
+				.replace(/^\s+|\s+$/g, '')
+				.replace(/\n/g, this.settings.newLine);
 
 			if (typeof this.element === 'object') {
 

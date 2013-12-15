@@ -40,6 +40,14 @@
 					.off('click');
 
 			});
+
+		// Set the value of the textfield to the referrer URL
+		$('#demo-2-input').val(
+			'Linkify the following URL: ' + (
+				document.referrer || 'https://github.com/HitSend/jQuery-linkify/'
+			)
+		);
+
 		$('#demo-2-linkifier').on('click', function () {
 			var $this = $(this),
 				$input = $($this.attr('data-linkify-demo-input')),
