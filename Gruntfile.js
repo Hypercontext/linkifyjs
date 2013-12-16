@@ -84,7 +84,7 @@ module.exports = function (grunt) {
 					"bower.json"
 				],
 				updateConfigs: ["pkg"],
-				releaseBranch: []
+				releaseBranch: ["master"]
 			}
 		},
 
@@ -105,7 +105,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask("default", ["jshint", "concat", "uglify", "copy"]);
 	grunt.registerTask("travis", ["jshint"]);
-	grunt.registerTask("release", ["default", "bumper"]);
+	grunt.registerTask("release", ["bumper", "clean"]);
 	grunt.registerTask("release:minor", ["bumper:minor", "clean"]);
 	grunt.registerTask("release:major", ["bumper:major", "clean"]);
 
