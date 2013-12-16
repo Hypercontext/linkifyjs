@@ -1,6 +1,6 @@
 # Linkify
 
-__Download 1.0.0__
+__Download 1.0__
 - [Minified](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.min.js)
 - [Source](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.js)
 
