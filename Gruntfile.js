@@ -81,10 +81,7 @@ module.exports = function (grunt) {
 					"package.json",
 					"bower.json"
 				],
-				updateConfigs: [
-					"pkg",
-					"bower"
-				],
+				updateConfigs: ["pkg"],
 				releaseBranch: ["master"]
 			}
 		},
