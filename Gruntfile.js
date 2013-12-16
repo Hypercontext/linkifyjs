@@ -69,7 +69,29 @@ module.exports = function (grunt) {
 				base: "demo"
 			},
 			src: ["**"]
-		}
+		},
+
+		bumper: {
+			options: {
+				tasks: [
+					"default",
+					"gh-pages"
+				],
+				files: [
+					"package.json",
+					"bower.json"
+				],
+				updateConfigs: [
+					"pkg",
+					"bower"
+				],
+				releaseBranch: ["master"]
+			}
+		},
+
+		clean: [
+			".grunt/grunt-gh-pages/gh-pages"
+		]
 
 	});
 
@@ -78,10 +100,14 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-connect");
+	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-gh-pages");
+	grunt.loadNpmTasks("grunt-bumper");
 
 	grunt.registerTask("default", ["jshint", "concat", "uglify", "copy"]);
 	grunt.registerTask("travis", ["jshint"]);
-	grunt.registerTask("publish", ["default", "gh-pages"]);
+	grunt.registerTask("release", ["default", "bumper"]);
+	grunt.registerTask("release:minor", ["bumper:minor", "clean"]);
+	grunt.registerTask("release:major", ["bumper:major", "clean"]);
 
 };

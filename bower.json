@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "homepage": "https://github.com/HitSend/jQuery-linkify/",
   "authors": [
-    "SoapBox Innovations, Inc. <dev@hitsend.ca>"
+    "SoapBox Innovations",
+    "Inc. <dev@hitsend.ca>"
   ],
   "description": "Find URLs in plain text and return HTML for discovered links.",
   "main": "src/jquery.linkify.js",
@@ -20,6 +21,15 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jquery": "1.10.2"
-  }
+    "jquery": ">= 1.9.0"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "demo",
+    "assets"
+  ]
 }
