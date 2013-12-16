@@ -72,17 +72,19 @@ module.exports = function (grunt) {
 		},
 
 		bumper: {
-			push: {
+			options: {
 				tasks: [
 					"default",
 					"gh-pages"
-				],
+				]
+			},
+			push: {
 				files: [
 					"package.json",
 					"bower.json"
 				],
 				updateConfigs: ["pkg"],
-				releaseBranch: ["master"]
+				releaseBranch: []
 			}
 		},
 
