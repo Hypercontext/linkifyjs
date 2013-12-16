@@ -6,6 +6,9 @@ __Download 1.0__
 
 __Jump to__
 - [Demo](#demo)
+- [Installing](#installing)
+  - [Basic](#basic)
+  - [Bower](#bower)
 - [Examples](#examples)
   - [Basic Usage](#basic-usage)
   - [Usage via HTML attributes](#usage-via-html-attributes)
@@ -20,6 +23,20 @@ Linkify is a jQuery plugin for finding URLs in plain-text and converting them to
 
 ## Demo
 [Launch demo](http://hitsend.github.io/jQuery-linkify/)
+
+## Installing
+
+### Basic
+Just download [jquery.min.js](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.min.js) from this repo's `dist` folder and include it on your web page with `<script>` tag, along with jQuery:
+
+```html
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="js/jquery.linkify.min.js"></script>
+```
+
+### Bower
+Run `bower install jQuery-linkify` from your project's root folder.
+
 
 ## Examples
 
