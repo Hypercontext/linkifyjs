@@ -6,14 +6,24 @@
 	// Plugin definition
 	$.fn.linkify = function (options) {
 		return this.each(function () {
-			if (!$.data(this, 'plugin-linkify')) {
+
+			var linkified;
+
+			if (linkified = $.data(this, 'plugin-linkify')) {
+
+				// Relinkify
+				linkified.setOptions(options);
+				linkified.init();
+
+			} else {
+
+				// Linkify
 				$.data(
 					this,
 					'plugin-linkify',
 					new Linkified(this, options)
 				);
-			} else {
-				$.data(this, 'plugin-linkify').linkify(options);
+
 			}
 		});
 	};

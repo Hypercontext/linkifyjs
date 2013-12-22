@@ -35,10 +35,11 @@
 				$targets = $('[data-linkify-demo-target="' + id + '"]');
 				$targets.linkify();
 
+				/*
 				$this.prop('disabled', true)
 					.text('Linkified!')
 					.off('click');
-
+				*/
 			});
 
 		// Set the value of the textfield to the referrer URL
@@ -53,7 +54,7 @@
 				$input = $($this.attr('data-linkify-demo-input')),
 				$output = $($this.attr('data-linkify-demo-output'));
 
-			$output.text($input.val());
+			$output.html($input.val());
 			$output.linkify({newLine: '<br>\n'});
 		});
 
