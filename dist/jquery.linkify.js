@@ -255,7 +255,7 @@
 	};
 
 	/**
-		Given a DOM node, linkify its contents
+		Given an HTML DOM node, linkify its contents
 	*/
 	Linkified.linkifyNode = function (node) {
 
@@ -284,7 +284,18 @@
 
 				if (childNode.nodeType === 3) {
 
-					// Linkify the text node
+					/*
+						Cleanup dummy node. This is to make sure that
+						existing nodes don't get improperly removed
+					*/
+					while (dummyElement.firstChild) {
+						dummyElement.removeChild(dummyElement.firstChild);
+					}
+
+					/*
+						Linkify the text node, set the result to the
+						dummy's contents
+					*/
 					dummyElement.innerHTML = Linkified.linkify.call(
 						this,
 						childNode.textContent || childNode.innerText
@@ -299,27 +310,38 @@
 						dummyElement.childNodes
 					);
 
+					// Clean up the dummy
+					while (dummyElement.firstChild) {
+						dummyElement.removeChild(dummyElement.firstChild);
+					}
+
 				} else if (childNode.nodeType === 1) {
+
+					// This is an HTML node, linkify it and add it
 					children.push(Linkified.linkifyNode(childNode));
+
 				} else {
+
+					// This is some other kind of node, just push it
 					children.push(childNode);
 				}
 
 				childNode = childNode.nextSibling;
 			}
 
-			// Replace nodes with the new ones
-			for (i = 0; i < childCount; i++) {
-				console.log(node.childNodes[i], children[i], i);
-				node.replaceChild(children[i], node.childNodes[i]);
+
+			// Remove all existing nodes.
+			while (node.firstChild) {
+				node.removeChild(node.firstChild);
 			}
 
-			for (i; i < children.length; i++) {
-				console.log(children[i], i);
+			// Replace with all the new nodes
+			for (i = 0; i < children.length; i++) {
 				node.appendChild(children[i]);
 			}
 
 		}
+		console.log("\n", children);
 		return node;
 	},
 
