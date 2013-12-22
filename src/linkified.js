@@ -1,44 +1,38 @@
-/*
- *  Linkify - v1.0.2
- *  Find URLs in plain text and return HTML for discovered links.
- *  https://github.com/HitSend/jQuery-linkify/
- *
- *  Made by SoapBox Innovations, Inc.
- *  Under MIT License
- */
-;(function ($, window, document, undefined) {
+/**
+	A Linkified object contains a DOM node (or just plain text) whose
+	inner text is replaced by HTML containing `<a>` links to URLs
+	discovered in that text. Call with
 
-	// Create the defaults once
-	var pluginName = 'linkify',
-		defaults = {
+		new Linkified(element, options)
+
+	Here are some the available options and their defaults
+
+		{
 			tagName: 'a',
 			newLine: '\n',
 			target: '_blank',
 			linkClass: null,
 			linkClasses: ['linkified'],
 			linkAttributes: null
-		};
+		}
 
-	/**
-		A Linkified object contains a DOM node (or just plain text) whose
-		inner text is replaced by HTML containing `<a>` links to URLs
-		discovered in that text. Call with
+	TODO: Take out jQuery reliance
 
-			new Linkified(element, options)
+	@class Linkified
+*/
+;(function ($, window, document, undefined) {
 
-		Here are some the available options and their defaults
+	"use strict";
 
-			{
-				tagName: 'a',
-				newLine: '\n',
-				target: '_blank',
-				linkClass: null,
-				linkClasses: ['linkified'],
-				linkAttributes: null
-			}
+	var defaults = {
+		tagName: 'a',
+		newLine: '\n',
+		target: '_blank',
+		linkClass: null,
+		linkClasses: ['linkified'],
+		linkAttributes: null
+	};
 
-		@class Linkified
-	*/
 	function Linkified(element, options) {
 
 		this.element = element;
@@ -46,8 +40,6 @@
 		// Setup settings
 		this.settings = $.extend({}, defaults, options);
 		this._defaults = defaults;
-		this._name = pluginName;
-
 		this.init();
 	}
 
@@ -214,57 +206,10 @@
 	*/
 	Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
 
+	if (window) {
+		window.Linkified = Linkified;
+	}
 
-	// Plugin definition
-	$.fn[pluginName] = function (options) {
-		return this.each(function () {
-			if (!$.data(this, 'plugin-' + pluginName)) {
-				$.data(this, 'plugin-' + pluginName, new Linkified(this, options));
-			} else {
-				$.data(this, 'plugin-' + pluginName).linkify(options);
-			}
-		});
-	};
+	return Linkified;
 
-	// Maintain access to the constructor from the plugin
-	$.fn[pluginName].Constructor = Linkified;
-
-	// DOM data- API setup
-	$(window).on('load', function () {
-		$('[data-linkify]').each(function () {
-			var $this = $(this),
-				$target,
-				target = $this.attr('data-linkify'),
-				options = {
-					tagName: $this.attr('data-linkify-tagname') || undefined,
-					newLine: $this.attr('data-linkify-newline') || undefined,
-					target: $this.attr('data-linkify-target') || undefined,
-					linkClass: $this.attr('data-linkify-linkclass') || undefined
-				};
-
-			$target = target === 'this' ? $this : $this.find(target);
-			$target.linkify(options);
-
-		});
-	});
-
-	// Setup click events for linkified elements
-	$('body').on('click', '.linkified', function () {
-		var $link = $(this),
-			url = $link.attr('href'),
-			isEmail = url.substr(0, 7) === 'mailto:',
-			target = $link.attr('target');
-
-		if (isEmail) {
-
-			// mailto links ignore the target
-			window.location.href = url;
-
-		} else {
-			window.open(url, target);
-		}
-
-		return false;
-	});
-
-})(jQuery, window, document);
+})(jQuery, window, document, undefined);

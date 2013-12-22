@@ -22,8 +22,12 @@ module.exports = function (grunt) {
 		// Concat definitions
 		concat: {
 			dist: {
-				src: ["src/jquery.linkify.js"],
-				dest: "dist/jquery.linkify.js"
+				files: {
+					"dist/jquery.linkify.js": [
+						"src/linkified.js",
+						"src/jquery.linkify.js"
+					]
+				}
 			},
 			options: {
 				banner: "<%= meta.banner %>"
@@ -32,7 +36,7 @@ module.exports = function (grunt) {
 
 		// Lint definitions
 		jshint: {
-			files: ["src/jquery.linkify.js"],
+			files: ["src/*"],
 			options: {
 				jshintrc: ".jshintrc"
 			}
