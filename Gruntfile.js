@@ -21,16 +21,28 @@ module.exports = function (grunt) {
 
 		// Concat definitions
 		concat: {
-			dist: {
+			jquery: {
 				files: {
-					"dist/jquery.linkify.js": [
+					"build/jquery.linkify.js": [
 						"src/linkified.js",
 						"src/jquery.linkify.js"
 					]
 				}
-			},
-			options: {
-				banner: "<%= meta.banner %>"
+			}
+		},
+
+		// Wrap files
+		wrap: {
+			jquery: {
+				expand: true,
+				src: ['build/jquery.linkify.js'],
+				dest: 'build/',
+				options: {
+					wrapper: [
+						'<%= meta.banner %>\n;(function ($, window, document, undefined) {\n"use strict";',
+						'})(jQuery, window, document)\n'
+					]
+				}
 			}
 		},
 
@@ -44,7 +56,7 @@ module.exports = function (grunt) {
 
 		// Minify definitions
 		uglify: {
-			my_target: {
+			dist: {
 				src: ["dist/jquery.linkify.js"],
 				dest: "dist/jquery.linkify.min.js"
 			},
@@ -54,7 +66,13 @@ module.exports = function (grunt) {
 		},
 
 		copy: {
-			main: {
+			build: {
+				expand: true,
+				flatten: true,
+				src: "build/build/*",
+				dest: "dist/"
+			},
+			demo: {
 				src: "dist/*",
 				dest: "demo/"
 			},
@@ -93,21 +111,32 @@ module.exports = function (grunt) {
 		},
 
 		clean: [
-			".grunt/grunt-gh-pages/gh-pages"
+			".grunt/grunt-gh-pages/gh-pages",
+			"build/*"
 		]
 
 	});
 
-	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-copy");
+	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-connect");
 	grunt.loadNpmTasks("grunt-contrib-clean");
+	grunt.loadNpmTasks("grunt-wrap");
 	grunt.loadNpmTasks("grunt-gh-pages");
 	grunt.loadNpmTasks("grunt-bumper");
 
-	grunt.registerTask("default", ["jshint", "concat", "uglify", "copy"]);
+	grunt.registerTask("default", [
+		"jshint",
+		"concat",
+		"wrap",
+		"copy:build",
+		"uglify",
+		"copy:demo",
+		"clean"
+	]);
+
 	grunt.registerTask("travis", ["jshint"]);
 	grunt.registerTask("release", ["bumper", "clean"]);
 	grunt.registerTask("release:minor", ["bumper:minor", "clean"]);

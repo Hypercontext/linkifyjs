@@ -6,4 +6,5 @@
 Thumbs.DB
 node_modules
 bower_components
+build/*
 demo/dist/*
