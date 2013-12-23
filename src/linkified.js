@@ -16,8 +16,6 @@
 			linkAttributes: null
 		}
 
-	TODO: Take out jQuery reliance
-
 	@class Linkified
 */
 
@@ -84,6 +82,10 @@ Linkified.prototype = {
 /**
 	Create an extended settings object using the default options.
 	Include a second hash to use those as defaults instead.
+	@method	extendSettings
+	@static
+	@param	{Object} options Hash of options to use for extending
+	@param	{Object} settings Existing settings object to extend from. If undefined, the defaults will be used
 */
 Linkified.extendSettings = function (options, settings) {
 	var prop;
@@ -156,6 +158,8 @@ Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[
 /**
 	Linkify the given text
 	@method	linkify
+	@param	{String} text Plain text to linkify
+	@param	{Options} options to linkify with, in addition to the defaults for the context
 	@return	{String} html
 */
 Linkified.linkify = function (text, options) {
@@ -245,6 +249,10 @@ Linkified.linkify = function (text, options) {
 
 /**
 	Given an HTML DOM node, linkify its contents
+	@method	linkifyNode
+	@static
+	@param	{Element} node The HTML node to find URLs in
+	@return {Element} node
 */
 Linkified.linkifyNode = function (node) {
 
@@ -299,7 +307,7 @@ Linkified.linkifyNode = function (node) {
 					dummyElement.childNodes
 				);
 
-				// Clean up the dummy
+				// Clean up the dummy again?
 				while (dummyElement.firstChild) {
 					dummyElement.removeChild(dummyElement.firstChild);
 				}

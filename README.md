@@ -142,10 +142,10 @@ $('selector').linkify({
 		<tr>
 			<td>linkClass</td>
 			<td>String</td>
-			<td><code>"linkified"</code></td>
+			<td><code>null</code></td>
 			<td>
-				The class to be added to each linkified tag. The default
-				<code>.linkified</code> ensures that each link will be
+				The class to be added to each linkified tag. The extra
+				<code>.linkified</code> class also ensures that each link will be
 				clickable, regardless of the value of <code>tagName</code>.
 			</td>
 			<td><code class="small">data-linkify-linkclass</code></td>
