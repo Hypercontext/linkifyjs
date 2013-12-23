@@ -12,8 +12,11 @@
 	"unused": true,
 	"strict": false,
 	"node": true,
+	"browser": true,
 	"jquery": true,
 	"globals": {
-		"prettyPrint": false
+		"prettyPrint": false,
+		"jQuery": false,
+		"Linkified": false
 	}
 }

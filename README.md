@@ -1,8 +1,8 @@
 # Linkify
 
-__Download 1.0__
-- [Minified](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.min.js)
-- [Source](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.js)
+__Download 1.1__
+- [Minified](https://github.com/SoapBox/jQuery-linkify/blob/master/dist/jquery.linkify.min.js)
+- [Source](https://github.com/SoapBox/jQuery-linkify/blob/master/dist/jquery.linkify.js)
 
 __Jump to__
 - [Demo](#demo)
@@ -77,10 +77,6 @@ $(window).on('load', function () {
   to view more.
 </p>
 ```
-
-#### Notice
-
-Linkify currently cannot process elements that contain HTML. It will strip out any tags it encounters before discovering URLs.
 
 ### Usage via HTML attributes
 
@@ -163,10 +159,10 @@ $('selector').linkify({
 		<tr>
 			<td>linkClass</td>
 			<td>String</td>
-			<td><code>"linkified"</code></td>
+			<td><code>null</code></td>
 			<td>
-				The class to be added to each linkified tag. The default
-				<code>.linkified</code> ensures that each link will be
+				The class to be added to each linkified tag. The extra
+				<code>.linkified</code> class also ensures that each link will be
 				clickable, regardless of the value of <code>tagName</code>.
 			</td>
 			<td><code class="small">data-linkify-linkclass</code></td>
