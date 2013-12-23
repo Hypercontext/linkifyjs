@@ -1,6 +1,6 @@
 # Linkify
 
-__Download 1.0__
+__Download 1.1__
 - [Minified](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.min.js)
 - [Source](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.js)
 
@@ -60,10 +60,6 @@ $(window).on('load', function () {
   to view more.
 </p>
 ```
-
-#### Notice
-
-Linkify currently cannot process elements that contain HTML. It will strip out any tags it encounters before discovering URLs.
 
 ### Usage via HTML attributes
 

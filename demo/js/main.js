@@ -35,21 +35,21 @@
 				$targets = $('[data-linkify-demo-target="' + id + '"]');
 				$targets.linkify();
 
-				/*
+
 				$this.prop('disabled', true)
 					.text('Linkified!')
 					.off('click');
-				*/
+
 			});
 
 		// Set the value of the textfield to the referrer URL
-		$('#demo-2-input').val(
+		$('#demo-3-input').val(
 			'Linkify the following URL: ' + (
-				document.referrer || 'https://github.com/HitSend/jQuery-linkify/'
+				document.referrer || 'https://github.com/SoapBox/jQuery-linkify/'
 			)
 		);
 
-		$('#demo-2-linkifier').on('click', function () {
+		$('#demo-3-linkifier').on('click', function () {
 			var $this = $(this),
 				$input = $($this.attr('data-linkify-demo-input')),
 				$output = $($this.attr('data-linkify-demo-output'));
