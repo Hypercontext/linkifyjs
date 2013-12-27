@@ -49,7 +49,7 @@ Linkified.prototype = {
 		if (this.element.nodeType === 1) {
 			Linkified.linkifyNode.call(this, this.element);
 		} else {
-			this.element = Linkified.linkify.apply(
+			this.element = Linkified.linkify.call(
 				this,
 				this.element.toString()
 			);
