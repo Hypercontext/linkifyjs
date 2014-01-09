@@ -1,5 +1,7 @@
 # Linkify
 
+[![Node Dependencies](https://david-dm.org/SoapBox/jQuery-linkify/dev-status.png)](https://david-dm.org/SoapBox/jQuery-linkify)
+
 __Download 1.1__
 - [Minified](https://github.com/SoapBox/jQuery-linkify/blob/master/dist/jquery.linkify.min.js)
 - [Source](https://github.com/SoapBox/jQuery-linkify/blob/master/dist/jquery.linkify.js)
