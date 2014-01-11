@@ -1,5 +1,5 @@
 /*
- *  Linkify - v1.1.0
+ *  Linkify - v1.1.2
  *  Find URLs in plain text and return HTML for discovered links.
  *  https://github.com/HitSend/jQuery-linkify/
  *
@@ -60,7 +60,7 @@ Linkified.prototype = {
 		if (this.element.nodeType === 1) {
 			Linkified.linkifyNode.call(this, this.element);
 		} else {
-			this.element = Linkified.linkify.apply(
+			this.element = Linkified.linkify.call(
 				this,
 				this.element.toString()
 			);
