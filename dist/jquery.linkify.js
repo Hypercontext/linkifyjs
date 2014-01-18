@@ -1,5 +1,5 @@
 /*
- *  Linkify - v1.1.7
+ *  Linkify - v1.1.8
  *  Find URLs in plain text and return HTML for discovered links.
  *  https://github.com/HitSend/jQuery-linkify/
  *
