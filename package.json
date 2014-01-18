@@ -21,9 +21,10 @@
     "grunt-contrib-copy": "0.x",
     "grunt-wrap": "0.x",
     "grunt-gh-pages": "0.x",
-    "grunt-bumper": "1.0.x"
+    "grunt-bumper": "1.0.x",
+    "grunt-contrib-qunit": "0.4.x"
   },
   "scripts": {
-    "test": "grunt travis --verbose"
+    "test": "grunt test --verbose"
   }
 }
