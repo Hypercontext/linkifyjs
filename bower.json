@@ -20,7 +20,9 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jquery": ">=1.9.0",
+    "jquery": ">=1.9.0"
+  },
+  "devDependencies": {
     "qunit": "1.*"
   },
   "ignore": [

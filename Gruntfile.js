@@ -54,11 +54,30 @@ module.exports = function (grunt) {
 			}
 		},
 
+		// Run test suite
+		qunit: {
+			all: {
+				options: {
+					urls: [
+						'http://localhost:8001/tests/linkified.html',
+					]
+				}
+			}
+		},
+
 		// Minify definitions
 		uglify: {
-			dist: {
-				src: ["dist/jquery.linkify.js"],
+			min: {
+				src: ["build/jquery.linkify.js"],
 				dest: "dist/jquery.linkify.min.js"
+			},
+			max: {
+				src: ["build/jquery.linkify.js"],
+				dest: "dist/jquery.linkify.js",
+				options: {
+					beautify: true,
+					mangle: false
+				}
 			},
 			options: {
 				banner: "<%= meta.banner %>"
@@ -70,7 +89,7 @@ module.exports = function (grunt) {
 				expand: true,
 				flatten: true,
 				src: "build/build/*",
-				dest: "dist/"
+				dest: "build/"
 			},
 			demo: {
 				src: "dist/*",
@@ -82,6 +101,11 @@ module.exports = function (grunt) {
 			server: {
 				options: {
 					keepalive: true
+				}
+			},
+			test: {
+				options: {
+					port: 8001
 				}
 			}
 		},
@@ -123,6 +147,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-connect");
 	grunt.loadNpmTasks("grunt-contrib-clean");
+	grunt.loadNpmTasks("grunt-contrib-qunit");
 	grunt.loadNpmTasks("grunt-wrap");
 	grunt.loadNpmTasks("grunt-gh-pages");
 	grunt.loadNpmTasks("grunt-bumper");
@@ -137,7 +162,12 @@ module.exports = function (grunt) {
 		"clean"
 	]);
 
-	grunt.registerTask("travis", ["jshint"]);
+	grunt.registerTask("test", [
+		"connect:test",
+		"jshint",
+		"qunit"
+	]);
+
 	grunt.registerTask("release", ["bumper", "clean"]);
 	grunt.registerTask("release:minor", ["bumper:minor", "clean"]);
 	grunt.registerTask("release:major", ["bumper:major", "clean"]);
