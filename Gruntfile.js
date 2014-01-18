@@ -122,8 +122,7 @@ module.exports = function (grunt) {
 		bumper: {
 			options: {
 				tasks: [
-					"default",
-					"gh-pages"
+					"default"
 				]
 			},
 			push: {
