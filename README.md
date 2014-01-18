@@ -15,9 +15,9 @@ __Jump to__
   - [Basic Usage](#basic-usage)
   - [Usage via HTML attributes](#usage-via-html-attributes)
 - [Options](#options)
-- [Building](#building)
+- [Building and Development Tasks](#building-and-development-tasks)
   - [Setup](#setup)
-  - [Build Tasks](#build-tasks)
+  - [Development](#development)
 - [Testing](#testing)
 - [Authors](#authors)
 
@@ -194,7 +194,7 @@ $('p').linkify({
 	</tbody>
 </table>
 
-## Building
+## Building and Development Tasks
 
 ### Setup
 
@@ -213,22 +213,21 @@ Once you have those, navigate into the repo's root directory and run
 npm install && bower install
 ```
 
-### Build Tasks
+### Development
 
-Two main tasks are provided for this plugin's development. Each can be
-called by running `grunt taskName` from the repo's root folder.
-
+Each of these tasks can be called by running `grunt taskName` from the
+repo's root folder.
 
 1. `default`: Also available by just calling `grunt`, this task tests
 the plugin code in the `src` folder for JSHint compliance and builds and
 minifies it into the `dist` folder.
 
-2. `connect`: Runs a server at
-[localhost:8000](http://localhost:8000/demo/) that can be used for
-running tests and viewing the demo page.
+2. `demo`: Builds everything and launches the demo page at
+[localhost:8000](http://localhost:8000/).
 
-## Testing
-Coming soon.
+3. `test`: Runs the complete test suite, including JSHint and QUnit. QUnit
+tests will be executed at [localhost:8001](http://localhost:8000/).
+
 
 ## Authors
 Linkify is handcrafted with Love by [SoapBox Innovations, Inc](http://soapboxhq.com).

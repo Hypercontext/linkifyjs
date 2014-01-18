@@ -98,8 +98,10 @@ module.exports = function (grunt) {
 		},
 
 		connect: {
-			server: {
+			demo: {
 				options: {
+					base: 'demo/',
+					open: true,
 					keepalive: true
 				}
 			},
@@ -166,6 +168,11 @@ module.exports = function (grunt) {
 		"connect:test",
 		"jshint",
 		"qunit"
+	]);
+
+	grunt.registerTask("demo", [
+		'default',
+		'connect:demo'
 	]);
 
 	grunt.registerTask("release", ["bumper", "clean"]);
