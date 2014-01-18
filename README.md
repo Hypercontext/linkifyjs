@@ -109,7 +109,7 @@ $('selector').linkify({
   tagName: 'a',
   target: '_blank',
   newLine: '\n',
-  linkClass: 'linkified',
+  linkClass: null,
   linkAttributes: null
 });
 ```
@@ -163,9 +163,7 @@ $('selector').linkify({
 			<td>String</td>
 			<td><code>null</code></td>
 			<td>
-				The class to be added to each linkified tag. The extra
-				<code>.linkified</code> class also ensures that each link will be
-				clickable, regardless of the value of <code>tagName</code>.
+				The class to be added to each linkified tag. An extra <code>.linkified</code> class ensures that each link will be clickable, regardless of the value of <code>tagName</code>. Linkify won't attempt finding links in <code>.linkified</code> elements.
 			</td>
 			<td><code class="small">data-linkify-linkclass</code></td>
 		</tr>
