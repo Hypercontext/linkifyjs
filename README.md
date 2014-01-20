@@ -29,7 +29,7 @@ Linkify is a jQuery plugin for finding URLs in plain-text and converting them to
 ## Installing
 
 ### Basic
-Just download [jquery.min.js](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.min.js) from this repo's `dist` folder and include it on your web page with `<script>` tag, along with jQuery:
+Just download [jquery.linkify.min.js](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.min.js) from this repo's `dist` folder and include it on your web page with `<script>` tag, along with jQuery:
 
 ```html
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
