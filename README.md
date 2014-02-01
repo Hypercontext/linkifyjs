@@ -18,7 +18,6 @@ __Jump to__
 - [Building and Development Tasks](#building-and-development-tasks)
   - [Setup](#setup)
   - [Development](#development)
-- [Testing](#testing)
 - [Authors](#authors)
 
 Linkify is a jQuery plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
