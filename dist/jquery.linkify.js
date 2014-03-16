@@ -13,13 +13,17 @@
     }
     var defaults = {
         tagName: "a",
-        newLine: "\n",
         target: "_blank",
         linkClass: null,
         linkClasses: [],
-        linkAttributes: null
+        linkAttributes: null,
+        format: function(link) {
+            return link;
+        },
+        nl2br: !1,
+        preserveWhitespace: !1
     };
-    Linkified.prototype = {
+    window.Linkified = Linkified, Linkified.prototype = {
         constructor: Linkified,
         init: function() {
             1 === this.element.nodeType ? Linkified.linkifyNode.call(this, this.element) : this.element = Linkified.linkify.call(this, this.element.toString());
@@ -36,31 +40,51 @@
         for (prop in defaults) settings[prop] || (settings[prop] = defaults[prop]);
         for (prop in options) settings[prop] = options[prop];
         return settings;
-    }, Linkified.linkMatch = new RegExp([ "(", '\\s|[^a-zA-Z0-9.\\+_\\/"\\>\\-]|^', ")(?:", "(", "[a-zA-Z0-9\\+_\\-]+", "(?:", "\\.[a-zA-Z0-9\\+_\\-]+", ")*@", ")?(", "http:\\/\\/|https:\\/\\/|ftp:\\/\\/", ")?(", "(?:(?:[a-z0-9][a-z0-9_%\\-_+]*\\.)+)", ")(", "(?:com|ca|co|edu|gov|net|org|dev|biz|cat|int|pro|tel|mil|aero|asia|coop|info|jobs|mobi|museum|name|post|travel|local|[a-z]{2})", ")(", "(?:", "[\\/|\\?]", "(?:", "[\\-a-zA-Z0-9_%#*&+=~!?,;:.\\/]*", ")*", ")", "[\\-\\/a-zA-Z0-9_%#*&+=~]", "|", "\\/?", ")?", ")(", '[^a-zA-Z0-9\\+_\\/"\\<\\-]|$', ")" ].join(""), "g"), 
-    Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g, 
+    }, Linkified.linkMatch = new RegExp([ "(", "https?:\\/\\/|ftps?:\\/\\/", ")?(", "(?:(?:[a-z0-9][a-z0-9_%\\-_+]*\\.)+)", ")(", "(?:[a-z]{4-12}|com|biz|cab|cat|edu|eus|giv|int|mil|net|org|pro|tel|[a-z]{2})", ")(", "(?:", "[\\/|\\?]", "(?:", "[\\-a-zA-Z0-9_%#*&+=~!?,;:.\\/]*", ")*", ")", "[\\-\\/a-zA-Z0-9_%#*&+=~]", "|", "\\/?", ")?" ].join("")), 
+    Linkified.emailLinkMatch = /[a-zA-Z0-9%\+_\-]+(\.[a-zA-Z0-9%\+_\-]*)+@([a-z0-9][a-z0-9_%\-_+]*\.)+([a-z]{2}|com|biz|cab|cat|edu|eus|giv|int|mil|net|org|pro|tel|[a-z]{4-12})/, 
     Linkified.linkify = function(text, options) {
-        var attr, settings, linkClasses, linkReplace = [];
+        function textToNodes(text, nl2br) {
+            var lines, nodes = [];
+            if (nl2br) {
+                lines = text.split("\n");
+                for (var i = 0; i < lines.length; i++) nodes.push(new Text(lines[i])), i < lines.length - 1 && nodes.push(document.createElement("br"));
+            } else nodes.push(new Text(text));
+            return nodes;
+        }
+        var settings, linkClasses, words;
         this.constructor === Linkified && this.settings ? (settings = this.settings, options && (settings = Linkified.extendSettings(options, settings))) : settings = Linkified.extendSettings(options), 
         linkClasses = settings.linkClass ? settings.linkClass.split(/\s+/) : [], linkClasses.push.apply(linkClasses, settings.linkClasses), 
-        text = text.replace(/</g, "&lt;").replace(/(\s)/g, "$1$1"), linkReplace.push("$1<" + settings.tagName, 'href="http://$2$4$5$6"'), 
-        linkReplace.push('class="linkified' + (linkClasses.length > 0 ? " " + linkClasses.join(" ") : "") + '"'), 
-        settings.target && linkReplace.push('target="' + settings.target + '"');
-        for (attr in settings.linkAttributes) linkReplace.push([ attr, '="', settings.linkAttributes[attr].replace(/\"/g, "&quot;").replace(/\$/g, "&#36;"), '"' ].join(""));
-        return linkReplace.push(">$2$3$4$5$6</" + settings.tagName + ">$7"), text = text.replace(Linkified.linkMatch, linkReplace.join(" ")), 
-        text = text.replace(Linkified.emailLinkMatch, "$1mailto:$3"), text = text.replace(/(\s){2}/g, "$1"), 
-        text = text.replace(/\n/g, settings.newLine);
+        words = text.split(settings.preserveWhitespace ? " " : /[^\S\n]+/);
+        for (var defaultTarget = settings.target || settings.linkAttributes.target || "_blank", nodeList = [], dummyElement = Linkified._dummyElement, phrase = ""; dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
+        for (var i = 0; i < words.length; i++) {
+            var word = words[i], action = null, linkPadding = null, hasMatch = !1, display = null, matches = null, href = null, target = null, searchIndex = word.search(/[.@#]/);
+            if (searchIndex >= 0 && searchIndex < word.length - i) {
+                if (target = defaultTarget, (matches = word.match(this.constructor.emailLinkMatch)) ? (hasMatch = !0, 
+                linkPadding = word.split(matches[0], 2), display = matches[0], href = "mailto:" + display, 
+                target = null, action = "a" === settings.tagName ? null : function() {
+                    return window.location.href = href, !1;
+                }) : (matches = word.match(this.constructor.linkMatch)) ? (hasMatch = !0, linkPadding = word.split(matches[0], 2), 
+                display = matches[0], href = display, 0 !== display.search(/(https?|ftps?):\/\//) && (href = "http://" + display), 
+                action = "a" === settings.tagName ? null : function() {
+                    return window.open(href, target), !1;
+                }) : phrase += word + " ", hasMatch) {
+                    var linkified = document.createElement(settings.tagName);
+                    linkified.setAttribute("href", href), target && linkified.setAttribute("target", target), 
+                    linkified.setAttribute("class", "linkified " + linkClasses.join(" "));
+                    for (var prop in settings.linkAttributes) linkified.setAttribute(prop, settings.linkAttributes[prop]);
+                    linkified.innerText = display, action && (linkified.addEventListener ? linkified.addEventListener("click", action) : linkified.attachEvent && linkified.attachEvent("onclick", action)), 
+                    phrase += linkPadding[0], nodeList.push.apply(nodeList, textToNodes(phrase, settings.nl2br)), 
+                    nodeList.push(linkified), phrase = linkPadding[1] + " ";
+                }
+            } else phrase += word + " ";
+        }
+        return nodeList.push.apply(nodeList, textToNodes(phrase)), nodeList;
     }, Linkified.linkifyNode = function(node) {
         var children, childNode, childCount, dummyElement, i;
         if (node && "object" == typeof node && 1 === node.nodeType && "a" !== node.tagName.toLowerCase() && !/[^\s]linkified[\s$]/.test(node.className)) {
             for (children = [], dummyElement = Linkified._dummyElement || document.createElement("div"), 
-            childNode = node.firstChild, childCount = node.childElementCount; childNode; ) {
-                if (3 === childNode.nodeType) {
-                    for (;dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
-                    for (dummyElement.innerHTML = Linkified.linkify.call(this, childNode.textContent || childNode.innerText), 
-                    children.push.apply(children, dummyElement.childNodes); dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
-                } else 1 === childNode.nodeType ? children.push(Linkified.linkifyNode(childNode)) : children.push(childNode);
-                childNode = childNode.nextSibling;
-            }
+            childNode = node.firstChild, childCount = node.childElementCount; childNode; ) 3 === childNode.nodeType ? children.push.apply(children, Linkified.linkify.call(this, childNode.textContent || childNode.innerText)) : 1 === childNode.nodeType ? children.push(Linkified.linkifyNode(childNode)) : children.push(childNode), 
+            childNode = childNode.nextSibling;
             for (;node.firstChild; ) node.removeChild(node.firstChild);
             for (i = 0; i < children.length; i++) node.appendChild(children[i]);
         }

@@ -94,7 +94,7 @@ module.exports = function (grunt) {
 			demo: {
 				src: "dist/*",
 				dest: "demo/"
-			},
+			}
 		},
 
 		connect: {
