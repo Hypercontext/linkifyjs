@@ -160,7 +160,7 @@ Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[
 	@method	linkify
 	@param	{String} text Plain text to linkify
 	@param	{Options} options to linkify with, in addition to the defaults for the context
-	@return	{String} html
+	@return	{NodeList} element (Changed spec) List of DOM nodes with attached event listeners
 */
 Linkified.linkify = function (text, options) {
 
