@@ -1,3 +1,5 @@
+/* globals Text */
+
 /**
 	A Linkified object contains a DOM node (or just plain text) whose
 	inner text is replaced by HTML containing `<a>` links to URLs
@@ -14,6 +16,7 @@
 			linkClass: null,
 			linkClasses: [],
 			linkAttributes: null
+			preserveWhitespace: false
 		}
 
 	@class Linkified
@@ -21,11 +24,15 @@
 
 var defaults = {
 	tagName: 'a',
-	newLine: '\n',
-	target: '_blank',
+	target: "_blank",
 	linkClass: null,
 	linkClasses: [],
-	linkAttributes: null
+	linkAttributes: null,
+	format: function (link/*, type*/) {
+		return link;
+	},
+	nl2br: false,
+	preserveWhitespace: false
 };
 
 function Linkified(element, options) {
@@ -36,6 +43,14 @@ function Linkified(element, options) {
 	this.setOptions(options);
 	this.init();
 }
+
+if (!String.prototype.trim) {
+	String.prototype.trim = function () {
+		return this.replace(/^\s+|\s+$/g, '');
+	};
+}
+
+window.Linkified = Linkified;
 
 Linkified.prototype = {
 
@@ -73,7 +88,7 @@ Linkified.prototype = {
 	toString: function () {
 
 		// Returned the linkified HTML
-		return this.element.toString();
+		return this._element.innerHTML;
 	}
 
 
@@ -106,29 +121,24 @@ Linkified.extendSettings = function (options, settings) {
 
 
 /**
-	The url-matching regular expression for double-spaced text
+	The url-matching regular expression for a single word
+
 	@property	linkMatch
 	@static
 	@type		RegExp
 */
 Linkified.linkMatch = new RegExp([
 
+	// Note: Character before the link should  match /[^a-zA-Z0-9.\+_\/"\-]/
+
 	// The groups
-	'(', // 1. Character before the link
-	'\\s|[^a-zA-Z0-9.\\+_\\/"\\>\\-]|^',
-	')(?:', //Main group
-	'(', // 2. Email address (optional)
-	'[a-zA-Z0-9\\+_\\-]+',
-	'(?:',
-	'\\.[a-zA-Z0-9\\+_\\-]+',
-	')*@',
-	')?(', // 3. Protocol (optional)
-	'http:\\/\\/|https:\\/\\/|ftp:\\/\\/',
-	')?(', // 4. Domain & Subdomains
-	'(?:(?:[a-z0-9][a-z0-9_%\\-_+]*\\.)+)',
-	')(', // 5. Top-level domain - http://en.wikipedia.org/wiki/List_of_Internet_top-level_domains
-	'(?:com|ca|co|edu|gov|net|org|dev|biz|cat|int|pro|tel|mil|aero|asia|coop|info|jobs|mobi|museum|name|post|travel|local|[a-z]{2})',
-	')(', // 6. Query string (optional)
+	'^(',		// 1. Protocol (optional)
+	'https?:\\/\\/|ftps?:\\/\\/',
+	')?(',		// 2. Domain & Subdomains
+	'(?:(?:[a-zA-Z0-9][a-zA-Z0-9_%\\-_+]*\\.)+)',
+	')(',		// 3. Top-level domain - http://en.wikipedia.org/wiki/List_of_Internet_top-level_domains
+	'(?:[a-z]{4-12}|com|biz|cab|cat|edu|eus|giv|int|mil|net|org|pro|tel|[a-z]{2})', // .construction is a thing.
+	')(',		// 4. Query string (optional)
 	'(?:',
 	'[\\/|\\?]',
 	'(?:',
@@ -138,21 +148,21 @@ Linkified.linkMatch = new RegExp([
 	'[\\-\\/a-zA-Z0-9_%#*&+=~]',
 	'|',
 	'\\/?',
-	')?',
-	')(', // 7. Character after the link
-	'[^a-zA-Z0-9\\+_\\/"\\<\\-]|$',
-	')'
-].join(''), 'g');
+	')?$'
+
+	// Note: Character after the link should match [^a-zA-Z0-9\+_\/"\-]
+
+].join(''));
 
 /**
-	The regular expression of matching email links after the
-	application of the initial link matcher.
+	The regular expression seeing if an email link matches a given word
 
 	@property	emailLinkMatch
 	@static
 	@type		RegExp
 */
-Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
+Linkified.emailLinkMatch =
+	/^[a-zA-Z0-9%\+_\-]+(\.[a-zA-Z0-9%\+_\-]*)+@([a-z0-9][a-z0-9_%\-_+]*\.)+([a-z]{2}|com|biz|cab|cat|edu|eus|giv|int|mil|net|org|pro|tel|[a-z]{4-12})$/;
 
 
 /**
@@ -160,19 +170,17 @@ Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[
 	@method	linkify
 	@param	{String} text Plain text to linkify
 	@param	{Options} options to linkify with, in addition to the defaults for the context
-	@return	{String} html
+	@return	{NodeList} element (Changed spec) List of DOM nodes with attached event listeners
 */
 Linkified.linkify = function (text, options) {
 
-	var attr,
-		settings,
-		linkClasses,
-		linkReplace = [];
+	var settings, linkClasses, words;
 
 	if (this.constructor === Linkified && this.settings) {
 
 		// Called from an instance of Linkified
 		settings = this.settings;
+
 		if (options) {
 			settings = Linkified.extendSettings(options, settings);
 		}
@@ -190,60 +198,167 @@ Linkified.linkify = function (text, options) {
 
 	linkClasses.push.apply(linkClasses, settings.linkClasses);
 
-
 	// Get rid of tags and HTML-structure,
 	// Duplicate whitespace in preparation for linking
-	text = text
-		.replace(/</g, '&lt;')
-		.replace(/(\s)/g, '$1$1');
+	//text = text.replace(/</g, '&lt;');
+		//.replace(/(\s)/g, '$1$1');
 
-	// Build up the replacement string
-
-	linkReplace.push(
-		'$1<' + settings.tagName,
-		'href="http://$2$4$5$6"'
+	// get individual words
+	words = text.split(
+		settings.preserveWhitespace ? ' ' : /[^\S\n]+/
 	);
 
-	// Add classes
-	linkReplace.push(
-		'class="linkified' +
-		(linkClasses.length > 0 ? ' ' + linkClasses.join(' ') : '') +
-		'"'
-	);
+	var defaultTarget = settings.target ||  settings.linkAttributes.target || "_blank";
+	var nodeList = [];
+	var dummyElement = document.createElement('div');
+	var phrase = '';
 
-	// Add target
-	if (settings.target) {
-		linkReplace.push('target="' + settings.target + '"');
+	function textToNodes(text, nl2br) {
+
+		var nodes = [], lines;
+
+		if (nl2br) {
+
+			lines = text.split('\n');
+
+			for (var i = 0; i < lines.length; i++) {
+				nodes.push(new Text(lines[i]));
+				if (i < lines.length - 1) {
+					nodes.push(document.createElement('br'));
+				}
+			}
+		} else {
+			nodes.push(new Text(text));
+		}
+
+		return nodes;
 	}
 
-	// Add other (normalized) attributes
-	for (attr in settings.linkAttributes) {
-		linkReplace.push([
-			attr,
-			'="',
-			settings.linkAttributes[attr]
-				.replace(/\"/g, '&quot;')
-				.replace(/\$/g, '&#36;'),
-			'"'
-		].join(''));
+	for (var i = 0; i < words.length; i++) {
+
+		var word = words[i];
+		var action = null;
+		var linkPadding = null;
+		var hasMatch = false;
+		var display = null, matches = null, href = null, target = null;
+
+		// search for one of the characters the URL must have
+		var searchIndex = word.search(/[.@#]/); // # for hashtags in the future
+
+		if (searchIndex >= 0 && searchIndex < word.length - i) {
+
+			// Matching character is before the last character of the word
+			// try to find a URL
+
+
+			target = defaultTarget;
+
+			if (matches = word.match(this.constructor.emailLinkMatch)) {
+
+				// There's an email!
+				hasMatch = true;
+				linkPadding = word.split(matches[0], 2); // get the link without surrounding characters
+
+				display = matches[0];
+				href = 'mailto:' + display;
+
+				target = null;
+
+				action = settings.tagName === 'a' ? null : function () {
+					window.location.href = href;
+					return false;
+				};
+
+			} else if (matches = word.match(this.constructor.linkMatch)) {
+
+				// There's a link!
+				hasMatch = true;
+				linkPadding = word.split(matches[0], 2);
+
+				display = matches[0];
+				href = display;
+
+				if (display.search(/(https?|ftps?):\/\//) !== 0) {
+					// Append http to href
+					href = 'http://' + display;
+				}
+
+				action = settings.tagName === 'a' ? null : function () {
+					window.open(href, target);
+					return false;
+				};
+
+			} else {
+
+				phrase += word + ' ';
+
+			}
+
+			//console.log(matches);
+
+
+			if (hasMatch) {
+
+				var linkified = document.createElement(settings.tagName);
+
+				// Set href and target and what not
+				linkified.setAttribute('href', href);
+
+				if (target) {
+					linkified.setAttribute('target', target);
+				}
+
+				var className = 'linkified';
+				if (linkClasses.length) {
+					className += ' ' + linkClasses.join(' ');
+				}
+
+				linkified.setAttribute('class', className);
+
+				// Add all the given properties
+				for (var prop in settings.linkAttributes) {
+					linkified.setAttribute(prop, settings.linkAttributes[prop]);
+				}
+
+				linkified.innerText = display;
+
+				if (action) {
+					if (linkified.addEventListener){
+						linkified.addEventListener('click', action);
+					} else if(linkified.attachEvent){ // IE < 9 :(
+						linkified.attachEvent('onclick', action);
+					}
+				}
+
+				phrase += linkPadding[0];
+
+				nodeList.push.apply(
+					nodeList,
+					textToNodes(phrase, settings.nl2br)
+				);
+
+				nodeList.push(linkified);
+
+				phrase = linkPadding[1] + ' ';
+
+			}
+
+		} else {
+
+			phrase += word + ' ';
+
+		}
 	}
 
-	// Finish off
-	linkReplace.push('>$2$3$4$5$6</' + settings.tagName + '>$7');
+	nodeList.push.apply(nodeList, textToNodes(phrase.replace(/\s+$/, '')));
 
-	// Create the link
-	text = text.replace(Linkified.linkMatch, linkReplace.join(' '));
+	for (i = 0; i < nodeList.length; i++) {
+		dummyElement.appendChild(nodeList[i]);
+	}
 
-	// The previous line added `http://` to emails. Replace that with `mailto:`
-	text = text.replace(Linkified.emailLinkMatch, '$1mailto:$3');
+	this._element = dummyElement;
 
-	// Revert whitespace characters back to a single character
-	text = text.replace(/(\s){2}/g, '$1');
-
-	// Trim and account for new lines
-	text = text.replace(/\n/g, settings.newLine);
-
-	return text;
+	return dummyElement.childNodes;
 
 };
 
@@ -281,36 +396,13 @@ Linkified.linkifyNode = function (node) {
 
 			if (childNode.nodeType === 3) {
 
-				/*
-					Cleanup dummy node. This is to make sure that
-					existing nodes don't get improperly removed
-				*/
-				while (dummyElement.firstChild) {
-					dummyElement.removeChild(dummyElement.firstChild);
-				}
-
-				/*
-					Linkify the text node, set the result to the
-					dummy's contents
-				*/
-				dummyElement.innerHTML = Linkified.linkify.call(
-					this,
-					childNode.textContent || childNode.innerText
-				);
-
-				/*
-					Parse the linkified text and append it to the
-					new children
-				*/
 				children.push.apply(
 					children,
-					dummyElement.childNodes
+					Linkified.linkify.call(
+						this,
+						childNode.textContent || childNode.innerText
+					)
 				);
-
-				// Clean up the dummy again?
-				while (dummyElement.firstChild) {
-					dummyElement.removeChild(dummyElement.firstChild);
-				}
 
 			} else if (childNode.nodeType === 1) {
 
