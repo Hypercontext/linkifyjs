@@ -128,7 +128,9 @@ Linkified.linkMatch = new RegExp([
 	'(?:(?:[a-z0-9][a-z0-9_%\\-_+]*\\.)+)',
 	')(', // 5. Top-level domain - http://en.wikipedia.org/wiki/List_of_Internet_top-level_domains
 	'(?:com|ca|co|edu|gov|net|org|dev|biz|cat|int|pro|tel|mil|aero|asia|coop|info|jobs|mobi|museum|name|post|travel|local|[a-z]{2})',
-	')(', // 6. Query string (optional)
+	')(', // 6. Port (optional)
+	'(?::\\d{1,5})',
+	')?(', // 7. Query string (optional)
 	'(?:',
 	'[\\/|\\?]',
 	'(?:',
@@ -201,7 +203,7 @@ Linkified.linkify = function (text, options) {
 
 	linkReplace.push(
 		'$1<' + settings.tagName,
-		'href="http://$2$4$5$6"'
+		'href="http://$2$4$5$6$7"'
 	);
 
 	// Add classes
@@ -229,7 +231,7 @@ Linkified.linkify = function (text, options) {
 	}
 
 	// Finish off
-	linkReplace.push('>$2$3$4$5$6</' + settings.tagName + '>$7');
+	linkReplace.push('>$2$3$4$5$6$7</' + settings.tagName + '>$8');
 
 	// Create the link
 	text = text.replace(Linkified.linkMatch, linkReplace.join(' '));
