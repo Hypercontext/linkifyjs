@@ -73,6 +73,11 @@ test("linkify string basics", function () {
 		input: 't.c.com/sadqad is a great domain, so is ftp://i.am.a.b.ca/ okay?',
 		output: '<a href="http://t.c.com/sadqad" class="linkified" target="_blank" >t.c.com/sadqad</a> is a great domain, so is <a href="http://i.am.a.b.ca/" class="linkified" target="_blank" >ftp://i.am.a.b.ca/</a> okay?',
 		options: null
+	}, {
+		name: 'Port numbers',
+		input: 'This port is too short someport.com: this port is too long http://googgle.com:789023/myQuery this port is just right https://github.com:8080/SoapBox/jQuery-linkify/',
+		output: 'This port is too short <a href="http://someport.com" class="linkified" target="_blank" >someport.com</a>: this port is too long <a href="http://googgle.com" class="linkified" target="_blank" >http://googgle.com</a>:789023/myQuery this port is just right <a href="http://github.com:8080/SoapBox/jQuery-linkify/" class="linkified" target="_blank" >https://github.com:8080/SoapBox/jQuery-linkify/</a>',
+		options: null
 	}];
 
 	for (var i = 0; i < linkifyTests.length; i++) {
