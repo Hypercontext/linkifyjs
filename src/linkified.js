@@ -297,7 +297,7 @@ Linkified.linkifyNode = function (node) {
 				*/
 				dummyElement.innerHTML = Linkified.linkify.call(
 					this,
-					childNode.textContent || childNode.innerText
+					childNode.textContent || childNode.innerText || childNode.nodeValue
 				);
 
 				/*
