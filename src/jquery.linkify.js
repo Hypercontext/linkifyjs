@@ -33,11 +33,18 @@ $(window).on('load', function () {
 			$target,
 			target = $this.attr('data-linkify'),
 			options = {
-				tagName: $this.attr('data-linkify-tagname') || undefined,
-				newLine: $this.attr('data-linkify-newline') || undefined,
-				target: $this.attr('data-linkify-target') || undefined,
-				linkClass: $this.attr('data-linkify-linkclass') || undefined
+				tagName: $this.attr('data-linkify-tagname'),
+				newLine: $this.attr('data-linkify-newline'),
+				target: $this.attr('data-linkify-target'),
+				linkClass: $this.attr('data-linkify-linkclass')
 			};
+
+		// Delete undefined options
+		for (var option in options) {
+			if (typeof options[option] === 'undefined') {
+				delete options[option];
+			}
+		}
 
 		$target = target === 'this' ? $this : $this.find(target);
 		$target.linkify(options);

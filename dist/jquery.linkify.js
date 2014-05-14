@@ -6,7 +6,7 @@
  *  Made by SoapBox Innovations, Inc.
  *  Under MIT License
  */
-!function($, window, document, undefined) {
+!function($, window, document) {
     "use strict";
     function Linkified(element, options) {
         this._defaults = defaults, this.element = element, this.setOptions(options), this.init();
@@ -73,11 +73,12 @@
     }, $.fn.linkify.Constructor = Linkified, $(window).on("load", function() {
         $("[data-linkify]").each(function() {
             var $target, $this = $(this), target = $this.attr("data-linkify"), options = {
-                tagName: $this.attr("data-linkify-tagname") || undefined,
-                newLine: $this.attr("data-linkify-newline") || undefined,
-                target: $this.attr("data-linkify-target") || undefined,
-                linkClass: $this.attr("data-linkify-linkclass") || undefined
+                tagName: $this.attr("data-linkify-tagname"),
+                newLine: $this.attr("data-linkify-newline"),
+                target: $this.attr("data-linkify-target"),
+                linkClass: $this.attr("data-linkify-linkclass")
             };
+            for (var option in options) "undefined" == typeof options[option] && delete options[option];
             $target = "this" === target ? $this : $this.find(target), $target.linkify(options);
         });
     }), $("body").on("click", ".linkified", function() {
