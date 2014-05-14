@@ -1,5 +1,5 @@
 /*
- *  Linkify - v1.1.4
+ *  Linkify - v1.1.5
  *  Find URLs in plain text and return HTML for discovered links.
  *  https://github.com/HitSend/jQuery-linkify/
  *
@@ -56,7 +56,7 @@
             childNode = node.firstChild, childCount = node.childElementCount; childNode; ) {
                 if (3 === childNode.nodeType) {
                     for (;dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
-                    for (dummyElement.innerHTML = Linkified.linkify.call(this, childNode.textContent || childNode.innerText), 
+                    for (dummyElement.innerHTML = Linkified.linkify.call(this, childNode.textContent || childNode.innerText || childNode.nodeValue), 
                     children.push.apply(children, dummyElement.childNodes); dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
                 } else 1 === childNode.nodeType ? children.push(Linkified.linkifyNode(childNode)) : children.push(childNode);
                 childNode = childNode.nextSibling;
