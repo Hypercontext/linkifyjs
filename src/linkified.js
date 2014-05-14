@@ -99,7 +99,9 @@ Linkified.extendSettings = function (options, settings) {
 	}
 
 	for (prop in options) {
-		settings[prop] = options[prop];
+		if(options[prop]){
+			settings[prop] = options[prop];
+		}
 	}
 	return settings;
 };
