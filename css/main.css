@@ -21,6 +21,12 @@ button, .btn, .navbar-brand {
 	font-family: 'Oswald', sans-serif;
 }
 
+.demo-well {
+	white-space: normal;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+}
+
 body,
 .form-control,
 .dropdown-menu > li > a {
@@ -53,6 +59,16 @@ header {
 
 footer {
 	border-bottom: none;
+}
+
+.table-responsive > .table > thead > tr > th,
+.table-responsive > .table > tbody > tr > th,
+.table-responsive > .table > tfoot > tr > th,
+.table-responsive > .table > thead > tr > td,
+.table-responsive > .table > tbody > tr > td,
+.table-responsive > .table > tfoot > tr > td {
+	max-width: 300px;
+	white-space: normal;
 }
 
 .page-title {
