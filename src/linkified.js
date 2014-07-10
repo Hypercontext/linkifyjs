@@ -144,7 +144,7 @@ Linkified.linkMatch = new RegExp([
 	')(', // 7. Character after the link
 	'[^a-zA-Z0-9\\+_\\/"\\<\\-]|$',
 	')'
-].join(''), 'g');
+].join(''), 'gi');
 
 /**
 	The regular expression of matching email links after the
@@ -154,7 +154,7 @@ Linkified.linkMatch = new RegExp([
 	@static
 	@type		RegExp
 */
-Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
+Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/gi;
 
 
 /**
