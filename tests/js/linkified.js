@@ -78,6 +78,16 @@ test("linkify string basics", function () {
 		input: 'This port is too short someport.com: this port is too long http://googgle.com:789023/myQuery this port is just right https://github.com:8080/SoapBox/jQuery-linkify/',
 		output: 'This port is too short <a href="http://someport.com" class="linkified" target="_blank" >someport.com</a>: this port is too long <a href="http://googgle.com" class="linkified" target="_blank" >http://googgle.com</a>:789023/myQuery this port is just right <a href="http://github.com:8080/SoapBox/jQuery-linkify/" class="linkified" target="_blank" >https://github.com:8080/SoapBox/jQuery-linkify/</a>',
 		options: null
+	}, {
+		name: 'Support @ in the link (issue #33)',
+		input: 'https://www.google.com/maps/place/Beale+St+%26+Howard+St/@37.789757,-122.39418,17z/data=!3m1!4b1!4m2!3m1!1s0x80858064c9b535d3:0xa66bb5757849f517',
+		output: '<a href="http://www.google.com/maps/place/Beale+St+%26+Howard+St/@37.789757,-122.39418,17z/data=!3m1!4b1!4m2!3m1!1s0x80858064c9b535d3:0xa66bb5757849f517" class="linkified" target="_blank" >https://www.google.com/maps/place/Beale+St+%26+Howard+St/@37.789757,-122.39418,17z/data=!3m1!4b1!4m2!3m1!1s0x80858064c9b535d3:0xa66bb5757849f517</a>',
+		options: null
+	}, {
+		name: 'Support @ in the querystring (issue #33)',
+		input: 'https://www.abc.com/login/confirm/?email=abc@gmail.com',
+		output: '<a href="http://www.abc.com/login/confirm/?email=abc@gmail.com" class="linkified" target="_blank" >https://www.abc.com/login/confirm/?email=abc@gmail.com</a>',
+		options: null
 	}];
 
 	for (var i = 0; i < linkifyTests.length; i++) {
