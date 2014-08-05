@@ -317,7 +317,7 @@ Linkified.linkifyNode = function (node) {
 			} else if (childNode.nodeType === 1) {
 
 				// This is an HTML node, linkify it and add it
-				children.push(Linkified.linkifyNode(childNode));
+				children.push(Linkified.linkifyNode.call(this, childNode));
 
 			} else {
 
