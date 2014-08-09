@@ -71,3 +71,8 @@ $('body').on('click', '.linkified', function () {
 	return false;
 });
 
+// Unlinkify
+$.fn.unlinkify = function () {
+    this.find('a.linkified').contents().unwrap(); // completely removes <a> tags around all linkified links
+    return this;
+}
