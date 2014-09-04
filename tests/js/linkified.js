@@ -22,6 +22,11 @@ test("linkify string basics", function () {
 			tagName: 'span'
 		}
 	}, {
+		name: 'Ignore anchor tags and any tag that has the linkified class',
+		inputHTML: 'I should ignore this anchor <a href="https://www.google.com">google.com</a> as well as this <span class="linkified">google.com</span>, but not this url www.yahoo.com',
+		output: 'I should ignore this anchor <a href="https://www.google.com">google.com</a> as well as this <span class="linkified">google.com</span>, but not this url <a href="http://www.yahoo.com" class="linkified" target="_blank">www.yahoo.com</a>',
+		options: null
+	}, {
 		name: 'Capitalized domains should not be linkified',
 		input: 'I like Google.com the most',
 		output: 'I like Google.com the most',

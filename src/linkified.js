@@ -270,11 +270,8 @@ Linkified.linkifyNode = function (node) {
 		linkifiedText;
 
 	// Don't linkify anchor tags or tags that have the .linkified class
-	if (node &&
-		typeof node === 'object' &&
-		node.nodeType === 1 &&
-		node.tagName.toLowerCase() !== 'a' &&
-		!/[^\s]linkified[\s$]/.test(node.className)
+	if (node && typeof node === 'object' && node.nodeType === 1 &&
+		(node.tagName.toLowerCase() !== 'a' && (!(/\blinkified\b/.test(node.className))))
 	) {
 
 		// Placeholder for linkified text elements
