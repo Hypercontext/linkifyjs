@@ -154,8 +154,7 @@ Linkified.linkMatch = new RegExp([
 	@static
 	@type		RegExp
 */
-Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
-
+Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)?([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
 
 /**
 	Linkify the given text
@@ -203,7 +202,7 @@ Linkified.linkify = function (text, options) {
 
 	linkReplace.push(
 		'$1<' + settings.tagName,
-		'href="http://$2$4$5$6$7"'
+		'href="$3://$2$4$5$6$7"'
 	);
 
 	// Add classes
@@ -235,6 +234,11 @@ Linkified.linkify = function (text, options) {
 
 	// Create the link
 	text = text.replace(Linkified.linkMatch, linkReplace.join(' '));
+
+	// Handle the case where there's no protocol (i.e. 'www.google.com' vs 'https://www.google.com')
+	// also handle some messiness with duplicated ://:// due to some complications in the regexp.
+	text = text.replace(/(:\/\/){2}/g, '://');
+	text = text.replace(/href=\\?":\/\//g, 'href="http://');
 
 	// The previous line added `http://` to emails. Replace that with `mailto:`
 	text = text.replace(Linkified.emailLinkMatch, '$1mailto:$3');
