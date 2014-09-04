@@ -83,17 +83,29 @@ test("linkify string basics", function () {
 		input: 'This port is too short someport.com: this port is too long http://googgle.com:789023/myQuery this port is just right https://github.com:8080/SoapBox/jQuery-linkify/',
 		output: 'This port is too short <a href="http://someport.com" class="linkified" target="_blank" >someport.com</a>: this port is too long <a href="http://googgle.com" class="linkified" target="_blank" >http://googgle.com</a>:789023/myQuery this port is just right <a href="https://github.com:8080/SoapBox/jQuery-linkify/" class="linkified" target="_blank" >https://github.com:8080/SoapBox/jQuery-linkify/</a>',
 		options: null
+	}, {
+		name: 'Deeply nested html',
+		inputHTML: '<div> <blockquote> <div> <blockquote> <div> <div> <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#DFDFDF"> <tbody> <tr> <td colspan="3"> <table border="0" cellspacing="0" cellpadding="0" style="font-family:Helvetica,Arial,sans-serif" width="1"> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table width="13px" border="0" cellspacing="0" cellpadding="1"> <tbody> <tr> <td> <div style="min-height:0px;font-size:0px;line-height:0px"> yahoo.com </div> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </div> </div> </blockquote> </div> </blockquote> </div>',
+		output: '<div> <blockquote> <div> <blockquote> <div> <div> <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#DFDFDF"> <tbody> <tr> <td colspan="3"> <table border="0" cellspacing="0" cellpadding="0" style="font-family:Helvetica,Arial,sans-serif" width="1"> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table> <tbody> <tr> <td> <table width="13px" border="0" cellspacing="0" cellpadding="1"> <tbody> <tr> <td> <div style="min-height:0px;font-size:0px;line-height:0px"> <a href="http://yahoo.com" class="linkified" target="_blank">yahoo.com</a> </div> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </div> </div> </blockquote> </div> </blockquote> </div>',
+		options: null
 	}];
 
 	for (var i = 0; i < linkifyTests.length; i++) {
-		equal(
-			(new Linkified(
-				linkifyTests[i].input,
-				linkifyTests[i].options
-			)).toString(),
-			linkifyTests[i].output,
-			linkifyTests[i].name
-		);
+		if (linkifyTests[i].inputHTML) {
+			var element = document.createElement('div');
+				element.innerHTML = linkifyTests[i].inputHTML;
+			new Linkified(element, linkifyTests[i].options);
+			equal(
+				element.innerHTML,
+				linkifyTests[i].output,
+				linkifyTests[i].name
+			);
+		} else {
+			equal(
+				(new Linkified(linkifyTests[i].input, linkifyTests[i].options)).toString(),
+				linkifyTests[i].output,
+				linkifyTests[i].name
+			);
+		}
 	}
-
 });

@@ -264,9 +264,10 @@ Linkified.linkifyNode = function (node) {
 
 	var children,
 		childNode,
-		childCount,
+		i,
+		offset,
 		dummyElement,
-		i;
+		linkifiedText;
 
 	// Don't linkify anchor tags or tags that have the .linkified class
 	if (node &&
@@ -276,73 +277,46 @@ Linkified.linkifyNode = function (node) {
 		!/[^\s]linkified[\s$]/.test(node.className)
 	) {
 
-		children = [];
-		dummyElement = Linkified._dummyElement ||
-			document.createElement('div');
+		// Placeholder for linkified text elements
+		dummyElement = Linkified._dummyElement || document.createElement('div');
 
-		childNode = node.firstChild;
-		childCount = node.childElementCount;
+		// Grab all the childNodes
+		children = node.childNodes;
 
-		while (childNode) {
-
-			if (childNode.nodeType === 3) {
-
-				/*
-					Cleanup dummy node. This is to make sure that
-					existing nodes don't get improperly removed
-				*/
-				while (dummyElement.firstChild) {
-					dummyElement.removeChild(dummyElement.firstChild);
-				}
-
-				/*
-					Linkify the text node, set the result to the
-					dummy's contents
-				*/
-				dummyElement.innerHTML = Linkified.linkify.call(
-					this,
-					childNode.textContent || childNode.innerText || childNode.nodeValue
-				);
-
-				/*
-					Parse the linkified text and append it to the
-					new children
-				*/
-				children.push.apply(
-					children,
-					dummyElement.childNodes
-				);
-
-				// Clean up the dummy again?
-				while (dummyElement.firstChild) {
-					dummyElement.removeChild(dummyElement.firstChild);
-				}
-
-			} else if (childNode.nodeType === 1) {
-
-				// This is an HTML node, linkify it and add it
-				children.push(Linkified.linkifyNode.call(this, childNode));
-
-			} else {
-
-				// This is some other kind of node, just push it
-				children.push(childNode);
-			}
-
-			childNode = childNode.nextSibling;
-		}
-
-
-		// Remove all existing nodes.
-		while (node.firstChild) {
-			node.removeChild(node.firstChild);
-		}
-
-		// Replace with all the new nodes
+		// Loop through all the children
 		for (i = 0; i < children.length; i++) {
-			node.appendChild(children[i]);
-		}
+			childNode = children[i];
 
+			// If the childNode is an element node, recurse
+			if (childNode.nodeType === 1) {
+				Linkified.linkifyNode.call(this, childNode);
+
+			// If the childNode is a text node, linkify
+			} else if (childNode.nodeType === 3) {
+
+				// clean out any cruft from the dummy element
+				while (dummyElement.firstChild) { dummyElement.removeChild(dummyElement.firstChild); }
+
+				// Keep track of the offset here so that if we insert more than one new node we know
+				// where to start removing replaced text nodes
+				offset = 0;
+
+				// Try to linkify the contents of the text node
+				linkifiedText  = Linkified.linkify.call(this, childNode.textContent || childNode.innerText || childNode.nodeValue);
+
+				// Insert the new nodes into the dummy element
+				dummyElement.innerHTML = linkifiedText;
+				while(dummyElement.firstChild) {
+					offset++;
+					node.insertBefore(dummyElement.firstChild, childNode);
+				}
+
+				// Remove the text nodes
+				node.removeChild(childNode);
+				offset--;
+				i += offset;
+			}
+		}
 	}
 	return node;
 },
