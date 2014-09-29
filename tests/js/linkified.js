@@ -59,6 +59,11 @@ test("linkify string basics", function () {
 			}
 		}
 	}, {
+		name: 'Links with odd characters in the params',
+		input: 'A link with odd characters in the params is http://google.com/?q=nick.amazing@gmail.com&d[on]t=d(o)\'this',
+		output: 'A link with odd characters in the params is <a href="http://google.com/?q=nick.amazing@gmail.com&d[on]t=d(o)\'this" class="linkified" target="_blank" >http://google.com/?q=nick.amazing@gmail.com&d[on]t=d(o)\'this</a>',
+		options: null
+	}, {
 		name: 'Invalid top-level domains',
 		input: 'A link is http://nick.is.awesome/?q=nick+amazing&nick=yo%29%30hellp another is http://nick.con/?q=look',
 		output: 'A link is <a href="http://nick.is" class="linkified" target="_blank" >http://nick.is</a>.awesome/?q=nick+amazing&nick=yo%29%30hellp another is http://nick.con/?q=look',
