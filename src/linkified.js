@@ -207,7 +207,7 @@ Linkified.linkify = function (text, options) {
 
 	// Add classes
 	linkReplace.push(
-		'class="linkified' +
+		'class="jq-linkified' +
 		(linkClasses.length > 0 ? ' ' + linkClasses.join(' ') : '') +
 		'"'
 	);
@@ -271,7 +271,7 @@ Linkified.linkifyNode = function (node) {
 
 	// Don't linkify anchor tags or tags that have the .linkified class
 	if (node && typeof node === 'object' && node.nodeType === 1 &&
-		(node.tagName.toLowerCase() !== 'a' && (!(/\blinkified\b/.test(node.className))))
+		(node.tagName.toLowerCase() !== 'a' && (!(/\bjq-linkified\b/.test(node.className))))
 	) {
 
 		// Placeholder for linkified text elements

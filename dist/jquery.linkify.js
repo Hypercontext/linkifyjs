@@ -43,7 +43,7 @@
         this.constructor === Linkified && this.settings ? (settings = this.settings, options && (settings = Linkified.extendSettings(options, settings))) : settings = Linkified.extendSettings(options), 
         linkClasses = settings.linkClass ? settings.linkClass.split(/\s+/) : [], linkClasses.push.apply(linkClasses, settings.linkClasses), 
         text = text.replace(/</g, "&lt;").replace(/(\s)/g, "$1$1"), linkReplace.push("$1<" + settings.tagName, 'href="$3://$2$4$5$6$7"'), 
-        linkReplace.push('class="linkified' + (linkClasses.length > 0 ? " " + linkClasses.join(" ") : "") + '"'), 
+        linkReplace.push('class="jq-linkified' + (linkClasses.length > 0 ? " " + linkClasses.join(" ") : "") + '"'), 
         settings.target && linkReplace.push('target="' + settings.target + '"');
         for (attr in settings.linkAttributes) linkReplace.push([ attr, '="', settings.linkAttributes[attr].replace(/\"/g, "&quot;").replace(/\$/g, "&#36;"), '"' ].join(""));
         return linkReplace.push(">$2$3$4$5$6$7</" + settings.tagName + ">$8"), text = text.replace(Linkified.linkMatch, linkReplace.join(" ")), 
@@ -52,7 +52,7 @@
         text = text.replace(/\n/g, settings.newLine);
     }, Linkified.linkifyNode = function(node) {
         var children, childNode, i, offset, dummyElement, linkifiedText;
-        if (node && "object" == typeof node && 1 === node.nodeType && "a" !== node.tagName.toLowerCase() && !/\blinkified\b/.test(node.className)) for (dummyElement = Linkified._dummyElement || document.createElement("div"), 
+        if (node && "object" == typeof node && 1 === node.nodeType && "a" !== node.tagName.toLowerCase() && !/\bjq-linkified\b/.test(node.className)) for (dummyElement = Linkified._dummyElement || document.createElement("div"), 
         children = node.childNodes, i = 0; i < children.length; i++) if (childNode = children[i], 
         1 === childNode.nodeType) Linkified.linkifyNode.call(this, childNode); else if (3 === childNode.nodeType) {
             for (;dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
