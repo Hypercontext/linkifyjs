@@ -36,8 +36,8 @@
         for (prop in defaults) settings[prop] || (settings[prop] = defaults[prop]);
         for (prop in options) settings[prop] = options[prop];
         return settings;
-    }, Linkified.linkMatch = new RegExp([ "(", '\\s|[^a-zA-Z0-9.\\+_\\/"\\>\\-]|^', ")(?:", "(", "[a-zA-Z0-9\\+_\\-]+", "(?:", "\\.[a-zA-Z0-9\\+_\\-]+", ")*@", ")?(", "http:\\/\\/|https:\\/\\/|ftp:\\/\\/", ")?(", "(?:(?:[a-z0-9][a-z0-9_%\\-_+]*\\.)+)", ")(", "(?:com|ca|co|edu|gov|net|org|dev|biz|cat|int|pro|tel|mil|aero|asia|coop|info|jobs|mobi|museum|name|post|travel|local|[a-z]{2})", ")(", "(?::\\d{1,5})", ")?(", "(?:", "[\\/|\\?]", "(?:", "[\\-a-zA-Z0-9_%#*&+=~!?,;:.\\/]*", ")*", ")", "[\\-\\/a-zA-Z0-9_%#*&+=~]", "|", "\\/?", ")?", ")(", '[^a-zA-Z0-9\\+_\\/"\\<\\-]|$', ")" ].join(""), "g"), 
-    Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g, 
+    }, Linkified.linkMatch = new RegExp([ "(", '\\s|[^a-zA-Z0-9\\u0400-\\u04FF.\\+_\\/"\\>\\-]|^', ")(?:", "(", "[a-zA-Z0-9\\u0400-\\u04FF\\+_\\-]+", "(?:", "\\.[a-zA-Z0-9\\u0400-\\u04FF\\+_\\-]+", ")*@", ")?(", "http:\\/\\/|https:\\/\\/|ftp:\\/\\/", ")?(", "(?:(?:[a-z0-9\\u0400-\\u04FF][a-z0-9\\u0400-\\u04FF_%\\-_+]*\\.)+)", ")(", "(?:com|ca|co|edu|gov|net|org|dev|biz|cat|int|pro|tel|mil|aero|asia|coop|info|jobs|mobi|museum|name|post|travel|local|[a-z]{2}|[\\u0400-\\u04FF]{2,3})", ")(", "(?::\\d{1,5})", ")?(", "(?:", "[\\/|\\?]", "(?:", "[\\-a-zA-Z0-9\\u0400-\\u04FF_%#*&+=~!?,;:.\\/]*", ")*", ")", "[\\-\\/a-zA-Z0-9\\u0400-\\u04FF_%#*&+=~]", "|", "\\/?", ")?", ")(", '[^a-zA-Z0-9\\u0400-\\u04FF\\+_\\/"\\<\\-]|$', ")" ].join(""), "g"), 
+    Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\u0400-\u04FF\+_\-]+(?:\.[a-zA-Z0-9\u0400-\u04FF\+_\-]+)*@)/g, 
     Linkified.linkify = function(text, options) {
         var attr, settings, linkClasses, linkReplace = [];
         this.constructor === Linkified && this.settings ? (settings = this.settings, options && (settings = Linkified.extendSettings(options, settings))) : settings = Linkified.extendSettings(options), 
