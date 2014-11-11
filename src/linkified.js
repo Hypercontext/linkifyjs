@@ -115,34 +115,34 @@ Linkified.linkMatch = new RegExp([
 
 	// The groups
 	'(', // 1. Character before the link
-	'\\s|[^a-zA-Z0-9.\\+_\\/"\\>\\-]|^',
+	'\\s|[^a-zA-Z0-9\\u0400-\\u04FF.\\+_\\/"\\>\\-]|^',
 	')(?:', //Main group
 	'(', // 2. Email address (optional)
-	'[a-zA-Z0-9\\+_\\-]+',
+	'[a-zA-Z0-9\\u0400-\\u04FF\\+_\\-]+',
 	'(?:',
-	'\\.[a-zA-Z0-9\\+_\\-]+',
+	'\\.[a-zA-Z0-9\\u0400-\\u04FF\\+_\\-]+',
 	')*@',
 	')?(', // 3. Protocol (optional)
 	'http:\\/\\/|https:\\/\\/|ftp:\\/\\/',
 	')?(', // 4. Domain & Subdomains
-	'(?:(?:[a-z0-9][a-z0-9_%\\-_+]*\\.)+)',
+	'(?:(?:[a-z0-9\\u0400-\\u04FF][a-z0-9\\u0400-\\u04FF_%\\-_+]*\\.)+)',
 	')(', // 5. Top-level domain - http://en.wikipedia.org/wiki/List_of_Internet_top-level_domains
-	'(?:com|ca|co|edu|gov|net|org|dev|biz|cat|int|pro|tel|mil|aero|asia|coop|info|jobs|mobi|museum|name|post|travel|local|[a-z]{2})',
+	'(?:com|ca|co|edu|gov|net|org|dev|biz|cat|int|pro|tel|mil|aero|asia|coop|info|jobs|mobi|museum|name|post|travel|local|[a-z]{2}|[\\u0400-\\u04FF]{2,3})',
 	')(', // 6. Port (optional)
 	'(?::\\d{1,5})',
 	')?(', // 7. Query string (optional)
 	'(?:',
 	'[\\/|\\?]',
 	'(?:',
-	'[\\-a-zA-Z0-9_%#*&+=~!?,;:.\\/]*',
+	'[\\-a-zA-Z0-9\\u0400-\\u04FF_%#*&+=~!?,;:.\\/]*',
 	')*',
 	')',
-	'[\\-\\/a-zA-Z0-9_%#*&+=~]',
+	'[\\-\\/a-zA-Z0-9\\u0400-\\u04FF_%#*&+=~]',
 	'|',
 	'\\/?',
 	')?',
 	')(', // 7. Character after the link
-	'[^a-zA-Z0-9\\+_\\/"\\<\\-]|$',
+	'[^a-zA-Z0-9\\u0400-\\u04FF\\+_\\/"\\<\\-]|$',
 	')'
 ].join(''), 'g');
 
@@ -154,7 +154,7 @@ Linkified.linkMatch = new RegExp([
 	@static
 	@type		RegExp
 */
-Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\+_\-]+(?:\.[a-zA-Z0-9\+_\-]+)*@)/g;
+Linkified.emailLinkMatch = /(<[a-z]+ href=\")(http:\/\/)([a-zA-Z0-9\u0400-\u04FF\+_\-]+(?:\.[a-zA-Z0-9\u0400-\u04FF\+_\-]+)*@)/g;
 
 
 /**
