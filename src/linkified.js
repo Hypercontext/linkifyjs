@@ -190,7 +190,7 @@ Linkified.linkify = function (text, options) {
 		linkClasses = [];
 	}
 
-	linkClasses.push.apply(linkClasses, settings.linkClasses);
+	linkClasses.push.apply(linkClasses, [].slice.call(settings.linkClasses));
 
 
 	// Get rid of tags and HTML-structure,
@@ -306,7 +306,7 @@ Linkified.linkifyNode = function (node) {
 				*/
 				children.push.apply(
 					children,
-					dummyElement.childNodes
+					[].slice.call(dummyElement.childNodes)
 				);
 
 				// Clean up the dummy again?

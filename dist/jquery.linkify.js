@@ -41,7 +41,7 @@
     Linkified.linkify = function(text, options) {
         var attr, settings, linkClasses, linkReplace = [];
         this.constructor === Linkified && this.settings ? (settings = this.settings, options && (settings = Linkified.extendSettings(options, settings))) : settings = Linkified.extendSettings(options), 
-        linkClasses = settings.linkClass ? settings.linkClass.split(/\s+/) : [], linkClasses.push.apply(linkClasses, settings.linkClasses), 
+        linkClasses = settings.linkClass ? settings.linkClass.split(/\s+/) : [], linkClasses.push.apply(linkClasses, [].slice.call(settings.linkClasses)), 
         text = text.replace(/</g, "&lt;").replace(/(\s)/g, "$1$1"), linkReplace.push("$1<" + settings.tagName, 'href="http://$2$4$5$6$7"'), 
         linkReplace.push('class="linkified' + (linkClasses.length > 0 ? " " + linkClasses.join(" ") : "") + '"'), 
         settings.target && linkReplace.push('target="' + settings.target + '"');
@@ -57,7 +57,7 @@
                 if (3 === childNode.nodeType) {
                     for (;dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
                     for (dummyElement.innerHTML = Linkified.linkify.call(this, childNode.textContent || childNode.innerText || childNode.nodeValue), 
-                    children.push.apply(children, dummyElement.childNodes); dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
+                    children.push.apply(children, [].slice.call(dummyElement.childNodes)); dummyElement.firstChild; ) dummyElement.removeChild(dummyElement.firstChild);
                 } else children.push(1 === childNode.nodeType ? Linkified.linkifyNode.call(this, childNode) : childNode);
                 childNode = childNode.nextSibling;
             }
