@@ -1,30 +1,23 @@
 {
-  "name": "jQuery-linkify",
-  "title": "Linkify",
-  "description": "Find URLs in plain text and return HTML for discovered links.",
-  "author": "SoapBox Innovations, Inc.",
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/HitSend/jQuery-linkify.git"
+  "name": "linkify",
+  "version": "2.0.0",
+  "description": "Intelligent URL recognition, made easy",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "node_modules/.bin/gulp build",
+    "test": "node_modules/.bin/gulp test"
   },
-  "homepage": "https://github.com/HitSend/jQuery-linkify/",
-  "version": "1.1.7",
+  "author": "SoapBox Innovations (@SoapBoxHQ)",
   "license": "MIT",
   "devDependencies": {
-    "grunt": "0.4.x",
-    "grunt-cli": "0.1.x",
-    "grunt-contrib-jshint": "0.x",
-    "grunt-contrib-concat": "0.x",
-    "grunt-contrib-uglify": "0.x",
-    "grunt-contrib-clean": "0.x",
-    "grunt-contrib-connect": "0.x",
-    "grunt-contrib-copy": "0.x",
-    "grunt-wrap": "0.x",
-    "grunt-gh-pages": "0.x",
-    "grunt-bumper": "1.0.x",
-    "grunt-contrib-qunit": "0.5.x"
+    "chai": "^1.10.0",
+    "glob": "^4.3.2",
+    "gulp": "^3.8.10",
+    "gulp-es6-transpiler": "^1.0.1",
+    "gulp-jshint": "^1.9.0",
+    "gulp-mocha": "^2.0.0",
+    "gulp-uglify": "^1.0.2",
+    "jshint-stylish": "^1.0.0"
   },
-  "scripts": {
-    "test": "grunt test --verbose"
-  }
+  "dependencies": {}
 }

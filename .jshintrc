@@ -1,21 +1,13 @@
 {
-	"boss": true,
-	"curly": true,
-	"eqeqeq": true,
-	"eqnull": true,
-	"expr": true,
-	"immed": false,
-	"noarg": true,
-	"smarttabs": true,
-	"trailing": true,
-	"unused": true,
-	"strict": false,
-	"node": true,
-	"browser": true,
-	"jquery": true,
-	"globals": {
-		"prettyPrint": false,
-		"jQuery": false,
-		"Linkified": false
-	}
+    "esnext": true,
+    "globalstrict": false,
+    "node": true,
+    "globals": {
+        "describe": false,
+        "it": false,
+        "before": false,
+        "beforeEach": false,
+        "after": false,
+        "afterEach": false
+    }
 }

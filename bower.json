@@ -1,37 +1,31 @@
 {
-  "name": "jQuery-linkify",
-  "version": "1.1.7",
-  "homepage": "https://github.com/SoapBox/jQuery-linkify/",
+  "name": "linkify",
+  "main": "index.js",
+  "version": "2.0.0",
   "authors": [
-    "SoapBox Innovations, Inc. <dev@soapboxhq.com>"
+    "SoapBox Innovations Inc. <dev@soapboxhq.com>"
   ],
-  "description": "Find URLs in plain text and return HTML for discovered links.",
-  "main": "dist/jquery.linkify.js",
+  "description": "Find links in plain text",
   "keywords": [
+    "node",
+    "js",
     "jquery",
-    "plugin",
-    "boilerplate",
-    "jquery-plugin",
-    "jquery-boilerplate",
     "link",
+    "autolink",
+    "text",
     "url",
-    "match",
-    "html"
+    "email"
   ],
   "license": "MIT",
-  "dependencies": {
-    "jquery": ">=1.9.0"
-  },
-  "devDependencies": {
-    "qunit": "1.*"
-  },
+  "homepage": "http://soapbox.github.io/jQuery-linkify/",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
-    "tests",
-    "demo",
-    "assets"
-  ]
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3"
+  }
 }
