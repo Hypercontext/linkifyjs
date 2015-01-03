@@ -60,7 +60,7 @@ gulp.task('uglify', function () {
 // Build steps
 gulp.task('build', ['transpile']);
 gulp.task('dist', ['transpile', 'uglify']);
-gulp.task('test', ['build', 'jshint', 'mocha']);
+gulp.task('test', ['jshint', 'build', 'mocha']);
 
 /**
 	Build app and begin watching for changes

@@ -33,8 +33,8 @@ let find = function (str) {
 // Scanner and parser provide states and tokens for the lexicographic stage
 // (will be used to add additional link types)
 module.exports = {
-	scanner: scanner,
+	find: find,
 	parser: parser,
-	tokenize: tokenize,
-	find: find
+	scanner: scanner,
+	tokenize: tokenize
 };

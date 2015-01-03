@@ -101,6 +101,7 @@ S_START.on(REGEXP_NUM, S_NUM);
 S_NUM.on('-', S_DOMAIN_HYPHEN);
 S_NUM.on(REGEXP_NUM, S_NUM);
 S_NUM.on(REGEXP_ALPHANUM, S_DOMAIN); // number becomes DOMAIN
+S_DOMAIN.on('-', S_DOMAIN_HYPHEN);
 S_DOMAIN.on(REGEXP_ALPHANUM, S_DOMAIN);
 
 // All the generated states should have a jump to DOMAIN
@@ -116,9 +117,6 @@ S_DOMAIN_HYPHEN.on(REGEXP_ALPHANUM, S_DOMAIN);
 // Any other character is considered a single symbol token
 S_START.on(/./, makeState(TOKENS.SYM));
 
-// Tokens
-exports.TOKENS = TOKENS;
-
 /**
 	Given a string, returns an array of TOKEN instances representing the
 	composition of that string.
@@ -127,7 +125,7 @@ exports.TOKENS = TOKENS;
 	@param {String} str Input string to scan
 	@return {Array} Array of TOKEN instances
 */
-exports.run = function (str) {
+let run = function (str) {
 
 	let
 	lowerStr = str.toLowerCase(), // The state machine only looks at lowercase strings
@@ -176,4 +174,12 @@ exports.run = function (str) {
 	}
 
 	return tokens;
+};
+
+module.exports = {
+	State: State,
+	TOKENS: TOKENS,
+	run: run,
+	start: S_START,
+	stateify: stateify
 };

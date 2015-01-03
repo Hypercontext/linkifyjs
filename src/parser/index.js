@@ -287,5 +287,6 @@ let run = function (tokens) {
 module.exports = {
 	TOKENS: MULTI_TOKENS,
 	State: State,
-	run: run
+	run: run,
+	start: S_START
 };

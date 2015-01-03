@@ -44,7 +44,7 @@ class MultiToken {
 		@property type
 		@default 'TOKEN'
 	*/
-	get type() { return 'TOKEN'; }
+	get type() { return 'token'; }
 
 	/**
 		Is this multitoken a link?
@@ -90,7 +90,7 @@ class MultiToken {
 	*/
 	toObject(protocol = 'http') {
 		return {
-			type: this.type.toLowerCase(),
+			type: this.type,
 			value: this.toString(),
 			href: this.toHref(protocol)
 		};
@@ -114,7 +114,7 @@ class MultiToken {
 	@extends MultiToken
 */
 class EMAIL extends MultiToken {
-	get type() { return 'EMAIL'; }
+	get type() { return 'email'; }
 	get isLink() { return true; }
 	toHref() {
 		return 'mailto:' + this.toString();
@@ -127,7 +127,7 @@ class EMAIL extends MultiToken {
 	@extends MultiToken
 */
 class TEXT extends MultiToken {
-	get type() { return 'TEXT'; }
+	get type() { return 'text'; }
 }
 
 /**
@@ -136,7 +136,7 @@ class TEXT extends MultiToken {
 	@extends MultiToken
 */
 class NL extends MultiToken {
-	get type() { return 'NL'; }
+	get type() { return 'nl'; }
 }
 
 /**
@@ -145,7 +145,7 @@ class NL extends MultiToken {
 	@extends MultiToken
 */
 class URL extends MultiToken {
-	get type() { return 'URL'; }
+	get type() { return 'url'; }
 	get isLink() { return true; }
 
 	/**

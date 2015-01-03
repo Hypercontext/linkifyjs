@@ -24,7 +24,6 @@ class TextToken {
 		@property type
 		@default 'TOKEN'
 	*/
-	get type() { return 'TOKEN'; }
 
 	toString() {
 		return this.v + '';
@@ -46,9 +45,7 @@ class TextToken {
 	@class DOMAIN
 	@extends TextToken
 */
-class DOMAIN extends TextToken {
-	get type() { return 'DOMAIN'; }
-}
+class DOMAIN extends TextToken {}
 
 /**
 	@class AT
@@ -56,7 +53,6 @@ class DOMAIN extends TextToken {
 */
 class AT extends TextToken {
 	constructor() { super('@'); }
-	get type() { return 'AT'; }
 }
 
 /**
@@ -67,7 +63,6 @@ class AT extends TextToken {
 */
 class COLON extends TextToken {
 	constructor() { super(':'); }
-	get type() { return 'COLON'; }
 }
 
 /**
@@ -76,7 +71,6 @@ class COLON extends TextToken {
 */
 class DOT extends TextToken {
 	constructor() { super('.'); }
-	get type() { return 'DOT'; }
 }
 
 /**
@@ -84,9 +78,8 @@ class DOT extends TextToken {
 	@class LOCALHOST
 	@extends TextToken
 */
-class LOCALHOST extends TextToken {
-	get type() { return 'LOCALHOST'; }
-}
+class LOCALHOST extends TextToken {}
+
 /**
 	Newline token
 	@class NL
@@ -94,16 +87,13 @@ class LOCALHOST extends TextToken {
 */
 class NL extends TextToken {
 	constructor() { super('\n'); }
-	get type() { return 'NL'; }
 }
 
 /**
 	@class NUM
 	@extends TextToken
 */
-class NUM extends TextToken {
-	get type() { return 'NUM'; }
-}
+class NUM extends TextToken {}
 
 /**
 	@class PLUS
@@ -111,7 +101,6 @@ class NUM extends TextToken {
 */
 class PLUS extends TextToken {
 	constructor() { super('+'); }
-	get type() { return 'PLUS'; }
 }
 
 /**
@@ -120,7 +109,6 @@ class PLUS extends TextToken {
 */
 class POUND extends TextToken {
 	constructor() { super('#'); }
-	get type() { return 'POUND'; }
 }
 
 /**
@@ -135,9 +123,7 @@ class POUND extends TextToken {
 	@class PROTOCOL
 	@extends TextToken
 */
-class PROTOCOL extends TextToken {
-	get type() { return 'PROTOCOL'; }
-}
+class PROTOCOL extends TextToken {}
 
 /**
 	@class QUERY
@@ -145,7 +131,6 @@ class PROTOCOL extends TextToken {
 */
 class QUERY extends TextToken {
 	constructor() { super('?'); }
-	get type() { return 'QUERY'; }
 }
 
 /**
@@ -154,7 +139,6 @@ class QUERY extends TextToken {
 */
 class SLASH extends TextToken {
 	constructor() { super('/'); }
-	get type() { return 'SLASH'; }
 }
 
 /**
@@ -162,17 +146,13 @@ class SLASH extends TextToken {
 	@class SYM
 	@extends TextToken
 */
-class SYM extends TextToken {
-	get type() { return 'SYM'; }
-}
+class SYM extends TextToken {}
 
 /**
 	@class TLD
 	@extends TextToken
 */
-class TLD extends TextToken {
-	get type() { return 'TLD'; }
-}
+class TLD extends TextToken {}
 
 /**
 	Represents a string of consecutive whitespace characters
@@ -180,9 +160,7 @@ class TLD extends TextToken {
 	@class WS
 	@extends TextToken
 */
-class WS extends TextToken {
-	get type() { return 'WS'; }
-}
+class WS extends TextToken {}
 
 module.exports = {
 	Base: TextToken,

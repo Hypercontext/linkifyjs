@@ -11,12 +11,6 @@ describe('TEXT_TOKENS', function () {
 			DOMAIN = new TEXT_TOKENS.DOMAIN('abc123');
 		});
 
-		describe('#type()', function () {
-			it('should have a type of DOMAIN', function () {
-				DOMAIN.type.should.eql('DOMAIN');
-			});
-		});
-
 		describe('#toString()', function () {
 			it ('should return the string "abc123"', function () {
 				DOMAIN.toString().should.eql('abc123');
@@ -29,12 +23,6 @@ describe('TEXT_TOKENS', function () {
 
 		before(function () {
 			at = new TEXT_TOKENS.AT('asdf'); // should ignore passed-in value
-		});
-
-		describe('#type()', function () {
-			it('should have a type of AT', function () {
-				at.type.should.eql('AT');
-			});
 		});
 
 		describe('#toString()', function () {

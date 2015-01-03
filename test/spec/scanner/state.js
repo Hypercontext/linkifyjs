@@ -60,6 +60,7 @@ describe('CharacterState', function () {
 	describe('#test()', function () {
 		it('Ensures characters match the given token or regexp', function () {
 			S_START.test('a', 'a').should.be.ok;
+			S_START.test('a', 'b').should.not.be.ok;
 			S_START.test('b', /[a-z]/).should.be.ok;
 			S_START.test('\n', /[^\S\n]/).should.not.be.ok;
 		});

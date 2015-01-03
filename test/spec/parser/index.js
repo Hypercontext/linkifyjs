@@ -86,6 +86,10 @@ var tests = [
 		'IP loops like email? 192.168.0.1@gmail.com works!!',
 		[TEXT, EMAIL, TEXT],
 		['IP loops like email? ', '192.168.0.1@gmail.com', ' works!!']
+	], [
+		'Url like bro-215.co with a hyphen?',
+		[TEXT, URL, TEXT],
+		['Url like ', 'bro-215.co', ' with a hyphen?']
 	]
 	// END: New linkify tests
 ];
