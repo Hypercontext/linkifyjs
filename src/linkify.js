@@ -30,11 +30,32 @@ let find = function (str) {
 	return filtered;
 };
 
+/**
+	Is the given string valid linkable text of some sort
+	Note that this does not trim the text for you.
+
+	Optionally pass in a second `type` param, which is the type of link to test
+	for.
+
+	For example,
+
+		test(str, 'email');
+
+	Will return `true` if str is a valid email.
+*/
+let test = function (str, type=null) {
+	let tokens = tokenize(str);
+	return tokens.length === 1 && tokens[0].isLink && (
+		!type || tokens[0].type === type
+	);
+};
+
 // Scanner and parser provide states and tokens for the lexicographic stage
 // (will be used to add additional link types)
 module.exports = {
 	find: find,
 	parser: parser,
 	scanner: scanner,
+	test: test,
 	tokenize: tokenize
 };

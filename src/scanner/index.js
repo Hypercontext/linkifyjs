@@ -20,9 +20,7 @@ COLON			= ':';
 
 let
 domainStates = [], // states that jump to DOMAIN on /[a-z0-9]/
-makeState = function (tokenClass) {
-	return new State(tokenClass);
-};
+makeState = (tokenClass) => new State(tokenClass);
 
 const // Frequently used tokens
 T_DOMAIN	= TOKENS.DOMAIN,

@@ -18,9 +18,7 @@ TEXT_TOKENS		= require('../tokens/text'),
 MULTI_TOKENS	= require('../tokens/multi'),
 State			= require('./state');
 
-let makeState = function (tokenClass) {
-	return new State(tokenClass);
-};
+let makeState = (tokenClass) => new State(tokenClass);
 
 const
 TT_DOMAIN		= TEXT_TOKENS.DOMAIN,
