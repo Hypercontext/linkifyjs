@@ -23,12 +23,13 @@ function attributesToString(attributes) {
 /**
 	Options:
 
+	format: null
+	linkAttributes: null,
+	linkClass: null,
+	newLine: '\n', // deprecated
+	nl2br: false,
 	tagName: 'a',
 	target: '_blank',
-	newLine: '\n',
-	linkClass: null,
-	linkAttributes: null,
-	format: null
 */
 module.exports = function (str, options) {
 	options = options || {};
@@ -65,7 +66,7 @@ module.exports = function (str, options) {
 				format(token.toString(), token.type) : token.toString();
 			link += `</${tagName}>`;
 
-			result.push(token);
+			result.push(link);
 
 		} else if (token.type === 'nl' && nl2br) {
 			if (newLine) {
