@@ -1,3 +1,5 @@
+/*jshint scripturl:true*/
+
 var linkifyStr = require('../../lib/linkify-string');
 
 /**
