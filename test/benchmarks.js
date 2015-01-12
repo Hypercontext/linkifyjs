@@ -1,4 +1,4 @@
-var scanner = require('../build/scanner'), sum = 0;
+var scanner = require('../lib/scanner'), sum = 0;
 
 var ITERATIONS = 2000;
 

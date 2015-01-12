@@ -1,6 +1,6 @@
 var
-scanner = require('../../../build/scanner'),
-TEXT_TOKENS = require('../../../build/tokens/text');
+scanner = require('../../../lib/scanner'),
+TEXT_TOKENS = require('../../../lib/tokens/text');
 
 var
 DOMAIN	= TEXT_TOKENS.DOMAIN,

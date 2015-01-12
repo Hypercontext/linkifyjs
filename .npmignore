@@ -1,0 +1,6 @@
+# All compiled code will be in the "lib" and build folders
+assets
+bower_components
+demo
+src
+test

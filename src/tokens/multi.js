@@ -37,21 +37,21 @@ class MultiToken {
 	*/
 	constructor(value) {
 		this.v = value;
+
+		/**
+			String representing the type for this token
+			@property type
+			@default 'TOKEN'
+		*/
+		this.type = 'token';
+
+		/**
+			Is this multitoken a link?
+			@property isLink
+			@default false
+		*/
+		this.isLink = false;
 	}
-
-	/**
-		String representing the type for this token
-		@property type
-		@default 'TOKEN'
-	*/
-	get type() { return 'token'; }
-
-	/**
-		Is this multitoken a link?
-		@property isLink
-		@default false
-	*/
-	get isLink() { return false; }
 
 	/**
 		Return the string this token represents.
@@ -114,8 +114,13 @@ class MultiToken {
 	@extends MultiToken
 */
 class EMAIL extends MultiToken {
-	get type() { return 'email'; }
-	get isLink() { return true; }
+
+	constructor(value) {
+		super(value);
+		this.type = 'email';
+		this.isLink = true;
+	}
+
 	toHref() {
 		return 'mailto:' + this.toString();
 	}
@@ -127,7 +132,10 @@ class EMAIL extends MultiToken {
 	@extends MultiToken
 */
 class TEXT extends MultiToken {
-	get type() { return 'text'; }
+	constructor(value) {
+		super(value);
+		this.type = 'text';
+	}
 }
 
 /**
@@ -136,7 +144,10 @@ class TEXT extends MultiToken {
 	@extends MultiToken
 */
 class NL extends MultiToken {
-	get type() { return 'nl'; }
+	constructor(value) {
+		super(value);
+		this.type = 'nl';
+	}
 }
 
 /**
@@ -145,8 +156,12 @@ class NL extends MultiToken {
 	@extends MultiToken
 */
 class URL extends MultiToken {
-	get type() { return 'url'; }
-	get isLink() { return true; }
+
+	constructor(value) {
+		super(value);
+		this.type = 'url';
+		this.isLink = true;
+	}
 
 	/**
 		Lowercases relevant parts of the domain and adds the protocol if

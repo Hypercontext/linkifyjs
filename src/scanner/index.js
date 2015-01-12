@@ -7,11 +7,10 @@
 	@main scanner
 */
 
-let
-TOKENS		= require('../tokens/text'),
-State		= require('./state'),
-stateify	= require('./stateify'),
-tlds		= require('./tlds').complete;
+import TOKENS from '../tokens/text';
+import State from './state';
+import stateify from './stateify';
+import {complete as tlds} from './tlds';
 
 const
 REGEXP_NUM		= /[0-9]/,
@@ -174,7 +173,7 @@ let run = function (str) {
 	return tokens;
 };
 
-module.exports = {
+export default {
 	State: State,
 	TOKENS: TOKENS,
 	run: run,

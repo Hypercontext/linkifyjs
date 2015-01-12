@@ -1,7 +1,7 @@
 /**
 	Quick Hashtag parser plugin for linkify
 */
-module.exports = function (linkify) {
+export default function (linkify) {
 	let
 	TT = linkify.scanner.TOKENS, // Text tokens
 	MT = linkify.parser.TOKENS, // Multi tokens
@@ -10,8 +10,11 @@ module.exports = function (linkify) {
 	S_HASH, S_HASHTAG;
 
 	class HASHTAG extends MultiToken {
-		get type() { return 'hashtag'; }
-		get isLink() { return true; }
+		constructor(value) {
+			super(value);
+			this.type = 'hashtag';
+			this.isLink = true;
+		}
 	}
 
 	S_HASH = new linkify.parser.State();
@@ -19,4 +22,4 @@ module.exports = function (linkify) {
 
 	S_START.on(TT.POUND, S_HASH);
 	S_HASH.on(TT.DOMAIN, S_HASHTAG);
-};
+}

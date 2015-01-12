@@ -2,7 +2,7 @@
 	@module linkify
 	@submodule parser
 */
-let BaseState = require('../state/base');
+import BaseState from '../state/base';
 
 /**
 	Subclass of
@@ -25,4 +25,4 @@ class TokenState extends BaseState {
 
 }
 
-module.exports = TokenState;
+export default TokenState;

@@ -1,1 +1,1 @@
-module.exports = require('./build/linkify');
+module.exports = require('./lib/linkify');

@@ -39,4 +39,4 @@ node_modules
 # Build files
 build
 dist
-
+lib

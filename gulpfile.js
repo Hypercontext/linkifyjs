@@ -1,10 +1,13 @@
 var gulp = require('gulp'),
-stylish = require('jshint-stylish');
+stylish = require('jshint-stylish'),
+extend = require('lodash').extend;
 
 var // Gulp plugins
-es6transpiler	= require('gulp-es6-transpiler'),
+concat			= require('gulp-concat'),
 jshint			= require('gulp-jshint'),
 mocha			= require('gulp-mocha'),
+sourcemaps		= require('gulp-sourcemaps'),
+to5				= require('gulp-6to5'),
 uglify			= require('gulp-uglify');
 
 var paths = {
@@ -13,23 +16,35 @@ var paths = {
 	spec: 'test/spec/**.js'
 };
 
-// The transpile plugin uses this method but it doesn't exist in Node 0.10
-// Perhaps it should be `includes`?
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
-if (!String.prototype.contains) {
-	String.prototype.contains = function (search, start) {
-		return this.indexOf(search, start || 0) >= 0;
-	};
-}
-
 /**
 	ES6 ~> ES5
 */
-gulp.task('transpile', function () {
+gulp.task('6to5', function () {
+	return gulp.src(paths.src)
+	.pipe(to5())
+	.pipe(gulp.dest('lib'));
+});
 
-	gulp.src(paths.src)
-	.pipe(es6transpiler())
-	.pipe(gulp.dest('build'));
+// TODO - Vanilla globals version, probably with AMD
+gulp.task('browser', function () {
+	var ext,
+	options = {
+		moduleRoot: 'linkifyjs',
+	},
+	modules = {
+		amd: 'amd',
+		umd: 'umd'
+	};
+
+	for (var type in modules) {
+		ext = modules[type];
+
+		gulp.src(paths.src)
+		.pipe(sourcemaps.init())
+		.pipe(to5(extend({modules: type}, options)))
+		.pipe(concat('linkify.' + ext + '.js'))
+		.pipe(gulp.dest('build'));
+	}
 
 });
 
@@ -58,13 +73,13 @@ gulp.task('uglify', function () {
 });
 
 // Build steps
-gulp.task('build', ['transpile']);
-gulp.task('dist', ['transpile', 'uglify']);
+gulp.task('build', ['6to5']);
+gulp.task('dist', ['6to5', 'uglify']);
 gulp.task('test', ['jshint', 'build', 'mocha']);
 
 /**
 	Build app and begin watching for changes
 */
 gulp.task('default', ['build'], function () {
-	gulp.watch(paths.src, ['transpile']);
+	gulp.watch(paths.src, ['6to5']);
 });

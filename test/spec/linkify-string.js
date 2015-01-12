@@ -1,4 +1,4 @@
-var linkifyStr = require('../../build/linkify-string');
+var linkifyStr = require('../../lib/linkify-string');
 
 /**
 	Gracefully truncate a string to a given limit. Will replace extraneous

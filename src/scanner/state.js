@@ -2,7 +2,7 @@
 	@module linkify
 	@submodule scanner
 */
-let BaseState = require('../state/base');
+import BaseState from '../state/base';
 
 /**
 	Subclass of
@@ -28,4 +28,4 @@ class CharacterState extends BaseState {
 
 }
 
-module.exports = CharacterState;
+export default CharacterState;

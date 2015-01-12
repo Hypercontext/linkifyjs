@@ -1,4 +1,4 @@
-var TEXT_TOKENS = require('../../../build/tokens/text');
+var TEXT_TOKENS = require('../../../lib/tokens/text');
 
 describe('TEXT_TOKENS', function () {
 

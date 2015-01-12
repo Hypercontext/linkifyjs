@@ -3,7 +3,7 @@
 	@submodule tokenizer
 */
 
-let CharacterState = require('./state');
+import CharacterState from './state';
 
 /**
 	Given a non-empty target string, generates states (if required) for each
@@ -11,8 +11,11 @@ let CharacterState = require('./state');
 	the string. The final state will have a special value, as specified in
 	options. All other "in between" substrings will have a default end state.
 
+	This turns the state machine into a Trie-like data structure (rather than a
+	intelligently-designed DFA).
+
 	Note that I haven't really tried these with any strings other than
-	DOMAINeric.
+	DOMAIN.
 
 	@param {String} str
 	@param {CharacterState} start State to jump from the first character
@@ -22,7 +25,7 @@ let CharacterState = require('./state');
 		we don't have a full match
 	@return {Array} list of newly-created states
 */
-module.exports = function (str, start, endToken, defaultToken) {
+export default function (str, start, endToken, defaultToken) {
 
 	let i = 0,
 	len = str.length,
@@ -51,4 +54,4 @@ module.exports = function (str, start, endToken, defaultToken) {
 	state.on(str[len - 1], nextState);
 
 	return newStates;
-};
+}

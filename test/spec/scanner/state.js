@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
-TEXT_TOKENS = require('../../../build/tokens/text'),
-CharacterState = require('../../../build/scanner/state');
+TEXT_TOKENS = require('../../../lib/tokens/text'),
+CharacterState = require('../../../lib/scanner/state');
 
 describe('CharacterState', function () {
 	var S_START, S_DOT, S_NUM;

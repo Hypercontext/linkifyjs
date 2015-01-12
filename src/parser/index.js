@@ -13,10 +13,9 @@
 	@main parser
 */
 
-let
-TEXT_TOKENS		= require('../tokens/text'),
-MULTI_TOKENS	= require('../tokens/multi'),
-State			= require('./state');
+import TEXT_TOKENS from '../tokens/text';
+import MULTI_TOKENS	from '../tokens/multi';
+import State from './state';
 
 let makeState = (tokenClass) => new State(tokenClass);
 
@@ -282,7 +281,7 @@ let run = function (tokens) {
 	return multis;
 };
 
-module.exports = {
+export default {
 	TOKENS: MULTI_TOKENS,
 	State: State,
 	run: run,

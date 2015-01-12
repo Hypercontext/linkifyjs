@@ -1,7 +1,7 @@
 var
-TOKENS = require('../../../build/tokens/text'),
-State = require('../../../build/scanner/state'),
-stateify = require('../../../build/scanner/stateify');
+TOKENS = require('../../../lib/tokens/text'),
+State = require('../../../lib/scanner/state'),
+stateify = require('../../../lib/scanner/stateify');
 
 describe('stateify', function () {
 	var S_START;
