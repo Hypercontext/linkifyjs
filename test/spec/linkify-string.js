@@ -48,11 +48,20 @@ describe('linkify-string', function () {
 			'Test with no links'
 		], [
 			'The URL is google.com and the email is test@example.com',
-			'The URL is <a href="http://google.com and the email is test@example.com'
+			'The URL is <a href="http://google.com" class="linkified" target="_blank">google.com</a> and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>',
+			'The URL is <span href="https://google.com" class="linkified my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">google.com</span> and the email is <span href="mailto:test@example.com" class="linkified my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test@example.com</span>'
 		]
 	];
 
 	it('Works with default options', function () {
+		tests.forEach(function (test) {
+			linkifyStr(test[0]).should.be.eql(test[1]);
+		});
+	});
 
+	it('Works with overriden options', function () {
+		tests.forEach(function (test) {
+			linkifyStr(test[0], options).should.be.eql(test[2]);
+		});
 	});
 });

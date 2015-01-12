@@ -1,5 +1,6 @@
 /**
 	Convert strings of text into linkable HTML text
+	TODO: Support for computed attributes based on the type?
 */
 
 let linkify = require('./linkify');
@@ -15,7 +16,7 @@ function attributesToString(attributes) {
 
 	for (let attr in attributes) {
 		let val = (attributes[attr] + '').replace(/"/g, '&quot;');
-		result.push(`${attr}="${val}}"`);
+		result.push(`${attr}="${val}"`);
 	}
 	return result.join(' ');
 }
@@ -23,6 +24,7 @@ function attributesToString(attributes) {
 /**
 	Options:
 
+	defaultProtocol: 'http'
 	format: null
 	linkAttributes: null,
 	linkClass: null,
@@ -35,13 +37,13 @@ module.exports = function (str, options) {
 	options = options || {};
 
 	let
+	defaultProtocol = options.defaultProtocol || 'http',
 	tagName = options.tagName || 'a',
 	target = options.target || typeToTarget,
 	newLine = options.newLine || false, // deprecated
 	nl2br =  !!newLine || options.nl2br || false,
 	format = options.format || null,
-	linkAttributes = options.linkAttributes || null,
-	attributesStr = linkAttributes ? attributesToString(linkAttributes) : null,
+	attributes = options.linkAttributes || null,
 	linkClass = 'linkified',
 	result = [];
 
@@ -51,14 +53,23 @@ module.exports = function (str, options) {
 
 	let tokens = linkify.tokenize(str);
 
-	for (let token of tokens) {
+	for (let i = 0; i < tokens.length; i++ ) {
+		let token = tokens[i];
 		if (token.isLink) {
-			let link = `<${tagName} href="${token.toHref()}" class="${linkClass}"`;
-			if (target) {
-				link += ` target=${target}`;
+
+			let
+			link = `<${tagName} href="${token.toHref(defaultProtocol)}" class="${linkClass}"`,
+			targetStr = typeof target === 'function' ?
+				target(token.type) : target,
+			attributesHash = typeof attributes === 'function' ?
+				attributes(token.type) : attributes;
+
+			if (targetStr) {
+				link += ` target="${targetStr}"`;
 			}
-			if (attributesStr) {
-				link += ` ${attributesStr}`;
+
+			if (attributesHash) {
+				link += ` ${attributesToString(attributesHash)}`;
 			}
 
 			link += '>';
