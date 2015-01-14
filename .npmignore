@@ -1,6 +1,8 @@
 # All compiled code will be in the "lib" and build folders
+amd
 assets
 bower_components
+build
 demo
 src
 test

@@ -1,6 +1,5 @@
-let
-scanner = require('./scanner'),
-parser = require('./parser');
+import scanner from './core/scanner';
+import parser from './core/parser';
 
 /**
 	Converts a string into tokens that represent linkable and non-linkable bits
@@ -52,7 +51,7 @@ let test = function (str, type=null) {
 
 // Scanner and parser provide states and tokens for the lexicographic stage
 // (will be used to add additional link types)
-module.exports = {
+export default {
 	find: find,
 	parser: parser,
 	scanner: scanner,

@@ -3,7 +3,7 @@
 	TODO: Support for computed attributes based on the type?
 */
 
-let linkify = require('./linkify');
+import linkify from './linkify';
 
 function typeToTarget(type) {
 	return type === 'url' ? '_blank' : null;
@@ -33,7 +33,7 @@ function attributesToString(attributes) {
 	tagName: 'a',
 	target: '_blank',
 */
-module.exports = function (str, options) {
+export default function (str, options) {
 	options = options || {};
 
 	let
@@ -91,5 +91,4 @@ module.exports = function (str, options) {
 	}
 
 	return result.join('');
-
-};
+}

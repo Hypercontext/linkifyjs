@@ -2,7 +2,7 @@
 	@module linkify
 	@submodule scanner
 */
-import BaseState from '../state/base';
+import BaseState from './base';
 
 /**
 	Subclass of

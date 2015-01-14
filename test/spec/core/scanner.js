@@ -1,9 +1,9 @@
 var
-scanner = require('../../../lib/scanner'),
-TEXT_TOKENS = require('../../../lib/tokens/text');
+scanner = require('../../../lib/core/scanner'),
+TEXT_TOKENS = require('../../../lib/core/tokens/text');
 
 var
-DOMAIN	= TEXT_TOKENS.DOMAIN,
+DOMAIN		= TEXT_TOKENS.DOMAIN,
 AT			= TEXT_TOKENS.AT,
 COLON		= TEXT_TOKENS.COLON,
 DOT			= TEXT_TOKENS.DOT,

@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
-TEXT_TOKENS = require('../../../lib/tokens/text'),
-TokenState = require('../../../lib/parser/state');
+TEXT_TOKENS = require('../../../../lib/core/tokens/text'),
+TokenState = require('../../../../lib/core/state/token');
 
 describe('TokenState', function () {
 	var TS_START;

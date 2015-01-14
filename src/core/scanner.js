@@ -7,10 +7,10 @@
 	@main scanner
 */
 
-import TOKENS from '../tokens/text';
-import State from './state';
-import stateify from './stateify';
-import {complete as tlds} from './tlds';
+import TOKENS from './tokens/text';
+import State from './state/character';
+import stateify from './state/stateify';
+import tlds from './tlds';
 
 const
 REGEXP_NUM		= /[0-9]/,

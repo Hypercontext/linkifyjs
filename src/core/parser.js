@@ -13,9 +13,9 @@
 	@main parser
 */
 
-import TEXT_TOKENS from '../tokens/text';
-import MULTI_TOKENS	from '../tokens/multi';
-import State from './state';
+import TEXT_TOKENS from './tokens/text';
+import MULTI_TOKENS	from './tokens/multi';
+import State from './state/token';
 
 let makeState = (tokenClass) => new State(tokenClass);
 

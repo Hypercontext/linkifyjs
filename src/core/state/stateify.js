@@ -3,7 +3,7 @@
 	@submodule tokenizer
 */
 
-import CharacterState from './state';
+import CharacterState from './character';
 
 /**
 	Given a non-empty target string, generates states (if required) for each

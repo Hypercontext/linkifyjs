@@ -1,7 +1,7 @@
 var
-scanner = require('../../../lib/scanner'),
-parser = require('../../../lib/parser'),
-MULTI_TOKENS = require('../../../lib/tokens/multi');
+scanner = require('../../../lib/core/scanner'),
+parser = require('../../../lib/core/parser'),
+MULTI_TOKENS = require('../../../lib/core/tokens/multi');
 
 var
 TEXT		= MULTI_TOKENS.TEXT,

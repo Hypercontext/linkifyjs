@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
-TEXT_TOKENS = require('../../../lib/tokens/text'),
-MULTI_TOKENS = require('../../../lib/tokens/multi');
+TEXT_TOKENS = require('../../../../lib/core/tokens/text'),
+MULTI_TOKENS = require('../../../../lib/core/tokens/multi');
 
 describe('MULTI_TOKENS', function () {
 

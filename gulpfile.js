@@ -1,23 +1,26 @@
 var gulp = require('gulp'),
 stylish = require('jshint-stylish'),
-extend = require('lodash').extend;
+amdOptimize = require("amd-optimize");;
 
 var // Gulp plugins
 concat			= require('gulp-concat'),
 jshint			= require('gulp-jshint'),
 mocha			= require('gulp-mocha'),
+// rjs				= require('gulp-r'),
 sourcemaps		= require('gulp-sourcemaps'),
 to5				= require('gulp-6to5'),
 uglify			= require('gulp-uglify');
+wrap			= require('gulp-wrap');
 
 var paths = {
 	src: 'src/**/*.js',
+	amd: 'build/amd/**/*.js',
 	test: 'test/index.js',
 	spec: 'test/spec/**.js'
 };
 
 /**
-	ES6 ~> ES5
+	ES6 ~> 6to5 (with CJS Node Modules)
 */
 gulp.task('6to5', function () {
 	return gulp.src(paths.src)
@@ -25,28 +28,38 @@ gulp.task('6to5', function () {
 	.pipe(gulp.dest('lib'));
 });
 
-// TODO - Vanilla globals version, probably with AMD
-gulp.task('browser', function () {
-	var ext,
-	options = {
-		moduleRoot: 'linkifyjs',
-	},
-	modules = {
-		amd: 'amd',
-		umd: 'umd'
-	};
-
-	for (var type in modules) {
-		ext = modules[type];
-
-		gulp.src(paths.src)
-		.pipe(sourcemaps.init())
-		.pipe(to5(extend({modules: type}, options)))
-		.pipe(concat('linkify.' + ext + '.js'))
-		.pipe(gulp.dest('build'));
-	}
-
+/**
+	ES6 to 6to5 AMD modules
+*/
+gulp.task('6to5-amd', function () {
+	gulp.src(paths.src)
+	.pipe(to5({
+		modules: 'amd',
+		moduleIds: true,
+		// moduleRoot: 'linkifyjs'
+	}))
+	.pipe(gulp.dest('build/amd'))
+	.pipe(amdOptimize('linkify', {
+		paths: {
+			parser: 'build/amd/parser/index',
+			scanner: 'build/amd/scanner/index'
+		}
+	}))
+	.pipe(concat('linkify.amd.js'))
+	.pipe(gulp.dest('build'));
 });
+
+// gulp.task('amd', function () {
+// 	gulp.src(paths.amd)
+// });
+
+// gulp.task('rjs', function () {
+// 	gulp.src(paths.amd)
+// 	.pipe(rjs({
+//         baseUrl: __dirname + '/build/amd/'
+//     }))
+//     .pipe(gulp.dest('dist/amd'));
+// })
 
 /**
 	Lint using jshint
@@ -73,13 +86,14 @@ gulp.task('uglify', function () {
 });
 
 // Build steps
-gulp.task('build', ['6to5']);
-gulp.task('dist', ['6to5', 'uglify']);
+gulp.task('build', ['6to5', '6to5-amd']);
+
+gulp.task('dist', ['6to5', '6to5-amd', 'uglify']);
 gulp.task('test', ['jshint', 'build', 'mocha']);
 
 /**
 	Build app and begin watching for changes
 */
-gulp.task('default', ['build'], function () {
+gulp.task('default', ['6to5'], function () {
 	gulp.watch(paths.src, ['6to5']);
 });

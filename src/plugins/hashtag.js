@@ -22,4 +22,5 @@ export default function (linkify) {
 
 	S_START.on(TT.POUND, S_HASH);
 	S_HASH.on(TT.DOMAIN, S_HASHTAG);
+	S_HASH.on(TT.TLD, S_HASHTAG);
 }
