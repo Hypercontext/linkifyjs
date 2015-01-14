@@ -162,7 +162,7 @@ class TLD extends TextToken {}
 */
 class WS extends TextToken {}
 
-module.exports = {
+export default {
 	Base: TextToken,
 	DOMAIN: DOMAIN,
 	AT: AT,

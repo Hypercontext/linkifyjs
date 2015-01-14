@@ -113,4 +113,4 @@ class BaseState {
 	}
 }
 
-module.exports = BaseState;
+export default BaseState;

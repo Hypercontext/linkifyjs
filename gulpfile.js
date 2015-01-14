@@ -8,6 +8,7 @@ jshint			= require('gulp-jshint'),
 mocha			= require('gulp-mocha'),
 // rjs				= require('gulp-r'),
 sourcemaps		= require('gulp-sourcemaps'),
+rename			= require('gulp-rename'),
 to5				= require('gulp-6to5'),
 uglify			= require('gulp-uglify');
 wrap			= require('gulp-wrap');
@@ -80,7 +81,11 @@ gulp.task('mocha', function () {
 });
 
 gulp.task('uglify', function () {
-	gulp.src('build/parser/index.js')
+	gulp.src('build/linkify.amd.js')
+	.pipe(gulp.dest('dist'))
+	.pipe(rename(function (path) {
+		path.extname = '.min.js';
+	}))
 	.pipe(uglify())
 	.pipe(gulp.dest('dist'));
 });

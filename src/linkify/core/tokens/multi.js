@@ -2,8 +2,7 @@
 	@module linkify
 	@submodule tokens
 */
-let
-TEXT_TOKENS = require('./text');
+import TEXT_TOKENS from './text';
 
 const
 TT_PROTOCOL	= TEXT_TOKENS.PROTOCOL,
@@ -220,7 +219,7 @@ class URL extends MultiToken {
 	}
 }
 
-module.exports = {
+export default {
 	Base: MultiToken,
 	EMAIL: EMAIL,
 	NL: NL,
