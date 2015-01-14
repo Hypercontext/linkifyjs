@@ -20,9 +20,9 @@ class CharacterState extends BaseState {
 		@param {String|RegExp} charOrRegExp
 		@return {Boolean}
 	*/
-	test(char, charOrRegExp) {
-		return char === charOrRegExp || (
-			charOrRegExp instanceof RegExp && charOrRegExp.test(char)
+	test(character, charOrRegExp) {
+		return character === charOrRegExp || (
+			charOrRegExp instanceof RegExp && charOrRegExp.test(character)
 		);
 	}
 

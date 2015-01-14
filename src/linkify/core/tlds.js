@@ -1,5 +1,6 @@
 /**
 	NOTICE: Please ensure that these strings are sorted in alphabetical order
+	TODO: Divide into essential and complete builds
 */
 
 // http://www.seobythesea.com/2006/01/googles-most-popular-and-least-popular-top-level-domains/

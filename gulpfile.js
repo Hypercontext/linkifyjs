@@ -33,34 +33,19 @@ gulp.task('6to5', function () {
 	ES6 to 6to5 AMD modules
 */
 gulp.task('6to5-amd', function () {
-	gulp.src(paths.src)
+
+	var amd = gulp.src(paths.src)
 	.pipe(to5({
 		modules: 'amd',
 		moduleIds: true,
 		// moduleRoot: 'linkifyjs'
 	}))
 	.pipe(gulp.dest('build/amd'))
-	.pipe(amdOptimize('linkify', {
-		// paths: {
-		// 	parser: 'build/amd/parser/index',
-		// 	scanner: 'build/amd/scanner/index'
-		// }
-	}))
+	.pipe(amdOptimize('linkify'))
 	.pipe(concat('linkify.amd.js'))
 	.pipe(gulp.dest('build'));
+
 });
-
-// gulp.task('amd', function () {
-// 	gulp.src(paths.amd)
-// });
-
-// gulp.task('rjs', function () {
-// 	gulp.src(paths.amd)
-// 	.pipe(rjs({
-//         baseUrl: __dirname + '/build/amd/'
-//     }))
-//     .pipe(gulp.dest('dist/amd'));
-// })
 
 /**
 	Lint using jshint
