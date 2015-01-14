@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
-TEXT_TOKENS = require('../../../../lib/core/tokens/text'),
-TokenState = require('../../../../lib/core/state/token');
+TEXT_TOKENS	= require(__base + 'lib/linkify/core/tokens/text'),
+TokenState	= require(__base + 'lib/linkify/core/state/token');
 
 describe('TokenState', function () {
 	var TS_START;

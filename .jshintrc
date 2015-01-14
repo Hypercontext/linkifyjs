@@ -3,6 +3,7 @@
     "globalstrict": false,
     "node": true,
     "globals": {
+        "__base": false,
         "describe": false,
         "it": false,
         "before": false,

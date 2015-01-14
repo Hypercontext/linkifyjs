@@ -1,0 +1,6 @@
+{
+	"framework": "mocha",
+	"src_files": [
+		""
+	]
+}

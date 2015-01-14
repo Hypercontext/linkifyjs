@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
 stylish = require('jshint-stylish'),
-amdOptimize = require("amd-optimize");;
+amdOptimize = require('amd-optimize');
 
 var // Gulp plugins
 concat			= require('gulp-concat'),
@@ -40,10 +40,10 @@ gulp.task('6to5-amd', function () {
 	}))
 	.pipe(gulp.dest('build/amd'))
 	.pipe(amdOptimize('linkify', {
-		paths: {
-			parser: 'build/amd/parser/index',
-			scanner: 'build/amd/scanner/index'
-		}
+		// paths: {
+		// 	parser: 'build/amd/parser/index',
+		// 	scanner: 'build/amd/scanner/index'
+		// }
 	}))
 	.pipe(concat('linkify.amd.js'))
 	.pipe(gulp.dest('build'));

@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
-TEXT_TOKENS = require('../../../../lib/core/tokens/text'),
-CharacterState = require('../../../../lib/core/state/character');
+TEXT_TOKENS = require(__base + 'lib/linkify/core/tokens/text'),
+CharacterState = require(__base + '/lib/linkify/core/state/character');
 
 describe('CharacterState', function () {
 	var S_START, S_DOT, S_NUM;

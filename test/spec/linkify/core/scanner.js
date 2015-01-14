@@ -1,6 +1,6 @@
 var
-scanner = require('../../../lib/core/scanner'),
-TEXT_TOKENS = require('../../../lib/core/tokens/text');
+scanner = require(__base + 'lib/linkify/core/scanner'),
+TEXT_TOKENS = require(__base + 'lib/linkify/core/tokens/text');
 
 var
 DOMAIN		= TEXT_TOKENS.DOMAIN,

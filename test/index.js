@@ -1,4 +1,5 @@
 var glob = require('glob');
+global.__base = __dirname.replace(/test$/, '');
 require('chai').should(); // Initialize should assertions
 
 // Require test files

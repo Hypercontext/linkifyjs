@@ -1,5 +1,5 @@
-import scanner from './core/scanner';
-import parser from './core/parser';
+import scanner from './linkify/core/scanner';
+import parser from './linkify/core/parser';
 
 /**
 	Converts a string into tokens that represent linkable and non-linkable bits

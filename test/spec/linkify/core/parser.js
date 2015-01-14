@@ -1,7 +1,7 @@
 var
-scanner = require('../../../lib/core/scanner'),
-parser = require('../../../lib/core/parser'),
-MULTI_TOKENS = require('../../../lib/core/tokens/multi');
+scanner = require(__base + 'lib/linkify/core/scanner'),
+parser = require(__base + 'lib/linkify/core/parser'),
+MULTI_TOKENS = require(__base + 'lib/linkify/core/tokens/multi');
 
 var
 TEXT		= MULTI_TOKENS.TEXT,
