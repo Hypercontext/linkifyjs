@@ -7,9 +7,8 @@
 	@main scanner
 */
 
-import TOKENS from './tokens/text';
-import State from './state/character';
-import stateify from './state/stateify';
+import {text as TOKENS} from './tokens';
+import {CharacterState as State, stateify} from './state';
 import tlds from './tlds';
 
 const
@@ -173,10 +172,5 @@ let run = function (str) {
 	return tokens;
 };
 
-export default {
-	State: State,
-	TOKENS: TOKENS,
-	run: run,
-	start: S_START,
-	stateify: stateify
-};
+let start = S_START;
+export {State, TOKENS, run, start};

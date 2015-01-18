@@ -1,7 +1,7 @@
 /**
 	Quick Hashtag parser plugin for linkify
 */
-export default function (linkify) {
+function hashtag (linkify) {
 	let
 	TT = linkify.scanner.TOKENS, // Text tokens
 	MT = linkify.parser.TOKENS, // Multi tokens
@@ -24,3 +24,5 @@ export default function (linkify) {
 	S_HASH.on(TT.DOMAIN, S_HASHTAG);
 	S_HASH.on(TT.TLD, S_HASHTAG);
 }
+
+export default hashtag;

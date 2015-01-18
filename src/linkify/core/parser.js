@@ -13,9 +13,8 @@
 	@main parser
 */
 
-import TEXT_TOKENS from './tokens/text';
-import MULTI_TOKENS	from './tokens/multi';
-import State from './state/token';
+import {text as TEXT_TOKENS, multi as MULTI_TOKENS} from './tokens';
+import {TokenState as State} from './state';
 
 let makeState = (tokenClass) => new State(tokenClass);
 
@@ -282,8 +281,8 @@ let run = function (tokens) {
 };
 
 export default {
+	State,
 	TOKENS: MULTI_TOKENS,
-	State: State,
-	run: run,
+	run,
 	start: S_START
 };

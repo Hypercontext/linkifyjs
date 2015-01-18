@@ -12,9 +12,11 @@
   "devDependencies": {
     "amd-optimize": "^0.4.3",
     "chai": "^1.10.0",
+    "closure-compiler": "^0.2.6",
     "glob": "^4.3.2",
     "gulp": "^3.8.10",
     "gulp-6to5": "^2.0.0",
+    "gulp-closure-compiler": "^0.2.14",
     "gulp-concat": "^2.4.3",
     "gulp-es6-transpiler": "^1.0.1",
     "gulp-jshint": "^1.9.0",

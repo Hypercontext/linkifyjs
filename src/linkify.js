@@ -1,5 +1,5 @@
-import scanner from './linkify/core/scanner';
-import parser from './linkify/core/parser';
+import * as scanner from './linkify/core/scanner';
+import * as parser from './linkify/core/parser';
 
 /**
 	Converts a string into tokens that represent linkable and non-linkable bits
@@ -51,10 +51,4 @@ let test = function (str, type=null) {
 
 // Scanner and parser provide states and tokens for the lexicographic stage
 // (will be used to add additional link types)
-export default {
-	find: find,
-	parser: parser,
-	scanner: scanner,
-	test: test,
-	tokenize: tokenize
-};
+export {find, parser, scanner, test, tokenize};

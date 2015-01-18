@@ -1,4 +1,4 @@
-var TEXT_TOKENS = require(__base + 'lib/linkify/core/tokens/text');
+var TEXT_TOKENS = require(__base + 'lib/linkify/core/tokens').text;
 
 describe('TEXT_TOKENS', function () {
 

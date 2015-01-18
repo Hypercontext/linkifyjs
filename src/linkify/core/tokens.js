@@ -1,20 +1,197 @@
-/**
-	@module linkify
-	@submodule tokens
-*/
-import TEXT_TOKENS from './text';
+/******************************************************************************
+	Text Tokens
+	Tokens composed of strings
+******************************************************************************/
 
-const
-TT_PROTOCOL	= TEXT_TOKENS.PROTOCOL,
-TT_DOMAIN	= TEXT_TOKENS.DOMAIN,
-TT_TLD		= TEXT_TOKENS.TLD,
-TT_SLASH	= TEXT_TOKENS.SLASH;
+/**
+	Abstract class used for manufacturing text tokens.
+	Pass in the value this token represents
+
+	@class TextToken
+	@abstract
+*/
+class TextToken {
+	/**
+		@method constructor
+		@param {String} value The string of characters representing this particular Token
+	*/
+	constructor(value) {
+		this.v = value;
+	}
+
+	/**
+		String representing the type for this token
+		@property type
+		@default 'TOKEN'
+	*/
+
+	toString() {
+		return this.v + '';
+	}
+
+	/**
+		Is the given value an instance of this Token?
+		@method test
+		@static
+		@param {Mixed} value
+	*/
+	static test(value) {
+		return value instanceof this;
+	}
+}
+
+/**
+	A valid domain token
+	@class DOMAIN
+	@extends TextToken
+*/
+class DOMAIN extends TextToken {}
+
+/**
+	@class AT
+	@extends TextToken
+*/
+class AT extends TextToken {
+	constructor() { super('@'); }
+}
+
+/**
+	Represents a single colon `:` character
+
+	@class COLON
+	@extends TextToken
+*/
+class COLON extends TextToken {
+	constructor() { super(':'); }
+}
+
+/**
+	@class DOT
+	@extends TextToken
+*/
+class DOT extends TextToken {
+	constructor() { super('.'); }
+}
+
+/**
+	The word localhost (by itself)
+	@class LOCALHOST
+	@extends TextToken
+*/
+class LOCALHOST extends TextToken {}
+
+/**
+	Newline token
+	@class NL
+	@extends TextToken
+*/
+class NL extends TextToken {
+	constructor() { super('\n'); }
+}
+
+/**
+	@class NUM
+	@extends TextToken
+*/
+class NUM extends TextToken {}
+
+/**
+	@class PLUS
+	@extends TextToken
+*/
+class PLUS extends TextToken {
+	constructor() { super('+'); }
+}
+
+/**
+	@class POUND
+	@extends TextToken
+*/
+class POUND extends TextToken {
+	constructor() { super('#'); }
+}
+
+/**
+	Represents a web URL protocol. Supported types include
+
+	* `http:`
+	* `https:`
+	* `ftp:`
+	* `ftps:`
+	* There's Another super weird one
+
+	@class PROTOCOL
+	@extends TextToken
+*/
+class PROTOCOL extends TextToken {}
+
+/**
+	@class QUERY
+	@extends TextToken
+*/
+class QUERY extends TextToken {
+	constructor() { super('?'); }
+}
+
+/**
+	@class SLASH
+	@extends TextToken
+*/
+class SLASH extends TextToken {
+	constructor() { super('/'); }
+}
+
+/**
+	One ore more non-whitespace symbol.
+	@class SYM
+	@extends TextToken
+*/
+class SYM extends TextToken {}
+
+/**
+	@class TLD
+	@extends TextToken
+*/
+class TLD extends TextToken {}
+
+/**
+	Represents a string of consecutive whitespace characters
+
+	@class WS
+	@extends TextToken
+*/
+class WS extends TextToken {}
+
+let text = {
+	Base: TextToken,
+	DOMAIN,
+	AT,
+	COLON,
+	DOT,
+	LOCALHOST,
+	NL,
+	NUM,
+	PLUS,
+	POUND,
+	QUERY,
+	PROTOCOL,
+	SLASH,
+	SYM,
+	TLD,
+	WS
+};
+
+/******************************************************************************
+	Multi-Tokens
+	Tokens composed of arrays of TextTokens
+******************************************************************************/
+
 
 // Is the given token a valid domain token?
 // Should nums be included here?
 function isDomainToken(token) {
-	return TT_DOMAIN.test(token) ||
-	TT_TLD.test(token);
+	return DOMAIN.test(token) ||
+	TLD.test(token);
 }
 
 /**
@@ -181,14 +358,14 @@ class URL extends MultiToken {
 
 		// Make the first part of the domain lowercase
 		// Lowercase protocol
-		while (TT_PROTOCOL.test(tokens[i])) {
+		while (PROTOCOL.test(tokens[i])) {
 			hasProtocol = true;
 			result.push(tokens[i].toString().toLowerCase());
 			i++;
 		}
 
 		// Skip slash-slash
-		while (TT_SLASH.test(tokens[i])) {
+		while (SLASH.test(tokens[i])) {
 			hasSlashSlash = true;
 			result.push(tokens[i].toString());
 			i++;
@@ -215,14 +392,16 @@ class URL extends MultiToken {
 	}
 
 	hasProtocol() {
-		return this.v[0] instanceof TT_PROTOCOL;
+		return this.v[0] instanceof PROTOCOL;
 	}
 }
 
-export default {
+let multi = {
 	Base: MultiToken,
-	EMAIL: EMAIL,
-	NL: NL,
-	TEXT: TEXT,
-	URL: URL
+	EMAIL,
+	NL,
+	TEXT,
+	URL
 };
+
+export {text, multi};
