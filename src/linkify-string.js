@@ -94,4 +94,10 @@ function linkifyStr(str, opts={}) {
 	return result.join('');
 }
 
+if (!String.prototype.linkify) {
+	String.prototype.linkify = function (options) {
+		return linkifyStr(this, options);
+	};
+}
+
 export default linkifyStr;
