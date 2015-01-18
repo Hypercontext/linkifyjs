@@ -137,14 +137,14 @@ gulp.task('build-plugins', function () {
 			format: to5format
 		}))
 		.pipe(wrap({src: 'templates/linkify/plugins/' + plugin + '.js'}))
-		.pipe(concat(plugin + '.js'))
-		.pipe(gulp.dest('build/linkify/plugins'));
+		.pipe(concat('linkify-plugin-' + plugin + '.js'))
+		.pipe(gulp.dest('build'));
 
 		// AMD plugins
 		gulp.src('build/amd/linkify/plugins/' + plugin + '.js')
 		.pipe(wrap({src: 'templates/linkify/plugins/' + plugin + '.amd.js'}))
-		.pipe(concat(plugin + '.amd.js'))
-		.pipe(gulp.dest('build/linkify/plugins'));
+		.pipe(concat('linkify-plugin-' + plugin + '.amd.js'))
+		.pipe(gulp.dest('build'));
 
 	}
 
@@ -176,12 +176,7 @@ gulp.task('mocha', function () {
 });
 
 gulp.task('uglify', function () {
-	gulp.src([
-		'build/*.js',
-		'build/**/*.js',
-		'!build/amd/*.js',
-		'!build/amd/**/*.js'
-	])
+	gulp.src('build/*.js')
 	.pipe(gulp.dest('dist')) // non-minified copy
 	.pipe(rename(function (path) {
 		path.extname = '.min.js';
