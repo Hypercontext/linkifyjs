@@ -35,7 +35,13 @@ describe('linkify-string', function () {
 			onclick: 'javascript:;'
 		},
 		format: function (val) {
-			return val.truncate(20);
+			return val.truncate(40);
+		},
+		formatHref: function (href, type) {
+			if (type === 'email') {
+				href += '?subject=Hello%20from%20Linkify';
+			}
+			return href;
 		}
 	},
 
@@ -51,7 +57,11 @@ describe('linkify-string', function () {
 		], [
 			'The URL is google.com and the email is test@example.com',
 			'The URL is <a href="http://google.com" class="linkified" target="_blank">google.com</a> and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>',
-			'The URL is <span href="https://google.com" class="linkified my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">google.com</span> and the email is <span href="mailto:test@example.com" class="linkified my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test@example.com</span>'
+			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">google.com</span> and the email is <span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test@example.com</span>'
+		], [
+			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test."wut".yo@gmail.co.uk!\n',
+			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="linkified" target="_blank">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.&quot;wut&quot;.yo@gmail.co.uk" class="linkified">test."wut".yo@gmail.co.uk</a>!\n',
+			'Super long maps URL <span href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">https://www.google.ca/maps/@43.472082,-8…</span>, a #hash-tag, and an email: <span href="mailto:test.&quot;wut&quot;.yo@gmail.co.uk?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test."wut".yo@gmail.co.uk</span>!<br>\n',
 		]
 	];
 

@@ -1,7 +1,7 @@
 /**
 	Quick Hashtag parser plugin for linkify
 */
-function hashtag (linkify) {
+function hashtag(linkify) {
 	let
 	TT = linkify.scanner.TOKENS, // Text tokens
 	MT = linkify.parser.TOKENS, // Multi tokens

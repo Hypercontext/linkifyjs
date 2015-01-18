@@ -9,6 +9,16 @@ function typeToTarget(type) {
 	return type === 'url' ? '_blank' : null;
 }
 
+function cleanText(text) {
+	return text
+	.replace(/</g, '&lt;')
+	.replace(/>/g, '&gt;');
+}
+
+function cleanAttr(href) {
+	return href.replace(/"/g, '&quot;');
+}
+
 function attributesToString(attributes) {
 
 	if (!attributes) return '';
@@ -16,41 +26,33 @@ function attributesToString(attributes) {
 
 	for (let attr in attributes) {
 		let val = (attributes[attr] + '').replace(/"/g, '&quot;');
-		result.push(`${attr}="${val}"`);
+		result.push(`${attr}="${cleanAttr(val)}"`);
 	}
 	return result.join(' ');
 }
 
-/**
-	Options:
+function resolveOption(value, ...params) {
+	return typeof value === 'function' ? value(...params) : value;
+}
 
-	defaultProtocol: 'http'
-	format: null
-	linkAttributes: null,
-	linkClass: null,
-	newLine: '\n', // deprecated
-	nl2br: false,
-	tagName: 'a',
-	target: '_blank',
-*/
-function linkifyStr(str, options) {
-	options = options || {};
+function noop(val) {
+	return val;
+}
+
+function linkifyStr(str, opts={}) {
 
 	let
-	defaultProtocol = options.defaultProtocol || 'http',
-	tagName = options.tagName || 'a',
-	target = options.target || typeToTarget,
-	newLine = options.newLine || false, // deprecated
-	nl2br =  !!newLine || options.nl2br || false,
-	format = options.format || null,
-	attributes = options.linkAttributes || null,
-	linkClass = 'linkified',
-	result = [];
+	attributes		= opts.linkAttributes		|| null,
+	defaultProtocol	= opts.defaultProtocol		|| 'http',
+	format			= opts.format				|| noop,
+	formatHref		= opts.formatHref			|| noop,
+	newLine			= opts.newLine				|| false, // deprecated
+	nl2br			= !!newLine	|| opts.nl2br 	|| false,
+	tagName			= opts.tagName				|| 'a',
+	target			= opts.target				|| typeToTarget,
+	linkClass		= opts.linkClass			|| 'linkified';
 
-	if (options.linkClass) {
-		linkClass += ' ' + options.linkClass;
-	}
-
+	let result = [];
 	let tokens = tokenize(str);
 
 	for (let i = 0; i < tokens.length; i++ ) {
@@ -58,12 +60,15 @@ function linkifyStr(str, options) {
 		if (token.isLink) {
 
 			let
-			link = `<${tagName} href="${token.toHref(defaultProtocol)}" class="${linkClass}"`,
-			targetStr = typeof target === 'function' ?
-				target(token.type) : target,
-			attributesHash = typeof attributes === 'function' ?
-				attributes(token.type) : attributes;
+			tagNameStr		= resolveOption(tagName, token.type),
+			classStr		= resolveOption(linkClass, token.type),
+			targetStr		= resolveOption(target, token.type),
+			formatted		= resolveOption(format, token.toString(), token.type),
+			href			= token.toHref(defaultProtocol),
+			formattedHref	= resolveOption(formatHref, href, token.type),
+			attributesHash	= resolveOption(attributes, token.type);
 
+			let link = `<${tagNameStr} href="${cleanAttr(formattedHref)}" class="${classStr}"`;
 			if (targetStr) {
 				link += ` target="${targetStr}"`;
 			}
@@ -72,11 +77,7 @@ function linkifyStr(str, options) {
 				link += ` ${attributesToString(attributesHash)}`;
 			}
 
-			link += '>';
-			link += typeof format === 'function' ?
-				format(token.toString(), token.type) : token.toString();
-			link += `</${tagName}>`;
-
+			link += `>${cleanText(formatted)}</${tagNameStr}>`;
 			result.push(link);
 
 		} else if (token.type === 'nl' && nl2br) {
@@ -86,7 +87,7 @@ function linkifyStr(str, options) {
 				result.push('<br>\n');
 			}
 		} else {
-			result.push(token.toString());
+			result.push(cleanText(token.toString()));
 		}
 	}
 
