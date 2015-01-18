@@ -190,7 +190,16 @@ gulp.task('uglify', function () {
 	.pipe(gulp.dest('dist'));
 });
 
-gulp.task('dist', ['6to5', '6to5-amd', 'uglify']);
+gulp.task('build', [
+	'6to5',
+	'6to5-amd',
+	'build-core',
+	'build-interfaces',
+	'build-plugins'
+]);
+
+gulp.task('dist', ['build', 'uglify']);
+
 gulp.task('test', ['jshint', 'build', 'mocha']);
 
 /**

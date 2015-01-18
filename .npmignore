@@ -1,8 +1,17 @@
-# All compiled code will be in the "lib" and build folders
+# All compiled code will be in the `lib` folders
 amd
 assets
 bower_components
 build
 demo
 src
+templates
 test
+
+# Files
+.editorconfig
+.jshintrc
+.travis.yml
+bower.json
+gulpfile.js
+testem.json
