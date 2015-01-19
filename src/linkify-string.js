@@ -1,6 +1,5 @@
 /**
 	Convert strings of text into linkable HTML text
-	TODO: Support for computed attributes based on the type?
 */
 
 import {tokenize} from './linkify';
