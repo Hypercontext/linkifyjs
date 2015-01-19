@@ -1,8 +1,9 @@
 var gulp = require('gulp'),
-path = require('path'),
+amdOptimize = require('amd-optimize'),
 glob = require('glob'),
-stylish = require('jshint-stylish'),
-amdOptimize = require('amd-optimize');
+karma = require('karma').server,
+path = require('path'),
+stylish = require('jshint-stylish');
 
 var // Gulp plugins
 concat			= require('gulp-concat'),
@@ -171,8 +172,28 @@ gulp.task('jshint', function () {
 	Run mocha tests
 */
 gulp.task('mocha', function () {
-	gulp.src(paths.test, {read: false})
+	return gulp.src(paths.test, {read: false})
 	.pipe(mocha());
+});
+
+gulp.task('karma', function () {
+	return karma.start({
+		configFile: __dirname + '/test/dev.conf.js',
+		singleRun: true
+	});
+});
+
+gulp.task('karma-chrome', function () {
+	karma.start({
+		configFile: __dirname + '/test/chrome.conf.js',
+	});
+});
+
+gulp.task('karma-ci', function () {
+	karma.start({
+		configFile: __dirname + '/test/ci.conf.js',
+		singleRun: true
+	});
 });
 
 gulp.task('uglify', function () {
@@ -196,6 +217,8 @@ gulp.task('build', [
 gulp.task('dist', ['build', 'uglify']);
 
 gulp.task('test', ['jshint', 'build', 'mocha']);
+gulp.task('test-ci', ['karma-ci']);
+// Using with other tasks causes an error here for some reason
 
 /**
 	Build app and begin watching for changes
@@ -203,3 +226,5 @@ gulp.task('test', ['jshint', 'build', 'mocha']);
 gulp.task('default', ['6to5'], function () {
 	gulp.watch(paths.src, ['6to5']);
 });
+
+

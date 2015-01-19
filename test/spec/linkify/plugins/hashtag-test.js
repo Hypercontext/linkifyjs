@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
-linkify = require(__base + 'lib/linkify'),
-hashtag = require(__base + 'lib/linkify/plugins/hashtag');
+linkify = require('../../../../lib/linkify'),
+hashtag = require('../../../../lib/linkify/plugins/hashtag');
 
 describe('Linkify Hashtag Plugin', function () {
 

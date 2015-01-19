@@ -1,7 +1,7 @@
 var
-TOKENS		= require(__base + 'lib/linkify/core/tokens').text,
-State		= require(__base + 'lib/linkify/core/state').CharacterState,
-stateify	= require(__base + 'lib/linkify/core/state').stateify;
+TOKENS		= require('../../../../../lib/linkify/core/tokens').text,
+State		= require('../../../../../lib/linkify/core/state').CharacterState,
+stateify	= require('../../../../../lib/linkify/core/state').stateify;
 
 describe('stateify', function () {
 	var S_START;

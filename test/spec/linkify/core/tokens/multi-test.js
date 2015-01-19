@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
-TEXT_TOKENS = require(__base + 'lib/linkify/core/tokens').text,
-MULTI_TOKENS = require(__base + 'lib/linkify/core/tokens').multi;
+TEXT_TOKENS = require('../../../../../lib/linkify/core/tokens').text,
+MULTI_TOKENS = require('../../../../../lib/linkify/core/tokens').multi;
 
 describe('MULTI_TOKENS', function () {
 
