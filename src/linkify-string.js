@@ -2,14 +2,11 @@
 	Convert strings of text into linkable HTML text
 */
 
-import {tokenize} from './linkify';
-
-function typeToTarget(type) {
-	return type === 'url' ? '_blank' : null;
-}
+import {tokenize, options} from './linkify';
 
 function cleanText(text) {
 	return text
+	.replace(/&/g, '&amp;')
 	.replace(/</g, '&lt;')
 	.replace(/>/g, '&gt;');
 }
@@ -30,58 +27,42 @@ function attributesToString(attributes) {
 	return result.join(' ');
 }
 
-function resolveOption(value, ...params) {
-	return typeof value === 'function' ? value(...params) : value;
-}
-
-function noop(val) {
-	return val;
-}
-
 function linkifyStr(str, opts={}) {
 
-	let
-	attributes		= opts.linkAttributes		|| null,
-	defaultProtocol	= opts.defaultProtocol		|| 'http',
-	format			= opts.format				|| noop,
-	formatHref		= opts.formatHref			|| noop,
-	newLine			= opts.newLine				|| false, // deprecated
-	nl2br			= !!newLine	|| opts.nl2br 	|| false,
-	tagName			= opts.tagName				|| 'a',
-	target			= opts.target				|| typeToTarget,
-	linkClass		= opts.linkClass			|| 'linkified';
+	opts = options.normalize(opts);
 
-	let result = [];
-	let tokens = tokenize(str);
+	let
+	tokens = tokenize(str),
+	result = [];
 
 	for (let i = 0; i < tokens.length; i++ ) {
 		let token = tokens[i];
 		if (token.isLink) {
 
 			let
-			tagNameStr		= resolveOption(tagName, token.type),
-			classStr		= resolveOption(linkClass, token.type),
-			targetStr		= resolveOption(target, token.type),
-			formatted		= resolveOption(format, token.toString(), token.type),
-			href			= token.toHref(defaultProtocol),
-			formattedHref	= resolveOption(formatHref, href, token.type),
-			attributesHash	= resolveOption(attributes, token.type);
+			tagName			= options.resolve(opts.tagName, token.type),
+			linkClass		= options.resolve(opts.linkClass, token.type),
+			target			= options.resolve(opts.target, token.type),
+			formatted		= options.resolve(opts.format, token.toString(), token.type),
+			href			= token.toHref(opts.defaultProtocol),
+			formattedHref	= options.resolve(opts.formatHref, href, token.type),
+			attributesHash	= options.resolve(opts.attributes, token.type);
 
-			let link = `<${tagNameStr} href="${cleanAttr(formattedHref)}" class="${classStr}"`;
-			if (targetStr) {
-				link += ` target="${targetStr}"`;
+			let link = `<${tagName} href="${cleanAttr(formattedHref)}" class="${linkClass}"`;
+			if (target) {
+				link += ` target="${target}"`;
 			}
 
 			if (attributesHash) {
 				link += ` ${attributesToString(attributesHash)}`;
 			}
 
-			link += `>${cleanText(formatted)}</${tagNameStr}>`;
+			link += `>${cleanText(formatted)}</${tagName}>`;
 			result.push(link);
 
-		} else if (token.type === 'nl' && nl2br) {
-			if (newLine) {
-				result.push(newLine);
+		} else if (token.type === 'nl' && opts.nl2br) {
+			if (opts.newLine) {
+				result.push(opts.newLine);
 			} else {
 				result.push('<br>\n');
 			}

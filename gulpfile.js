@@ -63,7 +63,7 @@ gulp.task('6to5-amd', function () {
 // Closure compiler is used here since it can correctly concatenate CJS modules
 gulp.task('build-core', function () {
 
-	gulp.src(['lib/linkify/core/*.js', 'lib/linkify.js'])
+	gulp.src(['lib/linkify/core/*.js', 'lib/linkify/utils/*.js', 'lib/linkify.js'])
 	.pipe(closureCompiler({
 		compilerPath: 'node_modules/closure-compiler/lib/vendor/compiler.jar',
 		fileName: 'linkify.js',
