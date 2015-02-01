@@ -17,11 +17,45 @@ TXT_NODE = 3;
 	Takes the same options as linkifyElement and an optional doc element (this should be passed in by linkifyElement)
 */
 function tokensToNodes(tokens, opts, doc) {
-	// TODO: Write this
+	let result = [];
+
+	for (let i = 0; i < tokens.length; i++) {
+		let token = tokens[i];
+		if (token.isLink) {
+			let
+			tagName			= options.resolve(opts.tagName, token.type),
+			linkClass		= options.resolve(opts.linkClass, token.type),
+			target			= options.resolve(opts.target, token.type),
+			formatted		= options.resolve(opts.format, token.toString(), token.type),
+			href			= token.toHref(opts.defaultProtocol),
+			formattedHref	= options.resolve(opts.formatHref, href, token.type),
+			attributesHash	= options.resolve(opts.attributes, token.type);
+
+			// Build the link
+			let link = doc.createElement(tagName);
+			link.setAttribute('href', formattedHref);
+			link.setAttribute('class', linkClass);
+			if (target) {
+				link.setAttribute('target', target);
+			}
+
+			// Build up additional attributes
+			if (attributesHash) {
+				for (let attr in attributesHash) {
+					link.setAttribute(attr, attributesHash);
+				}
+			}
+
+			link.appendChild(doc.createTextNode(formatted));
+			result.push(link);
+		}
+	}
+
+	return result;
 }
 
 // Requires document.createElement
-function linkifyElement(element, opts, doc=null) {
+function linkifyElement(element, opts, doc) {
 
 	doc = doc || window && window.document || global && global.document;
 
@@ -70,6 +104,7 @@ function linkifyElement(element, opts, doc=null) {
 		childElement = childElement.nextSibling;
 	}
 
+	// Clear out the element
 	while (element.firstChild) {
 		element.removeChild(element.firstChild);
 	}
@@ -77,4 +112,8 @@ function linkifyElement(element, opts, doc=null) {
 	return linkifyElement;
 }
 
-module.exports = linkifyElement;
+export { linkifyElement };
+export default function (element, opts, doc=null) {
+	opts = options.normalize(opts);
+	return linkifyElement(element, opts, doc);
+}
