@@ -86,16 +86,35 @@ gulp.task('build-interfaces', function () {
 	// Core linkify functionality as plugins
 	var interface, interfaces = [
 		'string',
-		// 'dom',
-		// 'jquery'
+		'element',
+		// ['element', 'jquery'] // jQuery interface requires both element and jquery
 	];
+
+	var files = {js: null, amd: null};
 
 	// Globals browser interface
 	for (var i = 0; i < interfaces.length; i++) {
 		interface = interfaces[i];
 
+		if (interface instanceof Array) {
+			// Interface has dependencies
+			files.js = [];
+			files.amd = [];
+			for (var j = 0; j < interface.length; j++) {
+				files.js.push('src/linkify-' + interface[i] + '.js');
+				files.amd.push('build/amd/linkify-' + interface[i] + '.js');
+			}
+
+			// The last interface is the name of the dependency
+			interface = interface.pop();
+
+		} else {
+			files.js = 'src/linkify-' + interface + '.js';
+			files.amd = 'build/amd/linkify-' + interface + '.js';
+		}
+
 		// Browser interface
-		gulp.src('src/linkify-' + interface + '.js')
+		gulp.src(files.js)
 		.pipe(to5({
 			modules: 'ignore',
 			format: to5format
@@ -105,7 +124,7 @@ gulp.task('build-interfaces', function () {
 		.pipe(gulp.dest('build'));
 
 		// AMD interface
-		gulp.src('build/amd/linkify-' + interface + '.js')
+		gulp.src(files.amd)
 		.pipe(wrap({src: 'templates/linkify-' + interface + '.amd.js'}))
 		.pipe(concat('linkify-' + interface + '.amd.js'))
 		.pipe(gulp.dest('build'));

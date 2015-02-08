@@ -7,9 +7,13 @@
 
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.js" data-main="build/amd/linkify"></script>
-<script src="build/amd/linkify-string.js"></script>
-<script src="build/amd/linkify-element.js"></script>
-<script src="build/amd/linkify/plugins/hashtag.js"></script>
+<script src="build/linkify-string.amd.js"></script>
+<script src="build/linkify-element.amd.js"></script>
+<script src="build/linkify-plugin-hashtag.amd.js"></script>
+<p id="yolo">
+	You let's get all up in the
+	http://element.co/?wat=this and the #swag
+</p>
 <script>
 	require(['linkify'], function (linkify) {
 		console.log(linkify.find('google.com'));

@@ -2,11 +2,10 @@ var usageInitial = process.memoryUsage();
 var linkify = require('../lib/linkify');
 var usageLinkify = process.memoryUsage();
 
-var sum = 0, ITERATIONS = 2000;
+var ITERATIONS = 2000;
 
 function benchmark() {
-	var start = new Date(), end, diff;
-
+	debugger; // prevents V8 optimization
 	// linkify.tokenize('The URL is http://google.com The URL is http://google.com');
 	// linkify.tokenize('google.com');
 	// linkify.tokenize('I like google.com the most I like google.com the most');
@@ -23,27 +22,26 @@ function benchmark() {
 	//
 	linkify.tokenize('About a year ago Graham and I went to Google IO (https://developers.google.com/events/io/) to learn about some upcoming technology and meet some tech folk in the valley. The experience was great. We met a bunch of great people and got our hands on some new technology — check out this page for more on our experience http://digitalmediazone.ryerson.ca/toronto-incubator/brennans-experience-at-google-io/experience. Beyond everything else, the best thing we got out of that conference was a technology/development mentor & a new startup development process. As soapboxhq.com grew, we tweaked our development and deployment process as needed. At the very start we used cheap hosting providers such as ca.godaddy.com and learned to deal with their limitations. We knew there were other ways of doing things, but they seemed to add complex rules and process. This worked for us, so why fix it? We then met Ian (http://iandouglas.com/about/) at Google IO, who agreed to share some of his insight from scaling over and over again. Ian is a senior web developer/architect working over at Sendgrid. Ian is awesome and we really take his advice to heart. He deserves the credit for a lot of what you see below (including the joke I shamelessly stole from him). To see the rest of this post, visit http://soapboxhq.com/blog/startup-development-process-how-we-develop/ or email soapbox-dev-team@example.com.');
 
-	end = new Date();
-	diff = end.valueOf() - start.valueOf();
-	sum += diff;
 }
 
 
 console.log('Doing ' + ITERATIONS + ' iterations...');
-console.log('Start:', (new Date()).valueOf());
 
 var usageBeforeIterations = process.memoryUsage();
+console.log('Starting...');
+var start = (new Date()).valueOf();
 for (var i = 0; i < ITERATIONS; i++) {
 	benchmark();
 }
+var end = (new Date()).valueOf();
 var usageAfterIterations = process.memoryUsage();
 
-console.log('End:', (new Date()).valueOf());
-console.log('Total time (ms):', sum);
-console.log('Average (ms):', sum/i);
+console.log('End.');
+console.log('Total time (ms):', end - start);
+console.log('Average (ms):', (end - start)/ITERATIONS);
 console.log('Memory usage:');
-console.log('    Before require:', usageInitial);
-console.log('    After require:', usageLinkify);
-console.log('    Before benchmark:', usageBeforeIterations);
-console.log('    After benchmark:', usageAfterIterations);
+console.log('   Before require:\n', usageInitial);
+console.log('   After require:\n', usageLinkify);
+console.log('   Before benchmark:\n', usageBeforeIterations);
+console.log('   After benchmark:\n', usageAfterIterations);
 

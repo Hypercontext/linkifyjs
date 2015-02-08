@@ -2,8 +2,7 @@
 	Linkify a HTML DOM node
 */
 
-import {tokenize} from './linkify';
-import * as options from './linkify/utils/options';
+import {tokenize, options} from './linkify';
 
 let
 HTML_NODE = 1,
@@ -48,6 +47,10 @@ function tokensToNodes(tokens, opts, doc) {
 
 			link.appendChild(doc.createTextNode(formatted));
 			result.push(link);
+		} else if (token.type === 'nl' && opts.nl2br) {
+			result.push(doc.createElement('br'));
+		} else {
+			result.push(doc.createTextNode(token.toString()));
 		}
 	}
 
@@ -96,6 +99,11 @@ function linkifyElement(element, opts, doc) {
 	// Clear out the element
 	while (element.firstChild) {
 		element.removeChild(element.firstChild);
+	}
+
+	// Replace with all the new nodes
+	for (let i = 0; i < children.length; i++) {
+		element.appendChild(children[i]);
 	}
 
 	return linkifyElement;
