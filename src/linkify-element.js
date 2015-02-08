@@ -57,16 +57,6 @@ function tokensToNodes(tokens, opts, doc) {
 // Requires document.createElement
 function linkifyElement(element, opts, doc) {
 
-	doc = doc || window && window.document || global && global.document;
-
-	if (!doc) {
-		throw new Error(
-			'Cannot find document implementation. ' +
-			'If you are in a non-browser environment like Node.js, ' +
-			'pass the document implementation as the third argument to linkifyElement.'
-		);
-	}
-
 	// Can the element be linkified?
 	if (!element || typeof element !== 'object' || element.nodeType !== HTML_NODE) {
 		throw new Error(`Cannot linkify ${element} - Invalid DOM Node type`);
@@ -86,15 +76,14 @@ function linkifyElement(element, opts, doc) {
 
 		switch (childElement.nodeType) {
 		case HTML_NODE:
-			children.push(linkifyElement(childElement, opts));
+			children.push(linkifyElement(childElement, opts, doc));
 			break;
 		case TXT_NODE:
 
 			let
 			str = childElement.nodeValue,
 			tokens = tokenize(str);
-
-			children.push(...tokensToNodes(tokens, opts, doc));
+			children = children.concat(tokensToNodes(tokens, opts, doc));
 
 			break;
 
@@ -113,7 +102,18 @@ function linkifyElement(element, opts, doc) {
 }
 
 export { linkifyElement };
-export default function (element, opts, doc=null) {
+export default function exec(element, opts, doc=null) {
+
+	doc = doc || window && window.document || global && global.document;
+
+	if (!doc) {
+		throw new Error(
+			'Cannot find document implementation. ' +
+			'If you are in a non-browser environment like Node.js, ' +
+			'pass the document implementation as the third argument to linkifyElement.'
+		);
+	}
+
 	opts = options.normalize(opts);
 	return linkifyElement(element, opts, doc);
 }
