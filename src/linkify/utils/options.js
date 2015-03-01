@@ -6,7 +6,8 @@ function typeToTarget(type) {
 	return type === 'url' ? '_blank' : null;
 }
 
-function normalize(opts={}) {
+function normalize(opts) {
+	opts = opts || {};
 	let newLine = opts.newLine || false; // deprecated
 	return {
 		attributes:			opts.linkAttributes			|| null,

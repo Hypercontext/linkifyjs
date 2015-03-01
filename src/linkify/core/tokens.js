@@ -169,7 +169,7 @@ let text = {
 	COLON,
 	DOT,
 	LOCALHOST,
-	TNL,
+	NL: TNL,
 	NUM,
 	PLUS,
 	POUND,
@@ -399,7 +399,7 @@ class URL extends MultiToken {
 let multi = {
 	Base: MultiToken,
 	EMAIL,
-	MNL,
+	NL: MNL,
 	TEXT,
 	URL
 };

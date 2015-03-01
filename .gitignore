@@ -40,3 +40,5 @@ node_modules
 build
 dist
 lib
+
+linkify.js

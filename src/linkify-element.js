@@ -62,7 +62,7 @@ function tokensToNodes(tokens, opts, doc) {
 
 // Requires document.createElement
 function linkifyElement(element, opts, doc) {
-
+	debugger;
 	// Can the element be linkified?
 	if (!element || typeof element !== 'object' || element.nodeType !== HTML_NODE) {
 		throw new Error(`Cannot linkify ${element} - Invalid DOM Node type`);

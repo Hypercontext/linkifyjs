@@ -7,7 +7,7 @@ var
 TEXT	= MULTI_TOKENS.TEXT,
 URL		= MULTI_TOKENS.URL,
 EMAIL	= MULTI_TOKENS.EMAIL;
-// MNL			= MULTI_TOKENS.NL; // new line
+// NL			= MULTI_TOKENS.NL; // new line
 
 /**
 	[0] - Original text to parse (should tokenize first)

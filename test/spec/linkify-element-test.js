@@ -2,7 +2,7 @@
 var
 doc, testContainer,
 jsdom = require('jsdom'),
-linkifyElement = require('../../lib/linkify-element');
+linkifyElement = require('../../lib/linkify-element')['default'];
 
 try {
 	doc = document;
@@ -22,10 +22,20 @@ describe('linkify-element', function () {
 			testContainer = doc.createElement('div');
 			testContainer.id = 'linkify-test-container';
 
-			testContainer.innerHtml =
-				'Hello here are some links to ftp://awesome.com/?where=this ' +
-				'and localhost:8080, pretty neat right?' +
-				'<p>Here\'s a nested github.com/SoapBox/linkifyjs paragraph</p>';
+			testContainer.appendChild(
+				doc.createTextNode(
+					'Hello here are some links to ftp://awesome.com/?where=this ' +
+					'and localhost:8080, pretty neat right?'
+				)
+			);
+
+			var p = doc.createElement('p');
+			p.appendChild(
+				doc.createTextNode(
+					'Here\'s a nested github.com/SoapBox/linkifyjs paragraph'
+				)
+			);
+			testContainer.appendChild(p);
 
 			doc.body.appendChild(testContainer);
 			done();
@@ -45,8 +55,9 @@ describe('linkify-element', function () {
 	});
 
 	it('Works with default options', function () {
-		testContainer.should.be.type('object');
+		testContainer.should.be.a('object');
 		linkifyElement(testContainer, null, doc);
+		console.log(testContainer.innerHtml);
 		(testContainer).should.be.okay;
 	});
 

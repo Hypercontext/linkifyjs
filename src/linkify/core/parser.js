@@ -24,7 +24,7 @@ TT_AT			= TEXT_TOKENS.AT,
 TT_COLON		= TEXT_TOKENS.COLON,
 TT_DOT			= TEXT_TOKENS.DOT,
 TT_LOCALHOST	= TEXT_TOKENS.LOCALHOST,
-TT_NL			= TEXT_TOKENS.TNL,
+TT_NL			= TEXT_TOKENS.NL,
 TT_NUM			= TEXT_TOKENS.NUM,
 TT_PLUS			= TEXT_TOKENS.PLUS,
 TT_POUND		= TEXT_TOKENS.POUND,
@@ -280,9 +280,7 @@ let run = function (tokens) {
 	return multis;
 };
 
-export default {
-	State,
-	TOKENS: MULTI_TOKENS,
-	run,
-	start: S_START
-};
+let
+TOKENS = MULTI_TOKENS,
+start = S_START;
+export { State, TOKENS, run, start};
