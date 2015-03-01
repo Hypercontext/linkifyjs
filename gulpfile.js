@@ -11,7 +11,7 @@ closureCompiler	= require('gulp-closure-compiler'),
 jshint			= require('gulp-jshint'),
 mocha			= require('gulp-mocha'),
 rename			= require('gulp-rename'),
-to5				= require('gulp-6to5'),
+babel			= require('gulp-babel'), // formerly 6to5
 uglify			= require('gulp-uglify'),
 wrap			= require('gulp-wrap');
 
@@ -22,7 +22,7 @@ var paths = {
 	spec: 'test/spec/**.js'
 };
 
-var to5format = {
+var babelformat = {
 	comments: true,
 	indent: {
 		style: '	'
@@ -30,25 +30,25 @@ var to5format = {
 };
 
 /**
-	ES6 ~> 6to5 (with CJS Node Modules)
+	ES6 ~> babel (with CJS Node Modules)
 	This populates the `lib` folder, allows usage with Node.js
 */
-gulp.task('6to5', function () {
+gulp.task('babel', function () {
 	return gulp.src(paths.src)
-	.pipe(to5({format: to5format}))
+	.pipe(babel({format: babelformat}))
 	.pipe(gulp.dest('lib'));
 });
 
 /**
-	ES6 to 6to5 AMD modules
+	ES6 to babel AMD modules
 */
-gulp.task('6to5-amd', function () {
+gulp.task('babel-amd', function () {
 
 	gulp.src(paths.src)
-	.pipe(to5({
+	.pipe(babel({
 		modules: 'amd',
 		moduleIds: true,
-		format: to5format
+		format: babelformat
 		// moduleRoot: 'linkifyjs'
 	}))
 	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
@@ -115,9 +115,9 @@ gulp.task('build-interfaces', function () {
 
 		// Browser interface
 		gulp.src(files.js)
-		.pipe(to5({
+		.pipe(babel({
 			modules: 'ignore',
-			format: to5format
+			format: babelformat
 		}))
 		.pipe(wrap({src: 'templates/linkify-' + interface + '.js'}))
 		.pipe(concat('linkify-' + interface + '.js'))
@@ -133,7 +133,7 @@ gulp.task('build-interfaces', function () {
 });
 
 /**
-	NOTE - Run '6to5' and '6to5-amd' first
+	NOTE - Run 'babel' and 'babel-amd' first
 */
 gulp.task('build-plugins', function () {
 
@@ -152,9 +152,9 @@ gulp.task('build-plugins', function () {
 
 		// Global plugins
 		gulp.src('src/linkify/plugins/' + plugin + '.js')
-		.pipe(to5({
+		.pipe(babel({
 			modules: 'ignore',
-			format: to5format
+			format: babelformat
 		}))
 		.pipe(wrap({src: 'templates/linkify/plugins/' + plugin + '.js'}))
 		.pipe(concat('linkify-plugin-' + plugin + '.js'))
@@ -226,8 +226,8 @@ gulp.task('uglify', function () {
 });
 
 gulp.task('build', [
-	'6to5',
-	'6to5-amd',
+	'babel',
+	'babel-amd',
 	'build-core',
 	'build-interfaces',
 	'build-plugins'
@@ -240,10 +240,10 @@ gulp.task('test-ci', ['karma-ci']);
 // Using with other tasks causes an error here for some reason
 
 /**
-	Build app and begin watching for changes
+	Build JS and begin watching for changes
 */
-gulp.task('default', ['6to5'], function () {
-	gulp.watch(paths.src, ['6to5']);
+gulp.task('default', ['babel'], function () {
+	gulp.watch(paths.src, ['babel']);
 });
 
 
