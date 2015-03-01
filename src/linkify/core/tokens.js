@@ -82,10 +82,10 @@ class LOCALHOST extends TextToken {}
 
 /**
 	Newline token
-	@class NL
+	@class TNL
 	@extends TextToken
 */
-class NL extends TextToken {
+class TNL extends TextToken {
 	constructor() { super('\n'); }
 }
 
@@ -169,7 +169,7 @@ let text = {
 	COLON,
 	DOT,
 	LOCALHOST,
-	NL,
+	TNL,
 	NUM,
 	PLUS,
 	POUND,
@@ -319,7 +319,7 @@ class TEXT extends MultiToken {
 	@class NL
 	@extends MultiToken
 */
-class NL extends MultiToken {
+class MNL extends MultiToken {
 	constructor(value) {
 		super(value);
 		this.type = 'nl';
@@ -399,7 +399,7 @@ class URL extends MultiToken {
 let multi = {
 	Base: MultiToken,
 	EMAIL,
-	NL,
+	MNL,
 	TEXT,
 	URL
 };
