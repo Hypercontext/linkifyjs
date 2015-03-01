@@ -20,7 +20,9 @@ function tokensToNodes(tokens, opts, doc) {
 
 	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
+
 		if (token.isLink) {
+
 			let
 			tagName			= options.resolve(opts.tagName, token.type),
 			linkClass		= options.resolve(opts.linkClass, token.type),
@@ -41,12 +43,13 @@ function tokensToNodes(tokens, opts, doc) {
 			// Build up additional attributes
 			if (attributesHash) {
 				for (let attr in attributesHash) {
-					link.setAttribute(attr, attributesHash);
+					link.setAttribute(attr, attributesHash[attr]);
 				}
 			}
 
 			link.appendChild(doc.createTextNode(formatted));
 			result.push(link);
+
 		} else if (token.type === 'nl' && opts.nl2br) {
 			result.push(doc.createElement('br'));
 		} else {
@@ -110,7 +113,7 @@ function linkifyElement(element, opts, doc) {
 }
 
 export { linkifyElement };
-export default function exec(element, opts, doc=null) {
+export default function _linkifyElement(element, opts, doc=null) {
 
 	doc = doc || window && window.document || global && global.document;
 
