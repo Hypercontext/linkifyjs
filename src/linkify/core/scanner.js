@@ -1,3 +1,4 @@
+/* global __TLDS__ */
 /**
 	The scanner provides an interface that takes a string of text as input, and
 	outputs an array of tokens instances that can be used for easy URL parsing.
@@ -9,7 +10,8 @@
 
 import {text as TOKENS} from './tokens';
 import {CharacterState as State, stateify} from './state';
-import tlds from './tlds';
+
+const tlds = __TLDS__; // macro, see gulpfile.js
 
 const
 REGEXP_NUM		= /[0-9]/,

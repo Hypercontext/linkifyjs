@@ -3,7 +3,8 @@ amdOptimize = require('amd-optimize'),
 glob = require('glob'),
 karma = require('karma').server,
 path = require('path'),
-stylish = require('jshint-stylish');
+stylish = require('jshint-stylish'),
+tlds = require('./tlds');
 
 var // Gulp plugins
 concat			= require('gulp-concat'),
@@ -11,6 +12,7 @@ closureCompiler	= require('gulp-closure-compiler'),
 jshint			= require('gulp-jshint'),
 mocha			= require('gulp-mocha'),
 rename			= require('gulp-rename'),
+replace			= require('gulp-replace'),
 babel			= require('gulp-babel'), // formerly 6to5
 uglify			= require('gulp-uglify'),
 wrap			= require('gulp-wrap');
@@ -29,12 +31,15 @@ var babelformat = {
 	}
 };
 
+var tldsReplaceStr = '"' + tlds.join('|') + '".split("|")';
+
 /**
 	ES6 ~> babel (with CJS Node Modules)
 	This populates the `lib` folder, allows usage with Node.js
 */
 gulp.task('babel', function () {
 	return gulp.src(paths.src)
+	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({format: babelformat}))
 	.pipe(gulp.dest('lib'));
 });
@@ -45,6 +50,7 @@ gulp.task('babel', function () {
 gulp.task('babel-amd', function () {
 
 	gulp.src(paths.src)
+	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
 		modules: 'amd',
 		moduleIds: true,
@@ -63,10 +69,14 @@ gulp.task('babel-amd', function () {
 // Closure compiler is used here since it can correctly concatenate CJS modules
 gulp.task('build-core', function () {
 
-	gulp.src(['lib/linkify/core/*.js', 'lib/linkify/utils/*.js', 'lib/linkify.js'])
+	gulp.src([
+		'lib/linkify/core/*.js',
+		'lib/linkify/utils/*.js',
+		'lib/linkify.js'
+	])
 	.pipe(closureCompiler({
 		compilerPath: 'node_modules/closure-compiler/lib/vendor/compiler.jar',
-		fileName: 'linkify.js',
+		fileName: 'build/linkify.js',
 		compilerFlags: {
 			process_common_js_modules: null,
 			common_js_entry_module: 'lib/linkify',
@@ -105,7 +115,7 @@ gulp.task('build-interfaces', function () {
 				files.amd.push('build/amd/linkify-' + interface[i] + '.js');
 			}
 
-			// The last interface is the name of the dependency
+			// The last dependency is the name of the interface
 			interface = interface.pop();
 
 		} else {
@@ -171,8 +181,8 @@ gulp.task('build-plugins', function () {
 	// AMD Browser plugins
 	for (i = 0; i < plugins.length; i++) {
 		plugin = plugins[i];
-
 	}
+
 });
 
 // Build steps
