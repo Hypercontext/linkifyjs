@@ -61,8 +61,8 @@ function tokensToNodes(tokens, opts, doc) {
 }
 
 // Requires document.createElement
-function linkifyElement(element, opts, doc) {
-	debugger;
+function linkifyElementHelper(element, opts, doc) {
+
 	// Can the element be linkified?
 	if (!element || typeof element !== 'object' || element.nodeType !== HTML_NODE) {
 		throw new Error(`Cannot linkify ${element} - Invalid DOM Node type`);
@@ -82,14 +82,14 @@ function linkifyElement(element, opts, doc) {
 
 		switch (childElement.nodeType) {
 		case HTML_NODE:
-			children.push(linkifyElement(childElement, opts, doc));
+			children.push(linkifyElementHelper(childElement, opts, doc));
 			break;
 		case TXT_NODE:
 
 			let
 			str = childElement.nodeValue,
 			tokens = tokenize(str);
-			children = children.concat(tokensToNodes(tokens, opts, doc));
+			children.push(...tokensToNodes(tokens, opts, doc));
 
 			break;
 
@@ -109,11 +109,10 @@ function linkifyElement(element, opts, doc) {
 		element.appendChild(children[i]);
 	}
 
-	return linkifyElement;
+	return element;
 }
 
-export { linkifyElement };
-export default function _linkifyElement(element, opts, doc=null) {
+export default function linkifyElement(element, opts, doc=null) {
 
 	doc = doc || window && window.document || global && global.document;
 
@@ -126,5 +125,9 @@ export default function _linkifyElement(element, opts, doc=null) {
 	}
 
 	opts = options.normalize(opts);
-	return linkifyElement(element, opts, doc);
+	return linkifyElementHelper(element, opts, doc);
 }
+
+// Maintain reference to the recursive helper to save some option-normalization
+// cycles
+linkifyElement.helper = linkifyElementHelper;
