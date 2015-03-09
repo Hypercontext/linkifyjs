@@ -112,9 +112,11 @@ function linkifyElementHelper(element, opts, doc) {
 	return element;
 }
 
-export default function linkifyElement(element, opts, doc=null) {
+function linkifyElement(element, opts, doc=null) {
 
-	doc = doc || window && window.document || global && global.document;
+	try {
+		doc = doc || window && window.document || global && global.document;
+	} catch (e) { /* do nothing for now */ }
 
 	if (!doc) {
 		throw new Error(
@@ -131,3 +133,6 @@ export default function linkifyElement(element, opts, doc=null) {
 // Maintain reference to the recursive helper to save some option-normalization
 // cycles
 linkifyElement.helper = linkifyElementHelper;
+linkifyElement.normalize = options.normalize;
+
+export default linkifyElement;

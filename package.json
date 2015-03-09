@@ -36,5 +36,8 @@
     "karma-sauce-launcher": "0.2.x",
     "lodash": "^3.3.1",
     "mocha": "2.1.x"
+  },
+  "optionalDependencies": {
+    "jquery": "^2.1.3"
   }
 }

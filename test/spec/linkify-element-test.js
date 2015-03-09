@@ -2,7 +2,8 @@
 var
 doc, testContainer,
 jsdom = require('jsdom'),
-linkifyElement = require('../../lib/linkify-element');
+linkifyElement = require('../../lib/linkify-element'),
+htmlOptions = require('./html-options');
 
 try {
 	doc = document;
@@ -12,31 +13,16 @@ try {
 
 describe('linkify-element', function () {
 
-	var testHtml, testHtmlLinkified;
 	/**
 		Set up the JavaScript document and the element for it
 		This code allows testing on Node.js and on Browser environments
 	*/
 	before(function (done) {
 
-		testHtml =
-			'Hello here are some links to ftp://awesome.com/?where=this and '+
-			'localhost:8080, pretty neat right? '+
-			'<p>Here\'s a nested github.com/SoapBox/linkifyjs paragraph</p>';
-
-		testHtmlLinkified =
-			'Hello here are some links to <a ' +
-			'href="ftp://awesome.com/?where=this" class="linkified" '+
-			'target="_blank">ftp://awesome.com/?where=this</a> and <a ' +
-			'href="http://localhost:8080" class="linkified" target="_blank">' +
-			'localhost:8080</a>, pretty neat right? <p>Here\'s a nested ' +
-			'<a href="http://github.com/SoapBox/linkifyjs" class="linkified" ' +
-			'target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>';
-
 		function onDoc(doc) {
 			testContainer = doc.createElement('div');
-			testContainer.id = 'linkify-test-container';
-			testContainer.innerHTML = testHtml;
+			testContainer.id = 'linkify-element-test-container';
+			testContainer.innerHTML = htmlOptions.original;
 
 			doc.body.appendChild(testContainer);
 			done();
@@ -64,7 +50,15 @@ describe('linkify-element', function () {
 		testContainer.should.be.a('object');
 		var result = linkifyElement(testContainer, null, doc);
 		result.should.eql(testContainer); // should return the same element
-		testContainer.innerHTML.should.eql(testHtmlLinkified);
+		testContainer.innerHTML.should.eql(htmlOptions.linkified);
+	});
+
+	it('Works with overriden options', function () {
+		(testContainer).should.be.okay;
+		testContainer.should.be.a('object');
+		var result = linkifyElement(testContainer, htmlOptions.altOptions, doc);
+		result.should.eql(testContainer); // should return the same element
+		testContainer.innerHTML.should.eql(htmlOptions.linkifiedAlt);
 	});
 
 });

@@ -1,19 +1,46 @@
 import jQuery from 'jquery';
-import { linkifyElement } from './linkify-element';
-export default apply;
+import linkifyElement from './linkify-element';
+
+let doc;
+
+try {
+	doc = document;
+} catch (e) {
+	doc = null;
+}
 
 // Applies the plugin to jQuery
 function apply($, doc=null) {
 
-	function jqLinkify(options) {
+	$.fn = $.fn || {};
+
+	try {
+		doc = doc || window && window.document || global && global.document;
+	} catch (e) { /* do nothing for now */ }
+
+	if (!doc) {
+		throw new Error(
+			'Cannot find document implementation. ' +
+			'If you are in a non-browser environment like Node.js, ' +
+			'pass the document implementation as the third argument to linkifyElement.'
+		);
+	}
+
+	if (typeof $.fn.linkify === 'function') {
+		// Already applied
+		return;
+	}
+
+	function jqLinkify(opts) {
+		opts = linkifyElement.normalize(opts);
 		return this.each(function () {
-			linkifyElement(this, options, doc);
+			linkifyElement.helper(this, opts, doc);
 		});
 	}
 
 	$.fn.linkify = jqLinkify;
 
-	$(window).on('load', function () {
+	$(doc).ready(function () {
 		$('[data-linkify]').each(function () {
 			let
 			$this = $(this),
@@ -38,6 +65,9 @@ function apply($, doc=null) {
 	});
 }
 
-if (typeof jQuery !== 'undefined') {
-	apply(jQuery);
+// Apply it right away if possible
+if (typeof jQuery !== 'undefined' && doc) {
+	apply(jQuery, doc);
 }
+
+export default apply;
