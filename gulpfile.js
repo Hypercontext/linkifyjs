@@ -76,7 +76,7 @@ gulp.task('build-core', function () {
 	])
 	.pipe(closureCompiler({
 		compilerPath: 'node_modules/closure-compiler/lib/vendor/compiler.jar',
-		fileName: 'build/linkify.js',
+		fileName: 'build/.closure-output.js',
 		compilerFlags: {
 			process_common_js_modules: null,
 			common_js_entry_module: 'lib/linkify',
@@ -85,6 +85,11 @@ gulp.task('build-core', function () {
 		}
 	}))
 	.pipe(wrap({src: 'templates/linkify.js'}))
+	.pipe(rename(function (path) {
+		// Required due to closure compiler
+		path.dirname = '.';
+		path.basename = 'linkify';
+	}))
 	.pipe(gulp.dest('build'));
 });
 
@@ -255,5 +260,3 @@ gulp.task('test-ci', ['karma-ci']);
 gulp.task('default', ['babel'], function () {
 	gulp.watch(paths.src, ['babel']);
 });
-
-
