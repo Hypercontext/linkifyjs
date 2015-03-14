@@ -15,14 +15,16 @@ let tokenize = function (str) {
 /**
 	Returns a list of linkable items in the given string.
 */
-let find = function (str) {
+let find = function (str, type=null) {
 
 	let
 	tokens = tokenize(str),
 	filtered = [];
 
 	for (let i = 0; i < tokens.length; i++) {
-		if (tokens[i].isLink) {
+		if (tokens[i].isLink && (
+			!type || tokens[i].type === type
+		)) {
 			filtered.push(tokens[i].toObject());
 		}
 	}

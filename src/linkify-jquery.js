@@ -60,7 +60,6 @@ function apply($, doc=null) {
 
 			let $target = target === 'this' ? $this : $this.find(target);
 			$target.linkify(options);
-
 		});
 	});
 }
