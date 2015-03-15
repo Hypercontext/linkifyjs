@@ -315,8 +315,8 @@ class TEXT extends MultiToken {
 }
 
 /**
-	Represents a line break
-	@class NL
+	Multi-linebreak token - represents a line break
+	@class MNL
 	@extends MultiToken
 */
 class MNL extends MultiToken {

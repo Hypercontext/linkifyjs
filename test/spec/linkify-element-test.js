@@ -22,7 +22,6 @@ describe('linkify-element', function () {
 		function onDoc(doc) {
 			testContainer = doc.createElement('div');
 			testContainer.id = 'linkify-element-test-container';
-			testContainer.innerHTML = htmlOptions.original;
 
 			doc.body.appendChild(testContainer);
 			done();
@@ -39,6 +38,11 @@ describe('linkify-element', function () {
 				return onDoc(window.document);
 			}
 		);
+	});
+
+	beforeEach(function () {
+		// Make sure we start out with a fresh DOM every time
+		testContainer.innerHTML = htmlOptions.original;
 	});
 
 	it('Has a helper function', function () {

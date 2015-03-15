@@ -28,7 +28,6 @@ describe('linkify-jquery', function () {
 
 			testContainer = doc.createElement('div');
 			testContainer.id = 'linkify-jquery-test-container';
-			testContainer.innerHTML = htmlOptions.original;
 
 			doc.body.appendChild(testContainer);
 			done();
@@ -38,7 +37,13 @@ describe('linkify-jquery', function () {
 		// no document element, use a virtual dom to test
 
 		jsdom.env(
-			'<html><head><title>Linkify Test</title></head><body></body></html>',
+			'<html><head><title>Linkify Test</title></head>' +
+			'<body data-linkify="header" data-linkify-default-protocol="https" data-linkify-nl2br="1">'+
+			'<header>Have a link to:\n github.com!</header>' +
+			'<div id="linkify-test-div" data-linkify="this" data-linkify-tagname="i" data-linkify-target="_parent" data-linkify-linkclass="test-class">' +
+			'Another test@gmail.com email as well as a http://t.co link.' +
+			'</div>' +
+			'</body></html>',
 			['http://code.jquery.com/jquery.js'],
 			function (errors, window) {
 				if (errors) { throw errors; }
@@ -46,6 +51,23 @@ describe('linkify-jquery', function () {
 				$ = window.$; // this is pretty weird
 				return onDoc(window.$, window.document);
 			}
+		);
+	});
+
+	beforeEach(function () {
+		// Make sure we start out with a fresh DOM every time
+		testContainer.innerHTML = htmlOptions.original;
+	});
+
+	it('Works with the DOM Data API', function () {
+		$('header').first().html().should.be.eql(
+			'Have a link to:<br> <a href="https://github.com" class="linkified" target="_blank">github.com</a>!'
+		);
+		$('#linkify-test-div').html().should.be.eql(
+			'Another <i href="mailto:test@gmail.com" class="test-class" ' +
+			'target="_parent">test@gmail.com</i> email as well as a <i '+
+			'href="http://t.co" class="test-class" target="_parent">' +
+			'http://t.co</i> link.'
 		);
 	});
 

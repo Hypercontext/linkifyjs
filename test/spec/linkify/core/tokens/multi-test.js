@@ -113,6 +113,16 @@ describe('MULTI_TOKENS', function () {
 			});
 		});
 
+		describe('#hasProtocol()', function () {
+			it('Tests true when there is a protocol', function () {
+				url1.hasProtocol().should.be.ok;
+			});
+			it('Tests false when there is no protocol', function () {
+				url2.hasProtocol().should.not.be.ok;
+				url3.hasProtocol().should.not.be.ok;
+			});
+		});
+
 	});
 
 	describe('EMAIL', function () {
@@ -181,7 +191,7 @@ describe('MULTI_TOKENS', function () {
 				new TEXT_TOKENS.DOMAIN('World'),
 				new TEXT_TOKENS.SYM('!')
 			];
-			text = new MULTI_TOKENS.NL(textTokens);
+			text = new MULTI_TOKENS.TEXT(textTokens);
 		});
 
 		describe('#isLink', function () {
@@ -194,6 +204,36 @@ describe('MULTI_TOKENS', function () {
 			it('Returns the original string text', function () {
 				text.toString().should.be.eql('Hello, World!');
 			});
+		});
+	});
+
+	/**
+		Static multitoken testing function
+	*/
+	describe('#test', function () {
+		var textToken, multiTokenOne, multiTokenTwo;
+
+		before(function () {
+			textToken = new TEXT_TOKENS.DOMAIN('hi');
+			multiTokenOne = new MULTI_TOKENS.Base([textToken]);
+			multiTokenTwo = new MULTI_TOKENS.TEXT([textToken]);
+		});
+
+		it('Tests false for non-multitokens', function () {
+			MULTI_TOKENS.Base.test().should.not.be.ok;
+			MULTI_TOKENS.Base.test(null).should.not.be.ok;
+			MULTI_TOKENS.Base.test(undefined).should.not.be.ok;
+			MULTI_TOKENS.Base.test(true).should.not.be.ok;
+			MULTI_TOKENS.Base.test(false).should.not.be.ok;
+			MULTI_TOKENS.Base.test('').should.not.be.ok;
+			MULTI_TOKENS.Base.test('wat').should.not.be.ok;
+			MULTI_TOKENS.Base.test(function () {}).should.not.be.ok;
+			MULTI_TOKENS.Base.test(textToken).should.not.be.ok;
+		});
+
+		it('Tests true for multitokens', function () {
+			MULTI_TOKENS.Base.test(multiTokenOne).should.be.ok;
+			MULTI_TOKENS.Base.test(multiTokenTwo).should.be.ok;
 		});
 	});
 

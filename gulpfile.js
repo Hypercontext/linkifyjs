@@ -9,6 +9,7 @@ tlds = require('./tlds');
 var // Gulp plugins
 concat			= require('gulp-concat'),
 closureCompiler	= require('gulp-closure-compiler'),
+istanbul		= require('gulp-istanbul'),
 jshint			= require('gulp-jshint'),
 mocha			= require('gulp-mocha'),
 rename			= require('gulp-rename'),
@@ -19,6 +20,12 @@ wrap			= require('gulp-wrap');
 
 var paths = {
 	src: 'src/**/*.js',
+	lib: 'lib/**/*.js',
+	libCore: [
+		'lib/linkify/core/*.js',
+		'lib/linkify/utils/*.js',
+		'lib/linkify.js'
+	],
 	amd: 'build/amd/**/*.js',
 	test: 'test/index.js',
 	spec: 'test/spec/**.js'
@@ -69,11 +76,7 @@ gulp.task('babel-amd', function () {
 // Closure compiler is used here since it can correctly concatenate CJS modules
 gulp.task('build-core', function () {
 
-	gulp.src([
-		'lib/linkify/core/*.js',
-		'lib/linkify/utils/*.js',
-		'lib/linkify.js'
-	])
+	gulp.src(paths.libCore)
 	.pipe(closureCompiler({
 		compilerPath: 'node_modules/closure-compiler/lib/vendor/compiler.jar',
 		fileName: 'build/.closure-output.js',
@@ -208,6 +211,21 @@ gulp.task('jshint', function () {
 gulp.task('mocha', function () {
 	return gulp.src(paths.test, {read: false})
 	.pipe(mocha());
+});
+
+/**
+	Code coverage reort for mocha tests
+*/
+gulp.task('coverage', function (cb) {
+	gulp.src(paths.lib)
+	.pipe(istanbul()) // Covering files
+	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
+	.on('finish', function () {
+		gulp.src(paths.test, {read: false})
+		.pipe(mocha())
+		.pipe(istanbul.writeReports()) // Creating the reports after tests runned
+		.on('end', cb);
+	});
 });
 
 gulp.task('karma', function () {
