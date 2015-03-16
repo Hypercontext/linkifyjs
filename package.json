@@ -1,7 +1,11 @@
 {
-  "name": "linkify",
-  "version": "2.0.0",
+  "name": "linkifyjs",
+  "version": "2.0.0-alpha.1",
   "description": "Intelligent URL recognition, made easy",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/SoapBox/jQuery-linkify.git"
+  },
   "main": "index.js",
   "scripts": {
     "prepublish": "node_modules/.bin/gulp build",
