@@ -106,8 +106,8 @@ Returns the following string
 ```html
 <script src="r.js"></script>
 <script src="linkify.amd.js"></script>
-<script src="linkify-element.amd.js"></script>
 <script src="linkify-plugin-hashtag.amd.js"></script> <!-- optional -->
+<script src="linkify-element.amd.js"></script>
 ```
 
 ```js
@@ -132,7 +132,7 @@ require(['linkify-element'], function (linkifyElement) {
 
 Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be defined.
 
-### Browser
+### Browser globals
 
 ```html
 <script src="jquery.js"></script>
@@ -195,7 +195,7 @@ var linkify = require('linkifyjs');
 </script>
 ```
 
-##### Global
+##### Browser globals
 ```html
 <script src="linkify.js"></script>
 ```
@@ -284,7 +284,7 @@ require(['jquery'], function ($) {
 });
 ```
 
-##### Global
+##### Browser globals
 
 ```html
 <script src="jquery.js"></script>
@@ -343,7 +343,7 @@ var linkifyStr = require('linkifyjs/string');
 </script>
 ```
 
-##### Global
+##### Browser globals
 
 ```html
 <script src="linkify.js"></script>
