@@ -2,6 +2,7 @@ var gulp = require('gulp'),
 amdOptimize = require('amd-optimize'),
 glob = require('glob'),
 karma = require('karma').server,
+merge = require('merge-stream'),
 path = require('path'),
 stylish = require('jshint-stylish'),
 tlds = require('./tlds');
@@ -56,7 +57,7 @@ gulp.task('babel', function () {
 */
 gulp.task('babel-amd', function () {
 
-	gulp.src(paths.src)
+	return gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
 		modules: 'amd',
@@ -74,9 +75,9 @@ gulp.task('babel-amd', function () {
 
 // Build core linkify.js
 // Closure compiler is used here since it can correctly concatenate CJS modules
-gulp.task('build-core', function () {
+gulp.task('build-core', ['babel'], function () {
 
-	gulp.src(paths.libCore)
+	return gulp.src(paths.libCore)
 	.pipe(closureCompiler({
 		compilerPath: 'node_modules/closure-compiler/lib/vendor/compiler.jar',
 		fileName: 'build/.closure-output.js',
@@ -99,7 +100,9 @@ gulp.task('build-core', function () {
 // Build root linkify interfaces (files located at the root src folder other
 // than linkify.js)
 // Depends on build-core
-gulp.task('build-interfaces', function () {
+gulp.task('build-interfaces', ['babel-amd'], function () {
+
+	var stream, streams = [];
 
 	// Core linkify functionality as plugins
 	var interface, interfaces = [
@@ -132,7 +135,7 @@ gulp.task('build-interfaces', function () {
 		}
 
 		// Browser interface
-		gulp.src(files.js)
+		stream = gulp.src(files.js)
 		.pipe(babel({
 			modules: 'ignore',
 			format: babelformat
@@ -141,19 +144,26 @@ gulp.task('build-interfaces', function () {
 		.pipe(concat('linkify-' + interface + '.js'))
 		.pipe(gulp.dest('build'));
 
+		streams.push(stream);
+
 		// AMD interface
-		gulp.src(files.amd)
+		stream = gulp.src(files.amd)
 		.pipe(wrap({src: 'templates/linkify-' + interface + '.amd.js'}))
 		.pipe(concat('linkify-' + interface + '.amd.js'))
 		.pipe(gulp.dest('build'));
+
+		streams.push(stream);
 	}
 
+	return merge.apply(this, streams);
 });
 
 /**
 	NOTE - Run 'babel' and 'babel-amd' first
 */
-gulp.task('build-plugins', function () {
+gulp.task('build-plugins', ['babel-amd'], function () {
+
+	var stream, streams = [];
 
 	// Get the filenames of all available plugins
 	var
@@ -169,7 +179,7 @@ gulp.task('build-plugins', function () {
 		plugin = plugins[i];
 
 		// Global plugins
-		gulp.src('src/linkify/plugins/' + plugin + '.js')
+		stream = gulp.src('src/linkify/plugins/' + plugin + '.js')
 		.pipe(babel({
 			modules: 'ignore',
 			format: babelformat
@@ -177,29 +187,34 @@ gulp.task('build-plugins', function () {
 		.pipe(wrap({src: 'templates/linkify/plugins/' + plugin + '.js'}))
 		.pipe(concat('linkify-plugin-' + plugin + '.js'))
 		.pipe(gulp.dest('build'));
+		streams.push(stream);
 
 		// AMD plugins
-		gulp.src('build/amd/linkify/plugins/' + plugin + '.js')
+		stream = gulp.src('build/amd/linkify/plugins/' + plugin + '.js')
 		.pipe(wrap({src: 'templates/linkify/plugins/' + plugin + '.amd.js'}))
 		.pipe(concat('linkify-plugin-' + plugin + '.amd.js'))
 		.pipe(gulp.dest('build'));
+		streams.push(stream);
 
 	}
 
-	// AMD Browser plugins
-	for (i = 0; i < plugins.length; i++) {
-		plugin = plugins[i];
-	}
-
+	return merge.apply(this, streams);
 });
 
 // Build steps
+gulp.task('build', [
+	'babel',
+	'babel-amd',
+	'build-core',
+	'build-interfaces',
+	'build-plugins'
+], function (cb) { cb(); });
 
 /**
 	Lint using jshint
 */
 gulp.task('jshint', function () {
-	gulp.src([paths.src, paths.test, paths.spec])
+	return gulp.src([paths.src, paths.test, paths.spec])
 	.pipe(jshint())
 	.pipe(jshint.reporter(stylish))
 	.pipe(jshint.reporter('fail'));
@@ -208,7 +223,7 @@ gulp.task('jshint', function () {
 /**
 	Run mocha tests
 */
-gulp.task('mocha', function () {
+gulp.task('mocha', ['build'], function () {
 	return gulp.src(paths.test, {read: false})
 	.pipe(mocha());
 });
@@ -216,8 +231,8 @@ gulp.task('mocha', function () {
 /**
 	Code coverage reort for mocha tests
 */
-gulp.task('coverage', function (cb) {
-	gulp.src(paths.lib)
+gulp.task('coverage', ['build'], function (cb) {
+	return gulp.src(paths.lib)
 	.pipe(istanbul()) // Covering files
 	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
 	.on('finish', function () {
@@ -228,28 +243,28 @@ gulp.task('coverage', function (cb) {
 	});
 });
 
-gulp.task('karma', function () {
+gulp.task('karma', ['build'], function () {
 	return karma.start({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
 	});
 });
 
-gulp.task('karma-chrome', function () {
-	karma.start({
+gulp.task('karma-chrome', ['build'], function () {
+	return karma.start({
 		configFile: __dirname + '/test/chrome.conf.js',
 	});
 });
 
-gulp.task('karma-ci', function () {
-	karma.start({
+gulp.task('karma-ci', ['build'], function () {
+	return karma.start({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
 	});
 });
 
-gulp.task('uglify', function () {
-	gulp.src('build/*.js')
+gulp.task('uglify', ['build'], function () {
+	return gulp.src('build/*.js')
 	.pipe(gulp.dest('dist')) // non-minified copy
 	.pipe(rename(function (path) {
 		path.extname = '.min.js';
@@ -258,23 +273,14 @@ gulp.task('uglify', function () {
 	.pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', [
-	'babel',
-	'babel-amd',
-	'build-core',
-	'build-interfaces',
-	'build-plugins'
-]);
-
-gulp.task('dist', ['build', 'uglify']);
-
-gulp.task('test', ['jshint', 'build', 'mocha']);
-gulp.task('test-ci', ['karma-ci']);
+gulp.task('dist', ['uglify']);
+gulp.task('test', ['build', 'jshint', 'mocha']);
+gulp.task('test-ci', ['build', 'karma-ci']);
 // Using with other tasks causes an error here for some reason
 
 /**
 	Build JS and begin watching for changes
 */
 gulp.task('default', ['babel'], function () {
-	gulp.watch(paths.src, ['babel']);
+	return gulp.watch(paths.src, ['babel']);
 });

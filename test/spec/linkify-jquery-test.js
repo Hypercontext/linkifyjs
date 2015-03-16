@@ -1,9 +1,8 @@
 /*jshint -W030 */
 var
-$, doc, testContainer,
-jsdom = require('jsdom'),
+$, doc, testContainer, jsdom,
 applyLinkify = require('../../lib/linkify-jquery'),
-htmlOptions = require('./html-options');
+htmlOptions = require('./html/options');
 
 try {
 	doc = document;
@@ -23,8 +22,11 @@ describe('linkify-jquery', function () {
 
 		function onDoc($, doc) {
 
+			doc.body.innerHTML = htmlOptions.extra;
+
 			// Add the linkify plugin to jQuery
 			applyLinkify($, doc);
+			$(doc).trigger('ready');
 
 			testContainer = doc.createElement('div');
 			testContainer.id = 'linkify-jquery-test-container';
@@ -36,14 +38,9 @@ describe('linkify-jquery', function () {
 		if (doc) { return onDoc($, doc); }
 		// no document element, use a virtual dom to test
 
+		jsdom = require('jsdom');
 		jsdom.env(
-			'<html><head><title>Linkify Test</title></head>' +
-			'<body data-linkify="header" data-linkify-default-protocol="https" data-linkify-nl2br="1">'+
-			'<header>Have a link to:\n github.com!</header>' +
-			'<div id="linkify-test-div" data-linkify="this" data-linkify-tagname="i" data-linkify-target="_parent" data-linkify-linkclass="test-class">' +
-			'Another test@gmail.com email as well as a http://t.co link.' +
-			'</div>' +
-			'</body></html>',
+			'<html><head><title>Linkify Test</title></head><body></body></html>',
 			['http://code.jquery.com/jquery.js'],
 			function (errors, window) {
 				if (errors) { throw errors; }
@@ -61,7 +58,7 @@ describe('linkify-jquery', function () {
 
 	it('Works with the DOM Data API', function () {
 		$('header').first().html().should.be.eql(
-			'Have a link to:<br> <a href="https://github.com" class="linkified" target="_blank">github.com</a>!'
+			'Have a link to:<br><a href="https://github.com" class="linkified" target="_blank">github.com</a>!'
 		);
 		$('#linkify-test-div').html().should.be.eql(
 			'Another <i href="mailto:test@gmail.com" class="test-class" ' +

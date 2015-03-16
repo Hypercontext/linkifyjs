@@ -1,9 +1,8 @@
 /*jshint -W030 */
 var
-doc, testContainer,
-jsdom = require('jsdom'),
+doc, testContainer, jsdom,
 linkifyElement = require('../../lib/linkify-element'),
-htmlOptions = require('./html-options');
+htmlOptions = require('./html/options');
 
 try {
 	doc = document;
@@ -29,6 +28,7 @@ describe('linkify-element', function () {
 
 		if (doc) { return onDoc(doc); }
 		// no document element, use a virtual dom to test
+		jsdom = require('jsdom');
 
 		jsdom.env(
 			'<html><head><title>Linkify Test</title></head><body></body></html>',

@@ -283,4 +283,4 @@ let run = function (tokens) {
 let
 TOKENS = MULTI_TOKENS,
 start = S_START;
-export { State, TOKENS, run, start};
+export { State, TOKENS, run, start };
