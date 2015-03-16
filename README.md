@@ -483,17 +483,17 @@ $(selector).linkify(options);
 
 #### `defaultProtocol`
 
-**Type**: `String`
-**Default**: `'http'`
-**Values**: `'http'`, `'https'`, `'ftp'`, `'ftps'`, etc.
-**Data API**: `data-linkify-default-protocol`
+**Type**: `String`<br>
+**Default**: `'http'`<br>
+**Values**: `'http'`, `'https'`, `'ftp'`, `'ftps'`, etc.<br>
+**Data API**: `data-linkify-default-protocol`<br>
 
 Protocol that should be used in `href` attributes for URLs without a protocol (e.g., `github.com`).
 
 #### `format`
 
-**Type**: `Function`
-**Default**: `null`
+**Type**: `Function`<br>
+**Default**: `null`<br>
 
 Format the text displayed by a linkified entity. e.g., truncate a long URL.
 
