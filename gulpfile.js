@@ -85,6 +85,7 @@ gulp.task('build-core', ['babel'], function () {
 			process_common_js_modules: null,
 			common_js_entry_module: 'lib/linkify',
 			common_js_module_path_prefix: path.join(__dirname, 'lib'),
+	        compilation_level: 'SIMPLE_OPTIMIZATIONS',
 			formatting: 'PRETTY_PRINT'
 		}
 	}))
@@ -232,7 +233,7 @@ gulp.task('mocha', ['build'], function () {
 	Code coverage reort for mocha tests
 */
 gulp.task('coverage', ['build'], function (cb) {
-	return gulp.src(paths.lib)
+	gulp.src(paths.lib)
 	.pipe(istanbul()) // Covering files
 	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
 	.on('finish', function () {
