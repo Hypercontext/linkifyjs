@@ -492,7 +492,7 @@ Protocol that should be used in `href` attributes for URLs without a protocol (e
 
 #### `format`
 
-**Type**: `Function`<br>
+**Type**: `Function (String value, String type)`<br>
 **Default**: `null`<br>
 
 Format the text displayed by a linkified entity. e.g., truncate a long URL.

@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "prepublish": "node_modules/.bin/gulp build",
+    "prepublish": "rm -rf lib/* && node_modules/.bin/gulp build",
     "test": "node_modules/.bin/gulp coverage",
     "coverage": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
