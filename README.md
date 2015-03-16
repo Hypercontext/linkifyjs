@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
 [![Dependency Status](https://gemnasium.com/SoapBox/jQuery-linkify.svg)](https://gemnasium.com/SoapBox/jQuery-linkify)
+[![Build Status](https://travis-ci.org/SoapBox/jQuery-linkify.svg)](https://travis-ci.org/SoapBox/jQuery-linkify)
 [![Coverage Status](https://coveralls.io/repos/SoapBox/jQuery-linkify/badge.svg)](https://coveralls.io/r/SoapBox/jQuery-linkify)
 
 Linkify is a small yet comprehensive JavaScript plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
@@ -85,8 +86,8 @@ See [all available options](#options)
 
 ```js
 var linkify = require('linkifyjs');
-var linkifyStr = require('linkifyjs/string');
 require('linkifyjs/plugin/hashtag')(linkify); // optional
+var linkifyStr = require('linkifyjs/string');
 ```
 
 #### Example string usage
@@ -153,16 +154,16 @@ $('p').linkify();
 
 **[linkify](#api)** _(required)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.js)
 
+**Plugins** _(optional)_
+
+* **[hashtag](#linkify-plugin-hashtag)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.amd.js)
+
 **Interfaces** _(recommended - include at least one)_
 
 * **[string](#linkify-string)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.amd.js)
 * **[jquery](#linkify-jquery)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.js)
 * **[element](#linkify-element)** _(Included with linkify-jquery)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.js)
 
-
-**Plugins** _(optional)_
-
-* **[hashtag](#linkify-plugin-hashtag)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.amd.js)
 
 ## API
 
@@ -176,7 +177,7 @@ $('p').linkify();
 * [Options](#options)
 * [Plugins](#plugins)
 
-### Standard linkify
+### Standard `linkify`
 
 #### Installation
 
@@ -204,15 +205,23 @@ var linkify = require('linkifyjs');
 
 #### Methods
 
-##### linkify.find _(str)_
+##### `linkify.find` _(`str` [, `type`])_
 
 Finds all links in the given string
 
 **Params**
 
 * _`String`_ **`str`** Search string
+* _`String`_ [**`type`**] (Optional) only find links of the given type
 
-**Returns** _`Array`_ List of links where each element is a hash with properties `type`, `value`, and `href`
+**Returns** _`Array`_ List of links where each element is a hash with properties `type`, `value`, and `href`.
+
+* `type` is the type of entity found. Possible values are
+  - `'url'`
+  - `'email'`
+  - `'hashtag'` (with Hashtag plugin)
+* `value` is the original entity substring.
+* `href` should be the value of this link's `href` attribute.
 
 ```js
 linkify.find('For help with GitHub.com, please email support@github.com');
@@ -221,24 +230,28 @@ linkify.find('For help with GitHub.com, please email support@github.com');
 Returns the array
 
 ```js
-[{
+[
+  {
     type: 'url',
     value: 'GitHub.com',
     href: 'http://github.com',
-}, {
+  },
+  {
     type: 'email',
     value: 'support@github.com',
     href: 'mailto:support@github.com'
-}]
+  }
+]
 ```
 
-##### linkify.test _(str)_
+##### `linkify.test` _(`str` [, `type`])_
 
 Is the given string a link? Not to be used for strict validation - See [Caveats](#)
 
 **Params**
 
-* `String` **`str`** Test string
+* _`String`_ **`str`** Test string
+* _`String`_ [**`type`**] (Optional) returns `true` only if the link is of the given type (see `linkify.find`),
 
 **Returns** _`Boolean`_
 
@@ -247,28 +260,31 @@ linkify.test('google.com'); // true
 linkify.test('google.com', 'email'); // false
 ```
 
-#### linkify.tokenize _(str)_
+#### `linkify.tokenize` _(`str`)_
 
 Internal method used to perform lexicographical analysis on the given string and output the resulting token array.
 
 **Params**
 
-* `String` **`str`**
+* _`String`_ **`str`**
 
 **Returns** _`Array`_
 
 
-### linkify-jquery
+### `linkify-jquery`
 
 Provides the Linkify jQuery plugin.
 
 #### Installation
 
 ##### Node.js/io.js/Browserify
+
 ```js
 var $ = require('jquery');
-require('linkifyjs/jquery')($);
+require('linkifyjs/jquery')($, document);
 ```
+
+Where the second argument is your `window.document` implementation (not required for Browserify).
 
 ##### AMD
 
@@ -303,7 +319,7 @@ $(selector).linkify(options);
 
 **Params**
 
-* `Object` [**`options`**] [Options hash](#options)
+* _`Object`_ [**`options`**] [Options hash](#options)
 
 See [all available options](#options).
 
@@ -321,7 +337,7 @@ The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript requir
 
 [Additional data options](#options) are available.
 
-### linkify-string
+### `linkify-string`
 
 Interface for replacing links within native strings with anchor tags. Note that this function will ***not*** parse HTML strings properly - use [`linkify-element`](#linkify-element) or [`linkify-jquery`](#linkify-jquery) instead.
 
@@ -352,7 +368,7 @@ var linkifyStr = require('linkifyjs/string');
 <script src="linkify-string.js"></script>
 ```
 
-**Usage**
+#### Usage
 
 ```js
 var options = {/* ... */};
@@ -370,8 +386,8 @@ Returns
 
 **Params**
 
-* `String` **`str`** String to linkify
-* `Object` [**`options`**] [Options hash](#)
+* _`String`_ **`str`** String to linkify
+* _`Object`_ [**`options`**] [Options hash](#)
 
 **Returns** _`String`_ Linkified string
 
@@ -380,48 +396,63 @@ Returns
 
 Plugins provide no new interfaces but add additional detection functionality to Linkify. A custom plugin API is currently in the works.
 
-#### hashtag
+**Note:** Plugins should be included before interfaces.
+
+#### General Installation
+
+##### Node.js/io.js/Browserify
+
+```js
+var linkify = require('linkifyjs')
+require('linkifyjs/plugin/<name>')(linkify);
+```
+
+##### AMD
+
+```html
+<script src="linkify.amd.js"></script>
+<script src="linkify-plugin-<name>.amd.js"></script>
+```
+
+##### Browser globals
+
+```html
+<script src="linkify.js"></script>
+<script src="linkify-plugin-<name>.js"></script>
+```
+
+#### `hashtag` Plugin
 
 Adds basic support for Twitter-style hashtags.
 
 ```js
-// Node.js/Browserify
 var linkify = require('linkifyjs');
 require('linkifyjs/plugins/hashtag')(linkify);
 ```
 
-```html
-<!-- Global `linkifyStr` -->
-<script src="linkify.js"></script>
-<script src="linkify-plugin-hashtag.js"></script>
-
-<!-- AMD -->
-<script src="linkify.amd.js"></script>
-<script src="linkify-plugin-hashtag.amd.js"></script>
-<script>
-    require(['linkify'], function (linkify) {
-        // ...
-    });
-</script>
-```
-
-**Usage**
-
 ```js
 var options = {/* ... */};
-var str = "Linkify is #super #rad";
+var str = "Linkify is #super #rad2015";
 
 linkify.find(str);
-/* [
- {type: 'hashtag', value: "#super", href: "#super"},
- {type: 'hashtag', value: "#rad", href: "#rad"}
-] */
-
-// If the linkifyStr interface has also been included
-linkifyStr(str)
-
 ```
 
+Returns the following array
+
+```js
+[
+  {
+    type: 'hashtag',
+    value: "#super",
+    href: "#super"
+  },
+  {
+    type: 'hashtag',
+    value: "#rad2015",
+    href: "#rad2015"
+  }
+]
+```
 
 ## Options
 
@@ -429,36 +460,65 @@ Linkify is applied with the following default options. Below is a description of
 
 ```js
 var options = {
-  tagName: 'span',
-  defaultProtocol: 'https',
-  target: '_parent',
-  nl2br: true,
-  linkClass: 'a-new-link',
-  linkAttributes: {
-    rel: 'nofollow'
-  },
-  format: function (link, type) {
-    if (type === 'hashtag') {
-      link = link.toLowerCase();
-    }
-    return link;
-  },
-  formatHref: function (link, type) {
-    if (type === 'hashtag') {
-      link = 'https://twitter.com/hashtag/' + link.replace('#', '');
-    }
-    return link;
+  defaultProtocol: 'http',
+  format: null,
+  formatHref: null,
+  linkAttributes: null,
+  linkClass: 'linkified',
+  nl2br: false,
+  tagName: 'a',
+  target: function (type) {
+    return type === 'url' ? '_blank' : null;
   }
 };
-
-// jQuery
-$('selector').linkify(options);
-
-// String
-linkifyStr(str, options);
-str.linkify(options);
 ```
 
+### Usage
+
+```js
+linkifyStr(str, options); // or `str.linkify(options)`
+linkifyElement(document.getElementById(id), options);
+$(selector).linkify(options);
+```
+
+#### `defaultProtocol`
+
+**Type**: `String`
+**Default**: `'http'`
+**Values**: `'http'`, `'https'`, `'ftp'`, `'ftps'`, etc.
+**Data API**: `data-linkify-default-protocol`
+
+Protocol that should be used in `href` attributes for URLs without a protocol (e.g., `github.com`).
+
+#### `format`
+
+**Type**: `Function`
+**Default**: `null`
+
+Format the text displayed by a linkified entity. e.g., truncate a long URL.
+
+```js
+'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
+  format: function (value, type) {
+    if (type === 'url' && value.length > 50) {
+      value = value.slice(0, 50) + '…';
+    }
+    return value;
+  }
+});
+```
+
+#### `formatHref`
+
+#### `nl2br`
+
+#### `tagName`
+
+#### `target`
+
+#### `linkAttributes`
+
+#### `linkClass`
 
 ## Plugin API
 
@@ -466,10 +526,7 @@ Coming soon
 
 ## Caveats
 
-*
-
 ## Contributing
-
 
 ## Authors
 Linkify is handcrafted with Love by [SoapBox Innovations, Inc](http://soapboxhq.com).
