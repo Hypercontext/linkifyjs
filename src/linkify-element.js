@@ -4,7 +4,7 @@
 
 import {tokenize, options} from './linkify';
 
-let HTML_NODE = 1, TXT_NODE = 3;
+const HTML_NODE = 1, TXT_NODE = 3;
 
 /**
 	Given an array of MultiTokens, return an array of Nodes that are either

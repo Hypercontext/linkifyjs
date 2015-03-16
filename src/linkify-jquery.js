@@ -52,12 +52,11 @@ function apply($, doc=null) {
 				format:				data.linkifyFormat,
 				formatHref:			data.linkifyFormatHref,
 				newLine:			data.linkifyNewline, // deprecated
-				nl2br:				data.linkifyNl2br,
+				nl2br:				!!data.linkifyNlbr,
 				tagName:			data.linkifyTagname,
 				target:				data.linkifyTarget,
 				linkClass:			data.linkifyLinkclass,
 			};
-
 			let $target = target === 'this' ? $this : $this.find(target);
 			$target.linkify(options);
 		});
@@ -65,7 +64,7 @@ function apply($, doc=null) {
 }
 
 // Apply it right away if possible
-if (typeof jQuery !== 'undefined' && doc) {
+if (typeof __karma__ === 'undefined' && typeof jQuery !== 'undefined' && doc) {
 	apply(jQuery, doc);
 }
 

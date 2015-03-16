@@ -36,7 +36,11 @@ module.exports = {
 
 	browserify: {
 		debug: false,
-		// transform: [ 'brfs' ]
+		ignore: ['jsdom'],
+		transform: ['brfs'],
+		configure: function (bundle) {
+			bundle.ignore('jsdom');
+		},
 	},
 
 	// test results reporter to use
