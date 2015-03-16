@@ -15,11 +15,9 @@ __Jump to__
     - [AMD Modules](#amd-modules)
     - [Browser](#browser)
 - [API](#api)
-  - [`string`](#string)
-  - [`jquery`](#string)
-  - [Options](#options)
+- [Plugin API](#plugin-api)
+- [Caveats](#caveats)
 - [Contributing](#contributing)
-  [Authors](#authors)
 - [License](#license)
 
 ## Features
@@ -42,34 +40,65 @@ Add [linkify](#) and [linkify-jquery](#) to your HTML following jQuery:
 ```html
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="linkify.min.js"></script>
-<script src="linkify-jquery.min.js"></script><!-- interface -->
-<script>
-  (function ($) { $(document).ready({
-
-    var links = linkify.find('Any links to github.com here?');
-    console.log(links);
-    // [{type: 'url', value: 'github.com', href: 'http://github.com'}]
-
-    // Find links and emails in paragraphs and `#sidebar`
-    // and converts them to anchors
-    $('p').linkify();
-    $('#sidebar').linkify({
-        target: "_blank"
-    });
-
-  }) })(jQuery);
-</script>
+<script src="linkify-jquery.min.js"></script>
 ```
 
-### Node.js/Browserify
+#### Find all links and convert them to anchor tags
+
+```js
+$('p').linkify();
+$('#sidebar').linkify({
+    target: "_blank"
+});
+```
+
+#### Find all links in the given string
+
+```js
+linkify.find('Any links to github.com here? If not, contact test@example.com');
+```
+
+Returns the following array
+
+```js
+[
+  {
+    type: 'url',
+    value: 'github.com',
+    href: 'http://github.com'
+  },
+  {
+    type: 'email',
+    value: 'test@example.com',
+    href: 'mailto:test@example.com'
+  }
+]
+```
+
+
+See [all available options](#options)
+
+
+### Node.js/io.js/Browserify
 
 ```js
 var linkify = require('linkifyjs');
-var linkifyInterface = require('linkifyjs/<interface>');
-require('linkifyjs/plugin/<plugin1>')(linkify);
+var linkifyStr = require('linkifyjs/string');
+require('linkifyjs/plugin/hashtag')(linkify); // optional
+```
 
-linkify.find('github.com');
-linkifyInterface(target, options); // varies
+#### Example string usage
+
+```js
+linkifyStr('The site github.com is #awesome.', {
+  defaultProtocol: 'https'
+});
+```
+
+Returns the following string
+
+```js
+'The site <a href="https://github.com">github.com</a> is <a href="#awesome">#awesome</a>.'
 ```
 
 ### AMD
@@ -77,28 +106,45 @@ linkifyInterface(target, options); // varies
 ```html
 <script src="r.js"></script>
 <script src="linkify.amd.js"></script>
-<script src="linkify-<interface>.amd.js"></script>
-<script src="linkify-plugin-<plugin1>.amd.js"></script> <!-- optional -->
-<script>
-    require(['linkify'], function (linkify) {
-        var links = linkify.find("github.com");
-        console.log(link);
-    });
-
-    require(['linkify-<interface>'], function (linkifyInterface) {
-        var linkified = linkifyInterface(target, options); // varies
-        console.log(linkified);
-    });
-
-</script>
+<script src="linkify-element.amd.js"></script>
+<script src="linkify-plugin-hashtag.amd.js"></script> <!-- optional -->
 ```
+
+```js
+require(['linkify'], function (linkify) {
+  linkify.test('github.com'); // true
+  linkify.test('github.com', 'email'); // false
+});
+
+require(['linkify-element'], function (linkifyElement) {
+
+  // Linkify the #sidebar element
+  linkifyElement(document.getElementById('#sidebar'), {
+    linkClass: 'my-link'
+  });
+
+  // Linkify all paragraph tags
+  document.getElementsByTagName('p').map(linkifyElement);
+
+});
+
+```
+
+Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be defined.
 
 ### Browser
 
 ```html
+<script src="jquery.js"></script>
 <script src="linkify.js"></script>
-<script src="linkify-<interface>.js"></script>
-<script src="linkify-plugin-<plugin1>.js"></script> <!-- optional -->
+<script src="linkify-string.js"></script>
+<script src="linkify-jquery.js"></script>
+```
+
+```js
+linkify.test('dev@example.com'); // true
+var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
+$('p').linkify();
 ```
 
 ## Downloads
@@ -108,6 +154,8 @@ linkifyInterface(target, options); // varies
 **Interfaces** _(recommended - include at least one)_
 
 * **[string](#linkify-string)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.amd.js)
+* **[jquery](#linkify-jquery)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.js)
+* **[element](#linkify-element)** _(Included with linkify-jquery)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.js)
 
 
 **Plugins** _(optional)_
@@ -116,16 +164,29 @@ linkifyInterface(target, options); // varies
 
 ## API
 
+**Jump To**
+
+* [Standard](#standard-linkify)
+* [`string`](#linkify-string)
+* [`jquery`](#linkify-jquery)
+  - [DOM Data API](#dom-data-api)
+* [`element`](#linkify-element)
+* [Options](#options)
+* [Plugins](#plugins)
+
+### Standard linkify
+
+#### Installation
+
+##### Node.js/io.js/Browserify
+
 ```js
-// Node.js/Browserify usage
 var linkify = require('linkifyjs');
 ```
 
-```html
-<!-- Global `linkify` -->
-<script src="linkify.js"></script>
+##### AMD
 
-<!-- AMD -->
+```html
 <script src="linkify.amd.js"></script>
 <script>
     require(['linkify'], function (linkify) {
@@ -134,19 +195,30 @@ var linkify = require('linkifyjs');
 </script>
 ```
 
-#### linkify.find _(str)_
+##### Global
+```html
+<script src="linkify.js"></script>
+```
+
+#### Methods
+
+##### linkify.find _(str)_
 
 Finds all links in the given string
 
 **Params**
 
-* `String` **`str`** Search string
+* _`String`_ **`str`** Search string
 
 **Returns** _`Array`_ List of links where each element is a hash with properties `type`, `value`, and `href`
 
 ```js
 linkify.find('For help with GitHub.com, please email support@github.com');
-/** // returns
+```
+
+Returns the array
+
+```js
 [{
     type: 'url',
     value: 'GitHub.com',
@@ -156,10 +228,9 @@ linkify.find('For help with GitHub.com, please email support@github.com');
     value: 'support@github.com',
     href: 'mailto:support@github.com'
 }]
-*/
 ```
 
-#### linkify.test _(str)_
+##### linkify.test _(str)_
 
 Is the given string a link? Not to be used for strict validation - See [Caveats](#)
 
@@ -176,7 +247,7 @@ linkify.test('google.com', 'email'); // false
 
 #### linkify.tokenize _(str)_
 
-Internal method used to perform lexicographical analysis on the given string and output the resulting array tokens.
+Internal method used to perform lexicographical analysis on the given string and output the resulting token array.
 
 **Params**
 
@@ -184,72 +255,85 @@ Internal method used to perform lexicographical analysis on the given string and
 
 **Returns** _`Array`_
 
-### Interfaces
 
-#### linkify-jquery
+### linkify-jquery
 
 Provides the Linkify jQuery plugin.
 
+#### Installation
+
+##### Node.js/io.js/Browserify
 ```js
-// TODO: How do you build a Browserify jQuery plugin??
 var $ = require('jquery');
 require('linkifyjs/jquery')($);
 ```
 
+##### AMD
+
+Note that `linkify-jquery` requires a `jquery` module.
+
 ```html
-<script src="jquery.js"></script>
-
-<!-- Global jQuery -->
-<script src="linkify.js"></script>
-<script src="linkify-jquery.js"></script>
-
-<!-- AMD -->
-<script>define(['jquery'], function () { return window.jQuery; });</script>
+<script src="jquery.amd.js"></script>
 <script src="linkify.amd.js"></script>
-<script src="linkify-string.amd.js"></script>
-<script>
-require(['linkify-string'], function (linkifyStr) {
-  // ...
-});
-</script>
+<script src="linkify-jquery.amd.js"></script>
 ```
-
-**Usage**
 
 ```js
-$(selector).linkify(options);
+require(['jquery'], function ($) {
+  // ...
+});
 ```
 
-**DOM Data API**
+##### Global
 
 ```html
-<!-- Find and links all entitires in this div -->
-<div data-linkify="this">...</div>
+<script src="jquery.js"></script>
+<script src="linkify.js"></script>
+<script src="linkify-jquery.js"></script>
+```
 
-<!-- Find and linkifies the paragraphs and `#footer` element in the body -->
-<body data-linkify="p, #footer">...</body>
+#### Usage
+
+```js
+var options = { /* ... */ };
+$(selector).linkify(options);
 ```
 
 **Params**
 
-* `Object` [**`options`**] [Options hash](#)
+* `Object` [**`options`**] [Options hash](#options)
 
+See [all available options](#options).
 
-#### linkify-string
+#### DOM Data API
 
-Interface for replacing links within native strings with anchor tags. Note that this function will **not** parse HTML strings - use [linkify-dom](#) or [linkify-jquery](#) instead.
-
-```js
-// Node.js/Browserify usage
-var linkifyStr = require('linkifyjs/string'),;
-```
+The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript required!
 
 ```html
-<!-- Global `linkifyStr` -->
-<script src="linkify.js"></script>
-<script src="linkify-string.js"></script>
+<!-- Find and linkify all entities in this div -->
+<div data-linkify="this">...</div>
 
-<!-- AMD -->
+<!-- Find and linkify the paragraphs and `#footer` element in the body -->
+<body data-linkify="p, #footer">...</body>
+```
+
+[Additional data options](#options) are available.
+
+### linkify-string
+
+Interface for replacing links within native strings with anchor tags. Note that this function will ***not*** parse HTML strings properly - use [`linkify-element`](#linkify-element) or [`linkify-jquery`](#linkify-jquery) instead.
+
+#### Installation
+
+##### Node.js/io.js/Browserify
+
+```js
+var linkifyStr = require('linkifyjs/string');
+```
+
+##### AMD
+
+```html
 <script src="linkify.amd.js"></script>
 <script src="linkify-string.amd.js"></script>
 <script>
@@ -259,19 +343,27 @@ var linkifyStr = require('linkifyjs/string'),;
 </script>
 ```
 
+##### Global
+
+```html
+<script src="linkify.js"></script>
+<script src="linkify-string.js"></script>
+```
+
 **Usage**
 
 ```js
 var options = {/* ... */};
-linkifyStr('For help with GitHub.com, please email support@github.com');
-// returns "For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a>
+var str = 'For help with GitHub.com, please email support@github.com';
+linkifyStr(str, options);
+// or
+str.linkify(options);
 ```
 
-or
+Returns
 
 ```js
-var options = {/* ... */};
-'For help with GitHub.com, please email support@github.com'.linkify(options);
+'For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a>'
 ```
 
 **Params**
@@ -284,7 +376,7 @@ var options = {/* ... */};
 
 ### Plugins
 
-Plugins provide no new interfaces but add additional detection functionality to Linkify. A plugic plugin API is currently in the works.
+Plugins provide no new interfaces but add additional detection functionality to Linkify. A custom plugin API is currently in the works.
 
 #### hashtag
 
@@ -365,6 +457,14 @@ linkifyStr(str, options);
 str.linkify(options);
 ```
 
+
+## Plugin API
+
+Coming soon
+
+## Caveats
+
+*
 
 ## Contributing
 
