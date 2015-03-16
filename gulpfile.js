@@ -108,7 +108,7 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 	var interface, interfaces = [
 		'string',
 		'element',
-		// ['element', 'jquery'] // jQuery interface requires both element and jquery
+		['element', 'jquery'] // jQuery interface requires both element and jquery
 	];
 
 	var files = {js: null, amd: null};
@@ -122,8 +122,8 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 			files.js = [];
 			files.amd = [];
 			for (var j = 0; j < interface.length; j++) {
-				files.js.push('src/linkify-' + interface[i] + '.js');
-				files.amd.push('build/amd/linkify-' + interface[i] + '.js');
+				files.js.push('src/linkify-' + interface[j] + '.js');
+				files.amd.push('build/amd/linkify-' + interface[j] + '.js');
 			}
 
 			// The last dependency is the name of the interface
@@ -140,16 +140,16 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 			modules: 'ignore',
 			format: babelformat
 		}))
-		.pipe(wrap({src: 'templates/linkify-' + interface + '.js'}))
 		.pipe(concat('linkify-' + interface + '.js'))
+		.pipe(wrap({src: 'templates/linkify-' + interface + '.js'}))
 		.pipe(gulp.dest('build'));
 
 		streams.push(stream);
 
 		// AMD interface
 		stream = gulp.src(files.amd)
-		.pipe(wrap({src: 'templates/linkify-' + interface + '.amd.js'}))
 		.pipe(concat('linkify-' + interface + '.amd.js'))
+		.pipe(wrap({src: 'templates/linkify-' + interface + '.amd.js'}))
 		.pipe(gulp.dest('build'));
 
 		streams.push(stream);

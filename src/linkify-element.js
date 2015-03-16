@@ -85,7 +85,7 @@ function linkifyElementHelper(element, opts, doc) {
 		case TXT_NODE:
 
 			let
-			str = childElement.nodeValue,
+			str = childElement.nodeValue.replace(/^\s+|\s+$/g, ''), // trim
 			tokens = tokenize(str);
 			children.push(...tokensToNodes(tokens, opts, doc));
 

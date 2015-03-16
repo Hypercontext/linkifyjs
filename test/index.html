@@ -8,14 +8,22 @@
 </body>
 <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.js" data-main="build/amd/linkify"></script>
-<script src="build/linkify-string.amd.js"></script>
-<script src="build/linkify-element.amd.js"></script>
+<script>
+	/* global define */
+	define('jquery', ['exports', 'module'], function (exports, module) {
+		module.exports = window.jQuery;
+	});
+</script>
+<script src="build/linkify.amd.js"></script>
 <script src="build/linkify-plugin-hashtag.amd.js"></script>
-<p id="yolo" data-linkify="this" data-linkify-tagname="span">
+<script src="build/linkify-string.amd.js"></script>
+<script src="build/linkify-jquery.amd.js"></script>
+<p id="yolo" data-linkify="this" data-linkify-tagname="b">
 	You let's get all up in the
 	http://element.co/?wat=this and the #swag
 </p>
 <script>
+	/* global require */
 	require(['linkify'], function (linkify) {
 		console.log(linkify.find('google.com'));
 	});
