@@ -1,6 +1,6 @@
 # Linkify
 
-[![Node Dependencies](https://david-dm.org/SoapBox/jQuery-linkify/dev-status.png)](https://david-dm.org/SoapBox/jQuery-linkify#info=devDependencies&view=table)
+[![Dependency Status](https://gemnasium.com/SoapBox/jQuery-linkify.svg)](https://gemnasium.com/SoapBox/jQuery-linkify)
 
 Linkify is a small yet comprehensive JavaScript plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 

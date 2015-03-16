@@ -3,7 +3,9 @@ amd
 assets
 bower_components
 build
+coverage
 demo
+dist
 src
 templates
 test
