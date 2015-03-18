@@ -122,7 +122,7 @@ require(['linkify'], function (linkify) {
 require(['linkify-element'], function (linkifyElement) {
 
   // Linkify the #sidebar element
-  linkifyElement(document.getElementById('#sidebar'), {
+  linkifyElement(document.getElementById('sidebar'), {
     linkClass: 'my-link'
   });
 
