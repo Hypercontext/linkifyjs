@@ -1,0 +1,157 @@
+%vertical-rhythm {
+    margin-bottom: $spacing-unit / 2;
+}
+
+header, footer, #page-header {
+  background-color: white;
+  border: 3px solid $gray-lighter;
+  border-left: none;
+  border-right: none;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1031;
+  text-align: center;
+  border-top: none;
+}
+
+footer {
+  border-bottom: none;
+}
+
+#page-header {
+  margin-top: 575px;
+}
+
+/**
+ * Images
+ */
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+/**
+ * Figures
+ */
+figure > img {
+  display: block;
+}
+
+figcaption {
+  font-size: $font-size-small;
+}
+
+/**
+ * Headings
+ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  > small {
+    font-weight: inherit;
+  }
+}
+
+small {
+  @include opacity(0.6);
+}
+/**
+ * Code formatting
+ */
+pre, code {
+  font-size: 15px;
+  border: 1px solid $gray-light;
+  border-radius: 3px;
+  background-color: #eef;
+}
+
+code {
+  padding: 1px 5px;
+}
+
+pre {
+  padding: 8px 12px;
+  overflow-x: scroll;
+
+  > code {
+    border: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+
+.page-title {
+  margin: 0;
+  font-size: 50px;
+  line-height: 2;
+  height: 0;
+  overflow: hidden;
+
+  @include transition(all 0.3s ease);
+
+  &.active {
+    font-size: 90px;
+    line-height: 0.6;
+    padding-top: 30px;
+    height: 180px;
+  }
+
+  > small {
+    font-size: 35%;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    height: 100px;
+  }
+
+}
+
+.navbar-fixed-top {
+  top: 130px;
+  border-bottom: 3px solid #eee;
+  @include transition(top 0.3s ease);
+  &.top {
+    top: 0;
+    @media (min-width: $screen-sm-min) {
+      top: 103px;
+    }
+  }
+}
+
+.page-tagline {
+  font-size: 40px;
+  color: $gray-lighter;
+  text-align: center;
+}
+
+/**
+ * Icons
+ */
+.icon {
+
+  > svg {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+
+    path {
+      fill: $gray;
+    }
+  }
+}
+
+#content {
+  background-color: lighten($gray-lighter, 3%); // same as body
+}
+
+.blurb {
+  max-width: $screen-sm-min;
+  margin-left: auto;
+  margin-right: auto;
+}

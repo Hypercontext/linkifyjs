@@ -1,0 +1,42 @@
+<header class="site-header">
+  <h1 id="page-title" class="page-title">
+    Linkify<br>
+    <small>a JavaScript plugin</small>
+  </h1>
+</header>
+
+<nav id="navbar" class="nav navbar navbar-default navbar-fixed-top top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#linkify-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="navbar-brand">
+        <div class="visible-xs pull-left">
+          <strong>Linkify</strong>&nbsp;
+        </div>
+        a JavaScript plugin
+      </span>
+    </div>
+    <div class="collapse navbar-collapse" id="linkify-navbar-collapse">
+      <ul class="nav navbar-nav">
+        {% for page in site.pages %}
+          {% if page.title %}
+          <li>
+            <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+        <li><a href="#options">Options</a></li>
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<section id="page-header" {%if page.headeroffset %} class="offset"{% endif %}>
+  {{ page.header }}
+</section>
