@@ -3,7 +3,7 @@
 
 (($) ->
 
-  headerThreshold = 422;
+  headerThreshold = if $('#page-header.offset').length then 422 else 75;
 
   $(window).on 'scroll', ->
 

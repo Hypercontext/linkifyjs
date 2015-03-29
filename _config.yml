@@ -12,3 +12,6 @@ github_username:  SoapBox
 
 # Build settings
 markdown: kramdown
+
+kramdown:
+  input: GFM

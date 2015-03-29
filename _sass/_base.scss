@@ -24,7 +24,10 @@ footer {
 }
 
 #page-header {
-  margin-top: 575px;
+  margin-top: 256px;
+  &.offset {
+    margin-top: 575px;
+  }
 }
 
 /**
@@ -63,10 +66,10 @@ small {
  * Code formatting
  */
 pre, code {
-  font-size: 15px;
-  border: 1px solid $gray-light;
+  font-size: 14px;
+  border: 1px solid $gray-lighter;
   border-radius: 3px;
-  background-color: #eef;
+  background-color: white;
 }
 
 code {
