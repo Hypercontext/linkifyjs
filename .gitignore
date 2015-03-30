@@ -40,3 +40,9 @@ node_modules
 build
 dist
 lib
+
+# Specific to plugin website branch
+.sass-cache
+_site
+_sass
+js
