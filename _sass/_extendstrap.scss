@@ -5,6 +5,13 @@
   transform: $transform
 }
 
+h1, .h1,
+h2, .h2,
+h3, .h3 {
+  margin-top: ($line-height-computed * 1.5);
+  margin-bottom: $line-height-computed;
+}
+
 button, .btn, .navbar-brand {
   padding-left: 15px;
   padding-right: 15px;

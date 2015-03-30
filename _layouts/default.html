@@ -3,7 +3,7 @@
 
   {% include head.html %}
 
-  <body>
+  <body{%if page.headeroffset %} class="offset"{% endif %}>
 
     {% include header.html %}
 

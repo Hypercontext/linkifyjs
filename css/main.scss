@@ -8,8 +8,13 @@
 // Our variables
 $font-family-base:          'Roboto', sans-serif;
 $headings-font-family:      'Oswald', sans-serif;
+$font-family-monospace:     Monaco, Consolas, "Courier New", monospace;
 
 $spacing-unit:              30px;
+
+$font-size-base:            16px;
+
+$navbar-height:             75px;
 
 // Brand colours
 $brand-primary:             #3b88c8;
@@ -26,11 +31,12 @@ $brand-info:                #d67bb2;
 @import "base", "layout", "syntax-highlighting";
 
 body {
+  font-size: 16px;
+  font-weight: 300;
   background-repeat: no-repeat;
   background-position: center 175px;
   background-attachment: fixed;
   background-color: lighten($gray-lighter, 3%);
-  font-weight: 300;
 
   @include img-retina(
     "{{ site.baseurl }}/img/logo.png",
@@ -41,4 +47,5 @@ body {
 
 // Pages
 @import "home";
+@import "docs";
 

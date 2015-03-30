@@ -1,5 +1,6 @@
 ---
 layout: doc
+title: Documentation
 ---
 
 # Getting Started

@@ -52,10 +52,15 @@ figcaption {
 /**
  * Headings
  */
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
   font-weight: 300;
-  > small {
+  small {
     font-weight: inherit;
+  }
+  > code {
+    font-family: inherit;
+    font-size: inherit;
   }
 }
 
@@ -74,6 +79,7 @@ pre, code {
 
 code {
   padding: 1px 5px;
+  font-size: 80%;
 }
 
 pre {
@@ -94,6 +100,13 @@ pre {
   line-height: 2;
   height: 0;
   overflow: hidden;
+  > a {
+    color: inherit;
+    &:hover, &:active, &:visited, &:focus {
+      opacity: 0.8;
+      text-decoration: none;
+    }
+  }
 
   @include transition(all 0.3s ease);
 
@@ -104,27 +117,48 @@ pre {
     height: 180px;
   }
 
-  > small {
+  small {
     font-size: 35%;
   }
-
-  @media (min-width: $screen-sm-min) {
-    height: 100px;
-  }
-
 }
 
 .navbar-fixed-top {
-  top: 130px;
+  top: 105px;
   border-bottom: 3px solid #eee;
   @include transition(top 0.3s ease);
   &.top {
     top: 0;
+  }
+}
+
+.navbrand-linkify {
+
+}
+
+body.offset {
+
+  .page-title {
+    @media (min-width: $screen-sm-min) {
+      height: 100px;
+    }
+    &.active {
+      height: 180px;
+    }
+  }
+
+  .navbar-fixed-top {
     @media (min-width: $screen-sm-min) {
       top: 103px;
     }
   }
+
+  .navbrand-linkify {
+    @media (min-width: $screen-sm-min) {
+      display: none;
+    }
+  }
 }
+
 
 .page-tagline {
   font-size: 40px;
