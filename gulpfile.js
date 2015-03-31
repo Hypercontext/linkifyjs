@@ -233,6 +233,7 @@ gulp.task('mocha', ['build'], function () {
 	Code coverage reort for mocha tests
 */
 gulp.task('coverage', ['build'], function (cb) {
+	// IMPORTANT: return not required here (and will actually cause bugs!)
 	gulp.src(paths.lib)
 	.pipe(istanbul()) // Covering files
 	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
@@ -264,8 +265,25 @@ gulp.task('karma-ci', ['build'], function () {
 	});
 });
 
-gulp.task('uglify', ['build'], function () {
-	return gulp.src('build/*.js')
+// Build the deprecated legacy interface
+gulp.task('build-legacy', ['build'], function () {
+	return gulp.src(['build/linkify.js', 'build/linkify-jquery.js'])
+	.pipe(concat('jquery.linkify.js'))
+	.pipe(wrap({src: 'templates/linkify-legacy.js'}))
+	.pipe(gulp.dest('build/dist'));
+});
+
+// Build a file that can be used for easy headless benchmarking
+gulp.task('build-benchmark', ['build-legacy'], function () {
+	return gulp.src('build/dist/jquery.linkify.js')
+	.pipe(concat('linkify-benchmark.js'))
+	.pipe(wrap({src: 'templates/linkify-benchmark.js'}))
+	.pipe(uglify())
+	.pipe(gulp.dest('build/benchmark'));
+});
+
+gulp.task('uglify', ['build', 'build-legacy'], function () {
+	return gulp.src(['build/*.js', 'build/dist/jquery.linkify.js'])
 	.pipe(gulp.dest('dist')) // non-minified copy
 	.pipe(rename(function (path) {
 		path.extname = '.min.js';
