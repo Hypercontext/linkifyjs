@@ -64,6 +64,10 @@ See [all available options](#options)
 
 ## Node.js/io.js/Browserify
 
+```
+npm install linkifyjs
+```
+
 {% highlight js %}
 var linkify = require('linkifyjs');
 require('linkifyjs/plugin/hashtag')(linkify); // optional

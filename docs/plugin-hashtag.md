@@ -1,25 +1,20 @@
 ---
 layout: doc
-title: Hashtag plugin · Documentation
+title: hashtag plugin · Documentation
 ---
 
 Adds basic support for Twitter-style hashtags.
 
-```js
-var linkify = require('linkifyjs');
-require('linkifyjs/plugins/hashtag')(linkify);
-```
-
-```js
+{% highlight js %}
 var options = {/* ... */};
 var str = "Linkify is #super #rad2015";
 
 linkify.find(str);
-```
+{% endhighlight %}
 
 Returns the following array
 
-```js
+{% highlight js %}
 [
   {
     type: 'hashtag',
@@ -32,4 +27,4 @@ Returns the following array
     href: "#rad2015"
   }
 ]
-```
+{% endhighlight %}

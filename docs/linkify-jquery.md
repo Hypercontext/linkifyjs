@@ -18,10 +18,14 @@ Provides the Linkify jQuery plugin.
 
 ### Node.js/io.js/Browserify
 
-```js
+```
+npm install linkifyjs
+```
+
+{% highlight js %}
 var $ = require('jquery');
 require('linkifyjs/jquery')($, document);
-```
+{% endhighlight %}
 
 Where the second argument is your `window.document` implementation (not required for Browserify).
 
@@ -29,32 +33,32 @@ Where the second argument is your `window.document` implementation (not required
 
 Note that `linkify-jquery` requires a `jquery` module.
 
-```html
+{% highlight html %}
 <script src="jquery.amd.js"></script>
 <script src="linkify.amd.js"></script>
 <script src="linkify-jquery.amd.js"></script>
-```
+{% endhighlight %}
 
-```js
+{% highlight js %}
 require(['jquery'], function ($) {
   // ...
 });
-```
+{% endhighlight %}
 
 ### Browser globals
 
-```html
+{% highlight html %}
 <script src="jquery.js"></script>
 <script src="linkify.js"></script>
 <script src="linkify-jquery.js"></script>
-```
+{% endhighlight %}
 
 ## Usage
 
-```js
+{% highlight js %}
 var options = { /* ... */ };
 $(selector).linkify(options);
-```
+{% endhighlight %}
 
 **Params**
 
@@ -66,12 +70,12 @@ See [all available options](#options).
 
 The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript required!
 
-```html
+{% highlight html %}
 <!-- Find and linkify all entities in this div -->
 <div data-linkify="this">...</div>
 
 <!-- Find and linkify the paragraphs and `#footer` element in the body -->
 <body data-linkify="p, #footer">...</body>
-```
+{% endhighlight %}
 
 [Additional data options](#options) are available.

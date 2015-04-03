@@ -5,17 +5,29 @@ title: linkify-element · Documentation
 
 Interface for replacing links within native DOM elements with anchor tags. Note that `linkify-element` is included with `linkify-jquery`, so you do not have to install it if you are using `linkify-jquery`.
 
+#### Jump to
+
+* [Installation](#installation)
+  * [Node.js/io.js/Browserify](#nodejsiojsbrowserify)
+  * [AMD](#amd)
+  * [Browser globals](#browser-globals)
+* [Usage](#usage)
+
 ## Installation
 
 ### Node.js/io.js/Browserify
 
-```js
-var linkifyElement = require('linkifyjs/element');
 ```
+npm install linkifyjs
+```
+
+{% highlight js %}
+var linkifyElement = require('linkifyjs/element');
+{% endhighlight %}
 
 ### AMD
 
-```html
+{% highlight html %}
 <script src="linkify.amd.js"></script>
 <script src="linkify-element.amd.js"></script>
 <script>
@@ -23,21 +35,21 @@ var linkifyElement = require('linkifyjs/element');
         // ...
     });
 </script>
-```
+{% endhighlight %}
 
 ### Browser globals
 
-```html
+{% highlight html %}
 <script src="linkify.js"></script>
 <script src="linkify-element.js"></script>
-```
+{% endhighlight %}
 
 ## Usage
 
-```js
+{% highlight js %}
 var options = {/* ... */};
 linkifyElement(document.getElementById('id'), options, document);
-```
+{% endhighlight %}
 
 This recursively finds links in text nodes within element `#id`.
 

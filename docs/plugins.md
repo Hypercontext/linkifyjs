@@ -11,21 +11,21 @@ Plugins provide no new interfaces but add additional detection functionality to 
 
 ### Node.js/io.js/Browserify
 
-```js
+{% highlight js %}
 var linkify = require('linkifyjs')
 require('linkifyjs/plugin/<name>')(linkify);
-```
+{% endhighlight %}
 
 ### AMD
 
-```html
+{% highlight html %}
 <script src="linkify.amd.js"></script>
 <script src="linkify-plugin-<name>.amd.js"></script>
-```
+{% endhighlight %}
 
 ### Browser globals
 
-```html
+{% highlight html %}
 <script src="linkify.js"></script>
 <script src="linkify-plugin-<name>.js"></script>
-```
+{% endhighlight %}
