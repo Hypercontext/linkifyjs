@@ -8,6 +8,7 @@ Linkify is applied with the following default options. Below is a description of
 {% highlight js %}
 var options = {
   defaultProtocol: 'http',
+  events: null,
   format: null,
   formatHref: null,
   linkAttributes: null,
@@ -23,6 +24,7 @@ var options = {
 #### Jump to
 
 * [defaultProtocol](#defaultprotocol)
+* [events](#events)
 * [format](#format)
 * [formatHref](#formathref)
 * [linkAttributes](#linkattributes)
@@ -47,6 +49,30 @@ $(selector).linkify(options);
 * **Data API**: `data-linkify-default-protocol`
 
 Protocol that should be used in `href` attributes for URLs without a protocol (e.g., `github.com`).
+
+### events
+
+* **Type**: `Object | Function`
+* **Default**: `null`
+
+Add event listeners to newly created link elements. Takes a hash where each key is an [standard event](https://developer.mozilla.org/en-US/docs/Web/Events) name and the value is an event handler.
+
+Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.) and returns the hash.
+
+**Note:** Not applicable to linkify-string.
+
+{% highlight js %}
+$('p').linkify({
+  events: {
+    click: function (e) {
+      alert('Link clicked!');
+    },
+    mouseover: function (e) {
+      alert('Link hovered!');
+    }
+  }
+});
+{% endhighlight %}
 
 ### format
 
@@ -95,6 +121,7 @@ Hash of attributes to add to each new link. **Note:** the [`class`](#linkClass) 
 
 Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.) and returns the hash.
 
+
 {% highlight js %}
 'github.com'.linkify({
   linkAttributes: {
@@ -107,6 +134,7 @@ Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.
 
 * **Type**: `String | Function (String value, String type)`
 * **Default**: `'linkified'` (may be removed in future releases)
+* **Data API**: `data-linkify-linkclass`
 
 `class` attribute to use for newly created links.
 
@@ -128,6 +156,7 @@ Returns
 
 * **Type**: `Boolean`
 * **Default**: `false`
+* **Data API**: `data-linkify-nl2br`
 
 If true, `\n` line breaks will automatically be converted to `<br>` tags.
 
@@ -135,6 +164,7 @@ If true, `\n` line breaks will automatically be converted to `<br>` tags.
 
 * **Type**: `String`
 * **Default**: `a`
+* **Data API**: `data-linkify-tagname`
 
 The tag name to use for each link. For cases where you can't use anchor tags.
 
@@ -154,6 +184,7 @@ Returns
 
 * **Type**: `String`
 * **Default**: `'_blank'` for URLs, `null` for everything else
+* **Data API**: `data-linkify-target`
 
 `target` attribute for generated link.
 
