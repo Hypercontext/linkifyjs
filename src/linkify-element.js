@@ -28,7 +28,8 @@ function tokensToNodes(tokens, opts, doc) {
 			formatted		= options.resolve(opts.format, token.toString(), token.type),
 			href			= token.toHref(opts.defaultProtocol),
 			formattedHref	= options.resolve(opts.formatHref, href, token.type),
-			attributesHash	= options.resolve(opts.attributes, token.type);
+			attributesHash	= options.resolve(opts.attributes, token.type),
+			events			= options.resolve(opts.events, token.type);
 
 			// Build the link
 			let link = doc.createElement(tagName);
@@ -42,6 +43,16 @@ function tokensToNodes(tokens, opts, doc) {
 			if (attributesHash) {
 				for (let attr in attributesHash) {
 					link.setAttribute(attr, attributesHash[attr]);
+				}
+			}
+
+			if (events) {
+				for (let event in events) {
+					if (link.addEventListener) {
+						link.addEventListener(event, events[event]);
+					} else if (link.attachEvent)  {
+						link.attachEvent('on' + event, events[event]);
+					}
 				}
 			}
 

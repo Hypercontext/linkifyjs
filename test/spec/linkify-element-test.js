@@ -1,6 +1,6 @@
 /*jshint -W030 */
 var
-doc, testContainer, jsdom,
+doc, testContainer, jsdom, Ev,
 linkifyElement = require('../../lib/linkify-element'),
 htmlOptions = require('./html/options');
 
@@ -26,7 +26,11 @@ describe('linkify-element', function () {
 			done();
 		}
 
-		if (doc) { return onDoc(doc); }
+		if (doc) {
+			Ev = window.Event;
+			return onDoc(doc);
+		}
+
 		// no document element, use a virtual dom to test
 		jsdom = require('jsdom');
 
@@ -35,6 +39,7 @@ describe('linkify-element', function () {
 			function (errors, window) {
 				if (errors) { throw errors; }
 				doc = window.document;
+				Ev = window.Event;
 				return onDoc(window.document);
 			}
 		);
@@ -63,6 +68,17 @@ describe('linkify-element', function () {
 		var result = linkifyElement(testContainer, htmlOptions.altOptions, doc);
 		result.should.eql(testContainer); // should return the same element
 		testContainer.innerHTML.should.eql(htmlOptions.linkifiedAlt);
+
+		/*
+		// These don't work across all test suites :(
+		(function () {
+			testContainer.getElementsByTagName('a')[0].dispatchEvent(new Ev('click'));
+		}).should.throw('Clicked!');
+
+		(function () {
+			testContainer.getElementsByTagName('a')[0].dispatchEvent(new Ev('mouseover'));
+		}).should.throw('Hovered!');
+		*/
 	});
 
 });

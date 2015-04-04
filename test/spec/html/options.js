@@ -9,6 +9,14 @@ module.exports = {
 	altOptions: {
 		linkAttributes: {
 			rel: 'nofollow'
+		},
+		events: {
+			click: function () {
+				throw 'Clicked!';
+			},
+			mouseover: function () {
+				throw 'Hovered!';
+			}
 		}
 	}
 };

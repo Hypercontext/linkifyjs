@@ -49,6 +49,7 @@ function apply($, doc=null) {
 			options = {
 				linkAttributes:		data.linkifyAttributes,
 				defaultProtocol: 	data.linkifyDefaultProtocol,
+				events: 			data.linkifyEvents,
 				format:				data.linkifyFormat,
 				formatHref:			data.linkifyFormatHref,
 				newLine:			data.linkifyNewline, // deprecated

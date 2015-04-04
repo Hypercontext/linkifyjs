@@ -12,6 +12,7 @@ function normalize(opts) {
 	return {
 		attributes:			opts.linkAttributes			|| null,
 		defaultProtocol:	opts.defaultProtocol		|| 'http',
+		events:				opts.events					|| null,
 		format:				opts.format					|| noop,
 		formatHref:			opts.formatHref				|| noop,
 		newLine:			opts.newLine				|| false, // deprecated
