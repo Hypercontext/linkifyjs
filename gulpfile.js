@@ -283,13 +283,23 @@ gulp.task('build-benchmark', ['build-legacy'], function () {
 });
 
 gulp.task('uglify', ['build', 'build-legacy'], function () {
-	return gulp.src(['build/*.js', 'build/dist/jquery.linkify.js'])
+	var task = gulp.src('build/*.js')
 	.pipe(gulp.dest('dist')) // non-minified copy
 	.pipe(rename(function (path) {
 		path.extname = '.min.js';
 	}))
 	.pipe(uglify())
 	.pipe(gulp.dest('dist'));
+
+	var taskLegacy = gulp.src('build/dist/jquery.linkify.js')
+	.pipe(gulp.dest('dist/dist')) // non-minified copy
+	.pipe(rename(function (path) {
+		path.extname = '.min.js';
+	}))
+	.pipe(uglify())
+	.pipe(gulp.dest('dist/dist'));
+
+	return merge.apply(this, [task, taskLegacy]);
 });
 
 gulp.task('dist', ['uglify']);
