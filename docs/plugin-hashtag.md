@@ -6,7 +6,7 @@ title: hashtag plugin · Documentation
 Adds basic support for Twitter-style hashtags.
 
 {% highlight js %}
-var options = {/* ... */};
+var options = {/* … */};
 var str = "Linkify is #super #rad2015";
 
 linkify.find(str);

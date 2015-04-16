@@ -3,7 +3,7 @@ layout: doc
 title: Standard linkify · Documentation
 ---
 
-#### Jump to...
+#### Jump to…
 
 * [Installation](#installation)
   * [Node.js/io.js/Browserify](#nodejsiojsbrowserify)
@@ -28,7 +28,7 @@ var linkify = require('linkifyjs');
 <script src="linkify.amd.js"></script>
 <script>
   require(['linkify'], function (linkify) {
-    // ...
+    // …
   });
 </script>
 {% endhighlight %}
@@ -81,7 +81,7 @@ Returns the array
 
 ### linkify.test _(str [, type])_
 
-Is the given string a link? Not to be used for strict validation - See [Caveats](#)
+Is the given string a link? Not to be used for strict validation - See [Caveats](caveats.html)
 
 **Params**
 

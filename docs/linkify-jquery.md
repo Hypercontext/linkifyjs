@@ -41,7 +41,7 @@ Note that `linkify-jquery` requires a `jquery` module.
 
 {% highlight js %}
 require(['jquery'], function ($) {
-  // ...
+  // …
 });
 {% endhighlight %}
 
@@ -56,15 +56,15 @@ require(['jquery'], function ($) {
 ## Usage
 
 {% highlight js %}
-var options = { /* ... */ };
+var options = { /* … */ };
 $(selector).linkify(options);
 {% endhighlight %}
 
 **Params**
 
-* _`Object`_ [**`options`**] [Options hash](#options)
+* _`Object`_ [**`options`**] [Options](options.html) hash
 
-See [all available options](#options).
+See [all available options](options.html).
 
 ## DOM Data API
 
@@ -72,10 +72,10 @@ The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript requir
 
 {% highlight html %}
 <!-- Find and linkify all entities in this div -->
-<div data-linkify="this">...</div>
+<div data-linkify="this">…</div>
 
 <!-- Find and linkify the paragraphs and `#footer` element in the body -->
-<body data-linkify="p, #footer">...</body>
+<body data-linkify="p, #footer" data-linkify-target="_parent">…</body>
 {% endhighlight %}
 
-[Additional data options](#options) are available.
+[Additional data options](options.html) are available.

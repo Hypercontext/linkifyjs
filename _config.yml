@@ -1,9 +1,11 @@
 # Site settings
 title: Linkify
 email: info@soapboxhq.com
+website: soapboxhq.com
+websiteurl: http://soapboxhq.com
 description: > # this means to ignore newlines until "baseurl:"
   Linkify is a JavaScript plugin for finding links in plain-text and converting
-  them to HTML <a> tags. It works with all valid web URLs and email addresses.
+  them to HTML &lt;a&gt; tags. It works with all valid web URLs and email addresses.
 baseurl: "/jQuery-linkify" # the subpath of your site, e.g. /blog/
 url: "http://soapbox.github.io" # the base hostname & protocol for your site
 twitter_username: SoapBoxHQ

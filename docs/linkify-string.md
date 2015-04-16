@@ -3,7 +3,7 @@ layout: doc
 title: linkify-string · Documentation
 ---
 
-Interface for replacing links within native strings with anchor tags. Note that this function will ***not*** parse HTML strings properly - use [`linkify-element`](#linkify-element) or [`linkify-jquery`](#linkify-jquery) instead.
+Interface for replacing links within native strings with anchor tags. Note that this function will ***not*** parse HTML strings properly - use [`linkify-element`](linkify-element.html) or [`linkify-jquery`](linkify-jquery.html) instead.
 
 #### Jump to
 
@@ -32,7 +32,7 @@ var linkifyStr = require('linkifyjs/string');
 <script src="linkify-string.amd.js"></script>
 <script>
   require(['linkify-string'], function (linkifyStr) {
-    // ...
+    // …
   });
 </script>
 {% endhighlight %}
@@ -47,7 +47,7 @@ var linkifyStr = require('linkifyjs/string');
 ## Usage
 
 {% highlight js %}
-var options = {/* ... */};
+var options = {/* … */};
 var str = 'For help with GitHub.com, please email support@github.com';
 linkifyStr(str, options);
 // or
@@ -63,7 +63,7 @@ Returns
 **Params**
 
 * _`String`_ **`str`** String to linkify
-* _`Object`_ [**`options`**] [Options hash](#)
+* _`Object`_ [**`options`**] [Options](options.html) hash
 
 **Returns** _`String`_ Linkified string
 

@@ -21,6 +21,8 @@ header {
 
 footer {
   border-bottom: none;
+  padding-top: 30px;
+  padding-bottom: 15px;
 }
 
 #page-header {
@@ -85,6 +87,8 @@ code {
 pre {
   padding: 8px 12px;
   overflow-x: scroll;
+  white-space: nowrap;
+  word-break: normal;
 
   > code {
     border: 0;

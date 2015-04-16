@@ -19,7 +19,7 @@ bower install linkifyjs
 
 ## Quick Start
 
-Add [linkify](#) and [linkify-jquery](#) to your HTML following jQuery:
+Add linkify and linkify-jquery to your HTML following jQuery:
 
 {% highlight html %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -59,7 +59,7 @@ Returns the following array
 ]
 {% endhighlight %}
 
-See [all available options](#options)
+See [all available options](options.html)
 
 
 ## Node.js/io.js/Browserify
