@@ -11,7 +11,6 @@ module.exports = function (config) {
 		sl_chrome: {
 			base: 'SauceLabs',
 			browserName: 'chrome',
-			platform: 'Windows 7',
 			version: '35'
 		},
 		sl_firefox: {
@@ -30,6 +29,12 @@ module.exports = function (config) {
 			browserName: 'internet explorer',
 			platform: 'Windows 8.1',
 			version: '11'
+		},
+		sl_ie_8: {
+			base: 'SauceLabs',
+			browserName: 'internet explorer',
+			platform: 'Windows 7',
+			version: '8'
 		}
 	};
 
@@ -40,11 +45,10 @@ module.exports = function (config) {
 		sauceLabs: {
 			testName: 'Linkify Browser Tests'
 		},
-
-		logLevel: config.LOG_WARN,
-		browsers: ['Chrome'],
+		customLaunchers: customLaunchers,
+		browsers: Object.keys(customLaunchers),
 		autoWatch: false,
-		singleRun: true
-
+		singleRun: true,
+		logLevel: config.LOG_WARN
 	}));
 };

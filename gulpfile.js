@@ -304,7 +304,7 @@ gulp.task('uglify', ['build', 'build-legacy'], function () {
 
 gulp.task('dist', ['uglify']);
 gulp.task('test', ['build', 'jshint', 'mocha']);
-gulp.task('test-ci', ['build', 'karma-ci']);
+gulp.task('test-ci', ['karma-ci']);
 // Using with other tasks causes an error here for some reason
 
 /**

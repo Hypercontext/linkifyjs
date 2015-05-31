@@ -3,6 +3,9 @@ node_js:
   - "0.12"
   - "0.10"
   - "iojs"
-
+env:
+  global:
+    - secure: LhH+mMqOktTe6cIt97PGKBfgUjZM8vRd0qddyg61FSxg7a3WrHQoHE8WdRioJ9+DDzpu/NSTsHEUFUpGN+kSRw1UY4tsNLH6HoBQnqrNN4tVOeefudJpdeteOKZrJ8r8TaA/eO7sAgXO2T+RLJ8+qTbhx8FVZtLaCAgkrS0w9Qk=
+    - secure: Okwm1aAR3oo09AhHDsjFSq1UGlIUtWYYvYeoolJScC/UVFGMiK9oC4fzRtUHv3kXcnshDlcVDrr/Q5JL9Qx6E+tosPJp+tioaqE8X4IDbVk7PPs/ToOOEmWnGvxkgmfCGSDuneG8RVhILkhls3fbm0z+rRWlvJkjefeA96T6zps=
 script: npm test
 after_script: npm run coverage
