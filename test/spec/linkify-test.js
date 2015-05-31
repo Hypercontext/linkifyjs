@@ -21,60 +21,87 @@ var tokensTest = [
 ];
 
 describe('linkify', function () {
-	it('Has all required methods and properties', function () {
 
-		// Functions
-		linkify.tokenize.should.be.a('function');
-		linkify.tokenize.length.should.be.eql(1);
-		linkify.find.should.be.a('function');
-		linkify.find.length.should.be.eql(1); // type is optional
-		linkify.test.should.be.a('function');
-		linkify.test.length.should.be.eql(1); // type is optional
-
-		// Properties
-		linkify.options.should.be.a('object');
-		linkify.parser.should.be.a('object');
-		linkify.scanner.should.be.a('object');
-
+	describe('tokenize', function () {
+		it('is a function', function () {
+			linkify.tokenize.should.be.a('function');
+		});
+		it('takes a single argument', function () {
+			linkify.tokenize.length.should.be.eql(1);
+		});
 	});
-});
 
-describe('linkify.tokenize', function () {
-});
+	describe('find', function () {
+		it('is a function', function () {
+			linkify.find.should.be.a('function');
+		});
+		it('takes a single argument', function () {
+			linkify.find.length.should.be.eql(1); // type is optional
+		});
+	});
 
-describe('linkify.find', function () {
+	describe('test', function () {
+		/*
+			For each element,
 
-});
+			* [0] is the input string
+			* [1] is the expected return value
+			* [2] (optional) the type of link to look for
+		*/
+		var tests = [
+			['Herp derp', false],
+			['Herp derp', false, 'email'],
+			['Herp derp', false, 'asdf'],
+			['https://google.com/?q=yey', true],
+			['https://google.com/?q=yey', true, 'url'],
+			['https://google.com/?q=yey', false, 'email'],
+			['test+4@uwaterloo.ca', true],
+			['test+4@uwaterloo.ca', false, 'url'],
+			['test+4@uwaterloo.ca', true, 'email'],
+			['t.co', true],
+			['t.co g.co', false], // can only be one
+			['test@g.co t.co', false] // can only be one
+		];
 
-describe('linkify.test', function () {
-	/*
-		For each element,
+		it('is a function', function () {
+			linkify.test.should.be.a('function');
+		});
+		it('takes a single argument', function () {
+			linkify.test.length.should.be.eql(1); // type is optional
+		});
 
-		* [0] is the input string
-		* [1] is the expected return value
-		* [2] (optional) the type of link to look for
-	*/
-	var tests = [
-		['Herp derp', false],
-		['Herp derp', false, 'email'],
-		['Herp derp', false, 'asdf'],
-		['https://google.com/?q=yey', true],
-		['https://google.com/?q=yey', true, 'url'],
-		['https://google.com/?q=yey', false, 'email'],
-		['test+4@uwaterloo.ca', true],
-		['test+4@uwaterloo.ca', false, 'url'],
-		['test+4@uwaterloo.ca', true, 'email'],
-		['t.co', true],
-		['t.co g.co', false], // can only be one
-		['test@g.co t.co', false] // can only be one
-	];
-
-	it('Correctly tests each example string', function () {
-		var test;
+		var test, testName;
+		/* jshint loopfunc: true */
 		for (var i = 0; i < tests.length; i++) {
 			test = tests[i];
-			linkify.test(test[0], test[2]).should.be.eql(test[1]);
+			testName = 'Correctly tests the string "' + test[0] + '"';
+			testName += ' as `' + (test[1] ? 'true' : 'false') + '`';
+			if (test[2]) {
+				testName += ' (' + test[2] + ')';
+			}
+			testName += '.';
+
+			it(testName, function () {
+				linkify.test(test[0], test[2]).should.be.eql(test[1]);
+			});
 		}
 	});
 
+	describe('options', function () {
+		it('is an object', function () {
+			linkify.options.should.be.a('object');
+		});
+	});
+
+	describe('parser', function () {
+		it('is an object', function () {
+			linkify.parser.should.be.a('object');
+		});
+	});
+
+	describe('scanner', function () {
+		it('is an object', function () {
+			linkify.scanner.should.be.a('object');
+		});
+	});
 });
