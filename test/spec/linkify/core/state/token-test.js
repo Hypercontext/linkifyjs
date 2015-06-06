@@ -3,7 +3,7 @@ var
 TEXT_TOKENS	= require('../../../../../lib/linkify/core/tokens').text,
 TokenState	= require('../../../../../lib/linkify/core/state').TokenState;
 
-describe('TokenState', function () {
+describe('linkify/core/state/TokenState', function () {
 	var TS_START;
 
 	before(function () {

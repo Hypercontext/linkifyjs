@@ -1,6 +1,6 @@
 var TEXT_TOKENS = require('../../../../../lib/linkify/core/tokens').text;
 
-describe('TEXT_TOKENS', function () {
+describe('linkify/core/tokens#TEXT_TOKENS', function () {
 
 	// Test for two commonly-used tokens
 

@@ -94,7 +94,7 @@ var tests = [
 	// END: New linkify tests
 ];
 
-describe('parser#run()', function () {
+describe('linkify/core/parser#run()', function () {
 
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', function () {

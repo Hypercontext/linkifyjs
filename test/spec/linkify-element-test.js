@@ -58,16 +58,16 @@ describe('linkify-element', function () {
 		(testContainer).should.be.okay;
 		testContainer.should.be.a('object');
 		var result = linkifyElement(testContainer, null, doc);
-		result.should.eql(testContainer); // should return the same element
-		testContainer.innerHTML.should.eql(htmlOptions.linkified);
+		result.should.equal(testContainer); // should return the same element
+		htmlOptions.linkified.should.include(testContainer.innerHTML);
 	});
 
 	it('Works with overriden options', function () {
 		(testContainer).should.be.okay;
 		testContainer.should.be.a('object');
 		var result = linkifyElement(testContainer, htmlOptions.altOptions, doc);
-		result.should.eql(testContainer); // should return the same element
-		testContainer.innerHTML.should.eql(htmlOptions.linkifiedAlt);
+		result.should.equal(testContainer); // should return the same element
+		htmlOptions.linkifiedAlt.should.include(testContainer.innerHTML);
 
 		/*
 		// These don't work across all test suites :(

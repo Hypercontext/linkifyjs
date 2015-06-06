@@ -3,7 +3,7 @@ var
 linkify = require('../../../../lib/linkify'),
 hashtag = require('../../../../lib/linkify/plugins/hashtag');
 
-describe('Linkify Hashtag Plugin', function () {
+describe('linkify/plugins/hashtag', function () {
 
 	it('Cannot parse hashtags before applying the plugin', function () {
 		linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work')

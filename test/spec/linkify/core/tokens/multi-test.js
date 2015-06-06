@@ -3,7 +3,7 @@ var
 TEXT_TOKENS = require('../../../../../lib/linkify/core/tokens').text,
 MULTI_TOKENS = require('../../../../../lib/linkify/core/tokens').multi;
 
-describe('MULTI_TOKENS', function () {
+describe('linkify/core/tokens/MULTI_TOKENS', function () {
 
 	describe('URL', function () {
 		var

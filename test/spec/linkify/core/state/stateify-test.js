@@ -3,7 +3,7 @@ TOKENS		= require('../../../../../lib/linkify/core/tokens').text,
 State		= require('../../../../../lib/linkify/core/state').CharacterState,
 stateify	= require('../../../../../lib/linkify/core/state').stateify;
 
-describe('stateify', function () {
+describe('linkify/core/state/stateify', function () {
 	var S_START;
 
 	before(function () {

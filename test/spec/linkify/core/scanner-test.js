@@ -62,7 +62,7 @@ var tests = [
 	['123-456', [DOMAIN], ['123-456']]
 ];
 
-describe('scanner#run()', function () {
+describe('linkify/core/scanner#run()', function () {
 
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', function () {

@@ -42,10 +42,12 @@ function apply($, doc=null) {
 
 	$(doc).ready(function () {
 		$('[data-linkify]').each(function () {
+
 			let
 			$this = $(this),
 			data = $this.data(),
 			target = data.linkify,
+			nl2br = data.linkifyNlbr,
 			options = {
 				linkAttributes:		data.linkifyAttributes,
 				defaultProtocol: 	data.linkifyDefaultProtocol,
@@ -53,7 +55,7 @@ function apply($, doc=null) {
 				format:				data.linkifyFormat,
 				formatHref:			data.linkifyFormatHref,
 				newLine:			data.linkifyNewline, // deprecated
-				nl2br:				!!data.linkifyNlbr,
+				nl2br:				!!nl2br && nl2br !== 0 && nl2br !== 'false',
 				tagName:			data.linkifyTagname,
 				target:				data.linkifyTarget,
 				linkClass:			data.linkifyLinkclass,
@@ -65,7 +67,7 @@ function apply($, doc=null) {
 }
 
 // Apply it right away if possible
-if (typeof __karma__ === 'undefined' && typeof jQuery !== 'undefined' && doc) {
+if (typeof jQuery !== 'undefined' && doc) {
 	apply(jQuery, doc);
 }
 

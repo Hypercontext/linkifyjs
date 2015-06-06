@@ -3,13 +3,14 @@
   "version": "2.0.0-alpha.4",
   "description": "Intelligent URL recognition, made easy",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/SoapBox/jQuery-linkify.git"
+    "type": "git",
+    "url": "https://github.com/SoapBox/jQuery-linkify.git"
   },
   "main": "index.js",
   "scripts": {
     "prepublish": "rm -rf lib/* && node_modules/.bin/gulp build",
     "test": "node_modules/.bin/gulp coverage",
+    "test-ci": "node_modules/.bin/gulp test-ci",
     "coverage": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
   "author": "SoapBox Innovations (@SoapBoxHQ)",
@@ -28,7 +29,7 @@
     "gulp-concat": "^2.5.2",
     "gulp-istanbul": "^0.6.0",
     "gulp-jshint": "^1.9.2",
-    "gulp-mocha": "^2.0.0",
+    "gulp-mocha": "^2.1.0",
     "gulp-rename": "^1.2.0",
     "gulp-replace": "^0.5.3",
     "gulp-uglify": "^1.1.0",
@@ -38,10 +39,11 @@
     "karma": "^0.12.32",
     "karma-browserify": "^4.0.0",
     "karma-chrome-launcher": "^0.1.7",
+    "karma-firefox-launcher": "^0.1.6",
     "karma-mocha": "^0.1.10",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-sauce-launcher": "^0.2.10",
-    "lodash": "^3.5.0",
+    "lodash": "^3.9.3",
     "merge-stream": "^0.1.7",
     "mocha": "^2.2.1"
   },
