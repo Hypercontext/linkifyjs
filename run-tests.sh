@@ -1,5 +1,3 @@
-cd $(dirname "${BASH_SOURCE[0]}../")
-
 if [[ `echo $TRAVIS_BRANCH` = "master" ]]; then
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
