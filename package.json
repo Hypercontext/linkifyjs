@@ -21,7 +21,7 @@
     "brfs": "^1.4.0",
     "closure-compiler": "^0.2.6",
     "coveralls": "^2.11.2",
-    "expect": "^0.3.1",
+    "expect.js": "^0.3.1",
     "glob": "^5.0.3",
     "gulp": "^3.8.11",
     "gulp-babel": "^4.0.0",
