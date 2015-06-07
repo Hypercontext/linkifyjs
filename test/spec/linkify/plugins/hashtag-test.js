@@ -6,19 +6,19 @@ hashtag = require('../../../../lib/linkify/plugins/hashtag');
 describe('linkify/plugins/hashtag', function () {
 
 	it('Cannot parse hashtags before applying the plugin', function () {
-		linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work')
-		.should.be.eql([]);
+		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
+		.to.be.eql([]);
 
-		linkify.test('#wat', 'hashtag').should.not.be.ok;
-		linkify.test('#987', 'hashtag').should.not.be.ok;
+		expect(linkify.test('#wat', 'hashtag')).to.not.be.ok;
+		expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
 	});
 
 	it ('Can parse hashtags after applying the plugin', function () {
 
 		hashtag(linkify);
 
-		linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work')
-		.should.be.eql([{
+		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
+		.to.be.eql([{
 			type: 'hashtag',
 			value: '#hashtag',
 			href: '#hashtag'
@@ -28,7 +28,7 @@ describe('linkify/plugins/hashtag', function () {
 			href: '#YOLO-2015'
 		}]);
 
-		linkify.test('#wat', 'hashtag').should.be.ok;
-		linkify.test('#987', 'hashtag').should.not.be.ok;
+		expect(linkify.test('#wat', 'hashtag')).to.be.ok;
+		expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
 	});
 });

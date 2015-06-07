@@ -15,8 +15,8 @@ describe('linkify/core/state/CharacterState', function () {
 	describe('#next()', function () {
 
 		it('Has no jumps and return null', function () {
-			S_START.j.length.should.eql(0);
-			S_START.next('.').should.not.be.ok;
+			expect(S_START.j.length).to.eql(0);
+			expect(S_START.next('.')).to.not.be.ok;
 		});
 
 		it('Should return an new state for the ":" character', function () {
@@ -28,41 +28,41 @@ describe('linkify/core/state/CharacterState', function () {
 				S_START.next('7'),
 			];
 
-			S_START.j.length.should.eql(2);
+			expect(S_START.j.length).to.eql(2);
 
 			results.map(function (result) {
-				result.should.be.ok;
-				result.should.be.an.instanceOf(CharacterState);
+				expect(result).to.be.ok;
+				expect(result).to.be.a(CharacterState);
 			});
 
-			results[0].should.be.eql(S_DOT);
-			results[1].should.be.eql(S_NUM);
+			expect(results[0]).to.be.eql(S_DOT);
+			expect(results[1]).to.be.eql(S_NUM);
 		});
 
 		it('Can return itself (has recursion)', function () {
 			S_NUM.on(/[0-9]/, S_NUM);
-			S_NUM.next('8').should.be.eql(S_NUM);
-			S_NUM.next('0').next('4').should.be.eql(S_NUM);
+			expect(S_NUM.next('8')).to.be.eql(S_NUM);
+			expect(S_NUM.next('0').next('4')).to.be.eql(S_NUM);
 		});
 	});
 
 	describe('#emit()', function () {
 		it('Should return a falsey value if initalized with no token', function () {
-			(!S_START.emit()).should.be.ok;
+			expect((!S_START.emit())).to.be.ok;
 		});
 
 		it('Should return the token it was initialized with', function () {
 			var state = new CharacterState(TEXT_TOKENS.QUERY);
-			state.emit().should.be.eql(TEXT_TOKENS.QUERY);
+			expect(state.emit()).to.be.eql(TEXT_TOKENS.QUERY);
 		});
 	});
 
 	describe('#test()', function () {
 		it('Ensures characters match the given token or regexp', function () {
-			S_START.test('a', 'a').should.be.ok;
-			S_START.test('a', 'b').should.not.be.ok;
-			S_START.test('b', /[a-z]/).should.be.ok;
-			S_START.test('\n', /[^\S\n]/).should.not.be.ok;
+			expect(S_START.test('a', 'a')).to.be.ok;
+			expect(S_START.test('a', 'b')).to.not.be.ok;
+			expect(S_START.test('b', /[a-z]/)).to.be.ok;
+			expect(S_START.test('\n', /[^\S\n]/)).to.not.be.ok;
 		});
 	});
 });

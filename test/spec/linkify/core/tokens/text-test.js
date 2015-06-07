@@ -13,7 +13,7 @@ describe('linkify/core/tokens#TEXT_TOKENS', function () {
 
 		describe('#toString()', function () {
 			it ('should return the string "abc123"', function () {
-				DOMAIN.toString().should.eql('abc123');
+				expect(DOMAIN.toString()).to.eql('abc123');
 			});
 		});
 	});
@@ -27,7 +27,7 @@ describe('linkify/core/tokens#TEXT_TOKENS', function () {
 
 		describe('#toString()', function () {
 			it ('should return the string "@"', function () {
-				at.toString().should.eql('@');
+				expect(at.toString()).to.eql('@');
 			});
 		});
 	});

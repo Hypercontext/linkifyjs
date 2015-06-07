@@ -8,11 +8,11 @@ module.exports = {
 	// different attribute ordering (based on the rendering engine)
 	// Each line is semantically identical.
 	linkified: fs.readFileSync(__dirname + '/linkified.html', 'utf8')
-		.split('\n')
-		.map(function (line) { return line.trim(); }),
+		.trim()
+		.split('\n'),
 	linkifiedAlt: fs.readFileSync(__dirname + '/linkified-alt.html', 'utf8')
-		.split('\n')
-		.map(function (line) { return line.trim(); }),
+		.trim()
+		.split('\n'),
 
 	extra: fs.readFileSync(__dirname + '/extra.html', 'utf8').trim(), // for jQuery plugin tests
 	altOptions: {

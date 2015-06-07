@@ -152,7 +152,7 @@ class TokenState extends BaseState {
 		@return {Boolean}
 	*/
 	test(token, tokenClass) {
-		return tokenClass.test(token);
+		return token instanceof tokenClass;
 	}
 }
 

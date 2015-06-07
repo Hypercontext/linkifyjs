@@ -51,23 +51,23 @@ describe('linkify-element', function () {
 	});
 
 	it('Has a helper function', function () {
-		(linkifyElement.helper).should.be.a('function');
+		expect(linkifyElement.helper).to.be.a('function');
 	});
 
 	it('Works with default options', function () {
-		(testContainer).should.be.okay;
-		testContainer.should.be.a('object');
+		expect(testContainer).to.be.ok;
+		expect(testContainer).to.be.a('object');
 		var result = linkifyElement(testContainer, null, doc);
-		result.should.equal(testContainer); // should return the same element
-		htmlOptions.linkified.should.include(testContainer.innerHTML);
+		expect(result).to.equal(testContainer); // should return the same element
+		expect(htmlOptions.linkified).to.contain(testContainer.innerHTML);
 	});
 
 	it('Works with overriden options', function () {
-		(testContainer).should.be.okay;
-		testContainer.should.be.a('object');
+		expect(testContainer).to.be.ok;
+		expect(testContainer).to.be.a('object');
 		var result = linkifyElement(testContainer, htmlOptions.altOptions, doc);
-		result.should.equal(testContainer); // should return the same element
-		htmlOptions.linkifiedAlt.should.include(testContainer.innerHTML);
+		expect(result).to.equal(testContainer); // should return the same element
+		expect(htmlOptions.linkifiedAlt).to.contain(testContainer.innerHTML);
 
 		/*
 		// These don't work across all test suites :(

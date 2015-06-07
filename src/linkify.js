@@ -2,6 +2,12 @@ import * as options from './linkify/utils/options';
 import * as scanner from './linkify/core/scanner';
 import * as parser from './linkify/core/parser';
 
+if (!Array.isArray) {
+	Array.isArray = function(arg) {
+		return Object.prototype.toString.call(arg) === '[object Array]';
+	};
+}
+
 /**
 	Converts a string into tokens that represent linkable and non-linkable bits
 	@method tokenize

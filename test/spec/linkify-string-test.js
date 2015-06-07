@@ -66,14 +66,14 @@ describe('linkify-string', function () {
 	];
 
 	it('Works with default options', function () {
-		tests.forEach(function (test) {
-			linkifyStr(test[0]).should.be.eql(test[1]);
+		tests.map(function (test) {
+			expect(linkifyStr(test[0])).to.be.eql(test[1]);
 		});
 	});
 
 	it('Works with overriden options', function () {
-		tests.forEach(function (test) {
-			linkifyStr(test[0], options).should.be.eql(test[2]);
+		tests.map(function (test) {
+			expect(linkifyStr(test[0], options)).to.be.eql(test[2]);
 		});
 	});
 });

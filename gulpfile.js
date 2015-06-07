@@ -48,7 +48,10 @@ var tldsReplaceStr = '"' + tlds.join('|') + '".split("|")';
 gulp.task('babel', function () {
 	return gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
-	.pipe(babel({format: babelformat}))
+	.pipe(babel({
+		loose: 'all',
+		format: babelformat
+	}))
 	.pipe(gulp.dest('lib'));
 });
 
@@ -60,6 +63,7 @@ gulp.task('babel-amd', function () {
 	return gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
+		loose: 'all',
 		modules: 'amd',
 		moduleIds: true,
 		format: babelformat
@@ -138,6 +142,7 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 		// Browser interface
 		stream = gulp.src(files.js)
 		.pipe(babel({
+			loose: 'all',
 			modules: 'ignore',
 			format: babelformat
 		}))
@@ -182,6 +187,7 @@ gulp.task('build-plugins', ['babel-amd'], function () {
 		// Global plugins
 		stream = gulp.src('src/linkify/plugins/' + plugin + '.js')
 		.pipe(babel({
+			loose: 'all',
 			modules: 'ignore',
 			format: babelformat
 		}))

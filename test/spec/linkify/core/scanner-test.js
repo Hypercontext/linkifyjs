@@ -72,14 +72,16 @@ describe('linkify/core/scanner#run()', function () {
 			values = test[2],
 			result = scanner.run(str);
 
-			result.map(function (token) { return token.constructor; })
-			.should.eql(types);
+			expect(result.map(function (token) {
+				return token.constructor;
+			})).to.eql(types);
 
-			result.map(function (token) { return token.toString(); })
-			.should.eql(values);
+			expect(result.map(function (token) {
+				return token.toString();
+			})).to.eql(values);
 		});
 	}
 
-	tests.forEach(makeTest, this);
+	tests.map(makeTest, this);
 
 });

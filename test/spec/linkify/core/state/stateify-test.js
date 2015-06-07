@@ -13,41 +13,41 @@ describe('linkify/core/state/stateify', function () {
 	it('Makes states for the domain "co"', function () {
 		var result = stateify('co', S_START, TOKENS.TLD, TOKENS.DOMAIN);
 
-		result.should.be.an.instanceOf(Array);
-		result.length.should.eql(2);
-		result[0].T.should.eql(TOKENS.DOMAIN);
-		result[1].T.should.eql(TOKENS.TLD);
+		expect(result).to.be.an(Array);
+		expect(result.length).to.eql(2);
+		expect(result[0].T).to.eql(TOKENS.DOMAIN);
+		expect(result[1].T).to.eql(TOKENS.TLD);
 	});
 
 	it('Makes states for the domain "com"', function () {
 		var result = stateify('com', S_START, TOKENS.TLD, TOKENS.DOMAIN);
-		result.should.be.an.instanceOf(Array);
-		result.length.should.eql(1);
-		result[0].T.should.eql(TOKENS.TLD);
+		expect(result).to.be.an(Array);
+		expect(result.length).to.eql(1);
+		expect(result[0].T).to.eql(TOKENS.TLD);
 	});
 
 	it('Adding "com" again should not make any new states', function () {
 		var result = stateify('com', S_START, TOKENS.TLD, TOKENS.DOMAIN);
-		result.should.be.an.instanceOf(Array);
-		result.length.should.eql(0);
+		expect(result).to.be.an(Array);
+		expect(result.length).to.eql(0);
 	});
 
 	it('Makes states for the domain "community"', function () {
 		var state = S_START,
 		result = stateify('community', S_START, TOKENS.TLD, TOKENS.DOMAIN);
 
-		result.should.be.an.instanceOf(Array);
-		result.length.should.eql(6);
+		expect(result).to.be.an(Array);
+		expect(result.length).to.eql(6);
 
-		(state = state.next('c')).T.should.be.eql(TOKENS.DOMAIN);
-		(state = state.next('o')).T.should.be.eql(TOKENS.TLD);
-		(state = state.next('m')).T.should.be.eql(TOKENS.TLD);
-		(state = state.next('m')).T.should.be.eql(TOKENS.DOMAIN);
-		(state = state.next('u')).T.should.be.eql(TOKENS.DOMAIN);
-		(state = state.next('n')).T.should.be.eql(TOKENS.DOMAIN);
-		(state = state.next('i')).T.should.be.eql(TOKENS.DOMAIN);
-		(state = state.next('t')).T.should.be.eql(TOKENS.DOMAIN);
-		(state = state.next('y')).T.should.be.eql(TOKENS.TLD);
+		expect((state = state.next('c')).T).to.be.eql(TOKENS.DOMAIN);
+		expect((state = state.next('o')).T).to.be.eql(TOKENS.TLD);
+		expect((state = state.next('m')).T).to.be.eql(TOKENS.TLD);
+		expect((state = state.next('m')).T).to.be.eql(TOKENS.DOMAIN);
+		expect((state = state.next('u')).T).to.be.eql(TOKENS.DOMAIN);
+		expect((state = state.next('n')).T).to.be.eql(TOKENS.DOMAIN);
+		expect((state = state.next('i')).T).to.be.eql(TOKENS.DOMAIN);
+		expect((state = state.next('t')).T).to.be.eql(TOKENS.DOMAIN);
+		expect((state = state.next('y')).T).to.be.eql(TOKENS.TLD);
 
 	});
 

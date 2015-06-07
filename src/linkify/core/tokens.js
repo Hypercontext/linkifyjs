@@ -28,16 +28,6 @@ class TextToken {
 	toString() {
 		return this.v + '';
 	}
-
-	/**
-		Is the given value an instance of this Token?
-		@method test
-		@static
-		@param {Mixed} value
-	*/
-	static test(value) {
-		return value instanceof this;
-	}
 }
 
 /**
@@ -190,8 +180,7 @@ let text = {
 // Is the given token a valid domain token?
 // Should nums be included here?
 function isDomainToken(token) {
-	return DOMAIN.test(token) ||
-	TLD.test(token);
+	return token instanceof DOMAIN || token instanceof TLD;
 }
 
 /**
@@ -271,17 +260,6 @@ class MultiToken {
 			href: this.toHref(protocol)
 		};
 	}
-
-	/**
-		Is the given value an instance of this Token?
-		@method test
-		@static
-		@param {Mixed} value
-	*/
-	static test(token) {
-		return token instanceof this;
-	}
-
 }
 
 /**
@@ -358,14 +336,14 @@ class URL extends MultiToken {
 
 		// Make the first part of the domain lowercase
 		// Lowercase protocol
-		while (PROTOCOL.test(tokens[i])) {
+		while (tokens[i] instanceof PROTOCOL) {
 			hasProtocol = true;
 			result.push(tokens[i].toString().toLowerCase());
 			i++;
 		}
 
 		// Skip slash-slash
-		while (SLASH.test(tokens[i])) {
+		while (tokens[i] instanceof SLASH) {
 			hasSlashSlash = true;
 			result.push(tokens[i].toString());
 			i++;
