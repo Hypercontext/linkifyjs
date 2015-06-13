@@ -1,9 +1,11 @@
 # Linkify
 
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
-[![Dependency Status](https://gemnasium.com/SoapBox/jQuery-linkify.svg)](https://gemnasium.com/SoapBox/jQuery-linkify)
-[![Build Status](https://travis-ci.org/SoapBox/jQuery-linkify.svg)](https://travis-ci.org/SoapBox/jQuery-linkify)
-[![Coverage Status](https://coveralls.io/repos/SoapBox/jQuery-linkify/badge.svg)](https://coveralls.io/r/SoapBox/jQuery-linkify)
+[![Dependency Status](https://gemnasium.com/SoapBox/linkifyjs.svg)](https://gemnasium.com/SoapBox/linkifyjs)
+[![Build Status](https://travis-ci.org/SoapBox/linkifyjs.svg)](https://travis-ci.org/SoapBox/linkifyjs)
+[![Coverage Status](https://coveralls.io/repos/SoapBox/linkifyjs/badge.svg)](https://coveralls.io/r/SoapBox/linkifyjs)
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/nfrasser.svg)](https://saucelabs.com/u/nfrasser)
 
 Linkify is a small yet comprehensive JavaScript plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 
@@ -17,7 +19,7 @@ __Jump to__
     - [Node.js/Browserify](#node-js-browserify)
     - [AMD Modules](#amd-modules)
     - [Browser](#browser)
-- [API Documentation](#api)
+- [API Documentation](#api-documentation)
 - [Caveats](#caveats)
 - [Contributing](#contributing)
 - [License](#license)
@@ -32,7 +34,7 @@ __Jump to__
   * Linkify is compatible with all modern browsers, as well as Internet Explorer 9 and up. Full IE8 support coming soon.
 
 ## Demo
-[Launch demo](http://soapbox.github.io/jQuery-linkify/)
+[Launch demo](http://soapbox.github.io/linkifyjs/)
 
 ## Installation and Usage
 
@@ -79,7 +81,7 @@ Returns the following array
 ```
 
 
-See [all available options](http://soapbox.github.io/jQuery-linkify/docs/options)
+See [all available options](http://soapbox.github.io/linkifyjs/docs/options)
 
 
 ### Node.js/io.js/Browserify
@@ -167,7 +169,7 @@ $('p').linkify();
 
 ## API Documentation
 
-View full documentation at [soapbox.github.io/jQuery-linkify/docs](soapbox.github.io/jQuery-linkify).
+View full documentation at [soapbox.github.io/linkifyjs/docs](http://soapbox.github.io/linkifyjs).
 
 ## Caveats
 
@@ -182,7 +184,7 @@ Here are a few of the known issues.
 
 ## Contributing
 
-Check out [CONTRIBUTING.md](https://github.com/SoapBox/jQuery-linkify/blob/master/CONTRIBUTING.md).
+Check out [CONTRIBUTING.md](https://github.com/SoapBox/linkifyjs/blob/master/CONTRIBUTING.md).
 
 ## License
 
@@ -190,4 +192,4 @@ MIT
 
 ## Authors
 
-Linkify is built with Love™ and maintained by [SoapBox Innovations Inc.](http://soapboxhq.com).
+Linkify is built with Love™ and maintained by [SoapBox Innovations](http://soapboxhq.com).
