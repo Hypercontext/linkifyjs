@@ -1,6 +1,0 @@
-[submodule "_sass/bootstrap"]
-	path = _sass/bootstrap
-	url = https://github.com/twbs/bootstrap-sass.git
-[submodule "js/linkify"]
-	path = js/linkify
-	url = https://github.com/nfrasser/linkify-shim.git
