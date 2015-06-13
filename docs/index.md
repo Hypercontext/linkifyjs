@@ -5,7 +5,7 @@ title: Documentation
 
 # Getting Started
 
-[Download](https://github.com/SoapBox/jQuery-linkify/releases/download/v2.0.0-alpha.3/linkifyjs.zip) the latest release or install via [NPM](https://www.npmjs.com/)
+[Download](https://github.com/SoapBox/linkifyjs/releases/download/{{ site.version }}/linkifyjs.zip) the latest release or install via [NPM](https://www.npmjs.com/)
 
 ```
 npm install linkifyjs

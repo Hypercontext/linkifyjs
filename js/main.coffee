@@ -43,7 +43,7 @@
 
     # Set the value of the textfield to the referrer URL
     $('#demo-3-input').val 'Linkify the following URL: ' + \
-      document.referrer ? 'https://github.com/SoapBox/jQuery-linkify/'
+      document.referrer ? 'https://github.com/SoapBox/linkifyjs/'
 
     $('#demo-3-linkifier').on 'click', ->
       $this = $(this)
@@ -53,6 +53,10 @@
       $output.html $input.val()
       $output.linkify
         nl2br: true
+
+    # TODO: Get this from GitHub
+    $('.version').html '{{ site.version }}'
+    $('.version-download').attr 'href', 'https://github.com/SoapBox/linkifyjs/releases/download/{{ site.version }}/linkifyjs.zip'
 
     $(window).trigger 'scroll'
 
