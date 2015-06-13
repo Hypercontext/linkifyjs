@@ -1,0 +1,51 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+
+@import url("//fonts.googleapis.com/css?family=Oswald:400,300|Roboto:300,300italic,500,500italic");
+
+// Our variables
+$font-family-base:          'Roboto', sans-serif;
+$headings-font-family:      'Oswald', sans-serif;
+$font-family-monospace:     Monaco, Consolas, "Courier New", monospace;
+
+$spacing-unit:              30px;
+
+$font-size-base:            16px;
+
+$navbar-height:             75px;
+
+// Brand colours
+$brand-primary:             #3b88c8;
+$brand-soapbox:             $brand-primary; // #3b88c8
+$brand-success:             #3ab49b;
+$brand-warning:             #fbaf3f;
+$brand-danger:              #ff564f;
+$brand-info:                #d67bb2;
+
+
+// Import partials from `sass_dir` (defaults to `_sass`)
+@import "bootstrap/assets/stylesheets/bootstrap";
+@import "extendstrap";
+@import "base", "layout", "syntax-highlighting";
+
+body {
+  font-size: 16px;
+  font-weight: 300;
+  background-repeat: no-repeat;
+  background-position: center 175px;
+  background-attachment: fixed;
+  background-color: lighten($gray-lighter, 3%);
+
+  @include img-retina(
+    "{{ site.baseurl }}/img/logo.png",
+    "{{ site.baseurl }}/img/logo@2x.png",
+    650px, 400px
+  );
+}
+
+// Pages
+@import "home";
+@import "docs";
+
