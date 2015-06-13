@@ -1,0 +1,11 @@
+# Linkify Changelog
+
+### v2.0.0
+
+* New link-detection technique based on lexicographical analysis via two-stage scanner - essentially regexp with more flexibility.
+* Node.js API via `var linkify = require('linkifyjs');`
+* Internal plugin system so you can require only features you need. e.g., `require('linkifyjs/plugins/hashtag')(linkify);`
+* Browser modules (Browserify, AMD)
+* Mocha Unit tests
+* ES6 Implementation
+* Updated documentation

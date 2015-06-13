@@ -1,30 +1,53 @@
 {
-  "name": "jQuery-linkify",
-  "title": "Linkify",
-  "description": "Find URLs in plain text and return HTML for discovered links.",
-  "author": "SoapBox Innovations, Inc.",
+  "name": "linkifyjs",
+  "version": "2.0.0-beta.1",
+  "description": "Intelligent URL recognition, made easy",
   "repository": {
     "type": "git",
-    "url": "http://github.com/HitSend/jQuery-linkify.git"
+    "url": "https://github.com/SoapBox/jQuery-linkify.git"
   },
-  "homepage": "https://github.com/HitSend/jQuery-linkify/",
-  "version": "1.1.7",
-  "license": "MIT",
-  "devDependencies": {
-    "grunt": "0.4.x",
-    "grunt-cli": "0.1.x",
-    "grunt-contrib-jshint": "0.x",
-    "grunt-contrib-concat": "0.x",
-    "grunt-contrib-uglify": "0.x",
-    "grunt-contrib-clean": "0.x",
-    "grunt-contrib-connect": "0.x",
-    "grunt-contrib-copy": "0.x",
-    "grunt-wrap": "0.x",
-    "grunt-gh-pages": "0.x",
-    "grunt-bumper": "1.0.x",
-    "grunt-contrib-qunit": "0.5.x"
-  },
+  "main": "index.js",
   "scripts": {
-    "test": "grunt test --verbose"
+    "prepublish": "rm -rf lib/* && node_modules/.bin/gulp build",
+    "test": "node_modules/.bin/gulp coverage",
+    "test-ci": "node_modules/.bin/gulp test-ci",
+    "coverage": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
+  },
+  "author": "SoapBox Innovations (@SoapBoxHQ)",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "amd-optimize": "^0.4.3",
+    "brfs": "^1.4.0",
+    "closure-compiler": "^0.2.6",
+    "coveralls": "^2.11.2",
+    "expect.js": "^0.3.1",
+    "glob": "^5.0.3",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^4.0.0",
+    "gulp-closure-compiler": "^0.2.14",
+    "gulp-concat": "^2.5.2",
+    "gulp-istanbul": "^0.6.0",
+    "gulp-jshint": "^1.9.2",
+    "gulp-mocha": "^2.1.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-uglify": "^1.1.0",
+    "gulp-wrap": "^0.11.0",
+    "jsdom": "^3.0.0",
+    "jshint-stylish": "^1.0.1",
+    "karma": "^0.12.32",
+    "karma-browserify": "^4.0.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sauce-launcher": "^0.2.10",
+    "lodash": "^3.9.3",
+    "merge-stream": "^0.1.7",
+    "mocha": "^2.2.1"
+  },
+  "optionalDependencies": {
+    "jquery": "^1.11.1"
   }
 }

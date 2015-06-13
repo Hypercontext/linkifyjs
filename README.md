@@ -1,230 +1,193 @@
 # Linkify
 
-[![Node Dependencies](https://david-dm.org/SoapBox/jQuery-linkify/dev-status.png)](https://david-dm.org/SoapBox/jQuery-linkify#info=devDependencies&view=table)
+[![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
+[![Dependency Status](https://gemnasium.com/SoapBox/jQuery-linkify.svg)](https://gemnasium.com/SoapBox/jQuery-linkify)
+[![Build Status](https://travis-ci.org/SoapBox/jQuery-linkify.svg)](https://travis-ci.org/SoapBox/jQuery-linkify)
+[![Coverage Status](https://coveralls.io/repos/SoapBox/jQuery-linkify/badge.svg)](https://coveralls.io/r/SoapBox/jQuery-linkify)
 
-__Download 1.1__
-- [Minified](https://github.com/SoapBox/jQuery-linkify/blob/master/dist/jquery.linkify.min.js)
-- [Source](https://github.com/SoapBox/jQuery-linkify/blob/master/dist/jquery.linkify.js)
+Linkify is a small yet comprehensive JavaScript plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 
 __Jump to__
-- [Demo](#demo)
-- [Installing](#installing)
-  - [Basic](#basic)
-  - [Bower](#bower)
-- [Examples](#examples)
-  - [Basic Usage](#basic-usage)
-  - [Usage via HTML attributes](#usage-via-html-attributes)
-- [Options](#options)
-- [Building and Development Tasks](#building-and-development-tasks)
-  - [Setup](#setup)
-  - [Development](#development)
-- [Authors](#authors)
 
-Linkify is a jQuery plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
+- [Features](#features)
+- [Demo](#demo)
+- [Installation and Usage](#installation-and-usage)
+  - [Quick Start](#quick-start)
+  - [Usage](#usage)
+    - [Node.js/Browserify](#node-js-browserify)
+    - [AMD Modules](#amd-modules)
+    - [Browser](#browser)
+- [API Documentation](#api)
+- [Caveats](#caveats)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+* **Accuracy**<br>Linkify uses a (close to) complete list of valid top-level domains to ensure that only valid URLs and email addresses are matched.
+* **Speed**<br>Each string is analyzied exactly once to detect every kind of linkable entity
+* **Extensibility**<br>Linkify is designed to be fast and lightweight, but comes with a powerful plugin API that lets you detect even more information like #hashtags and @mentions.
+* **Small footprint**<br>Linkify and its jQuery interface clock in at approximately 15KB minified (5KB gzipped) - approximately 50% the size of Twitter Text
+* **Modern implementation**<br>Linkify is written in ECMAScript6 and compiles to ES5 for modern JavaScript runtimes.
+  * Linkify is compatible with all modern browsers, as well as Internet Explorer 9 and up. Full IE8 support coming soon.
 
 ## Demo
 [Launch demo](http://soapbox.github.io/jQuery-linkify/)
 
-## Installing
+## Installation and Usage
 
-### Basic
-Just download [jquery.linkify.min.js](https://github.com/HitSend/jQuery-linkify/blob/master/dist/jquery.linkify.min.js) from this repo's `dist` folder and include it on your web page with `<script>` tag, along with jQuery:
+### Quick Start
 
-```html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="js/jquery.linkify.min.js"></script>
-```
-
-### Bower
-Run `bower install jQuery-linkify` from your project's root folder.
-
-
-## Examples
-
-### Basic Usage
-
-To detect links within any set of elements, just call `$(selector).linkify()` on document load.
-
-#### Code
+Add [linkify](#) and [linkify-jquery](#) to your HTML following jQuery:
 
 ```html
-<p id="paragraph1">Check out this link to http://google.com</p>
-<p id="paragraph2">You can also email support@example.com to view more.</p>
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="js/jquery.linkify.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="linkify.min.js"></script>
+<script src="linkify-jquery.min.js"></script>
 ```
 
-```javascript
-$(window).on('load', function () {
-  $('p').linkify();
+#### Find all links and convert them to anchor tags
+
+```js
+$('p').linkify();
+$('#sidebar').linkify({
+    target: "_blank"
 });
 ```
 
-#### Output
+#### Find all links in the given string
 
-``` html
-<p id="paragraph1">
-  Check out this link to
-  <a href="http://google.com" class="linkified" target="_blank">
-    http://google.com
-  </a>
-</p>
-<p id="paragraph2">
-  You can also email
-  <a href="mailto:support@example.com" class="linkified">
-    support@example.com
-  </a>
-  to view more.
-</p>
+```js
+linkify.find('Any links to github.com here? If not, contact test@example.com');
 ```
 
-### Usage via HTML attributes
+Returns the following array
 
-Linkify also provides a DOM data- API. The following code will find links in the `#linkify-example` paragraph element:
-
-```html
-<p id="linkify-example" data-linkify="this">
-  Lorem ipsum dolor sit amet, consectetur adipisicing
-  elit, sed do eiusmod tempor incididunt ut labore et
-  dolore magna aliqua.
-</p>
+```js
+[
+  {
+    type: 'url',
+    value: 'github.com',
+    href: 'http://github.com'
+  },
+  {
+    type: 'email',
+    value: 'test@example.com',
+    href: 'mailto:test@example.com'
+  }
+]
 ```
 
-Pass in a selector instead of this to linkify every element with that selector. The example below linkifies every paragraph and `.plain-text` element in the bodytag:
 
-```html
-<body data-linkify="p, .plain-text">
-  ...
-</body>
+See [all available options](http://soapbox.github.io/jQuery-linkify/docs/options)
+
+
+### Node.js/io.js/Browserify
+
+```js
+var linkify = require('linkifyjs');
+require('linkifyjs/plugin/hashtag')(linkify); // optional
+var linkifyStr = require('linkifyjs/string');
 ```
 
-## Options
+#### Example string usage
 
-Linkify is applied with the following default options. Below is a description of each.
-
-```javascript
-$('selector').linkify({
-  tagName: 'a',
-  target: '_blank',
-  newLine: '\n',
-  linkClass: null,
-  linkAttributes: null
+```js
+linkifyStr('The site github.com is #awesome.', {
+  defaultProtocol: 'https'
 });
 ```
 
-<table>
-	<thead>
-		<tr>
-			<th>Option</th>
-			<th>Type</th>
-			<th>Default</th>
-			<th>Description</th>
-			<th>Data Attribute</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>tagName</td>
-			<td>String</td>
-			<td><code>"a"</code></td>
-			<td>
-				The tag that should be used to wrap each URL. This is
-				useful for cases where <code>a</code> tags might be
-				innapropriate, or might syntax problems (e.g., finding
-				URLs inside an <code>a</code> tag).
-			</td>
-			<td>
-				<code class="small">data-linkify-tagname</code>
-			</td>
-		</tr>
-		<tr>
-			<td>target</td>
-			<td>String</td>
-			<td><code>"_blank"</code></td>
-			<td><code>target</code> attribute for each linkified tag.</td>
-			<td><code class="small">data-linkify-target</code></td>
-		</tr>
-		<tr>
-			<td>newLine</td>
-			<td>String</td>
-			<td><code>"\n"</code></td>
-			<td>
-				The character to replace new lines with. Replace with
-				<code>"&lt;br&gt;"</code> to space out multi-line user
-				content.
-			</td>
-			<td><code class="small">data-linkify-newline</code></td>
-		</tr>
+Returns the following string
 
-		<tr>
-			<td>linkClass</td>
-			<td>String</td>
-			<td><code>null</code></td>
-			<td>
-				The class to be added to each linkified tag. An extra <code>.linkified</code> class ensures that each link will be clickable, regardless of the value of <code>tagName</code>. Linkify won't attempt finding links in <code>.linkified</code> elements.
-			</td>
-			<td><code class="small">data-linkify-linkclass</code></td>
-		</tr>
+```js
+'The site <a href="https://github.com">github.com</a> is <a href="#awesome">#awesome</a>.'
+```
 
-		<tr>
-			<td>linkAttributes</td>
-			<td>Object</td>
-			<td><code>null</code></td>
-			<td>
-				HTML attributes to add to each linkified tag. In the
-				following example, the <code>tabindex</code> and
-				<code>rel</code> attributes will be added to each link.
+### AMD
 
-<pre>
-$('p').linkify({
-	linkAttributes: {
-		tabindex: 0,
-		rel: 'nofollow'
-	}
+```html
+<script src="r.js"></script>
+<script src="linkify.amd.js"></script>
+<script src="linkify-plugin-hashtag.amd.js"></script> <!-- optional -->
+<script src="linkify-element.amd.js"></script>
+```
+
+```js
+require(['linkify'], function (linkify) {
+  linkify.test('github.com'); // true
+  linkify.test('github.com', 'email'); // false
 });
-</pre>
 
-			</td>
-			<td>N/A</td>
-		</tr>
-	</tbody>
-</table>
+require(['linkify-element'], function (linkifyElement) {
 
-## Building and Development Tasks
+  // Linkify the #sidebar element
+  linkifyElement(document.getElementById('sidebar'), {
+    linkClass: 'my-link'
+  });
 
-### Setup
+  // Linkify all paragraph tags
+  document.getElementsByTagName('p').map(linkifyElement);
 
-Linkify uses [Grunt](http://gruntjs.com/) for building and testing, and
-[Bower](http://bower.io/) for dependency management. Both can be installed
-via [npm](https://npmjs.org/) by running:
+});
 
-```bash
-npm install -g grunt-cli
-npm install -g bower
 ```
 
-Once you have those, navigate into the repo's root directory and run
+Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be defined.
 
-```bash
-npm install && bower install
+### Browser globals
+
+```html
+<script src="jquery.js"></script>
+<script src="linkify.js"></script>
+<script src="linkify-string.js"></script>
+<script src="linkify-jquery.js"></script>
 ```
 
-### Development
+```js
+linkify.test('dev@example.com'); // true
+var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
+$('p').linkify();
+```
 
-Each of these tasks can be called by running `grunt taskName` from the
-repo's root folder.
+## Downloads
 
-1. `default`: Also available by just calling `grunt`, this task tests
-the plugin code in the `src` folder for JSHint compliance and builds and
-minifies it into the `dist` folder.
+**[linkify](#api)** _(required)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.js)
 
-2. `demo`: Builds everything and launches the demo page at
-[localhost:8000](http://localhost:8000/).
+**Plugins** _(optional)_
 
-3. `test`: Runs the complete test suite, including JSHint and QUnit. QUnit
-tests will be executed at [localhost:8001](http://localhost:8000/).
+* **[hashtag](#linkify-plugin-hashtag)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-plugin-hashtag.amd.js)
 
+**Interfaces** _(recommended - include at least one)_
+
+* **[string](#linkify-string)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-string.amd.js)
+* **[jquery](#linkify-jquery)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.js)
+* **[element](#linkify-element)** _(Included with linkify-jquery)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.js)
+
+
+## API Documentation
+
+View full documentation at [soapbox.github.io/jQuery-linkify/docs](soapbox.github.io/jQuery-linkify).
+
+## Caveats
+
+The core linkify library (excluding plugins) attempts to find emails and URLs that match RFC specifications. However, it doesn't always get it right.
+
+Here are a few of the known issues.
+
+* Non-standard email local parts delimited by " (quote characters)
+  * Emails with quotes in the localpart are detected correctly, unless the quotes contain certain characters like `@`.
+* Slash characters in email addresses
+* Non-latin domains or TLDs are not supported (support may be added via plugin in the future)
+
+## Contributing
+
+Check out [CONTRIBUTING.md](https://github.com/SoapBox/jQuery-linkify/blob/master/CONTRIBUTING.md).
+
+## License
+
+MIT
 
 ## Authors
-Linkify is handcrafted with Love by [SoapBox Innovations, Inc](http://soapboxhq.com).
+
+Linkify is built with Love™ and maintained by [SoapBox Innovations Inc.](http://soapboxhq.com).

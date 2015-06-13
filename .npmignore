@@ -1,0 +1,24 @@
+# All compiled code will be in the `lib` folders
+.sass-cache
+_sass
+_site
+amd
+assets
+bower_components
+build
+coverage
+demo
+dist
+js
+src
+templates
+test
+
+# Files
+.editorconfig
+.jshintrc
+.travis.yml
+bower.json
+gulpfile.js
+testem.json
+run-tests.sh
