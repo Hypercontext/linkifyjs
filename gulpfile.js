@@ -32,13 +32,6 @@ var paths = {
 	spec: 'test/spec/**.js'
 };
 
-var babelformat = {
-	comments: true,
-	indent: {
-		style: '	'
-	}
-};
-
 var tldsReplaceStr = '"' + tlds.join('|') + '".split("|")';
 
 /**
@@ -49,8 +42,7 @@ gulp.task('babel', function () {
 	return gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
-		loose: 'all',
-		format: babelformat
+		loose: 'all'
 	}))
 	.pipe(gulp.dest('lib'));
 });
@@ -65,8 +57,7 @@ gulp.task('babel-amd', function () {
 	.pipe(babel({
 		loose: 'all',
 		modules: 'amd',
-		moduleIds: true,
-		format: babelformat
+		moduleIds: true
 		// moduleRoot: 'linkifyjs'
 	}))
 	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
@@ -90,7 +81,8 @@ gulp.task('build-core', ['babel'], function () {
 			common_js_entry_module: 'lib/linkify',
 			common_js_module_path_prefix: path.join(__dirname, 'lib'),
 	        compilation_level: 'SIMPLE_OPTIMIZATIONS',
-			formatting: 'PRETTY_PRINT'
+			formatting: 'PRETTY_PRINT',
+			warning_level: 'QUIET'
 		}
 	}))
 	.pipe(wrap({src: 'templates/linkify.js'}))
@@ -143,8 +135,7 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 		stream = gulp.src(files.js)
 		.pipe(babel({
 			loose: 'all',
-			modules: 'ignore',
-			format: babelformat
+			modules: 'ignore'
 		}))
 		.pipe(concat('linkify-' + interface + '.js'))
 		.pipe(wrap({src: 'templates/linkify-' + interface + '.js'}))
@@ -188,8 +179,7 @@ gulp.task('build-plugins', ['babel-amd'], function () {
 		stream = gulp.src('src/linkify/plugins/' + plugin + '.js')
 		.pipe(babel({
 			loose: 'all',
-			modules: 'ignore',
-			format: babelformat
+			modules: 'ignore'
 		}))
 		.pipe(wrap({src: 'templates/linkify/plugins/' + plugin + '.js'}))
 		.pipe(concat('linkify-plugin-' + plugin + '.js'))
