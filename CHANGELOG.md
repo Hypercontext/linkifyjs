@@ -9,3 +9,4 @@
 * Mocha Unit tests
 * ES6 Implementation
 * Updated documentation
+* Repository name change
