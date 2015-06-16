@@ -4,7 +4,7 @@
   "description": "Intelligent link recognition, made easy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SoapBox/jQuery-linkify.git"
+    "url": "https://github.com/SoapBox/linkifyjs.git"
   },
   "main": "index.js",
   "scripts": {
