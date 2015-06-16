@@ -38,6 +38,18 @@ __Jump to__
 
 ## Installation and Usage
 
+### [NPM](https://npmjs.com/)
+
+```
+npm install linkifyjs
+```
+
+### [Bower](http://bower.io/)
+
+```
+bower install linkifyjs
+```
+
 ### Quick Start
 
 Add [linkify](#) and [linkify-jquery](#) to your HTML following jQuery:
@@ -81,7 +93,7 @@ Returns the following array
 ```
 
 
-See [all available options](http://soapbox.github.io/linkifyjs/docs/options)
+See [all available options](http://soapbox.github.io/linkifyjs/docs/options.html)
 
 
 ### Node.js/io.js/Browserify
@@ -169,7 +181,7 @@ $('p').linkify();
 
 ## API Documentation
 
-View full documentation at [soapbox.github.io/linkifyjs/docs](http://soapbox.github.io/linkifyjs).
+View full documentation at [soapbox.github.io/linkifyjs/docs/](http://soapbox.github.io/linkifyjs/docs/).
 
 ## Caveats
 
