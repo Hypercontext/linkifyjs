@@ -22,14 +22,14 @@ function tokensToNodes(tokens, opts, doc) {
 		if (token.isLink) {
 
 			let
-			tagName			= options.resolve(opts.tagName, token.type),
-			linkClass		= options.resolve(opts.linkClass, token.type),
-			target			= options.resolve(opts.target, token.type),
-			formatted		= options.resolve(opts.format, token.toString(), token.type),
 			href			= token.toHref(opts.defaultProtocol),
+			formatted		= options.resolve(opts.format, token.toString(), token.type),
 			formattedHref	= options.resolve(opts.formatHref, href, token.type),
-			attributesHash	= options.resolve(opts.attributes, token.type),
-			events			= options.resolve(opts.events, token.type);
+			attributesHash	= options.resolve(opts.attributes, href, token.type),
+			tagName			= options.resolve(opts.tagName, href, token.type),
+			linkClass		= options.resolve(opts.linkClass, href, token.type),
+			target			= options.resolve(opts.target, href, token.type),
+			events			= options.resolve(opts.events, href, token.type);
 
 			// Build the link
 			let link = doc.createElement(tagName);
