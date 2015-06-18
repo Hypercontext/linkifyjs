@@ -6,6 +6,15 @@ import {tokenize, options} from './linkify';
 
 const HTML_NODE = 1, TXT_NODE = 3;
 
+function replaceChildWithChildren(parent, oldChild, newChildren) {
+	let lastNewChild = newChildren[newChildren.length - 1];
+	parent.replaceChild(lastNewChild, oldChild);
+	debugger;
+	for (let i = newChildren.length - 2; i >= 0; i++) {
+		parent.insertBefore(newChildren[i], lastNewChild);
+	}
+}
+
 /**
 	Given an array of MultiTokens, return an array of Nodes that are either
 	(a) Plain Text nodes (node type 3)
@@ -97,8 +106,10 @@ function linkifyElementHelper(element, opts, doc) {
 
 			let
 			str = childElement.nodeValue,
-			tokens = tokenize(str);
-			children.push(...tokensToNodes(tokens, opts, doc));
+			tokens = tokenize(str),
+			nodes = tokensToNodes(tokens, opts, doc);
+
+			replaceChildWithChildren(element, childElement, nodes);
 
 			break;
 
@@ -106,16 +117,6 @@ function linkifyElementHelper(element, opts, doc) {
 		}
 
 		childElement = childElement.nextSibling;
-	}
-
-	// Clear out the element
-	while (element.firstChild) {
-		element.removeChild(element.firstChild);
-	}
-
-	// Replace with all the new nodes
-	for (let i = 0; i < children.length; i++) {
-		element.appendChild(children[i]);
 	}
 
 	return element;
