@@ -40,17 +40,17 @@ function linkifyStr(str, opts={}) {
 		if (token.isLink) {
 
 			let
-			tagName			= options.resolve(opts.tagName, token.type),
-			linkClass		= options.resolve(opts.linkClass, token.type),
-			target			= options.resolve(opts.target, token.type),
-			formatted		= options.resolve(opts.format, token.toString(), token.type),
 			href			= token.toHref(opts.defaultProtocol),
+			formatted		= options.resolve(opts.format, token.toString(), token.type),
 			formattedHref	= options.resolve(opts.formatHref, href, token.type),
-			attributesHash	= options.resolve(opts.attributes, token.type);
+			attributesHash	= options.resolve(opts.attributes, href, token.type),
+			tagName			= options.resolve(opts.tagName, href, token.type),
+			linkClass		= options.resolve(opts.linkClass, href, token.type),
+			target			= options.resolve(opts.target, href, token.type);
 
-			let link = `<${tagName} href="${cleanAttr(formattedHref)}" class="${linkClass}"`;
+			let link = `<${tagName} href="${cleanAttr(formattedHref)}" class="${cleanAttr(linkClass)}"`;
 			if (target) {
-				link += ` target="${target}"`;
+				link += ` target="${cleanAttr(target)}"`;
 			}
 
 			if (attributesHash) {

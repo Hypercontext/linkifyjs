@@ -7,6 +7,19 @@ import {tokenize, options} from './linkify';
 const HTML_NODE = 1, TXT_NODE = 3;
 
 /**
+	Given a parent element and child node that the parent contains, replaces
+	that child with the given aary of new children
+*/
+function replaceChildWithChildren(parent, oldChild, newChildren) {
+	let lastNewChild = newChildren[newChildren.length - 1];
+	parent.replaceChild(lastNewChild, oldChild);
+	for (let i = newChildren.length - 2; i >= 0; i--) {
+		parent.insertBefore(newChildren[i], lastNewChild);
+		lastNewChild = newChildren[i];
+	}
+}
+
+/**
 	Given an array of MultiTokens, return an array of Nodes that are either
 	(a) Plain Text nodes (node type 3)
 	(b) Anchor tag nodes (usually, unless tag name is overriden in the options)
@@ -22,14 +35,14 @@ function tokensToNodes(tokens, opts, doc) {
 		if (token.isLink) {
 
 			let
-			tagName			= options.resolve(opts.tagName, token.type),
-			linkClass		= options.resolve(opts.linkClass, token.type),
-			target			= options.resolve(opts.target, token.type),
-			formatted		= options.resolve(opts.format, token.toString(), token.type),
 			href			= token.toHref(opts.defaultProtocol),
+			formatted		= options.resolve(opts.format, token.toString(), token.type),
 			formattedHref	= options.resolve(opts.formatHref, href, token.type),
-			attributesHash	= options.resolve(opts.attributes, token.type),
-			events			= options.resolve(opts.events, token.type);
+			attributesHash	= options.resolve(opts.attributes, href, token.type),
+			tagName			= options.resolve(opts.tagName, href, token.type),
+			linkClass		= options.resolve(opts.linkClass, href, token.type),
+			target			= options.resolve(opts.target, href, token.type),
+			events			= options.resolve(opts.events, href, token.type);
 
 			// Build the link
 			let link = doc.createElement(tagName);
@@ -41,13 +54,13 @@ function tokensToNodes(tokens, opts, doc) {
 
 			// Build up additional attributes
 			if (attributesHash) {
-				for (let attr in attributesHash) {
+				for (var attr in attributesHash) {
 					link.setAttribute(attr, attributesHash[attr]);
 				}
 			}
 
 			if (events) {
-				for (let event in events) {
+				for (var event in events) {
 					if (link.addEventListener) {
 						link.addEventListener(event, events[event]);
 					} else if (link.attachEvent)  {
@@ -78,7 +91,7 @@ function linkifyElementHelper(element, opts, doc) {
 	}
 
 	// Is this element already a link?
-	if (element.tagName.toLowerCase() === 'a' /*|| element.hasClass('linkified')*/) {
+	if (element.tagName === 'A' /*|| element.hasClass('linkified')*/) {
 		// No need to linkify
 		return element;
 	}
@@ -97,8 +110,14 @@ function linkifyElementHelper(element, opts, doc) {
 
 			let
 			str = childElement.nodeValue,
-			tokens = tokenize(str);
-			children.push(...tokensToNodes(tokens, opts, doc));
+			tokens = tokenize(str),
+			nodes = tokensToNodes(tokens, opts, doc);
+
+			// Swap out the current child for the set of nodes
+			replaceChildWithChildren(element, childElement, nodes);
+
+			// so that the correct sibling is selected
+			childElement = nodes[nodes.length - 1];
 
 			break;
 
@@ -106,16 +125,6 @@ function linkifyElementHelper(element, opts, doc) {
 		}
 
 		childElement = childElement.nextSibling;
-	}
-
-	// Clear out the element
-	while (element.firstChild) {
-		element.removeChild(element.firstChild);
-	}
-
-	// Replace with all the new nodes
-	for (let i = 0; i < children.length; i++) {
-		element.appendChild(children[i]);
 	}
 
 	return element;
