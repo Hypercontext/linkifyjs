@@ -9,13 +9,17 @@ Linkify is applied with the following default options. Below is a description of
 var options = {
   defaultProtocol: 'http',
   events: null,
-  format: null,
-  formatHref: null,
+  format: function (value, type) {
+    return value;
+  },
+  formatHref: function (href, type) {
+    return href;
+  },
   linkAttributes: null,
-  linkClass: 'linkified',
+  linkClass: null,
   nl2br: false,
   tagName: 'a',
-  target: function (type) {
+  target: function (href, type) {
     return type === 'url' ? '_blank' : null;
   }
 };
@@ -52,7 +56,7 @@ Protocol that should be used in `href` attributes for URLs without a protocol (e
 
 ### events
 
-* **Type**: `Object | Function`
+* **Type**: `Object | Function (String href, String type)`
 * **Default**: `null`
 
 Add event listeners to newly created link elements. Takes a hash where each key is an [standard event](https://developer.mozilla.org/en-US/docs/Web/Events) name and the value is an event handler.
@@ -94,10 +98,10 @@ Format the text displayed by a linkified entity. e.g., truncate a long URL.
 
 ### formatHref
 
-* **Type**: `Function (String value, String type)`
+* **Type**: `Function (String href, String type)`
 * **Default**: `null`
 
-Similar to [format](#format), except the resut of this function will be used as the `href` attribute of the new link.
+Similar to [format](#format), except the result of this function will be used as the `href` attribute of the new link.
 
 This is useful when finding hashtags, where you don't necessarily want the default to be a link to a named anchor.
 
@@ -114,7 +118,7 @@ This is useful when finding hashtags, where you don't necessarily want the defau
 
 ### linkAttributes
 
-* **Type**: `Object | Function (String value, String type)`
+* **Type**: `Object | Function (String href, String type)`
 * **Default**: `null`
 
 Hash of attributes to add to each new link. **Note:** the [`class`](#linkClass) and [`target`](#target) attributes have dedicated options.
@@ -132,7 +136,7 @@ Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.
 
 ### linkClass
 
-* **Type**: `String | Function (String value, String type)`
+* **Type**: `String | Function (String href, String type)`
 * **Default**: `'linkified'` (may be removed in future releases)
 * **Data API**: `data-linkify-linkclass`
 
@@ -162,7 +166,7 @@ If true, `\n` line breaks will automatically be converted to `<br>` tags.
 
 ### tagName
 
-* **Type**: `String`
+* **Type**: `String | Function (String href, String type)`
 * **Default**: `a`
 * **Data API**: `data-linkify-tagname`
 
@@ -182,7 +186,7 @@ Returns
 
 ### target
 
-* **Type**: `String`
+* **Type**: `String | Function (String href, String type)`
 * **Default**: `'_blank'` for URLs, `null` for everything else
 * **Data API**: `data-linkify-target`
 
