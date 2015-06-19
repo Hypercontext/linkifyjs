@@ -3,6 +3,7 @@
 ### v2.0.0
 
 * New link-detection technique based on lexicographical analysis via two-stage scanner - essentially regexp with more flexibility.
+* Faster, less destructive DOM manipulation.
 * Node.js API via `var linkify = require('linkifyjs');`
 * Internal plugin system so you can require only features you need. e.g., `require('linkifyjs/plugins/hashtag')(linkify);`
 * Browser modules (Browserify, AMD)
