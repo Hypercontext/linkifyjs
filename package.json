@@ -1,6 +1,6 @@
 {
   "name": "linkifyjs",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "description": "Intelligent link recognition, made easy",
   "repository": {
     "type": "git",
@@ -15,6 +15,18 @@
   },
   "author": "SoapBox Innovations (@SoapBoxHQ)",
   "license": "MIT",
+  "keywords": [
+    "jquery",
+    "link",
+    "autolink",
+    "text",
+    "url",
+    "email",
+    "hashtag",
+    "hashtags",
+    "mention",
+    "mentions"
+  ],
   "dependencies": {},
   "devDependencies": {
     "amd-optimize": "^0.4.3",
