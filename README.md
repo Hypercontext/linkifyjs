@@ -18,6 +18,7 @@ __Jump to__
     - [Node.js/Browserify](#node-js-browserify)
     - [AMD Modules](#amd-modules)
     - [Browser](#browser)
+- [Downloads](#downloads)
 - [API Documentation](#api-documentation)
 - [Caveats](#caveats)
 - [Contributing](#contributing)
@@ -39,7 +40,7 @@ __Jump to__
 
 [View full documentation](http://soapbox.github.io/linkifyjs/docs/).
 
-[Download](#downloads) the latest below or install via [NPM](https://www.npmjs.com/)
+Download the [latest release](https://github.com/SoapBox/linkifyjs/releases), or install via [NPM](https://www.npmjs.com/)
 
 ```
 npm install linkifyjs
@@ -165,6 +166,8 @@ $('p').linkify();
 ```
 
 ## Downloads
+
+Download the [**latest release**](https://github.com/SoapBox/linkifyjs/releases)
 
 **[linkify](http://soapbox.github.io/linkifyjs/docs/linkify.html)** _(required)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.js)
 
