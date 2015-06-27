@@ -1,4 +1,4 @@
-if [[ `echo $TRAVIS_BRANCH` = "master" ]]; then
+if [[ `echo $TRAVIS_BRANCH` = "master" && `echo $SAUCE_USERNAME` != "" ]]; then
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
 	npm test || exit 1
