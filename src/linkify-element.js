@@ -96,8 +96,7 @@ function linkifyElementHelper(element, opts, doc) {
 		return element;
 	}
 
-	let
-	childElement = element.firstChild;
+	let childElement = element.firstChild;
 
 	while (childElement) {
 

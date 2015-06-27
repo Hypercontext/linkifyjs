@@ -23,6 +23,7 @@ TT_DOMAIN		= TEXT_TOKENS.DOMAIN,
 TT_AT			= TEXT_TOKENS.AT,
 TT_COLON		= TEXT_TOKENS.COLON,
 TT_DOT			= TEXT_TOKENS.DOT,
+TT_PUNCTUATION	= TEXT_TOKENS.PUNCTUATION,
 TT_LOCALHOST	= TEXT_TOKENS.LOCALHOST,
 TT_NL			= TEXT_TOKENS.NL,
 TT_NUM			= TEXT_TOKENS.NUM,
@@ -86,9 +87,10 @@ S_PROTOCOL_SLASH.on(TT_SLASH, S_PROTOCOL_SLASH_SLASH);
 S_START.on(TT_TLD, S_DOMAIN);
 S_START.on(TT_DOMAIN, S_DOMAIN);
 S_START.on(TT_LOCALHOST, S_TLD);
-S_START.on(TT_NUM, S_LOCALPART);
+S_START.on(TT_NUM, S_DOMAIN);
 S_PROTOCOL_SLASH_SLASH.on(TT_TLD, S_PSS_DOMAIN);
 S_PROTOCOL_SLASH_SLASH.on(TT_DOMAIN, S_PSS_DOMAIN);
+S_PROTOCOL_SLASH_SLASH.on(TT_NUM, S_PSS_DOMAIN);
 S_PROTOCOL_SLASH_SLASH.on(TT_LOCALHOST, S_PSS_TLD);
 
 // Account for dots and hyphens
@@ -102,12 +104,15 @@ S_EMAIL_DOMAIN.on(TT_DOT, S_EMAIL_DOMAIN_DOT);
 // After the first domain and a dot, we can find either a URL or another domain
 S_DOMAIN_DOT.on(TT_TLD, S_TLD);
 S_DOMAIN_DOT.on(TT_DOMAIN, S_DOMAIN);
+S_DOMAIN_DOT.on(TT_NUM, S_DOMAIN);
 S_DOMAIN_DOT.on(TT_LOCALHOST, S_DOMAIN);
 S_PSS_DOMAIN_DOT.on(TT_TLD, S_PSS_TLD);
 S_PSS_DOMAIN_DOT.on(TT_DOMAIN, S_PSS_DOMAIN);
+S_PSS_DOMAIN_DOT.on(TT_NUM, S_PSS_DOMAIN);
 S_PSS_DOMAIN_DOT.on(TT_LOCALHOST, S_PSS_DOMAIN);
 S_EMAIL_DOMAIN_DOT.on(TT_TLD, S_EMAIL);
 S_EMAIL_DOMAIN_DOT.on(TT_DOMAIN, S_EMAIL_DOMAIN);
+S_EMAIL_DOMAIN_DOT.on(TT_NUM, S_EMAIL_DOMAIN);
 S_EMAIL_DOMAIN_DOT.on(TT_LOCALHOST, S_EMAIL_DOMAIN);
 
 // S_TLD accepts! But the URL could be longer, try to find a match greedily
@@ -133,14 +138,14 @@ S_EMAIL_COLON.on(TT_NUM, S_EMAIL_PORT);
 let qsAccepting = [
 	TT_DOMAIN,
 	TT_AT,
-
 	TT_LOCALHOST,
 	TT_NUM,
 	TT_PLUS,
 	TT_POUND,
 	TT_PROTOCOL,
 	TT_SLASH,
-	TT_TLD
+	TT_TLD,
+	TT_SYM
 ];
 
 // Types of tokens that can follow a URL and be part of the query string
@@ -150,7 +155,7 @@ let qsNonAccepting = [
 	TT_COLON,
 	TT_DOT,
 	TT_QUERY,
-	TT_SYM
+	TT_PUNCTUATION
 ];
 
 // Account for the query string
@@ -167,7 +172,6 @@ S_URL_SYMS.on(qsNonAccepting, S_URL_SYMS);
 // Tokens allowed in the localpart of the email
 let localpartAccepting = [
 	TT_DOMAIN,
-	TT_COLON,
 	TT_NUM,
 	TT_PLUS,
 	TT_POUND,
@@ -183,12 +187,6 @@ S_DOMAIN.on(TT_AT, S_LOCALPART_AT);
 S_DOMAIN_DOT.on(localpartAccepting, S_LOCALPART);
 S_TLD.on(localpartAccepting, S_LOCALPART);
 S_TLD.on(TT_AT, S_LOCALPART_AT);
-S_TLD_COLON.on(localpartAccepting, S_LOCALPART);
-S_TLD_COLON.on(TT_DOT, S_LOCALPART);
-S_TLD_COLON.on(TT_AT, S_LOCALPART_AT);
-S_TLD_PORT.on(localpartAccepting, S_LOCALPART);
-S_TLD_PORT.on(TT_DOT, S_LOCALPART_DOT);
-S_TLD_PORT.on(TT_AT, S_LOCALPART_AT);
 
 // Okay we're on a localpart. Now what?
 // TODO: IP addresses and what if the email starts with numbers?

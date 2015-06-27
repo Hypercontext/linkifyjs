@@ -64,6 +64,15 @@ class DOT extends TextToken {
 }
 
 /**
+	A character class that can surround the URL, but which the URL cannot begin
+	or end with. Does not include certain English punctuation like parentheses.
+
+	@class PUNCTUATION
+	@extends TextToken
+*/
+class PUNCTUATION extends TextToken {}
+
+/**
 	The word localhost (by itself)
 	@class LOCALHOST
 	@extends TextToken
@@ -158,6 +167,7 @@ let text = {
 	AT,
 	COLON,
 	DOT,
+	PUNCTUATION,
 	LOCALHOST,
 	NL: TNL,
 	NUM,
