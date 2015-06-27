@@ -97,14 +97,13 @@ function linkifyElementHelper(element, opts, doc) {
 	}
 
 	let
-	children = [],
 	childElement = element.firstChild;
 
 	while (childElement) {
 
 		switch (childElement.nodeType) {
 		case HTML_NODE:
-			children.push(linkifyElementHelper(childElement, opts, doc));
+			linkifyElementHelper(childElement, opts, doc);
 			break;
 		case TXT_NODE:
 
@@ -120,8 +119,6 @@ function linkifyElementHelper(element, opts, doc) {
 			childElement = nodes[nodes.length - 1];
 
 			break;
-
-		default: children.push(childElement); break;
 		}
 
 		childElement = childElement.nextSibling;
