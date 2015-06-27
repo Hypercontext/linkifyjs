@@ -15,7 +15,6 @@ EMAIL	= MULTI_TOKENS.EMAIL;
 	[2] - The values of the tokens the text should result in
 */
 var tests = [
-	// BEGIN: Original linkify tests
 	[
 		'google.com',
 		[URL],
@@ -33,12 +32,12 @@ var tests = [
 		['there are two tests, ', 'brennan.com', ' and ', 'nick.ca', ' -- do they work?']
 	], [
 		'there are two tests!brennan.com. and nick.ca? -- do they work?',
-		[TEXT, URL, TEXT],
-		['there are two tests!brennan.com. and ', 'nick.ca', '? -- do they work?']
+		[TEXT, URL, TEXT, URL, TEXT],
+		['there are two tests!', 'brennan.com', '. and ', 'nick.ca', '? -- do they work?']
 	], [
 		'This [i.imgur.com/ckSj2Ba.jpg)] should also work',
 		[TEXT, URL, TEXT],
-		['This [', 'i.imgur.com/ckSj2Ba.jpg', ')] should also work']
+		['This [', 'i.imgur.com/ckSj2Ba.jpg)]', ' should also work']
 	], [
 		'A link is http://nick.is.awesome/?q=nick+amazing&nick=yo%29%30hellp another is http://nick.con/?q=look',
 		[TEXT, URL, TEXT],
@@ -63,13 +62,10 @@ var tests = [
 		'This port is too short someport.com: this port is too long http://googgle.com:789023/myQuery this port is just right https://github.com:8080/SoapBox/jQuery-linkify/',
 		[TEXT, URL, TEXT, URL, TEXT, URL],
 		['This port is too short ', 'someport.com', ': this port is too long ', 'http://googgle.com:789023/myQuery', ' this port is just right ', 'https://github.com:8080/SoapBox/jQuery-linkify/']
-	],
-	// END: Original linkifiy tests
-	// BEGIN: New linkify tests
-	[
-		'The best URL http://google.com/?love=true and t.co',
+	], [
+		'The best URL http://google.com/?love=true, and t.co',
 		[TEXT, URL, TEXT, URL],
-		['The best URL ', 'http://google.com/?love=true', ' and ', 't.co']
+		['The best URL ', 'http://google.com/?love=true', ', and ', 't.co']
 	], [
 		'Please email me at testy.test+123@gmail.com',
 		[TEXT, EMAIL],
@@ -83,15 +79,42 @@ var tests = [
 		[URL, TEXT],
 		['http://500-px.com', ' is a real domain?']
 	], [
-		'IP loops like email? 192.168.0.1@gmail.com works!!',
+		'IP loops like email? 192.168.0.1@gmail.com! works!!',
 		[TEXT, EMAIL, TEXT],
-		['IP loops like email? ', '192.168.0.1@gmail.com', ' works!!']
+		['IP loops like email? ', '192.168.0.1@gmail.com', '! works!!']
 	], [
-		'Url like bro-215.co with a hyphen?',
+		'Url like bro-215.co; with a hyphen?',
 		[TEXT, URL, TEXT],
-		['Url like ', 'bro-215.co', ' with a hyphen?']
+		['Url like ', 'bro-215.co', '; with a hyphen?']
+	], [
+		'This URL http://23456789098.sydney is a number',
+		[TEXT, URL, TEXT],
+		['This URL ', 'http://23456789098.sydney', ' is a number']
+	], [
+		'This URL http://23456789098.sydney is a number',
+		[TEXT, URL, TEXT],
+		['This URL ', 'http://23456789098.sydney', ' is a number']
+	], [
+		'A URL with only numbers is 123.456.ca another is //7.8.com/?wat=1 is valid',
+		[TEXT, URL, TEXT, URL, TEXT],
+		['A URL with only numbers is ', '123.456.ca', ' another is ', '//7.8.com/?wat=1', ' is valid']
+	], [
+		'URL Numbers 6.wat.78.where.eu and u.0.e.9.kp',
+		[TEXT, URL, TEXT, URL],
+		['URL Numbers ', '6.wat.78.where.eu', ' and ', 'u.0.e.9.kp']
+	], [
+		'Emails like nick:f@gmail.com do not have colons in them',
+		[TEXT, EMAIL, TEXT],
+		['Emails like nick:', 'f@gmail.com', ' do not have colons in them']
+	], [
+		'Emails cannot have two dots, e.g.: nick..f@yahoo.ca',
+		[TEXT, EMAIL],
+		['Emails cannot have two dots, e.g.: nick..', 'f@yahoo.ca']
+	], [
+		'The `mailto:` part should not be included in mailto:this.is.a.test@yandex.ru',
+		[TEXT, EMAIL],
+		['The `mailto:` part should not be included in mailto:', 'this.is.a.test@yandex.ru']
 	]
-	// END: New linkify tests
 ];
 
 describe('linkify/core/parser#run()', function () {

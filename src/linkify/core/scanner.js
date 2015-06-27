@@ -44,6 +44,7 @@ S_START.on('#', makeState(TOKENS.POUND));
 S_START.on('?', makeState(TOKENS.QUERY));
 S_START.on('/', makeState(TOKENS.SLASH));
 S_START.on(COLON, makeState(TOKENS.COLON));
+S_START.on(/[,;!]/, makeState(TOKENS.PUNCTUATION));
 
 // Whitespace jumps
 // Tokens of only non-newline whitespace are arbitrarily long
