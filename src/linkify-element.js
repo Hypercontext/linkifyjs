@@ -8,7 +8,7 @@ const HTML_NODE = 1, TXT_NODE = 3;
 
 /**
 	Given a parent element and child node that the parent contains, replaces
-	that child with the given aary of new children
+	that child with the given array of new children
 */
 function replaceChildWithChildren(parent, oldChild, newChildren) {
 	let lastNewChild = newChildren[newChildren.length - 1];
@@ -22,9 +22,10 @@ function replaceChildWithChildren(parent, oldChild, newChildren) {
 /**
 	Given an array of MultiTokens, return an array of Nodes that are either
 	(a) Plain Text nodes (node type 3)
-	(b) Anchor tag nodes (usually, unless tag name is overriden in the options)
+	(b) Anchor tag nodes (usually, unless tag name is overridden in the options)
 
-	Takes the same options as linkifyElement and an optional doc element (this should be passed in by linkifyElement)
+	Takes the same options as linkifyElement and an optional doc element
+	(this should be passed in by linkifyElement)
 */
 function tokensToNodes(tokens, opts, doc) {
 	let result = [];
@@ -144,8 +145,7 @@ function linkifyElement(element, opts, doc=null) {
 	return linkifyElementHelper(element, opts, doc);
 }
 
-// Maintain reference to the recursive helper to save some option-normalization
-// cycles
+// Maintain reference to the recursive helper to cache option-normalization
 linkifyElement.helper = linkifyElementHelper;
 linkifyElement.normalize = options.normalize;
 
