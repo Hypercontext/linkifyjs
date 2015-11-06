@@ -99,37 +99,39 @@ gulp.task('build-core', ['babel'], function () {
 // Depends on build-core
 gulp.task('build-interfaces', ['babel-amd'], function () {
 
-	var stream, streams = [];
-
 	// Core linkify functionality as plugins
 	var interface, interfaces = [
 		'string',
 		'element',
-		['element', 'jquery'] // jQuery interface requires both element and jquery
+		['linkify-element.js', 'jquery'], // jQuery interface requires both element and jquery
+		[
+			'simple-html-tokenizer/*.js',
+			'simple-html-tokenizer.js',
+			'html'
+		]
 	];
 
-	var files = {js: null, amd: null};
-
 	// Globals browser interface
-	for (var i = 0; i < interfaces.length; i++) {
-		interface = interfaces[i];
+	var streams = [];
+
+	interfaces.forEach(function (interface) {
+
+		var files = {js: [], amd: []};
 
 		if (interface instanceof Array) {
-			// Interface has dependencies
-			files.js = [];
-			files.amd = [];
-			for (var j = 0; j < interface.length; j++) {
-				files.js.push('src/linkify-' + interface[j] + '.js');
-				files.amd.push('build/amd/linkify-' + interface[j] + '.js');
-			}
+			// Interface has other interface dependencies within this package
+			interface.forEach(function (i, idx) {
+				if (idx == interface.length - 1) { return; } // ignore last index
+				files.js.push('src/' + i);
+				files.amd.push('build/amd/' + i);
+			});
 
 			// The last dependency is the name of the interface
 			interface = interface.pop();
-
-		} else {
-			files.js = 'src/linkify-' + interface + '.js';
-			files.amd = 'build/amd/linkify-' + interface + '.js';
 		}
+
+		files.js.push('src/linkify-' + interface + '.js');
+		files.amd.push('build/amd/linkify-' + interface + '.js');
 
 		// Browser interface
 		stream = gulp.src(files.js)
@@ -150,7 +152,7 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 		.pipe(gulp.dest('build'));
 
 		streams.push(stream);
-	}
+	});
 
 	return merge.apply(this, streams);
 });
