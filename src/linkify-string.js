@@ -4,14 +4,14 @@
 
 import {tokenize, options} from './linkify';
 
-function cleanText(text) {
+function escapeText(text) {
 	return text
 	.replace(/&/g, '&amp;')
 	.replace(/</g, '&lt;')
 	.replace(/>/g, '&gt;');
 }
 
-function cleanAttr(href) {
+function escapeAttr(href) {
 	return href.replace(/"/g, '&quot;');
 }
 
@@ -22,7 +22,7 @@ function attributesToString(attributes) {
 
 	for (let attr in attributes) {
 		let val = (attributes[attr] + '').replace(/"/g, '&quot;');
-		result.push(`${attr}="${cleanAttr(val)}"`);
+		result.push(`${attr}="${escapeAttr(val)}"`);
 	}
 	return result.join(' ');
 }
@@ -35,7 +35,7 @@ function linkifyStr(str, opts={}) {
 	tokens = tokenize(str),
 	result = [];
 
-	for (let i = 0; i < tokens.length; i++ ) {
+	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
 		if (token.isLink) {
 
@@ -48,16 +48,16 @@ function linkifyStr(str, opts={}) {
 			linkClass		= options.resolve(opts.linkClass, href, token.type),
 			target			= options.resolve(opts.target, href, token.type);
 
-			let link = `<${tagName} href="${cleanAttr(formattedHref)}" class="${cleanAttr(linkClass)}"`;
+			let link = `<${tagName} href="${escapeAttr(formattedHref)}" class="${escapeAttr(linkClass)}"`;
 			if (target) {
-				link += ` target="${cleanAttr(target)}"`;
+				link += ` target="${escapeAttr(target)}"`;
 			}
 
 			if (attributesHash) {
 				link += ` ${attributesToString(attributesHash)}`;
 			}
 
-			link += `>${cleanText(formatted)}</${tagName}>`;
+			link += `>${escapeText(formatted)}</${tagName}>`;
 			result.push(link);
 
 		} else if (token.type === 'nl' && opts.nl2br) {
@@ -67,7 +67,7 @@ function linkifyStr(str, opts={}) {
 				result.push('<br>\n');
 			}
 		} else {
-			result.push(cleanText(token.toString()));
+			result.push(escapeText(token.toString()));
 		}
 	}
 
