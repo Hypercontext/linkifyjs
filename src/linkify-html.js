@@ -1,5 +1,5 @@
-import HTML5Tokenizer from 'simple-html-tokenizer';
-import {tokenize, options} from './linkify';
+import HTML5Tokenizer from './simple-html-tokenizer';
+import * as linkify from './linkify';
 
 const StartTag = 'StartTag';
 const EndTag = 'EndTag';
@@ -16,7 +16,7 @@ export default function linkifyHtml(str, opts={}) {
 	let linkified = [];
 	var i;
 
-	opts = options.normalize(opts);
+	opts = linkify.options.normalize(opts);
 
 	// Linkify the tokens given by the parser
 	for (i = 0; i < tokens.length; i++) {
@@ -72,7 +72,7 @@ export default function linkifyHtml(str, opts={}) {
 	`linkify.tokenize`. `linkified` will contain HTML Parser-style tokens
 */
 function linkifyChars(str, opts) {
-	let tokens = tokenize(str);
+	let tokens = linkify.tokenize(str);
 	let result = [];
 
 	for (var i = 0; i < tokens.length; i++) {
@@ -91,12 +91,12 @@ function linkifyChars(str, opts) {
 		}
 
 		let href			= token.toHref(opts.defaultProtocol);
-		let formatted		= options.resolve(opts.format, token.toString(), token.type);
-		let formattedHref	= options.resolve(opts.formatHref, href, token.type);
-		let attributesHash	= options.resolve(opts.attributes, href, token.type);
-		let tagName			= options.resolve(opts.tagName, href, token.type);
-		let linkClass		= options.resolve(opts.linkClass, href, token.type);
-		let target			= options.resolve(opts.target, href, token.type);
+		let formatted		= linkify.options.resolve(opts.format, token.toString(), token.type);
+		let formattedHref	= linkify.options.resolve(opts.formatHref, href, token.type);
+		let attributesHash	= linkify.options.resolve(opts.attributes, href, token.type);
+		let tagName			= linkify.options.resolve(opts.tagName, href, token.type);
+		let linkClass		= linkify.options.resolve(opts.linkClass, href, token.type);
+		let target			= linkify.options.resolve(opts.target, href, token.type);
 
 		// Build up attributes
 		let attributes = [
