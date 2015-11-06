@@ -10,6 +10,8 @@ try {
 	doc = null;
 }
 
+jsdom = doc ? null : require('jsdom');
+
 describe('linkify-element', function () {
 
 	/**
@@ -30,9 +32,6 @@ describe('linkify-element', function () {
 			Ev = window.Event;
 			return onDoc(doc);
 		}
-
-		// no document element, use a virtual dom to test
-		jsdom = require('jsdom');
 
 		jsdom.env(
 			'<html><head><title>Linkify Test</title></head><body></body></html>',
