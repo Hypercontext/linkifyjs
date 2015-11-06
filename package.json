@@ -27,7 +27,9 @@
     "mention",
     "mentions"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "simple-html-tokenizer": "^0.2.0"
+  },
   "devDependencies": {
     "amd-optimize": "^0.6.1",
     "brfs": "^1.4.1",
