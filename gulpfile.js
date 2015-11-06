@@ -1,7 +1,7 @@
 var gulp = require('gulp'),
 amdOptimize = require('amd-optimize'),
 glob = require('glob'),
-karma = require('karma').server,
+Server = require('karma').Server,
 merge = require('merge-stream'),
 path = require('path'),
 stylish = require('jshint-stylish'),
@@ -241,24 +241,27 @@ gulp.task('coverage', ['build'], function (cb) {
 	});
 });
 
-gulp.task('karma', ['build'], function () {
-	return karma.start({
+gulp.task('karma', ['build'], function (done) {
+	var server = new Server({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
-	});
+	}, done);
+	return server.start();
 });
 
-gulp.task('karma-chrome', ['build'], function () {
-	return karma.start({
+gulp.task('karma-chrome', ['build'], function (done) {
+	var server = new Server({
 		configFile: __dirname + '/test/chrome.conf.js',
-	});
+	}, done);
+	return server.start();
 });
 
-gulp.task('karma-ci', ['build'], function () {
-	return karma.start({
+gulp.task('karma-ci', ['build'], function (done) {
+	var server = new Server({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
-	});
+	}, done);
+	return server.start();
 });
 
 // Build the deprecated legacy interface
