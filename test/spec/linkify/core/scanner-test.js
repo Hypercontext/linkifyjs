@@ -61,13 +61,19 @@ var tests = [
 	['500-px', [DOMAIN], ['500-px']],
 	['-500px', [SYM, DOMAIN], ['-', '500px']],
 	['500px-', [DOMAIN, SYM], ['500px', '-']],
-	['123-456', [DOMAIN], ['123-456']]
+	['123-456', [DOMAIN], ['123-456']],
+	[
+		'Direniş İzleme Grubu\'nun',
+		[DOMAIN, SYM, WS, SYM, DOMAIN, WS, DOMAIN, SYM, DOMAIN],
+		['Direni', 'ş', ' ', 'İ', 'zleme', ' ', 'Grubu', '\'', 'nun']
+	]
 ];
 
 describe('linkify/core/scanner#run()', function () {
 
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', function () {
+
 			var
 			str = test[0],
 			types = test[1],
@@ -75,12 +81,13 @@ describe('linkify/core/scanner#run()', function () {
 			result = scanner.run(str);
 
 			expect(result.map(function (token) {
+				return token.toString();
+			})).to.eql(values);
+
+			expect(result.map(function (token) {
 				return token.constructor;
 			})).to.eql(types);
 
-			expect(result.map(function (token) {
-				return token.toString();
-			})).to.eql(values);
 		});
 	}
 

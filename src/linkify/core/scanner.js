@@ -125,11 +125,15 @@ S_START.on(/./, makeState(TOKENS.SYM));
 */
 let run = function (str) {
 
-	let
-	lowerStr = str.toLowerCase(), // The state machine only looks at lowercase strings
-	len = str.length,
-	cursor = 0,
-	tokens = []; // return value
+	// The state machine only looks at lowercase strings.
+	// This selective `toLowerCase` is used because lowercasing the entire
+	// string causes the length and character position to vary in some in some
+	// non-English strings. This happens only on V8-based runtimes.
+	let lowerStr = str.replace(/[A-Z]/g, c => c.toLowerCase());
+	let len = str.length;
+	let tokens = []; // return value
+
+	var cursor = 0;
 
 	// Tokenize the string
 	while (cursor < len) {
