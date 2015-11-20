@@ -8,6 +8,8 @@
 
 Linkify is a small yet comprehensive JavaScript plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 
+**A build repository is maintained [here](https://github.com/nfrasser/linkify-shim).**
+
 __Jump to__
 
 - [Features](#features)
@@ -167,7 +169,7 @@ $('p').linkify();
 
 ## Downloads
 
-Download the [**latest release**](https://github.com/SoapBox/linkifyjs/releases)
+Download the [**latest release**](https://github.com/SoapBox/linkifyjs/releases) or clone the [**build repository**](https://github.com/nfrasser/linkify-shim).
 
 **[linkify](http://soapbox.github.io/linkifyjs/docs/linkify.html)** _(required)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify.amd.js)
 
