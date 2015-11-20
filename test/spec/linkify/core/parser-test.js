@@ -114,6 +114,10 @@ var tests = [
 		'The `mailto:` part should not be included in mailto:this.is.a.test@yandex.ru',
 		[TEXT, EMAIL],
 		['The `mailto:` part should not be included in mailto:', 'this.is.a.test@yandex.ru']
+	], [
+		'Bu haritanın verileri Direniş İzleme Grubu\'nun yaptığı Türkiye İşçi Eylemleri haritası ile birleşebilir esasen. https://graphcommons.com/graphs/00af1cd8-5a67-40b1-86e5-32beae436f7c?show=Comments',
+		[TEXT, URL],
+		['Bu haritanın verileri Direniş İzleme Grubu\'nun yaptığı Türkiye İşçi Eylemleri haritası ile birleşebilir esasen. ', 'https://graphcommons.com/graphs/00af1cd8-5a67-40b1-86e5-32beae436f7c?show=Comments']
 	]
 ];
 
