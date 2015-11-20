@@ -126,7 +126,7 @@ S_START.on(/./, makeState(TOKENS.SYM));
 let run = function (str) {
 
 	let
-	lowerStr = str.toLowerCase(), // The state machine only looks at lowercase strings
+	lowerStr = str.replace(/[A-Z]/g, c => c.toLowerCase()), // The state machine only looks at lowercase strings
 	len = str.length,
 	cursor = 0,
 	tokens = []; // return value
