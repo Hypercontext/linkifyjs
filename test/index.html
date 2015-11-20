@@ -14,10 +14,13 @@
 		module.exports = window.jQuery;
 	});
 </script>
+<script src="build/linkify.js"></script>
+<script src="build/linkify-html.js"></script>
 <script src="build/linkify.amd.js"></script>
 <script src="build/linkify-plugin-hashtag.amd.js"></script>
 <script src="build/linkify-string.amd.js"></script>
 <script src="build/linkify-jquery.amd.js"></script>
+<script src="build/linkify-html.amd.js"></script>
 <p id="yolo" data-linkify="this" data-linkify-tagname="b">
 	You let's get all up in the
 	http://element.co/?wat=this and the #swag
@@ -36,6 +39,12 @@
 		hashtag(linkify);
 		console.log(linkify.find('What up #bro??'));
 	});
+
+	require(['linkify-html'], function (linkifyHtml) {
+		console.log(linkifyHtml('AMD <h2 rel="http://google.com/">Hi</h2><p>This is google.com</p>'));
+	});
+
+	console.log(linkifyHtml('GLOBAL <h2 rel="http://google.com/">Hi</h2><p>This is google.com</p>'));
 
 </script>
 </html>
