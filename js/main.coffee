@@ -1,6 +1,7 @@
 ---
 ---
 
+
 (($) ->
 
   headerThreshold = if $('#page-header.offset').length then 422 else 75;
@@ -50,7 +51,7 @@
       $input = $($this.attr 'data-linkify-demo-input')
       $output = $($this.attr 'data-linkify-demo-output')
 
-      $output.html $input.val()
+      $output.text $input.val()
       $output.linkify
         nl2br: true
 
