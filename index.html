@@ -12,7 +12,7 @@ header: >
   <div class="blurb text-center">
     <p class="lead">Install <code>linkifyjs</code> with <a href="https://www.npmjs.com/package/linkifyjs" target="_blank">NPM</a> or <a href="http://bower.io/" target="_blank">Bower</a></p>
   </div>
-  <p class="text-center small"><span class="version">v2.0.0</span> &middot; <a href="https://github.com/SoapBox/linkifyjs/blob/master/CHANGELOG.md">release notes</a></p>
+  <p class="text-center small"><span class="version">v2.0.0</span> &middot; <a href="https://github.com/SoapBox/linkifyjs/blob/master/CHANGELOG.md">release notes</a> &middot; <a href="https://github.com/SoapBox/linkifyjs/">view code on GitHub</a></p>
 ---
 
 <div id="home" class="home row">
@@ -32,24 +32,23 @@ header: >
 
   <div class="col-xs-12">
     <h2>Demo</h2>
-    <h3>1. Linkify some paragraphs</h3>
+    <h3>1. Linkify some HTML</h3>
   </div>
 
   <div class="col-sm-9">
-    <div class="well demo-well">
-      <p data-linkify-demo-target="demo-1-linkifier" data-linkify-demo-target="demo-1-linkifier">
-        About a year ago Graham and I went to Google IO (https://developers.google.com/events/io/) to learn about some upcoming technology and meet some tech folk in the valley. The experience was great. We met a bunch of great people and got our hands on some new technology — check out this page for more on our experience http://digitalmediazone.ryerson.ca/toronto-incubator/brennans-experience-at-google-io/experience. Beyond everything else, the best thing we got out of that conference was a technology/development mentor &amp; a new startup development process.
-      </p>
-      <p data-linkify-demo-target="demo-1-linkifier">
-        As soapboxhq.com grew, we tweaked our development and deployment process as needed. At the very start we used cheap hosting providers such as ca.godaddy.com and learned to deal with their limitations. We knew there were other ways of doing things, but they seemed to add complex rules and process. This worked for us, so why fix it?
-      </p>
-      <p data-linkify-demo-target="demo-1-linkifier">
-        We then met Ian (http://iandouglas.com/about/) at Google IO, who agreed to share some of his insight from scaling over and over again. Ian is a senior web developer/architect working over at Sendgrid. Ian is awesome and we really take his advice to heart. He deserves the credit for a lot of what you see below (including the joke I shamelessly stole from him).
-      </p>
+    <div class="well demo-well" data-linkify-demo-target="demo-1-linkifier" >
+      <p class="h1">Why Leaders Need Trust and How To Earn It</p>
+      <p class="entry-meta"> by Will Campbell (Website: http://soapboxhq.com/blog/author/willcampbell )</p>
+      <p><time class="updated" datetime="2015-11-18" itemprop="datePublished">November 18, 2015</time></p>
 
-      <p data-linkify-demo-target="demo-1-linkifier">
-        To see the rest of this post, visit http://soapboxhq.com/blog/startup-development-process-how-we-develop/ or email soapbox-dev-team@example.com.
-      </p>
+      <p>It’s something we all intuitively know: Good leaders are trusted by their employees. A happy, engaged, productive workforce is built on trust, and trust in the person leading the charge is a vital part of this.</p>
+
+     <p>Yet <strong>trust isn’t working for many organizations</strong>. A whopping 60 percent of employees don’t trust their workplace ( http://interactionassociates.com/insights/research/building-workplace-trust-201415 ). And this distrust is holding back productivity ( http://www.inc.com/penny-herscher/5-ways-trust-impacts-your-productivity-in-the-office.html ) and <a href="http://soapboxhq.com/blog/why-trust-is-the-core-of-employee-engagement" target="_blank">wounding employee engagement</a>.</p>
+
+    <p><strong>Leaders need to start building trust</strong>. In this post you’ll learn more about why trust should be a priority, what Carlos Ghosn can teach us, and get&nbsp;<strong>five tips on how to earn trust</strong>.</p>
+
+    <p>Read more at <strong>http://soapboxhq.com/blog/why-leaders-need-trust-and-how-to-earn-it</strong>. If you have any questions, reach out at info@soapboxhq.com</p>
+
     </div>
   </div>
 
@@ -58,57 +57,7 @@ header: >
   </div>
 
   <div class="col-xs-12">
-    <h3>2. Linkify won't break your existing HTML</h3>
-    <p class="lead">Try linkifying this entire section</p>
-  </div>
-
-  <div class="col-sm-9">
-    <div class="well demo-well" data-linkify-demo-target="demo-2-linkifier">
-      <p class="h2">Demonstrating a few HTML features</p>
-      <p><em>Originally from sheldonbrown.com/web_sample1.html</em></p>
-      <p>
-        HTML is really a very simple language. It consists of ordinary text, with commands that are enclosed by "&lt;" and "&gt;" characters, or between an <a href="http://www.ascii.cl/htmlcodes.htm">"&amp;" and a ";"</a>.
-      </p>
-      <p>
-        You don't really need to know much HTML to create a page, because you can <em>copy bits of HTML</em> from other pages (such as <a href="http://google.com">google.com</a> that do what you want, then change the text!
-      </p>
-      <p>
-        This page shows on the left as it appears in your browser, and the corresponding HTML code appears on the right. The HTML commands are linked to explanations of what they do. w3.org also has some great info on HTML standards.
-      </p>
-
-      <p class="h3">Line Breaks</p>
-      <p>
-        HTML doesn't normally use line breaks (http://en.wikipedia.org/wiki/Newline) for ordinary text. A white space of any size is treated as a single space. This is because the author of the page has no way of knowing the size of the reader's screen, or what size type they will have their browser set for.
-      </p>
-      <p>
-        If you want to put a line break at a particular place, you can use the "&lt;br&gt;" command, or, for a paragraph break, the "&lt;p&gt;" command, which will insert a blank line. The heading command ("&lt;h4&gt;&lt;/h4&gt;") puts a blank line above and below the heading text. Learn more about headings here: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements.
-      </p>
-
-      <p class="h1">This is a size "1" heading</p>
-      <p class="h2">This is a size "2" heading</p>
-      <p class="h3">This is a size "3" heading</p>
-      <p class="h4">This is a size "4" heading</p>
-      <p class="h5">This is a size "5" heading</p>
-      <p class="h6">This is a size "6" heading</p>
-
-      <br>
-
-      <p>
-        <a href="http://sheldonbrown.com/">
-          Check out this site for more!
-        </a>
-      </p>
-    </div>
-  </div>
-
-  <div class="col-sm-3">
-    <button id="demo-2-linkifier" class="btn btn-block btn-lg btn-primary linkifier">
-      Loading...
-    </button>
-  </div>
-
-  <div class="col-xs-12">
-    <h3>3. See if this plugin works for your URL</h3>
+    <h3>2. See if this plugin works for your text</h3>
   </div>
 
   <div class="col-sm-9">
