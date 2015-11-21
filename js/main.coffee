@@ -44,7 +44,7 @@
 
     # Set the value of the textfield to the referrer URL
     $('#demo-3-input').val 'Linkify the following URL: ' + \
-      document.referrer ? 'https://github.com/SoapBox/linkifyjs/'
+      (document.referrer || 'https://github.com/SoapBox/linkifyjs/')
 
     $('#demo-3-linkifier').on 'click', ->
       $this = $(this)
