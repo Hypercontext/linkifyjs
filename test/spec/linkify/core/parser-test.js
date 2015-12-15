@@ -37,7 +37,7 @@ var tests = [
 	], [
 		'This [i.imgur.com/ckSj2Ba.jpg)] should also work',
 		[TEXT, URL, TEXT],
-		['This [', 'i.imgur.com/ckSj2Ba.jpg)]', ' should also work']
+		['This [', 'i.imgur.com/ckSj2Ba.jpg', ')] should also work']
 	], [
 		'A link is http://nick.is.awesome/?q=nick+amazing&nick=yo%29%30hellp another is http://nick.con/?q=look',
 		[TEXT, URL, TEXT],
@@ -118,6 +118,18 @@ var tests = [
 		'Bu haritanın verileri Direniş İzleme Grubu\'nun yaptığı Türkiye İşçi Eylemleri haritası ile birleşebilir esasen. https://graphcommons.com/graphs/00af1cd8-5a67-40b1-86e5-32beae436f7c?show=Comments',
 		[TEXT, URL],
 		['Bu haritanın verileri Direniş İzleme Grubu\'nun yaptığı Türkiye İşçi Eylemleri haritası ile birleşebilir esasen. ', 'https://graphcommons.com/graphs/00af1cd8-5a67-40b1-86e5-32beae436f7c?show=Comments']
+	], [
+		'Links with brackets and parens https://en.wikipedia.org/wiki/Blur_[band] wat',
+		[TEXT, URL, TEXT],
+		['Links with brackets and parens ', 'https://en.wikipedia.org/wiki/Blur_[band]', ' wat'],
+	], [
+		'This has dots {https://msdn.microsoft.com/en-us/library/aa752574(VS.85).aspx}',
+		[TEXT, URL, TEXT],
+		['This has dots {', 'https://msdn.microsoft.com/en-us/library/aa752574(VS.85).aspx', '}']
+	], [ // This test is correct, will count nested brackets as being part of the first
+		'A really funky one (example.com/?id=asd2{hellow}and%20it%20continues(23&((@)) and it ends',
+		[TEXT, URL, TEXT],
+		['A really funky one (', 'example.com/?id=asd2{hellow}and%20it%20continues(23&((@)', ') and it ends']
 	]
 ];
 
@@ -132,12 +144,13 @@ describe('linkify/core/parser#run()', function () {
 			result = parser.run(scanner.run(str));
 
 			expect(result.map(function (token) {
+				return token.toString();
+			})).to.eql(values);
+
+			expect(result.map(function (token) {
 				return token.constructor;
 			})).to.eql(types);
 
-			expect(result.map(function (token) {
-				return token.toString();
-			})).to.eql(values);
 		});
 	}
 

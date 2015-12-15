@@ -33,7 +33,14 @@ TT_PROTOCOL		= TEXT_TOKENS.PROTOCOL,
 TT_QUERY		= TEXT_TOKENS.QUERY,
 TT_SLASH		= TEXT_TOKENS.SLASH,
 TT_SYM			= TEXT_TOKENS.SYM,
-TT_TLD			= TEXT_TOKENS.TLD;
+TT_TLD			= TEXT_TOKENS.TLD,
+TT_OPENBRACE	= TEXT_TOKENS.OPENBRACE,
+TT_OPENBRACKET	= TEXT_TOKENS.OPENBRACKET,
+TT_OPENPAREN	= TEXT_TOKENS.OPENPAREN,
+TT_CLOSEBRACE	= TEXT_TOKENS.CLOSEBRACE,
+TT_CLOSEBRACKET	= TEXT_TOKENS.CLOSEBRACKET,
+TT_CLOSEPAREN	= TEXT_TOKENS.CLOSEPAREN;
+
 // TT_WS 			= TEXT_TOKENS.WS;
 
 const
@@ -66,6 +73,15 @@ S_PSS_TLD_COLON			= makeState(), // (A) URL followed by colon (potential port nu
 S_PSS_TLD_PORT			= makeState(T_URL), // TLD followed by a port number
 S_URL					= makeState(T_URL), // Long URL with optional port and maybe query string
 S_URL_SYMS				= makeState(), // URL followed by some symbols (will not be part of the final URL)
+S_URL_OPENBRACE			= makeState(), // URL followed by {
+S_URL_OPENBRACKET		= makeState(), // URL followed by [
+S_URL_OPENPAREN			= makeState(), // URL followed by (
+S_URL_OPENBRACE_Q		= makeState(T_URL), // URL followed by { and some symbols that the URL can end it
+S_URL_OPENBRACKET_Q		= makeState(T_URL), // URL followed by [ and some symbols that the URL can end it
+S_URL_OPENPAREN_Q		= makeState(T_URL), // URL followed by ( and some symbols that the URL can end it
+S_URL_OPENBRACE_SYMS	= makeState(), // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
+S_URL_OPENBRACKET_SYMS	= makeState(), // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
+S_URL_OPENPAREN_SYMS	= makeState(), // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
 S_EMAIL_DOMAIN			= makeState(), // parsed string starts with local email info + @ with a potential domain name (C)
 S_EMAIL_DOMAIN_DOT		= makeState(), // (C) domain followed by DOT
 S_EMAIL					= makeState(T_EMAIL), // (C) Possible email address (could have more tlds)
@@ -144,8 +160,7 @@ let qsAccepting = [
 	TT_POUND,
 	TT_PROTOCOL,
 	TT_SLASH,
-	TT_TLD,
-	TT_SYM
+	TT_TLD
 ];
 
 // Types of tokens that can follow a URL and be part of the query string
@@ -155,8 +170,64 @@ let qsNonAccepting = [
 	TT_COLON,
 	TT_DOT,
 	TT_QUERY,
-	TT_PUNCTUATION
+	TT_PUNCTUATION,
+	TT_CLOSEBRACE,
+	TT_CLOSEBRACKET,
+	TT_CLOSEPAREN,
+	TT_OPENBRACE,
+	TT_OPENBRACKET,
+	TT_OPENPAREN,
+	TT_SYM
 ];
+
+// These states are responsible primarily for determining whether or not to
+// include the final round bracket.
+
+// URL, followed by an opening bracket
+S_URL.on(TT_OPENBRACE, S_URL_OPENBRACE);
+S_URL.on(TT_OPENBRACKET, S_URL_OPENBRACKET);
+S_URL.on(TT_OPENPAREN, S_URL_OPENPAREN);
+
+// URL with extra symbols at the end, followed by an opening bracket
+S_URL_SYMS.on(TT_OPENBRACE, S_URL_OPENBRACE);
+S_URL_SYMS.on(TT_OPENBRACKET, S_URL_OPENBRACKET);
+S_URL_SYMS.on(TT_OPENPAREN, S_URL_OPENPAREN);
+
+// Closing bracket component. This character WILL be included in the URL
+S_URL_OPENBRACE.on(TT_CLOSEBRACE, S_URL);
+S_URL_OPENBRACKET.on(TT_CLOSEBRACKET, S_URL);
+S_URL_OPENPAREN.on(TT_CLOSEPAREN, S_URL);
+S_URL_OPENBRACE_Q.on(TT_CLOSEBRACE, S_URL);
+S_URL_OPENBRACKET_Q.on(TT_CLOSEBRACKET, S_URL);
+S_URL_OPENPAREN_Q.on(TT_CLOSEPAREN, S_URL);
+S_URL_OPENBRACE_SYMS.on(TT_CLOSEBRACE, S_URL);
+S_URL_OPENBRACKET_SYMS.on(TT_CLOSEBRACKET, S_URL);
+S_URL_OPENPAREN_SYMS.on(TT_CLOSEPAREN, S_URL);
+
+// URL that beings with an opening bracket, followed by a symbols.
+// Note that the final state can still be `S_URL_OPENBRACE_Q` (if the URL only
+// has a single opening bracket for some reason).
+S_URL_OPENBRACE.on(qsAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET.on(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENPAREN.on(qsAccepting, S_URL_OPENPAREN_Q);
+S_URL_OPENBRACE.on(qsNonAccepting, S_URL_OPENBRACE_SYMS);
+S_URL_OPENBRACKET.on(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+S_URL_OPENPAREN.on(qsNonAccepting, S_URL_OPENPAREN_SYMS);
+
+// URL that begins with an opening bracket, followed by some symbols
+S_URL_OPENBRACE_Q.on(qsAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET_Q.on(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENPAREN_Q.on(qsAccepting, S_URL_OPENPAREN_Q);
+S_URL_OPENBRACE_Q.on(qsNonAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET_Q.on(qsNonAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENPAREN_Q.on(qsNonAccepting, S_URL_OPENPAREN_Q);
+
+S_URL_OPENBRACE_SYMS.on(qsAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET_SYMS.on(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENPAREN_SYMS.on(qsAccepting, S_URL_OPENPAREN_Q);
+S_URL_OPENBRACE_SYMS.on(qsNonAccepting, S_URL_OPENBRACE_SYMS);
+S_URL_OPENBRACKET_SYMS.on(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+S_URL_OPENPAREN_SYMS.on(qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // Account for the query string
 S_URL.on(qsAccepting, S_URL);
