@@ -21,7 +21,8 @@ wrap			= require('gulp-wrap');
 
 var paths = {
 	src: 'src/**/*.js',
-	lib: 'lib/**/*.js',
+	lib: ['lib/**/*.js'],
+	libTest: ['lib/*.js', 'lib/linkify/**/*.js'],
 	libCore: [
 		'lib/linkify/core/*.js',
 		'lib/linkify/utils/*.js',
@@ -232,7 +233,7 @@ gulp.task('mocha', ['build'], function () {
 */
 gulp.task('coverage', ['build'], function (cb) {
 	// IMPORTANT: return not required here (and will actually cause bugs!)
-	gulp.src(paths.lib)
+	gulp.src(paths.libTest)
 	.pipe(istanbul()) // Covering files
 	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
 	.on('finish', function () {
