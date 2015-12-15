@@ -161,6 +161,34 @@ class TLD extends TextToken {}
 */
 class WS extends TextToken {}
 
+/**
+	Opening/closing bracket classes
+*/
+
+class OPENBRACE extends TextToken {
+	constructor() { super('{'); }
+}
+
+class OPENBRACKET extends TextToken {
+	constructor() { super('['); }
+}
+
+class OPENPAREN extends TextToken {
+	constructor() { super('('); }
+}
+
+class CLOSEBRACE extends TextToken {
+	constructor() { super('}'); }
+}
+
+class CLOSEBRACKET extends TextToken {
+	constructor() { super(']'); }
+}
+
+class CLOSEPAREN extends TextToken {
+	constructor() { super(')'); }
+}
+
 let text = {
 	Base: TextToken,
 	DOMAIN,
@@ -178,7 +206,13 @@ let text = {
 	SLASH,
 	SYM,
 	TLD,
-	WS
+	WS,
+	OPENBRACE,
+	OPENBRACKET,
+	OPENPAREN,
+	CLOSEBRACE,
+	CLOSEBRACKET,
+	CLOSEPAREN
 };
 
 /******************************************************************************

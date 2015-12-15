@@ -44,6 +44,12 @@ S_START.on('#', makeState(TOKENS.POUND));
 S_START.on('?', makeState(TOKENS.QUERY));
 S_START.on('/', makeState(TOKENS.SLASH));
 S_START.on(COLON, makeState(TOKENS.COLON));
+S_START.on('{', makeState(TOKENS.OPENBRACE));
+S_START.on('[', makeState(TOKENS.OPENBRACKET));
+S_START.on('(', makeState(TOKENS.OPENPAREN));
+S_START.on('}', makeState(TOKENS.CLOSEBRACE));
+S_START.on(']', makeState(TOKENS.CLOSEBRACKET));
+S_START.on(')', makeState(TOKENS.CLOSEPAREN));
 S_START.on(/[,;!]/, makeState(TOKENS.PUNCTUATION));
 
 // Whitespace jumps
