@@ -163,10 +163,8 @@ function skipTagTokens(tagName, tokens, i, skippedTokens) {
 }
 
 function escapeText(text) {
-	return text
-	.replace(/&/g, '&amp;')
-	.replace(/</g, '&lt;')
-	.replace(/>/g, '&gt;');
+	// Not required, HTML tokenizer ensures this occurs properly
+	return text;
 }
 
 function escapeAttr(attr) {
