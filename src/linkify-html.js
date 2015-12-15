@@ -24,10 +24,10 @@ export default function linkifyHtml(str, opts={}) {
 
 		if (token.type === StartTag && token.tagName.toUpperCase() === 'A') {
 			// Ignore all the contents of an anchor tag
+			linkifiedTokens.push(token);
 			let preskipLen = linkifiedTokens.length;
-			skipTokens('A', tokens, ++i, linkifiedTokens);
-
-			i += linkifiedTokens.length - preskipLen;
+			skipTagTokens('A', tokens, ++i, linkifiedTokens);
+			i += linkifiedTokens.length - preskipLen - 1;
 			continue;
 
 		} else if (token.type !== Chars) {
