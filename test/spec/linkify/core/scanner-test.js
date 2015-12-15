@@ -18,7 +18,15 @@ QUERY		= TEXT_TOKENS.QUERY,
 SLASH		= TEXT_TOKENS.SLASH,
 SYM			= TEXT_TOKENS.SYM,
 TLD			= TEXT_TOKENS.TLD,
-WS			= TEXT_TOKENS.WS;
+WS			= TEXT_TOKENS.WS,
+
+OPENBRACE	= TEXT_TOKENS.OPENBRACE,
+OPENBRACKET	= TEXT_TOKENS.OPENBRACKET,
+OPENPAREN	= TEXT_TOKENS.OPENPAREN,
+CLOSEBRACE	= TEXT_TOKENS.CLOSEBRACE,
+CLOSEBRACKET	= TEXT_TOKENS.CLOSEBRACKET,
+CLOSEPAREN	= TEXT_TOKENS.CLOSEPAREN;
+
 
 // The elements are
 // 1. input string
@@ -35,7 +43,8 @@ var tests = [
 	['#', [POUND], ['#']],
 	['/', [SLASH], ['/']],
 	['&', [SYM], ['&']],
-	['&?<>(', [SYM, QUERY, SYM, SYM, SYM], ['&', '?', '<', '>', '(']],
+	['&?<>(', [SYM, QUERY, SYM, SYM, OPENPAREN], ['&', '?', '<', '>', '(']],
+	['([{}])', [OPENPAREN, OPENBRACKET, OPENBRACE, CLOSEBRACE, CLOSEBRACKET, CLOSEPAREN], ['(', '[', '{', '}', ']', ')']],
 	['!,;', [PUNCTUATION, PUNCTUATION, PUNCTUATION], ['!', ',', ';']],
 	['hello', [DOMAIN], ['hello']],
 	['Hello123', [DOMAIN], ['Hello123']],
