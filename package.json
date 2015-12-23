@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "rm -rf lib/* && node_modules/.bin/gulp build",
-    "test": "node_modules/.bin/gulp coverage",
+    "test": "node_modules/.bin/gulp test",
     "test-ci": "node_modules/.bin/gulp test-ci",
     "coverage": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },

@@ -312,7 +312,7 @@ gulp.task('uglify', ['build', 'build-legacy'], function () {
 });
 
 gulp.task('dist', ['uglify']);
-gulp.task('test', ['build', 'jshint', 'mocha', 'qunit']);
+gulp.task('test', ['build', 'jshint', 'qunit', 'coverage']);
 gulp.task('test-ci', ['karma-ci']);
 // Using with other tasks causes an error here for some reason
 
