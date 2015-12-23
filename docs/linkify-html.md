@@ -3,7 +3,7 @@ layout: doc
 title: linkify-html · Documentation
 ---
 
-Interface for replacing links within native strings containing HTML with anchor tags.
+Interface for replacing links with anchor tags within JavaScript strings containing HTML.
 
 #### Jump to
 
@@ -41,7 +41,7 @@ var linkifyHtml = require('linkifyjs/html');
 
 {% highlight html %}
 <script src="linkify.js"></script>
-<script src="linkify-string.js"></script>
+<script src="linkify-html.js"></script>
 {% endhighlight %}
 
 ## Usage
@@ -64,4 +64,3 @@ Returns
 * _`Object`_ [**`options`**] [Options](options.html) hash
 
 **Returns** _`String`_ Linkified htmlString
-

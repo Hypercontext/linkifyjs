@@ -3,7 +3,9 @@ layout: doc
 title: linkify-string · Documentation
 ---
 
-Interface for replacing links within native strings with anchor tags. Note that this function will ***not*** parse HTML strings properly - use [`linkify-html`](linkify-html.html) instead. Alternatively, if you're using linkify with a DOM, use [`linkify-jquery`](linkify-html.html) or [`linkify-element`](linkify-element.html)
+Interface for replacing links with anchor tags within JavaScript strings.
+
+Note that this function will ***not*** parse HTML strings properly - use [`linkify-html`](linkify-html.html) instead. Alternatively, if you're using linkify with a DOM, use [`linkify-jquery`](linkify-html.html) or [`linkify-element`](linkify-element.html)
 
 #### Jump to
 
@@ -66,4 +68,3 @@ Returns
 * _`Object`_ [**`options`**] [Options](options.html) hash
 
 **Returns** _`String`_ Linkified string
-
