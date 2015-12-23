@@ -71,13 +71,13 @@ npm install linkifyjs
 {% highlight js %}
 var linkify = require('linkifyjs');
 require('linkifyjs/plugin/hashtag')(linkify); // optional
-var linkifyStr = require('linkifyjs/string');
+var linkifyHtml = require('linkifyjs/html');
 {% endhighlight %}
 
 ### Example string usage
 
 {% highlight js %}
-linkifyStr('The site github.com is #awesome.', {
+linkifyHtml('The site github.com is #awesome.', {
   defaultProtocol: 'https'
 });
 {% endhighlight %}
