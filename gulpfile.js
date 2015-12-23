@@ -13,6 +13,7 @@ closureCompiler	= require('gulp-closure-compiler'),
 istanbul		= require('gulp-istanbul'),
 jshint			= require('gulp-jshint'),
 mocha			= require('gulp-mocha'),
+qunit			= require('gulp-qunit'),
 rename			= require('gulp-rename'),
 replace			= require('gulp-replace'),
 babel			= require('gulp-babel'), // formerly 6to5
@@ -30,7 +31,8 @@ var paths = {
 	],
 	amd: 'build/amd/**/*.js',
 	test: 'test/index.js',
-	spec: 'test/spec/**.js'
+	spec: 'test/spec/**.js',
+	qunit: 'test/qunit/*html'
 };
 
 var tldsReplaceStr = '"' + tlds.join('|') + '".split("|")';
@@ -267,6 +269,11 @@ gulp.task('karma-ci', ['build'], function (done) {
 	return server.start();
 });
 
+gulp.task('qunit', ['build'], function () {
+	return gulp.src(paths.qunit)
+	.pipe(qunit());
+});
+
 // Build the deprecated legacy interface
 gulp.task('build-legacy', ['build'], function () {
 	return gulp.src(['build/linkify.js', 'build/linkify-jquery.js'])
@@ -305,7 +312,7 @@ gulp.task('uglify', ['build', 'build-legacy'], function () {
 });
 
 gulp.task('dist', ['uglify']);
-gulp.task('test', ['build', 'jshint', 'mocha']);
+gulp.task('test', ['build', 'jshint', 'mocha', 'qunit']);
 gulp.task('test-ci', ['karma-ci']);
 // Using with other tasks causes an error here for some reason
 
