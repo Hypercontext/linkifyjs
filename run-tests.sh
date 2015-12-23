@@ -1,4 +1,12 @@
-if [[ `echo $TRAVIS_BRANCH` = "master" && `echo $SAUCE_USERNAME` != "" ]]; then
+node_v=$(node --version)
+
+# Run complete test suite only these conditions hold
+# * We're pushing to the master branch on Travis
+# * SauceLabs credentials are defined
+# * The node version is 5.0 (
+#	- so only a single member machine in the matrix calls sauce
+
+if [[ $(echo $TRAVIS_BRANCH) = "master" && $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v5.0* ]]; then
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
 	npm test || exit 1
