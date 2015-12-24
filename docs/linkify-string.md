@@ -64,6 +64,8 @@ Returns
 
 ## Usage with html string
 
+`linkify-string` automatically escapes HTML input.
+
 {% highlight js %}
 var options = {/* … */};
 var str = '<p>For help with GitHub.com, please email support@github.com</p>';
