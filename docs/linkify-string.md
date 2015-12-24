@@ -62,6 +62,22 @@ Returns
 'For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a>'
 {% endhighlight %}
 
+## Usage with html string
+
+{% highlight js %}
+var options = {/* … */};
+var str = 'For help with GitHub.com, please email support@github.com';
+linkifyStr(str, options);
+// or
+str.linkify(options);
+{% endhighlight %}
+
+Returns
+
+{% highlight js %}
+'&lt;p&gt;For help with <a href="http://github.com" class="linkified" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com" class="linkified">support@github.com</a>&lt;/p&gt;'
+{% endhighlight %}
+
 **Params**
 
 * _`String`_ **`str`** String to linkify
