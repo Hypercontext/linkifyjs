@@ -66,7 +66,7 @@ Returns
 
 {% highlight js %}
 var options = {/* … */};
-var str = 'For help with GitHub.com, please email support@github.com';
+var str = '<p>For help with GitHub.com, please email support@github.com</p>';
 linkifyStr(str, options);
 // or
 str.linkify(options);
