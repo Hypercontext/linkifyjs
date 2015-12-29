@@ -375,6 +375,7 @@ module.exports = [
 	'link',
 	'lk',
 	'loans',
+	'local',
 	'london',
 	'lotto',
 	'lr',
