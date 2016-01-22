@@ -58,9 +58,43 @@ describe('linkify-html', function () {
 		});
 	});
 
-	it('Works with overriden options', function () {
+	it('Works with overriden options (general)', function () {
 		tests.map(function (test) {
 			expect(linkifyHtml(test[0], options)).to.be.eql(test[2]);
+		});
+	});
+
+	it('Works with overriden options (validate)', function () {
+		var optionsValidate = {
+			validate: function (text, type) {
+				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
+			}
+		},
+
+		testsValidate = [
+			[
+				'1.Test with no links',
+				'1.Test with no links'
+			], [
+				'2.The URL is google.com and the email is <strong>test@example.com</strong>',
+				'2.The URL is google.com and the email is <strong><a href="mailto:test@example.com" class="linkified">test@example.com</a></strong>'
+			], [
+				'3.Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test."wut".yo@gmail.co.uk!',
+				'3.Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="linkified" target="_blank">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.&quot;wut&quot;.yo@gmail.co.uk" class="linkified">test."wut".yo@gmail.co.uk</a>!'
+			], [
+				'4a.This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt http://github.com</h1>',
+				'4a.This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt <a href="http://github.com" class="linkified" target="_blank">http://github.com</a></h1>'
+			], [
+				'4b.This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt github.com</h1>',
+				'4b.This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt github.com</h1>'
+			], [
+				'5.Unterminated anchor tag <a href="http://google.com"> This <em>is a link google.com</em> and this works!! https://reddit.com/r/photography/',
+				'5.Unterminated anchor tag <a href="http://google.com"> This <em>is a link google.com</em> and this works!! https://reddit.com/r/photography/'
+			]
+		];
+
+		testsValidate.map(function (test) {
+			expect(linkifyHtml(test[0], optionsValidate)).to.be.eql(test[1]);
 		});
 	});
 

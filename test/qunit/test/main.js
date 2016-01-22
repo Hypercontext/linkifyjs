@@ -99,6 +99,7 @@ QUnit.test('returns in the hash of default options when given an empty object', 
 		defaultProtocol: 'http',
 		events: null,
 		format: function () {},
+		validate: function () {},
 		formatHref: function () {},
 		newLine: false, // deprecated
 		nl2br: false,
@@ -107,6 +108,7 @@ QUnit.test('returns in the hash of default options when given an empty object', 
 		linkClass: 'linkified'
 	});
 	assert.equal(typeof result.format, 'function');
+	assert.equal(typeof result.validate, 'function');
 	assert.equal(result.format('test'), 'test');
 	assert.equal(typeof result.formatHref, 'function');
 	assert.equal(result.formatHref('test'), 'test');

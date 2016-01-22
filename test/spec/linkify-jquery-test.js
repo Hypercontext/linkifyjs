@@ -103,7 +103,7 @@ describe('linkify-jquery', function () {
 		testContainer.innerHTML = htmlOptions.original;
 	});
 
-	// This works but is inconsisten across browsers
+	// This works but is inconsistent across browsers
 	xit('Works with the DOM Data API', function () {
 		expect($('header').first().html()).to.be.eql(
 			'Have a link to:<br><a href="https://github.com" class="linkified" target="_blank">github.com</a>!'
@@ -125,12 +125,21 @@ describe('linkify-jquery', function () {
 		expect(htmlOptions.linkified).to.contain($container.html());
 	});
 
-	it('Works with overriden options', function () {
+	it('Works with overriden options (general)', function () {
 		var $container = $('#linkify-jquery-test-container');
 		expect(($container.length)).to.be.eql(1);
 		var result = $container.linkify(htmlOptions.altOptions);
 		// `should` is not defined on jQuery objects
 		expect((result === $container)).to.be.ok; // should return the same element
 		expect(htmlOptions.linkifiedAlt).to.contain($container.html());
+	});
+
+	it('Works with overriden options (validate)', function () {
+		var $container = $('#linkify-jquery-test-container');
+		expect(($container.length)).to.be.eql(1);
+		var result = $container.linkify(htmlOptions.validateOptions);
+		// `should` is not defined on jQuery objects
+		expect((result === $container)).to.be.ok; // should return the same element
+		expect(htmlOptions.linkifiedValidate).to.contain($container.html());
 	});
 });

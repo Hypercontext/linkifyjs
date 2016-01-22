@@ -59,6 +59,7 @@ function apply($, doc=null) {
 				tagName:			data.linkifyTagname,
 				target:				data.linkifyTarget,
 				linkClass:			data.linkifyLinkclass,
+				validate:			data.linkifyValidate,
 			};
 			let $target = target === 'this' ? $this : $this.find(target);
 			$target.linkify(options);

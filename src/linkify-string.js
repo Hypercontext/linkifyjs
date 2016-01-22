@@ -37,11 +37,14 @@ function linkifyStr(str, opts={}) {
 
 	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		if (token.isLink) {
+		let validated = token.isLink && options.resolve(opts.validate, token.toString(), token.type);
 
+		if (token.isLink && validated) {
+			
 			let
 			href			= token.toHref(opts.defaultProtocol),
 			formatted		= options.resolve(opts.format, token.toString(), token.type),
+
 			formattedHref	= options.resolve(opts.formatHref, href, token.type),
 			attributesHash	= options.resolve(opts.attributes, href, token.type),
 			tagName			= options.resolve(opts.tagName, href, token.type),
@@ -59,7 +62,6 @@ function linkifyStr(str, opts={}) {
 
 			link += `>${escapeText(formatted)}</${tagName}>`;
 			result.push(link);
-
 		} else if (token.type === 'nl' && opts.nl2br) {
 			if (opts.newLine) {
 				result.push(opts.newLine);

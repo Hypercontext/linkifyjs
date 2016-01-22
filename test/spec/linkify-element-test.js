@@ -61,7 +61,7 @@ describe('linkify-element', function () {
 		expect(htmlOptions.linkified).to.contain(testContainer.innerHTML);
 	});
 
-	it('Works with overriden options', function () {
+	it('Works with overriden options (general)', function () {
 		expect(testContainer).to.be.ok;
 		expect(testContainer).to.be.a('object');
 		var result = linkifyElement(testContainer, htmlOptions.altOptions, doc);
@@ -80,4 +80,11 @@ describe('linkify-element', function () {
 		*/
 	});
 
+	it('Works with overriden options (validate)', function () {
+		expect(testContainer).to.be.ok;
+		expect(testContainer).to.be.a('object');
+		var result = linkifyElement(testContainer, htmlOptions.validateOptions, doc);
+		expect(result).to.equal(testContainer); // should return the same element
+		expect(htmlOptions.linkifiedValidate).to.contain(testContainer.innerHTML);
+	});
 });

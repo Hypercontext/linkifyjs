@@ -2,6 +2,10 @@ function noop(val) {
 	return val;
 }
 
+function yes(val) {
+	return true;
+}
+
 function typeToTarget(href, type) {
 	return type === 'url' ? '_blank' : null;
 }
@@ -14,6 +18,7 @@ function normalize(opts) {
 		defaultProtocol:	opts.defaultProtocol		|| 'http',
 		events:				opts.events					|| null,
 		format:				opts.format					|| noop,
+		validate:			opts.validate				|| yes,
 		formatHref:			opts.formatHref				|| noop,
 		newLine:			opts.newLine				|| false, // deprecated
 		nl2br:				!!newLine	|| opts.nl2br	|| false,

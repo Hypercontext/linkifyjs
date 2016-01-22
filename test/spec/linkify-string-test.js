@@ -53,11 +53,12 @@ describe('linkify-string', function () {
 		[
 			'Test with no links',
 			'Test with no links',
-			'Test with no links'
+			'Test with no links',
 		], [
 			'The URL is google.com and the email is test@example.com',
 			'The URL is <a href="http://google.com" class="linkified" target="_blank">google.com</a> and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>',
-			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">google.com</span> and the email is <span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test@example.com</span>'
+			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">google.com</span> and the email is <span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test@example.com</span>',
+			'The URL is google.com and the email is test@example.com',
 		], [
 			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test."wut".yo@gmail.co.uk!\n',
 			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="linkified" target="_blank">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.&quot;wut&quot;.yo@gmail.co.uk" class="linkified">test."wut".yo@gmail.co.uk</a>!\n',
@@ -71,9 +72,44 @@ describe('linkify-string', function () {
 		});
 	});
 
-	it('Works with overriden options', function () {
+	it('Works with overriden options (general)', function () {
 		tests.map(function (test) {
 			expect(linkifyStr(test[0], options)).to.be.eql(test[2]);
+		});
+	});
+
+	// Test specific options
+	it('Works with overriden options (validate)', function () {
+		var optionsValidate = {
+			validate: function (text, type) {
+				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
+			}
+		},
+
+		testsValidate = [
+			[
+				'1.Test with no links',
+				'1.Test with no links'
+			], [
+				'2.The URL is google.com and the email is test@example.com',
+				'2.The URL is google.com and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>'
+			], [
+				'3.The URL is www.google.com',
+				'3.The URL is <a href="http://www.google.com" class="linkified" target="_blank">www.google.com</a>'
+			], [
+				'4.The URL is http://google.com',
+				'4.The URL is <a href="http://google.com" class="linkified" target="_blank">http://google.com</a>'
+			], [
+				'5.The URL is ftp://google.com',
+				'5.The URL is <a href="ftp://google.com" class="linkified" target="_blank">ftp://google.com</a>'
+			], [
+				'6.Test with no links.It is sloppy avoiding spaces after the dot',
+				'6.Test with no links.It is sloppy avoiding spaces after the dot'
+			]
+		];
+
+		testsValidate.map(function (test) {
+			expect(linkifyStr(test[0], optionsValidate)).to.be.eql(test[1]);
 		});
 	});
 });

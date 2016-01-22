@@ -32,8 +32,9 @@ function tokensToNodes(tokens, opts, doc) {
 
 	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
+		let validated = token.isLink && options.resolve(opts.validate, token.toString(), token.type);
 
-		if (token.isLink) {
+		if (token.isLink && validated) {
 
 			let
 			href			= token.toHref(opts.defaultProtocol),
