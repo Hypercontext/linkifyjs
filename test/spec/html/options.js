@@ -13,6 +13,9 @@ module.exports = {
 	linkifiedAlt: fs.readFileSync(__dirname + '/linkified-alt.html', 'utf8')
 		.trim()
 		.split('\n'),
+	linkifiedValidate: fs.readFileSync(__dirname + '/linkified-validate.html', 'utf8')
+		.trim()
+		.split('\n'),
 
 	extra: fs.readFileSync(__dirname + '/extra.html', 'utf8').trim(), // for jQuery plugin tests
 	altOptions: {
@@ -26,6 +29,12 @@ module.exports = {
 			mouseover: function () {
 				throw 'Hovered!';
 			}
+		}
+	},
+
+	validateOptions: {
+		validate: function (hasProtocol, text, type) {
+			return type === 'email' || (hasProtocol || text.slice(0,3) === 'www');
 		}
 	}
 };
