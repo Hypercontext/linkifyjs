@@ -33,8 +33,8 @@ module.exports = {
 	},
 
 	validateOptions: {
-		validate: function (hasProtocol, text, type) {
-			return type === 'email' || (hasProtocol || text.slice(0,3) === 'www');
+		validate: function (text, type) {
+			return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 		}
 	}
 };

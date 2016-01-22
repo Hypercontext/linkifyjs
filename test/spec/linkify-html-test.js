@@ -65,13 +65,13 @@ describe('linkify-html', function () {
 	});
 
 	it('Works with overriden options (validate)', function () {
-		var options_validate = {
-			validate: function (hasProtocol, text, type) {
-				return type === 'email' || (hasProtocol || text.slice(0,3) === 'www');
+		var optionsValidate = {
+			validate: function (text, type) {
+				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 			}
 		},
 
-		tests_validate = [
+		testsValidate = [
 			[
 				'1.Test with no links',
 				'1.Test with no links'
@@ -93,8 +93,8 @@ describe('linkify-html', function () {
 			]
 		];
 
-		tests_validate.map(function (test) {
-			expect(linkifyHtml(test[0], options_validate)).to.be.eql(test[1]);
+		testsValidate.map(function (test) {
+			expect(linkifyHtml(test[0], optionsValidate)).to.be.eql(test[1]);
 		});
 	});
 

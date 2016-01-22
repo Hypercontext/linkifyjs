@@ -77,9 +77,7 @@ function linkifyChars(str, opts) {
 
 	for (var i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		let validated = linkify.options.resolve(opts.validate,
-							token.hasProtocol ? token.hasProtocol() : false,
-							token.toString(), token.type);
+		let validated = token.isLink && linkify.options.resolve(opts.validate, token.toString(), token.type);
 
 		if (token.type === 'nl' && opts.nl2br) {
 			result.push({
