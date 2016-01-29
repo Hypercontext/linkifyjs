@@ -3,7 +3,7 @@ layout: doc
 title: linkify-jquery · Documentation
 ---
 
-Provides the Linkify jQuery plugin.
+Provides the Linkify jQuery plugin. This functionality is also available in plain JavaScript via [linkify-element](linkify-element.html).
 
 #### Jump to
 

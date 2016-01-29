@@ -36,6 +36,8 @@ $('#sidebar').linkify({
 });
 {% endhighlight %}
 
+This behaviour is also available without jQuery via [linkify-element](linkify-element.html).
+
 ### Find all links in the given string
 
 {% highlight js %}
