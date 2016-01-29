@@ -36,11 +36,12 @@ var options = {
 * [nl2br](#nl2br)
 * [tagName](#tagname)
 * [target](#target)
+* [validate](#validate)
 
 ## Usage
 
 {% highlight js %}
-linkifyStr(str, options); // or `str.linkify(options)`
+linkifyHtml(str, options); // or `str.linkify(options)`
 linkifyElement(document.getElementById('id'), options);
 $(selector).linkify(options);
 {% endhighlight %}
@@ -195,5 +196,22 @@ Returns
 {% highlight js %}
 'github.com'.linkify({
   target: '_parent'
+});
+{% endhighlight %}
+
+### validate
+
+* **Type**: `Function (String value, String type)`
+* **Default**: `null`
+
+If this function return false, the given value will not show up as a link.
+
+{% highlight js %}
+// Don't linkify links that don't begin in a protocol
+// e.g., "http://google.com" will be linkified, but "google.com" will not.
+'www.google.com'.linkify({
+  validate: function (value, type) {
+    return type !== 'url' || /^(http|ftp)s?/.test(value);
+  }
 });
 {% endhighlight %}
