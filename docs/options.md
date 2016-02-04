@@ -112,6 +112,9 @@ This is useful when finding hashtags, where you don't necessarily want the defau
     if (type === 'hashtag') {
       value = 'https://twitter.com/hashtag/' + value.substring(1);
     }
+    if (type === 'mention') {
+      value = 'https://github.com/' + value.substring(1);
+    }
     return value;
   }
 });
