@@ -373,6 +373,7 @@ module.exports = [
 	'limited',
 	'limo',
 	'link',
+	'live',
 	'lk',
 	'loans',
 	'local',
