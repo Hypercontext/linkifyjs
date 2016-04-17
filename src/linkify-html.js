@@ -22,11 +22,16 @@ export default function linkifyHtml(str, opts={}) {
 	for (i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
 
-		if (token.type === StartTag && token.tagName.toUpperCase() === 'A') {
-			// Ignore all the contents of an anchor tag
+		if (token.type === StartTag) {
 			linkifiedTokens.push(token);
+
+			// Ignore all the contents of ignored tags
+			let tagName = token.tagName.toUpperCase();
+			let isIgnored = tagName === 'A' || opts.ignoreTags.indexOf(tagName) >= 0;
+			if (!isIgnored) continue;
+
 			let preskipLen = linkifiedTokens.length;
-			skipTagTokens('A', tokens, ++i, linkifiedTokens);
+			skipTagTokens(tagName, tokens, ++i, linkifiedTokens);
 			i += linkifiedTokens.length - preskipLen - 1;
 			continue;
 
