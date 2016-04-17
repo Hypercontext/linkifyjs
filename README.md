@@ -19,7 +19,7 @@ __Jump to__
   - [Quick Start](#quick-start)
   - [Usage](#usage)
     - [Node.js/Browserify](#node-js-browserify)
-    - [AMD Modules](#amd-modules)
+    - [AMD Modules](#amd)
     - [Browser](#browser)
 - [Downloads](#downloads)
 - [API Documentation](#api-documentation)
