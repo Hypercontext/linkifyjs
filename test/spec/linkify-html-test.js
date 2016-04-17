@@ -21,7 +21,11 @@ describe('linkify-html', function () {
 				href += '?subject=Hello%20from%20Linkify';
 			}
 			return href;
-		}
+		},
+		ignoreTags: [
+			'script',
+			'style'
+		]
 	},
 
 	// For each element in this array
@@ -49,6 +53,10 @@ describe('linkify-html', function () {
 			'Unterminated anchor tag <a href="http://google.com"> This <em>is a link google.com</em> and this works!! https://reddit.com/r/photography/',
 			'Unterminated anchor tag <a href="http://google.com"> This <em>is a link google.com</em> and this works!! https://reddit.com/r/photography/',
 			'Unterminated anchor tag <a href="http://google.com"> This <em>is a link google.com</em> and this works!! https://reddit.com/r/photography/'
+		], [
+			'Ignore tags like <script>var a = {}; a.ca = "Hello";</script> and <style>b.com {color: blue;}</style>',
+			'Ignore tags like <script>var a = {}; <a href="http://a.ca" class="linkified" target="_blank">a.ca</a> = "Hello";</script> and <style><a href="http://b.com" class="linkified" target="_blank">b.com</a> {color: blue;}</style>',
+			'Ignore tags like <script>var a = {}; a.ca = "Hello";</script> and <style>b.com {color: blue;}</style>'
 		]
 	];
 
