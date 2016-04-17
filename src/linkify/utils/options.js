@@ -13,6 +13,13 @@ function typeToTarget(href, type) {
 function normalize(opts) {
 	opts = opts || {};
 	let newLine = opts.newLine || false; // deprecated
+	let ignoreTags = opts.ignoreTags || [];
+
+	// Make all tags names upper case
+	for (var i = 0; i < ignoreTags.length; i++) {
+		ignoreTags[i] = ignoreTags[i].toUpperCase();
+	}
+
 	return {
 		attributes:			opts.linkAttributes			|| null,
 		defaultProtocol:	opts.defaultProtocol		|| 'http',
@@ -24,7 +31,8 @@ function normalize(opts) {
 		nl2br:				!!newLine	|| opts.nl2br	|| false,
 		tagName:			opts.tagName				|| 'a',
 		target:				opts.target					|| typeToTarget,
-		linkClass:			opts.linkClass				|| 'linkified'
+		linkClass:			opts.linkClass				|| 'linkified',
+		ignoreTags:			ignoreTags
 	};
 }
 
