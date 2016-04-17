@@ -1,9 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-  - "5.0"
-  - "4.2"
-  - "iojs"
+  - "5.10"
+  - "4.4"
 env:
   global:
     - secure: LhH+mMqOktTe6cIt97PGKBfgUjZM8vRd0qddyg61FSxg7a3WrHQoHE8WdRioJ9+DDzpu/NSTsHEUFUpGN+kSRw1UY4tsNLH6HoBQnqrNN4tVOeefudJpdeteOKZrJ8r8TaA/eO7sAgXO2T+RLJ8+qTbhx8FVZtLaCAgkrS0w9Qk=
