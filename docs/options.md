@@ -5,7 +5,7 @@ title: Options · Documentation
 
 Linkify is applied with the following default options. Below is a description of each.
 
-{% highlight js %}
+```js
 var options = {
   defaultProtocol: 'http',
   events: null,
@@ -15,6 +15,7 @@ var options = {
   formatHref: function (href, type) {
     return href;
   },
+  ignoreTags: [],
   linkAttributes: null,
   linkClass: null,
   nl2br: false,
@@ -23,7 +24,7 @@ var options = {
     return type === 'url' ? '_blank' : null;
   }
 };
-{% endhighlight %}
+```
 
 #### Jump to
 
@@ -31,6 +32,7 @@ var options = {
 * [events](#events)
 * [format](#format)
 * [formatHref](#formathref)
+* [ignoreTags](#ignoretags)
 * [linkAttributes](#linkattributes)
 * [linkClass](#linkclass)
 * [nl2br](#nl2br)
@@ -40,11 +42,11 @@ var options = {
 
 ## Usage
 
-{% highlight js %}
+```js
 linkifyHtml(str, options); // or `str.linkify(options)`
 linkifyElement(document.getElementById('id'), options);
 $(selector).linkify(options);
-{% endhighlight %}
+```
 
 ### defaultProtocol
 
@@ -57,6 +59,8 @@ Protocol that should be used in `href` attributes for URLs without a protocol (e
 
 ### events
 
+_\*element and jquery interfaces only\*_
+
 * **Type**: `Object | Function (String href, String type)`
 * **Default**: `null`
 
@@ -66,7 +70,7 @@ Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.
 
 **Note:** Not applicable to linkify-string.
 
-{% highlight js %}
+```js
 $('p').linkify({
   events: {
     click: function (e) {
@@ -77,7 +81,7 @@ $('p').linkify({
     }
   }
 });
-{% endhighlight %}
+```
 
 ### format
 
@@ -86,7 +90,7 @@ $('p').linkify({
 
 Format the text displayed by a linkified entity. e.g., truncate a long URL.
 
-{% highlight js %}
+```js
 'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
   format: function (value, type) {
     if (type === 'url' && value.length > 50) {
@@ -95,7 +99,7 @@ Format the text displayed by a linkified entity. e.g., truncate a long URL.
     return value;
   }
 });
-{% endhighlight %}
+```
 
 ### formatHref
 
@@ -106,7 +110,7 @@ Similar to [format](#format), except the result of this function will be used as
 
 This is useful when finding hashtags, where you don't necessarily want the default to be a link to a named anchor.
 
-{% highlight js %}
+```js
 'This site is #rad'.linkify({
   formatHref: function (value, type) {
     if (type === 'hashtag') {
@@ -115,7 +119,36 @@ This is useful when finding hashtags, where you don't necessarily want the defau
     return value;
   }
 });
-{% endhighlight %}
+```
+
+### ignoreTags
+
+_\*element, html, and jquery interfaces only\*_
+
+* **Type**: `Array`
+* **Default**: `[]`
+
+Prevent linkify from trying to parse links in the specified tags. This is useful when running linkify on arbitrary HTML.
+
+```js
+linkifyHtml(
+  'Please ignore <script>var a = {}; a.com = "Hi";</script> \n' +
+  'but do <span>b.ca</span>', {
+  ignoreTags: [
+    'script',
+    'style'
+  ]
+});
+```
+
+Returns
+
+```html
+Please ignore <script>var a = {}; a.com = "Hi";</script>
+but do <span><a href="http://b.ca" class="linkified" target="_blank">b.ca</a></span>
+```
+
+Notice that there is no hyperlink at "a.com" inside the `script` tag.
 
 ### linkAttributes
 
@@ -127,13 +160,13 @@ Hash of attributes to add to each new link. **Note:** the [`class`](#linkClass) 
 Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.) and returns the hash.
 
 
-{% highlight js %}
+```js
 'github.com'.linkify({
   linkAttributes: {
     rel: 'nofollow'
   }
 });
-{% endhighlight %}
+```
 
 ### linkClass
 
@@ -145,17 +178,17 @@ Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.
 
 Also accepts a function that takes the link type (e.g., `'url'`, `'email'`, etc.) and returns the string.
 
-{% highlight js %}
+```js
 'github.com'.linkify({
   linkClass: 'new-link'
 });
-{% endhighlight %}
+```
 
 Returns
 
-{% highlight html %}
+```html
 <a href="http://github.com" class="new-link">github.com</a>
-{% endhighlight %}
+```
 
 ### nl2br
 
@@ -173,17 +206,17 @@ If true, `\n` line breaks will automatically be converted to `<br>` tags.
 
 The tag name to use for each link. For cases where you can't use anchor tags.
 
-{% highlight js %}
+```js
 'github.com'.linkify({
   tagName: 'span'
 });
-{% endhighlight %}
+```
 
 Returns
 
-{% highlight html %}
+```html
 <span href="http://github.com">github.com</span>
-{% endhighlight %}
+```
 
 ### target
 
@@ -193,11 +226,11 @@ Returns
 
 `target` attribute for generated link.
 
-{% highlight js %}
+```js
 'github.com'.linkify({
   target: '_parent'
 });
-{% endhighlight %}
+```
 
 ### validate
 
@@ -206,7 +239,7 @@ Returns
 
 If this function return false, the given value will not show up as a link.
 
-{% highlight js %}
+```js
 // Don't linkify links that don't begin in a protocol
 // e.g., "http://google.com" will be linkified, but "google.com" will not.
 'www.google.com'.linkify({
@@ -214,4 +247,4 @@ If this function return false, the given value will not show up as a link.
     return type !== 'url' || /^(http|ftp)s?/.test(value);
   }
 });
-{% endhighlight %}
+```
