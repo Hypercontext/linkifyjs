@@ -40,8 +40,8 @@ var tests = [
 		['This [', 'i.imgur.com/ckSj2Ba.jpg', ')] should also work']
 	], [
 		'A link is http://nick.is.awesome/?q=nick+amazing&nick=yo%29%30hellp another is http://nick.con/?q=look',
-		[TEXT, URL, TEXT],
-		['A link is ', 'http://nick.is', '.awesome/?q=nick+amazing&nick=yo%29%30hellp another is http://nick.con/?q=look']
+		[TEXT, URL, TEXT, URL],
+		['A link is ', 'http://nick.is.awesome/?q=nick+amazing&nick=yo%29%30hellp', ' another is ', 'http://nick.con/?q=look']
 	], [
 		'SOme URLS http://google.com https://google1.com google2.com google.com/search?q=potatoes+oven goo.gl/0192n1 google.com?q=asda test bit.ly/0912j www.bob.com indigo.dev.soapbox.co/mobile google.com/?q=.exe flickr.com/linktoimage.jpg',
 		[TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL, TEXT, URL],
@@ -130,6 +130,10 @@ var tests = [
 		'A really funky one (example.com/?id=asd2{hellow}and%20it%20continues(23&((@)) and it ends',
 		[TEXT, URL, TEXT],
 		['A really funky one (', 'example.com/?id=asd2{hellow}and%20it%20continues(23&((@)', ') and it ends']
+	], [
+		'Force http:/ and http:// are not but http://a and http://b.local?qeasd3qas=23 are all links',
+		[TEXT, URL, TEXT, URL, TEXT],
+		['Force http:/ and http:// are not but ', 'http://a', ' and ', 'http://b.local?qeasd3qas=23', ' are all links']
 	]
 ];
 
