@@ -54,9 +54,6 @@ let S_START = makeState();
 
 // Intermediate states for URLs. Note that domains that begin with a protocol
 // are treated slighly differently from those that don't.
-// (PSS == "PROTOCOL SLASH SLASH")
-// S_DOMAIN* states can generally become prefixes for email addresses, while
-// S_PSS_DOMAIN* cannot
 let
 S_PROTOCOL				= makeState(), // e.g., 'http:'
 S_PROTOCOL_SLASH		= makeState(), // e.g., '/', 'http:/''
@@ -66,11 +63,6 @@ S_DOMAIN_DOT			= makeState(), // (A) domain followed by DOT
 S_TLD					= makeState(T_URL), // (A) Simplest possible URL with no query string
 S_TLD_COLON				= makeState(), // (A) URL followed by colon (potential port number here)
 S_TLD_PORT				= makeState(T_URL), // TLD followed by a port number
-S_PSS_DOMAIN			= makeState(), // parsed string starts with protocol and ends with a potential domain name (B)
-S_PSS_DOMAIN_DOT		= makeState(), // (B) domain followed by DOT
-S_PSS_TLD				= makeState(T_URL), // (B) Simplest possible URL with no query string and a protocol
-S_PSS_TLD_COLON			= makeState(), // (A) URL followed by colon (potential port number here)
-S_PSS_TLD_PORT			= makeState(T_URL), // TLD followed by a port number
 S_URL					= makeState(T_URL), // Long URL with optional port and maybe query string
 S_URL_SYMS				= makeState(), // URL followed by some symbols (will not be part of the final URL)
 S_URL_OPENBRACE			= makeState(), // URL followed by {
@@ -104,15 +96,16 @@ S_START.on(TT_TLD, S_DOMAIN);
 S_START.on(TT_DOMAIN, S_DOMAIN);
 S_START.on(TT_LOCALHOST, S_TLD);
 S_START.on(TT_NUM, S_DOMAIN);
-S_PROTOCOL_SLASH_SLASH.on(TT_TLD, S_PSS_DOMAIN);
-S_PROTOCOL_SLASH_SLASH.on(TT_DOMAIN, S_PSS_DOMAIN);
-S_PROTOCOL_SLASH_SLASH.on(TT_NUM, S_PSS_DOMAIN);
-S_PROTOCOL_SLASH_SLASH.on(TT_LOCALHOST, S_PSS_TLD);
+
+// Force URL for anything sane followed by protocol
+S_PROTOCOL_SLASH_SLASH.on(TT_TLD, S_URL);
+S_PROTOCOL_SLASH_SLASH.on(TT_DOMAIN, S_URL);
+S_PROTOCOL_SLASH_SLASH.on(TT_NUM, S_URL);
+S_PROTOCOL_SLASH_SLASH.on(TT_LOCALHOST, S_URL);
 
 // Account for dots and hyphens
 // hyphens are usually parts of domain names
 S_DOMAIN.on(TT_DOT, S_DOMAIN_DOT);
-S_PSS_DOMAIN.on(TT_DOT, S_PSS_DOMAIN_DOT);
 S_EMAIL_DOMAIN.on(TT_DOT, S_EMAIL_DOMAIN_DOT);
 
 // Hyphen can jump back to a domain name
@@ -122,10 +115,6 @@ S_DOMAIN_DOT.on(TT_TLD, S_TLD);
 S_DOMAIN_DOT.on(TT_DOMAIN, S_DOMAIN);
 S_DOMAIN_DOT.on(TT_NUM, S_DOMAIN);
 S_DOMAIN_DOT.on(TT_LOCALHOST, S_DOMAIN);
-S_PSS_DOMAIN_DOT.on(TT_TLD, S_PSS_TLD);
-S_PSS_DOMAIN_DOT.on(TT_DOMAIN, S_PSS_DOMAIN);
-S_PSS_DOMAIN_DOT.on(TT_NUM, S_PSS_DOMAIN);
-S_PSS_DOMAIN_DOT.on(TT_LOCALHOST, S_PSS_DOMAIN);
 S_EMAIL_DOMAIN_DOT.on(TT_TLD, S_EMAIL);
 S_EMAIL_DOMAIN_DOT.on(TT_DOMAIN, S_EMAIL_DOMAIN);
 S_EMAIL_DOMAIN_DOT.on(TT_NUM, S_EMAIL_DOMAIN);
@@ -134,7 +123,6 @@ S_EMAIL_DOMAIN_DOT.on(TT_LOCALHOST, S_EMAIL_DOMAIN);
 // S_TLD accepts! But the URL could be longer, try to find a match greedily
 // The `run` function should be able to "rollback" to the accepting state
 S_TLD.on(TT_DOT, S_DOMAIN_DOT);
-S_PSS_TLD.on(TT_DOT, S_PSS_DOMAIN_DOT);
 S_EMAIL.on(TT_DOT, S_EMAIL_DOMAIN_DOT);
 
 // Become real URLs after `SLASH` or `COLON NUM SLASH`
@@ -143,10 +131,6 @@ S_TLD.on(TT_COLON, S_TLD_COLON);
 S_TLD.on(TT_SLASH, S_URL);
 S_TLD_COLON.on(TT_NUM, S_TLD_PORT);
 S_TLD_PORT.on(TT_SLASH, S_URL);
-S_PSS_TLD.on(TT_COLON, S_PSS_TLD_COLON);
-S_PSS_TLD.on(TT_SLASH, S_URL);
-S_PSS_TLD_COLON.on(TT_NUM, S_PSS_TLD_PORT);
-S_PSS_TLD_PORT.on(TT_SLASH, S_URL);
 S_EMAIL.on(TT_COLON, S_EMAIL_COLON);
 S_EMAIL_COLON.on(TT_NUM, S_EMAIL_PORT);
 
