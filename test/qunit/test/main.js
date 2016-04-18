@@ -105,7 +105,8 @@ QUnit.test('returns in the hash of default options when given an empty object', 
 		nl2br: false,
 		tagName: 'a',
 		target: function () {},
-		linkClass: 'linkified'
+		linkClass: 'linkified',
+		ignoreTags: []
 	});
 	assert.equal(typeof result.format, 'function');
 	assert.equal(typeof result.validate, 'function');

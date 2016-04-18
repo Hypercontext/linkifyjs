@@ -29,7 +29,11 @@ module.exports = {
 			mouseover: function () {
 				throw 'Hovered!';
 			}
-		}
+		},
+		ignoreTags: [
+			'script',
+			'style'
+		]
 	},
 
 	validateOptions: {
@@ -37,4 +41,5 @@ module.exports = {
 			return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 		}
 	}
+
 };
