@@ -134,6 +134,10 @@ var tests = [
 		'Force http:/ and http:// are not but http://a and http://b.local?qeasd3qas=23 are all links',
 		[TEXT, URL, TEXT, URL, TEXT],
 		['Force http:/ and http:// are not but ', 'http://a', ' and ', 'http://b.local?qeasd3qas=23', ' are all links']
+	], [
+		'HTTP Auth URLs should work: http://username:password@example.com',
+		[TEXT, URL],
+		['HTTP Auth URLs should work: ', 'http://username:password@example.com']
 	]
 ];
 
