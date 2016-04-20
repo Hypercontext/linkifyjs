@@ -16,7 +16,7 @@ mocha			= require('gulp-mocha'),
 qunit			= require('gulp-qunit'),
 rename			= require('gulp-rename'),
 replace			= require('gulp-replace'),
-babel			= require('gulp-babel'), // formerly 6to5
+babel			= require('gulp-babel'),
 uglify			= require('gulp-uglify'),
 wrap			= require('gulp-wrap');
 

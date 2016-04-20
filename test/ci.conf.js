@@ -55,6 +55,10 @@ module.exports = function (config) {
 		browsers: Object.keys(customLaunchers),
 		autoWatch: false,
 		singleRun: true,
-		logLevel: config.LOG_WARN
+		logLevel: config.LOG_WARN,
+		reporters: [
+			'dots',
+			'saucelabs'
+		],
 	}));
 };
