@@ -155,7 +155,7 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 		streams.push(stream);
 	});
 
-	return merge.apply(this, streams);
+	return merge(...streams);
 });
 
 /**
@@ -174,7 +174,7 @@ gulp.task('build-plugins', ['babel-amd'], () => {
 	plugins.forEach(plugin => {
 
 		// Global plugins
-		let stream = gulp.src(`src/linkify/plugins/${plugin}.js`)
+		var stream = gulp.src(`src/linkify/plugins/${plugin}.js`)
 		.pipe(babel({
 			loose: 'all',
 			modules: 'ignore'
@@ -193,7 +193,7 @@ gulp.task('build-plugins', ['babel-amd'], () => {
 
 	});
 
-	return merge.apply(this, streams);
+	return merge(...streams);
 });
 
 // Build steps
@@ -301,7 +301,7 @@ gulp.task('uglify', ['build', 'build-legacy'], () => {
 	.pipe(uglify())
 	.pipe(gulp.dest('dist/dist'));
 
-	return merge.apply(this, [task, taskLegacy]);
+	return merge(task, taskLegacy);
 });
 
 gulp.task('dist', ['uglify']);
