@@ -12,7 +12,6 @@ const tlds = require('./tlds');
 
 // Gulp plugins
 const babel = require('gulp-babel');
-const closureCompiler = require('gulp-closure-compiler');
 const concat = require('gulp-concat');
 const istanbul = require('gulp-istanbul');
 const jshint = require('gulp-jshint');
@@ -146,7 +145,7 @@ gulp.task('build-interfaces', () => {
 				moduleName: moduleName,
 				globals: {
 					'jquery': '$',
-					'./linkify': 'linkify'
+					'./linkify.js': 'linkify'
 				}
 			}
 		}))
@@ -189,7 +188,7 @@ gulp.task('build-plugins', () => {
 				format: 'iife',
 				moduleName: 'plugin',
 				globals: {
-					'./linkify': 'linkify'
+					'./linkify.js': 'linkify'
 				}
 			}
 		}))
