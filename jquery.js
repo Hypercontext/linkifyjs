@@ -1,1 +1,1 @@
-module.exports = require('./lib/linkify-jquery');
+module.exports = require('./lib/linkify-jquery').default;

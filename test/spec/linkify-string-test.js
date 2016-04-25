@@ -1,6 +1,6 @@
 /*jshint scripturl:true*/
 
-var linkifyStr = require('../../lib/linkify-string');
+var linkifyStr = require('../../lib/linkify-string').default;
 
 /**
 	Gracefully truncate a string to a given limit. Will replace extraneous

@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
 doc, testContainer, jsdom, Ev,
-linkifyElement = require('../../lib/linkify-element'),
+linkifyElement = require('../../lib/linkify-element').default,
 htmlOptions = require('./html/options');
 
 try {

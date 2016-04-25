@@ -1,4 +1,4 @@
-var linkifyHtml = require('../../lib/linkify-html');
+var linkifyHtml = require('../../lib/linkify-html').default;
 var htmlOptions = require('./html/options');
 
 describe('linkify-html', function () {

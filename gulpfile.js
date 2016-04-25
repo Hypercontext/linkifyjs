@@ -7,23 +7,31 @@ const Server = require('karma').Server;
 const merge = require('merge-stream');
 const path = require('path');
 const stylish = require('jshint-stylish');
+const runSequence = require('run-sequence');
 const tlds = require('./tlds');
 
 // Gulp plugins
-const concat = require('gulp-concat');
+const babel = require('gulp-babel');
 const closureCompiler = require('gulp-closure-compiler');
+const concat = require('gulp-concat');
 const istanbul = require('gulp-istanbul');
 const jshint = require('gulp-jshint');
 const mocha = require('gulp-mocha');
 const qunit = require('gulp-qunit');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
-const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const wrap = require('gulp-wrap');
 
+const rollup = require('./tasks/rollup');
+
 var paths = {
 	src: 'src/**/*.js',
+	srcCore: [
+		'src/linkify/core/*.js',
+		'src/linkify/utils/*.js',
+		'src/linkify.js'
+	],
 	lib: ['lib/**/*.js'],
 	libTest: ['lib/*.js', 'lib/linkify/**/*.js'],
 	libCore: [
@@ -46,9 +54,7 @@ var tldsReplaceStr = `'${tlds.join('|')}'.split('|')`;
 gulp.task('babel', () =>
 	gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
-	.pipe(babel({
-		loose: 'all'
-	}))
+	.pipe(babel())
 	.pipe(gulp.dest('lib'))
 );
 
@@ -59,8 +65,10 @@ gulp.task('babel-amd', () =>
 	gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
-		loose: 'all',
-		modules: 'amd',
+		plugins: [
+			'add-module-exports',
+			'transform-es2015-modules-amd'
+		],
 		moduleIds: true
 		// moduleRoot: 'linkifyjs'
 	}))
@@ -70,35 +78,29 @@ gulp.task('babel-amd', () =>
 	.pipe(gulp.dest('build'))
 );
 
-// Build core linkify.js
-// Closure compiler is used here since it can correctly concatenate CJS modules
-gulp.task('build-core', ['babel'], () =>
-	gulp.src(paths.libCore)
-	.pipe(closureCompiler({
-		compilerPath: 'node_modules/closure-compiler/lib/vendor/compiler.jar',
-		fileName: 'build/.closure-output.js',
-		compilerFlags: {
-			process_common_js_modules: null,
-			common_js_entry_module: 'lib/linkify',
-			common_js_module_path_prefix: path.join(__dirname, 'lib'),
-	        compilation_level: 'SIMPLE_OPTIMIZATIONS',
-			formatting: 'PRETTY_PRINT',
-			warning_level: 'QUIET'
+/**
+	Build core linkify.js
+*/
+gulp.task('build-core', () =>
+	gulp.src('src/linkify.js', {read: false})
+	.pipe(rollup({
+		bundle: {
+			format: 'iife',
+			moduleName: 'linkify'
 		}
 	}))
-	.pipe(wrap({src: 'templates/linkify.js'}))
-	.pipe(rename(function (path) {
-		// Required due to closure compiler
-		path.dirname = '.';
-		path.basename = 'linkify';
-	}))
+	.pipe(babel())
+	.pipe(replace('__TLDS__', tldsReplaceStr))
+	.pipe(replace('undefined.', 'window.'))
+	.pipe(wrap({src: `templates/linkify.js`}))
 	.pipe(gulp.dest('build'))
 );
 
-// Build root linkify interfaces (files located at the root src folder other
-// than linkify.js)
-// Depends on build-core
-gulp.task('build-interfaces', ['babel-amd'], function () {
+/**
+	Build root linkify interfaces (files located at the root src folder other
+	than linkify.js).
+*/
+gulp.task('build-interfaces', () => {
 
 	// Core linkify functionality as plugins
 	let interfaces = [
@@ -115,15 +117,14 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 	// Globals browser interface
 	let streams = [];
 
-	interfaces.forEach(intrface => {
+	interfaces.forEach((intrface) => {
 
 		let files = {js: [], amd: []};
 
 		if (intrface instanceof Array) {
-			// Interface has other interface dependencies within this package
+			// Interface has other intrface dependencies within this package
 			intrface.forEach((i, idx) => {
-				if (idx == intrface.length - 1) { return; } // ignore last index
-				files.js.push('src/' + i);
+				if (idx === intrface.length - 1) { return; } // ignore last index
 				files.amd.push('build/amd/' + i);
 			});
 
@@ -134,14 +135,23 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 		files.js.push(`src/linkify-${intrface}.js`);
 		files.amd.push(`build/amd/linkify-${intrface}.js`);
 
+		let moduleName = `linkify${intrface.substring(0, 1).toUpperCase()}${intrface.substring(1)}`;
+
 		// Browser intrface
 		let stream = gulp.src(files.js)
-		.pipe(babel({
-			loose: 'all',
-			modules: 'ignore'
+		.pipe(rollup({
+			rollup: {external: ['jquery', `${__dirname}/src/linkify.js`]},
+			bundle: {
+				format: 'iife',
+				moduleName: moduleName,
+				globals: {
+					'jquery': '$',
+					'./linkify': 'linkify'
+				}
+			}
 		}))
-		.pipe(concat(`linkify-${intrface}.js`))
 		.pipe(wrap({src: `templates/linkify-${intrface}.js`}))
+		.pipe(babel())
 		.pipe(gulp.dest('build'));
 
 		streams.push(stream);
@@ -158,28 +168,33 @@ gulp.task('build-interfaces', ['babel-amd'], function () {
 	return merge(...streams);
 });
 
-/**
-	NOTE - Run 'babel' and 'babel-amd' first
-*/
-gulp.task('build-plugins', ['babel-amd'], () => {
+
+gulp.task('build-plugins', () => {
 
 	let streams = [];
 
 	// Get the filenames of all available plugins
 	let plugins = glob.sync('*.js', {
 		cwd: path.join(__dirname, 'src', 'linkify', 'plugins')
-	}).map(plugin => plugin.replace(/\.js$/, ''));
+	}).map((plugin) => plugin.replace(/\.js$/, ''));
 
 	// Browser plugins
-	plugins.forEach(plugin => {
+	plugins.forEach((plugin) => {
 
 		// Global plugins
 		var stream = gulp.src(`src/linkify/plugins/${plugin}.js`)
-		.pipe(babel({
-			loose: 'all',
-			modules: 'ignore'
+		.pipe(rollup({
+			rollup: {external: [`${__dirname}/src/linkify.js`]},
+			bundle: {
+				format: 'iife',
+				moduleName: 'plugin',
+				globals: {
+					'./linkify': 'linkify'
+				}
+			}
 		}))
 		.pipe(wrap({src: `templates/linkify/plugins/${plugin}.js`}))
+		.pipe(babel())
 		.pipe(concat(`linkify-plugin-${plugin}.js`))
 		.pipe(gulp.dest('build'));
 		streams.push(stream);
@@ -203,7 +218,7 @@ gulp.task('build', [
 	'build-core',
 	'build-interfaces',
 	'build-plugins'
-], cb => { cb(); });
+], (cb) => { cb(); });
 
 /**
 	Lint using jshint
@@ -226,12 +241,12 @@ gulp.task('mocha', ['build'], () =>
 /**
 	Code coverage reort for mocha tests
 */
-gulp.task('coverage', ['build'], callback => {
+gulp.task('coverage', ['build'], (callback) => {
 	// IMPORTANT: return not required here (and will actually cause bugs!)
 	gulp.src(paths.libTest)
 	.pipe(istanbul()) // Covering files
 	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
-	.on('finish', function () {
+	.on('finish', () => {
 		gulp.src(paths.test, {read: false})
 		.pipe(mocha())
 		.pipe(istanbul.writeReports()) // Creating the reports after tests runned
@@ -239,7 +254,7 @@ gulp.task('coverage', ['build'], callback => {
 	});
 });
 
-gulp.task('karma', ['build'], callback => {
+gulp.task('karma', ['build'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
@@ -247,14 +262,14 @@ gulp.task('karma', ['build'], callback => {
 	return server.start();
 });
 
-gulp.task('karma-chrome', ['build'], callback => {
+gulp.task('karma-chrome', ['build'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-ci', ['build'], callback => {
+gulp.task('karma-ci', ['build'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
@@ -284,28 +299,32 @@ gulp.task('build-benchmark', ['build-legacy'], () =>
 	.pipe(gulp.dest('build/benchmark'))
 );
 
-gulp.task('uglify', ['build', 'build-legacy'], () => {
+gulp.task('uglify', ['build-legacy'], () => {
+	let options = {
+		mangleProperties: {
+			regex: /classCallCheck|inherits|possibleConstructorReturn/
+		}
+	};
+
 	let task = gulp.src('build/*.js')
 	.pipe(gulp.dest('dist')) // non-minified copy
-	.pipe(rename(function (path) {
-		path.extname = '.min.js';
-	}))
-	.pipe(uglify())
+	.pipe(rename((path) => path.extname = '.min.js'))
+	.pipe(uglify(options))
 	.pipe(gulp.dest('dist'));
 
 	let taskLegacy = gulp.src('build/dist/jquery.linkify.js')
 	.pipe(gulp.dest('dist/dist')) // non-minified copy
-	.pipe(rename(function (path) {
-		path.extname = '.min.js';
-	}))
-	.pipe(uglify())
+	.pipe(rename((path) => path.extname = '.min.js'))
+	.pipe(uglify(options))
 	.pipe(gulp.dest('dist/dist'));
 
 	return merge(task, taskLegacy);
 });
 
 gulp.task('dist', ['uglify']);
-gulp.task('test', ['build', 'jshint', 'qunit', 'coverage']);
+gulp.task('test', (callback) =>
+	runSequence('jshint', 'qunit', 'coverage', callback)
+);
 gulp.task('test-ci', ['karma-ci']);
 // Using with other tasks causes an error here for some reason
 

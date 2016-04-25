@@ -2,7 +2,9 @@
 	Linkify a HTML DOM node
 */
 
-import {tokenize, options} from './linkify';
+import * as linkify from './linkify';
+var tokenize = linkify.tokenize;
+var options = linkify.options;
 
 const HTML_NODE = 1, TXT_NODE = 3;
 
