@@ -164,7 +164,7 @@ gulp.task('build-interfaces', () => {
 		streams.push(stream);
 	});
 
-	return merge(...streams);
+	return merge.apply(this, streams);
 });
 
 
@@ -207,7 +207,7 @@ gulp.task('build-plugins', () => {
 
 	});
 
-	return merge(...streams);
+	return merge.apply(this, streams);
 });
 
 // Build steps
