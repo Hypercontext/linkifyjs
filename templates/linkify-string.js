@@ -1,6 +1,4 @@
-;(function (linkify) {
-"use strict";
-var tokenize = linkify.tokenize, options = linkify.options;
+;(function (window, linkify) {
 <%= contents %>
-window.linkifyStr = linkifyStr;
-})(window.linkify);
+window.linkifyStr = linkifyString;
+})(window, linkify);

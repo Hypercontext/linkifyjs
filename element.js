@@ -1,1 +1,1 @@
-module.exports = require('./lib/linkify-element');
+module.exports = require('./lib/linkify-element').default;

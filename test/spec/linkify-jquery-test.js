@@ -1,7 +1,7 @@
 /*jshint -W030 */
 var
 $, doc, testContainer, jsdom,
-applyLinkify = require('../../lib/linkify-jquery'),
+applyLinkify = require('../../lib/linkify-jquery').default,
 htmlOptions = require('./html/options');
 
 if (typeof Object.create != 'function') {

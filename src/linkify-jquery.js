@@ -1,4 +1,4 @@
-import jQuery from 'jquery';
+import $ from 'jquery';
 import linkifyElement from './linkify-element';
 
 let doc;
@@ -10,7 +10,7 @@ try {
 }
 
 // Applies the plugin to jQuery
-function apply($, doc=null) {
+export default function ($, doc=null) {
 
 	$.fn = $.fn || {};
 
@@ -68,9 +68,5 @@ function apply($, doc=null) {
 	});
 }
 
-// Apply it right away if possible
-if (typeof jQuery !== 'undefined' && doc) {
-	apply(jQuery, doc);
-}
-
-export default apply;
+// Try assigning linkifyElement to the browser scope
+try { window.linkifyElement = linkifyElement; } catch (e) {}

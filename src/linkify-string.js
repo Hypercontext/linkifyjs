@@ -2,7 +2,10 @@
 	Convert strings of text into linkable HTML text
 */
 
-import {tokenize, options} from './linkify';
+import * as linkify from './linkify';
+
+var tokenize = linkify.tokenize;
+var options = linkify.options;
 
 function escapeText(text) {
 	return text
@@ -40,7 +43,7 @@ function linkifyStr(str, opts={}) {
 		let validated = token.isLink && options.resolve(opts.validate, token.toString(), token.type);
 
 		if (token.isLink && validated) {
-			
+
 			let
 			href			= token.toHref(opts.defaultProtocol),
 			formatted		= options.resolve(opts.format, token.toString(), token.type),
