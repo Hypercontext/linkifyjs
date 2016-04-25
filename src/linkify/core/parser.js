@@ -85,23 +85,27 @@ S_LOCALPART_DOT			= makeState(), // Local part of the email address plus '.' (lo
 S_NL					= makeState(T_NL); // single new line
 
 // Make path from start to protocol (with '//')
-S_START.on(TT_NL, S_NL);
-S_START.on(TT_PROTOCOL, S_PROTOCOL);
-S_START.on(TT_SLASH, S_PROTOCOL_SLASH);
+S_START
+.on(TT_NL, S_NL)
+.on(TT_PROTOCOL, S_PROTOCOL)
+.on(TT_SLASH, S_PROTOCOL_SLASH);
+
 S_PROTOCOL.on(TT_SLASH, S_PROTOCOL_SLASH);
 S_PROTOCOL_SLASH.on(TT_SLASH, S_PROTOCOL_SLASH_SLASH);
 
 // The very first potential domain name
-S_START.on(TT_TLD, S_DOMAIN);
-S_START.on(TT_DOMAIN, S_DOMAIN);
-S_START.on(TT_LOCALHOST, S_TLD);
-S_START.on(TT_NUM, S_DOMAIN);
+S_START
+.on(TT_TLD, S_DOMAIN)
+.on(TT_DOMAIN, S_DOMAIN)
+.on(TT_LOCALHOST, S_TLD)
+.on(TT_NUM, S_DOMAIN);
 
 // Force URL for anything sane followed by protocol
-S_PROTOCOL_SLASH_SLASH.on(TT_TLD, S_URL);
-S_PROTOCOL_SLASH_SLASH.on(TT_DOMAIN, S_URL);
-S_PROTOCOL_SLASH_SLASH.on(TT_NUM, S_URL);
-S_PROTOCOL_SLASH_SLASH.on(TT_LOCALHOST, S_URL);
+S_PROTOCOL_SLASH_SLASH
+.on(TT_TLD, S_URL)
+.on(TT_DOMAIN, S_URL)
+.on(TT_NUM, S_URL)
+.on(TT_LOCALHOST, S_URL);
 
 // Account for dots and hyphens
 // hyphens are usually parts of domain names
@@ -111,14 +115,17 @@ S_EMAIL_DOMAIN.on(TT_DOT, S_EMAIL_DOMAIN_DOT);
 // Hyphen can jump back to a domain name
 
 // After the first domain and a dot, we can find either a URL or another domain
-S_DOMAIN_DOT.on(TT_TLD, S_TLD);
-S_DOMAIN_DOT.on(TT_DOMAIN, S_DOMAIN);
-S_DOMAIN_DOT.on(TT_NUM, S_DOMAIN);
-S_DOMAIN_DOT.on(TT_LOCALHOST, S_DOMAIN);
-S_EMAIL_DOMAIN_DOT.on(TT_TLD, S_EMAIL);
-S_EMAIL_DOMAIN_DOT.on(TT_DOMAIN, S_EMAIL_DOMAIN);
-S_EMAIL_DOMAIN_DOT.on(TT_NUM, S_EMAIL_DOMAIN);
-S_EMAIL_DOMAIN_DOT.on(TT_LOCALHOST, S_EMAIL_DOMAIN);
+S_DOMAIN_DOT
+.on(TT_TLD, S_TLD)
+.on(TT_DOMAIN, S_DOMAIN)
+.on(TT_NUM, S_DOMAIN)
+.on(TT_LOCALHOST, S_DOMAIN);
+
+S_EMAIL_DOMAIN_DOT
+.on(TT_TLD, S_EMAIL)
+.on(TT_DOMAIN, S_EMAIL_DOMAIN)
+.on(TT_NUM, S_EMAIL_DOMAIN)
+.on(TT_LOCALHOST, S_EMAIL_DOMAIN);
 
 // S_TLD accepts! But the URL could be longer, try to find a match greedily
 // The `run` function should be able to "rollback" to the accepting state
@@ -127,8 +134,9 @@ S_EMAIL.on(TT_DOT, S_EMAIL_DOMAIN_DOT);
 
 // Become real URLs after `SLASH` or `COLON NUM SLASH`
 // Here PSS and non-PSS converge
-S_TLD.on(TT_COLON, S_TLD_COLON);
-S_TLD.on(TT_SLASH, S_URL);
+S_TLD
+.on(TT_COLON, S_TLD_COLON)
+.on(TT_SLASH, S_URL);
 S_TLD_COLON.on(TT_NUM, S_TLD_PORT);
 S_TLD_PORT.on(TT_SLASH, S_URL);
 S_EMAIL.on(TT_COLON, S_EMAIL_COLON);
@@ -168,14 +176,16 @@ let qsNonAccepting = [
 // include the final round bracket.
 
 // URL, followed by an opening bracket
-S_URL.on(TT_OPENBRACE, S_URL_OPENBRACE);
-S_URL.on(TT_OPENBRACKET, S_URL_OPENBRACKET);
-S_URL.on(TT_OPENPAREN, S_URL_OPENPAREN);
+S_URL
+.on(TT_OPENBRACE, S_URL_OPENBRACE)
+.on(TT_OPENBRACKET, S_URL_OPENBRACKET)
+.on(TT_OPENPAREN, S_URL_OPENPAREN);
 
 // URL with extra symbols at the end, followed by an opening bracket
-S_URL_SYMS.on(TT_OPENBRACE, S_URL_OPENBRACE);
-S_URL_SYMS.on(TT_OPENBRACKET, S_URL_OPENBRACKET);
-S_URL_SYMS.on(TT_OPENPAREN, S_URL_OPENPAREN);
+S_URL_SYMS
+.on(TT_OPENBRACE, S_URL_OPENBRACE)
+.on(TT_OPENBRACKET, S_URL_OPENBRACKET)
+.on(TT_OPENPAREN, S_URL_OPENPAREN);
 
 // Closing bracket component. This character WILL be included in the URL
 S_URL_OPENBRACE.on(TT_CLOSEBRACE, S_URL);
@@ -237,21 +247,25 @@ let localpartAccepting = [
 
 // Some of the tokens in `localpartAccepting` are already accounted for here and
 // will not be overwritten (don't worry)
-S_DOMAIN.on(localpartAccepting, S_LOCALPART);
-S_DOMAIN.on(TT_AT, S_LOCALPART_AT);
+S_DOMAIN
+.on(localpartAccepting, S_LOCALPART)
+.on(TT_AT, S_LOCALPART_AT);
+S_TLD
+.on(localpartAccepting, S_LOCALPART)
+.on(TT_AT, S_LOCALPART_AT);
 S_DOMAIN_DOT.on(localpartAccepting, S_LOCALPART);
-S_TLD.on(localpartAccepting, S_LOCALPART);
-S_TLD.on(TT_AT, S_LOCALPART_AT);
 
 // Okay we're on a localpart. Now what?
 // TODO: IP addresses and what if the email starts with numbers?
-S_LOCALPART.on(localpartAccepting, S_LOCALPART);
-S_LOCALPART.on(TT_AT, S_LOCALPART_AT); // close to an email address now
-S_LOCALPART.on(TT_DOT, S_LOCALPART_DOT);
+S_LOCALPART
+.on(localpartAccepting, S_LOCALPART)
+.on(TT_AT, S_LOCALPART_AT) // close to an email address now
+.on(TT_DOT, S_LOCALPART_DOT);
 S_LOCALPART_DOT.on(localpartAccepting, S_LOCALPART);
-S_LOCALPART_AT.on(TT_TLD, S_EMAIL_DOMAIN);
-S_LOCALPART_AT.on(TT_DOMAIN, S_EMAIL_DOMAIN);
-S_LOCALPART_AT.on(TT_LOCALHOST, S_EMAIL);
+S_LOCALPART_AT
+.on(TT_TLD, S_EMAIL_DOMAIN)
+.on(TT_DOMAIN, S_EMAIL_DOMAIN)
+.on(TT_LOCALHOST, S_EMAIL);
 // States following `@` defined above
 
 let run = function (tokens) {
