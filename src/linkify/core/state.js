@@ -44,9 +44,10 @@ class BaseState {
 			for (let i = 0; i < symbol.length; i++) {
 				this.j.push([symbol[i], state]);
 			}
-			return;
+			return this;
 		}
 		this.j.push([symbol, state]);
+		return this;
 	}
 
 	/**

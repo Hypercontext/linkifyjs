@@ -37,26 +37,30 @@ S_DOMAIN_HYPHEN	= makeState(), // domain followed by 1 or more hyphen characters
 S_WS			= makeState(T_WS);
 
 // States for special URL symbols
-S_START.on('@', makeState(TOKENS.AT));
-S_START.on('.', makeState(TOKENS.DOT));
-S_START.on('+', makeState(TOKENS.PLUS));
-S_START.on('#', makeState(TOKENS.POUND));
-S_START.on('?', makeState(TOKENS.QUERY));
-S_START.on('/', makeState(TOKENS.SLASH));
-S_START.on(COLON, makeState(TOKENS.COLON));
-S_START.on('{', makeState(TOKENS.OPENBRACE));
-S_START.on('[', makeState(TOKENS.OPENBRACKET));
-S_START.on('(', makeState(TOKENS.OPENPAREN));
-S_START.on('}', makeState(TOKENS.CLOSEBRACE));
-S_START.on(']', makeState(TOKENS.CLOSEBRACKET));
-S_START.on(')', makeState(TOKENS.CLOSEPAREN));
-S_START.on(/[,;!]/, makeState(TOKENS.PUNCTUATION));
+S_START
+.on('@', makeState(TOKENS.AT))
+.on('.', makeState(TOKENS.DOT))
+.on('+', makeState(TOKENS.PLUS))
+.on('#', makeState(TOKENS.POUND))
+.on('?', makeState(TOKENS.QUERY))
+.on('/', makeState(TOKENS.SLASH))
+.on(COLON, makeState(TOKENS.COLON))
+.on('{', makeState(TOKENS.OPENBRACE))
+.on('[', makeState(TOKENS.OPENBRACKET))
+.on('(', makeState(TOKENS.OPENPAREN))
+.on('}', makeState(TOKENS.CLOSEBRACE))
+.on(']', makeState(TOKENS.CLOSEBRACKET))
+.on(')', makeState(TOKENS.CLOSEPAREN))
+.on(/[,;!]/, makeState(TOKENS.PUNCTUATION));
 
 // Whitespace jumps
 // Tokens of only non-newline whitespace are arbitrarily long
-S_START.on(/\n/, makeState(TOKENS.NL));
-S_START.on(/\s/, S_WS);
-S_WS.on(/[^\S\n]/, S_WS); // If any whitespace except newline, more whitespace!
+S_START
+.on(/\n/, makeState(TOKENS.NL))
+.on(/\s/, S_WS);
+
+// If any whitespace except newline, more whitespace!
+S_WS.on(/[^\S\n]/, S_WS);
 
 // Generates states for top-level domains
 // Note that this is most accurate when tlds are in alphabetical order
@@ -84,14 +88,18 @@ S_PROTOCOL_SECURE	= makeState(T_DOMAIN),
 S_FULL_PROTOCOL		= makeState(T_PROTOCOL); // Full protocol ends with COLON
 
 // Secure protocols (end with 's')
-S_PROTOCOL_FTP.on('s', S_PROTOCOL_SECURE);
-S_PROTOCOL_HTTP.on('s', S_PROTOCOL_SECURE);
+S_PROTOCOL_FTP
+.on('s', S_PROTOCOL_SECURE)
+.on(COLON, S_FULL_PROTOCOL);
+
+S_PROTOCOL_HTTP
+.on('s', S_PROTOCOL_SECURE)
+.on(COLON, S_FULL_PROTOCOL);
+
 domainStates.push(S_PROTOCOL_SECURE);
 
 // Become protocol tokens after a COLON
 S_PROTOCOL_FILE.on(COLON, S_FULL_PROTOCOL);
-S_PROTOCOL_FTP.on(COLON, S_FULL_PROTOCOL);
-S_PROTOCOL_HTTP.on(COLON, S_FULL_PROTOCOL);
 S_PROTOCOL_SECURE.on(COLON, S_FULL_PROTOCOL);
 
 // Localhost
@@ -102,21 +110,26 @@ domainStates.push.apply(domainStates, partialLocalhostStates);
 // DOMAINs make more DOMAINs
 // Number and character transitions
 S_START.on(REGEXP_NUM, S_NUM);
-S_NUM.on('-', S_DOMAIN_HYPHEN);
-S_NUM.on(REGEXP_NUM, S_NUM);
-S_NUM.on(REGEXP_ALPHANUM, S_DOMAIN); // number becomes DOMAIN
-S_DOMAIN.on('-', S_DOMAIN_HYPHEN);
-S_DOMAIN.on(REGEXP_ALPHANUM, S_DOMAIN);
+S_NUM
+.on('-', S_DOMAIN_HYPHEN)
+.on(REGEXP_NUM, S_NUM)
+.on(REGEXP_ALPHANUM, S_DOMAIN); // number becomes DOMAIN
+
+S_DOMAIN
+.on('-', S_DOMAIN_HYPHEN)
+.on(REGEXP_ALPHANUM, S_DOMAIN);
 
 // All the generated states should have a jump to DOMAIN
 for (let i = 0; i < domainStates.length; i++) {
-	domainStates[i].on('-', S_DOMAIN_HYPHEN);
-	domainStates[i].on(REGEXP_ALPHANUM, S_DOMAIN);
+	domainStates[i]
+	.on('-', S_DOMAIN_HYPHEN)
+	.on(REGEXP_ALPHANUM, S_DOMAIN);
 }
 
-S_DOMAIN_HYPHEN.on('-', S_DOMAIN_HYPHEN);
-S_DOMAIN_HYPHEN.on(REGEXP_NUM, S_DOMAIN);
-S_DOMAIN_HYPHEN.on(REGEXP_ALPHANUM, S_DOMAIN);
+S_DOMAIN_HYPHEN
+.on('-', S_DOMAIN_HYPHEN)
+.on(REGEXP_NUM, S_DOMAIN)
+.on(REGEXP_ALPHANUM, S_DOMAIN);
 
 // Any other character is considered a single symbol token
 S_START.on(/./, makeState(TOKENS.SYM));
@@ -135,7 +148,7 @@ let run = function (str) {
 	// This selective `toLowerCase` is used because lowercasing the entire
 	// string causes the length and character position to vary in some in some
 	// non-English strings. This happens only on V8-based runtimes.
-	let lowerStr = str.replace(/[A-Z]/g, c => c.toLowerCase());
+	let lowerStr = str.replace(/[A-Z]/g, (c) => c.toLowerCase());
 	let len = str.length;
 	let tokens = []; // return value
 
