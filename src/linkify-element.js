@@ -97,7 +97,7 @@ function linkifyElementHelper(element, opts, doc) {
 	let ignoreTags = opts.ignoreTags;
 
 	// Is this element already a link?
-	if (element.tagName === 'A' || ignoreTags.indexOf(element.tagName) >= 0) {
+	if (element.tagName === 'A' || options.contains(ignoreTags, element.tagName)) {
 		// No need to linkify
 		return element;
 	}
