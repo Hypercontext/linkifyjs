@@ -23,14 +23,11 @@ const uglify = require('gulp-uglify');
 const wrap = require('gulp-wrap');
 
 const rollup = require('./tasks/rollup');
+const quickEs3 = require('./tasks/quick-es3');
 
 var paths = {
 	src: 'src/**/*.js',
-	srcCore: [
-		'src/linkify/core/*.js',
-		'src/linkify/utils/*.js',
-		'src/linkify.js'
-	],
+	srcCore: 'src/linkify.js',
 	lib: ['lib/**/*.js'],
 	libTest: ['lib/*.js', 'lib/linkify/**/*.js'],
 	libCore: [
@@ -41,7 +38,8 @@ var paths = {
 	amd: 'build/amd/**/*.js',
 	test: 'test/index.js',
 	spec: 'test/spec/**.js',
-	qunit: 'test/qunit/*html'
+	qunit: 'test/qunit/*html',
+	polyfill: 'polyfill.js'
 };
 
 var tldsReplaceStr = `'${tlds.join('|')}'.split('|')`;
@@ -74,6 +72,7 @@ gulp.task('babel-amd', () =>
 	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
 	.pipe(amdOptimize('linkify'))
 	.pipe(concat('linkify.amd.js'))
+	.pipe(quickEs3())
 	.pipe(gulp.dest('build'))
 );
 
@@ -81,7 +80,7 @@ gulp.task('babel-amd', () =>
 	Build core linkify.js
 */
 gulp.task('build-core', () =>
-	gulp.src('src/linkify.js', {read: false})
+	gulp.src(paths.srcCore, {read: false})
 	.pipe(rollup({
 		bundle: {
 			format: 'iife',
@@ -159,6 +158,7 @@ gulp.task('build-interfaces', () => {
 		stream = gulp.src(files.amd)
 		.pipe(concat(`linkify-${intrface}.amd.js`))
 		.pipe(wrap({src: `templates/linkify-${intrface}.amd.js`}))
+		.pipe(quickEs3())
 		.pipe(gulp.dest('build'));
 
 		streams.push(stream);
@@ -202,6 +202,7 @@ gulp.task('build-plugins', () => {
 		stream = gulp.src(`build/amd/linkify/plugins/${plugin}.js`)
 		.pipe(wrap({src: `templates/linkify/plugins/${plugin}.amd.js`}))
 		.pipe(concat(`linkify-plugin-${plugin}.amd.js`))
+		.pipe(quickEs3())
 		.pipe(gulp.dest('build'));
 		streams.push(stream);
 
@@ -210,13 +211,20 @@ gulp.task('build-plugins', () => {
 	return merge.apply(this, streams);
 });
 
+gulp.task('build-polyfill', () =>
+	gulp.src(paths.polyfill)
+	.pipe(concat('linkify-polyfill.js'))
+	.pipe(gulp.dest('build'))
+);
+
 // Build steps
 gulp.task('build', [
 	'babel',
 	'babel-amd',
 	'build-core',
 	'build-interfaces',
-	'build-plugins'
+	'build-plugins',
+	'build-polyfill'
 ], (cb) => { cb(); });
 
 /**
