@@ -2,7 +2,7 @@
 // Just opens Google Chrome for testing
 
 var
-base = require('./conf'),
+base = require('./amd.conf'),
 extend = require('lodash/extend');
 
 module.exports = function (config) {
