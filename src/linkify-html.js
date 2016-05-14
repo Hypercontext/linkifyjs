@@ -28,8 +28,8 @@ export default function linkifyHtml(str, opts={}) {
 
 			// Ignore all the contents of ignored tags
 			let tagName = token.tagName.toUpperCase();
-			let isIgnored = tagName === 'A'
-				|| options.contains(opts.ignoreTags, tagName);
+			let isIgnored = tagName === 'A' ||
+				options.contains(opts.ignoreTags, tagName);
 			if (!isIgnored) continue;
 
 			let preskipLen = linkifiedTokens.length;

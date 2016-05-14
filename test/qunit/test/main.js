@@ -3,7 +3,14 @@
 */
 QUnit.assert.oneOf = function (value, possibleExpected, message) {
 	message = message || 'Expected ' + value + ' to be contained in ' + possibleExpected + '.';
-	this.push(possibleExpected.indexOf(value) >= 0, value, possibleExpected, message);
+	var test = false;
+	for (var i = 0; i < possibleExpected.length; i++) {
+		if (value === possibleExpected[i]) {
+			test = true;
+			break;
+		}
+	}
+	this.push(test, value, possibleExpected[i-1], message);
 };
 
 QUnit.module('linkify');
@@ -160,21 +167,23 @@ QUnit.test('finds valid hashtags', function (assert) {
 });
 
 // HTML rendered in body
-var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this and localhost:8080, pretty neat right? <p>Here\'s a nested github.com/SoapBox/linkifyjs paragraph</p>';
+var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this and localhost:8080, pretty neat right? <p>Here is a nested github.com/SoapBox/linkifyjs paragraph</p>';
 
 // Possible results with regular settings (will vary by browser)
 var linkifiedHtml = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>'
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" target=_blank>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" target=_blank>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" target=_blank>github.com/SoapBox/linkifyjs</A> paragraph</P>' // IE8
 ];
 
 // Possible results with overriden settings
 var linkifiedHtmlAlt = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a rel="nofollow" target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a rel="nofollow" target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a rel="nofollow" target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" rel="nofollow" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" rel="nofollow" target="_blank">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" rel="nofollow" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>'
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a rel="nofollow" target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a rel="nofollow" target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a rel="nofollow" target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" rel="nofollow" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" rel="nofollow" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" rel="nofollow" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" target=_blank rel=nofollow>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" target=_blank rel=nofollow>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" target=_blank rel=nofollow>github.com/SoapBox/linkifyjs</A> paragraph</P>' // IE8
 ];
 
 QUnit.module('linkify-jquery', {
