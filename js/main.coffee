@@ -59,6 +59,16 @@
     $('.version').html '{{ site.version }}'
     $('.version-download').attr 'href', 'https://github.com/SoapBox/linkifyjs/releases/download/{{ site.version }}/linkifyjs.zip'
 
+    $(window).on 'hashchange', ->
+      $w = $(window)
+      $navbar = $('#navbar')
+      height = $navbar.height()
+      scrollDistance = $w.scrollTop()
+      newScrollDistance = scrollDistance - height - 15
+      $w.scrollTop(Math.max(newScrollDistance, 0))
+
+    # Check if header in the right place on page load
     $(window).trigger 'scroll'
+    $(window).trigger 'hashchange' if location.hash?
 
 )(jQuery)
