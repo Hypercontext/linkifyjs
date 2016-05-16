@@ -6,7 +6,7 @@ title: Standard linkify · Documentation
 #### Jump to…
 
 * [Installation](#installation)
-  * [Node.js/io.js/Browserify](#nodejsiojsbrowserify)
+  * [Node.js/Browserify](#nodejsbrowserify)
   * [AMD](#amd)
   * [Browser Globals](#browser-globals)
 * [Methods](#methods)
@@ -16,7 +16,7 @@ title: Standard linkify · Documentation
 
 ## Installation
 
-### Node.js/io.js/Browserify
+### Node.js/Browserify
 
 {% highlight js %}
 var linkify = require('linkifyjs');

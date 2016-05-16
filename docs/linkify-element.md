@@ -8,14 +8,14 @@ Interface for replacing links within native DOM elements with anchor tags. Note 
 #### Jump to
 
 * [Installation](#installation)
-  * [Node.js/io.js/Browserify](#nodejsiojsbrowserify)
+  * [Node.js/Browserify](#nodejsbrowserify)
   * [AMD](#amd)
   * [Browser globals](#browser-globals)
 * [Usage](#usage)
 
 ## Installation
 
-### Node.js/io.js/Browserify
+### Node.js/Browserify
 
 ```
 npm install linkifyjs
@@ -60,4 +60,3 @@ This recursively finds links in text nodes within element `#id`.
 * _`HTMLDocument`_ [**`doc`**] Explicitly pass in the document object or document implementation if on a non-browser environment like Node.js
 
 **Returns** _`HTMLElement`_ **`element`** The same element provided as input
-

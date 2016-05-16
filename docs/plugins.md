@@ -9,7 +9,7 @@ Plugins provide no new interfaces but add additional detection functionality to 
 
 ## General Installation
 
-### Node.js/io.js/Browserify
+### Node.js/Browserify
 
 {% highlight js %}
 var linkify = require('linkifyjs')

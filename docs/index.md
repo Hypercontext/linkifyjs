@@ -3,7 +3,19 @@ layout: doc
 title: Documentation
 ---
 
-# Getting Started
+#### Jump to
+
+* [Installation/Getting Started](#installationgetting-started)
+  * [Quick Start](#quick-start)
+    * [Find all links and convert them to anchor tags](#find-all-links-and-convert-them-to-anchor-tags)
+    * [Find all links in the given string](#find-all-links-in-the-given-string)
+  * [Node.js/Browserify](#nodejsbrowserify)
+  * [AMD](#amd)
+  * [Browser globals](#browser-globals)
+* [Internet Explorer](#internet-explorer)
+
+
+# Installation/Getting Started
 
 [Download](https://github.com/SoapBox/linkifyjs/releases/download/{{ site.version }}/linkifyjs.zip) the latest release or install via [NPM](https://www.npmjs.com/)
 
@@ -26,6 +38,8 @@ Add linkify and linkify-jquery to your HTML following jQuery:
 <script src="linkify.min.js"></script>
 <script src="linkify-jquery.min.js"></script>
 {% endhighlight %}
+
+**Note:** A [polyfill](#internet-explorer) is required for Internet Explorer 8.
 
 ### Find all links and convert them to anchor tags
 
@@ -64,7 +78,7 @@ Returns the following array
 See [all available options](options.html)
 
 
-## Node.js/io.js/Browserify
+## Node.js/Browserify
 
 ```
 npm install linkifyjs
@@ -133,4 +147,20 @@ Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be de
 linkify.test('dev@example.com'); // true
 var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
 $('p').linkify();
+{% endhighlight %}
+
+# Internet Explorer
+
+Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is supported with a polyfill.
+
+You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also required) or the provided `linkify-polyfill.js`:
+
+{% highlight html %}
+<script src="jquery.js"></script>
+
+<!--[if IE 8]>
+<script src="linkify-polyfill.js"></script>
+<![endif]-->
+<script src="linkify.js"></script>
+<script src="linkify-jquery.js"></script>
 {% endhighlight %}
