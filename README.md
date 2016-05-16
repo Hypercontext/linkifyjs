@@ -20,6 +20,7 @@ __Jump to__
   - [Node.js/Browserify](#node-js-browserify)
   - [AMD Modules](#amd-modules)
   - [Browser](#browser)
+- [Internet Explorer](#internet-explorer)
 - [Downloads](#downloads)
 - [API Documentation](#api-documentation)
 - [Caveats](#caveats)
@@ -33,7 +34,7 @@ __Jump to__
 * **Extensibility**<br>Linkify is designed to be fast and lightweight, but comes with a powerful plugin API that lets you detect even more information like #hashtags and @mentions.
 * **Small footprint**<br>Linkify and its jQuery interface clock in at approximately 15KB minified (5KB gzipped) - approximately 50% the size of Twitter Text
 * **Modern implementation**<br>Linkify is written in ECMAScript6 and compiles to ES5 for modern JavaScript runtimes.
-  * Linkify is compatible with all modern browsers, as well as Internet Explorer 9 and up. Full IE8 support coming soon.
+  * Linkify is compatible with all modern browsers, as well as Internet Explorer 8 and up.
 
 ## Demo
 [Launch demo](http://soapbox.github.io/linkifyjs/)
@@ -63,6 +64,8 @@ Add [linkify](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js
 <script src="linkify.min.js"></script>
 <script src="linkify-jquery.min.js"></script>
 ```
+
+**Note:** A [polyfill](#internet-explorer) is required for Internet Explorer 8.
 
 #### Find all links and convert them to anchor tags
 
@@ -165,6 +168,22 @@ Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be de
 linkify.test('dev@example.com'); // true
 var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
 $('p').linkify();
+```
+
+## Internet Explorer
+
+Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is supported with a polyfill.
+
+You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also required) or the provided `linkify-polyfill.js`:
+
+```html
+<script src="jquery.js"></script>
+
+<!--[if IE 8]>
+<script src="linkify-polyfill.js"></script>
+<![endif]-->
+<script src="linkify.js"></script>
+<script src="linkify-jquery.js"></script>
 ```
 
 ## Downloads
