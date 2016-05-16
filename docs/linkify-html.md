@@ -8,14 +8,14 @@ Interface for replacing links with anchor tags within JavaScript strings contain
 #### Jump to
 
 * [Installation](#installation)
-  * [Node.js/io.js/Browserify](#nodejsiojsbrowserify)
+  * [Node.js/Browserify](#nodejsbrowserify)
   * [AMD](#amd)
   * [Browser globals](#browser-globals)
 * [Usage](#usage)
 
 ### Installation
 
-### Node.js/io.js/Browserify
+### Node.js/Browserify
 
 ```
 npm install linkifyjs
