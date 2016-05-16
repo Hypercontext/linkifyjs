@@ -1,16 +1,7 @@
-function noop(val) {
-	return val;
-}
-
-function yes(val) {
-	return true;
-}
-
-function typeToTarget(href, type) {
-	return type === 'url' ? '_blank' : null;
-}
-
-function normalize(opts) {
+/**
+ * Convert set of options into objects including all the defaults
+ */
+export function normalize(opts) {
 	opts = opts || {};
 	let newLine = opts.newLine || false; // deprecated
 	let ignoreTags = opts.ignoreTags || [];
@@ -36,8 +27,32 @@ function normalize(opts) {
 	};
 }
 
-function resolve(value, ...params) {
+/**
+ * Resolve an option's value based on the value of the option and the given
+ * params
+ */
+export function resolve(value, ...params) {
 	return typeof value === 'function' ? value(...params) : value;
 }
 
-export {normalize, resolve};
+/**
+ * Quick indexOf replacement for checking the ignoreTags option
+ */
+export function contains(arr, value) {
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i] == value) { return true; }
+	}
+	return false;
+}
+
+function noop(val) {
+	return val;
+}
+
+function yes(val) {
+	return true;
+}
+
+function typeToTarget(href, type) {
+	return type === 'url' ? '_blank' : null;
+}

@@ -1,7 +1,7 @@
 // Karma Development configuration
 
 var
-base = require('./conf'),
+base = require('./amd.conf'),
 extend = require('lodash/extend');
 
 module.exports = function (config) {

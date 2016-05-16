@@ -16,21 +16,17 @@ const concat = require('gulp-concat');
 const istanbul = require('gulp-istanbul');
 const jshint = require('gulp-jshint');
 const mocha = require('gulp-mocha');
-const qunit = require('gulp-qunit');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 const uglify = require('gulp-uglify');
 const wrap = require('gulp-wrap');
 
 const rollup = require('./tasks/rollup');
+const quickEs3 = require('./tasks/quick-es3');
 
 var paths = {
 	src: 'src/**/*.js',
-	srcCore: [
-		'src/linkify/core/*.js',
-		'src/linkify/utils/*.js',
-		'src/linkify.js'
-	],
+	srcCore: 'src/linkify.js',
 	lib: ['lib/**/*.js'],
 	libTest: ['lib/*.js', 'lib/linkify/**/*.js'],
 	libCore: [
@@ -41,7 +37,8 @@ var paths = {
 	amd: 'build/amd/**/*.js',
 	test: 'test/index.js',
 	spec: 'test/spec/**.js',
-	qunit: 'test/qunit/*html'
+	qunit: 'test/qunit/**.js',
+	polyfill: 'polyfill.js'
 };
 
 var tldsReplaceStr = `'${tlds.join('|')}'.split('|')`;
@@ -74,6 +71,7 @@ gulp.task('babel-amd', () =>
 	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
 	.pipe(amdOptimize('linkify'))
 	.pipe(concat('linkify.amd.js'))
+	.pipe(quickEs3())
 	.pipe(gulp.dest('build'))
 );
 
@@ -81,7 +79,7 @@ gulp.task('babel-amd', () =>
 	Build core linkify.js
 */
 gulp.task('build-core', () =>
-	gulp.src('src/linkify.js', {read: false})
+	gulp.src(paths.srcCore, {read: false})
 	.pipe(rollup({
 		bundle: {
 			format: 'iife',
@@ -159,6 +157,7 @@ gulp.task('build-interfaces', () => {
 		stream = gulp.src(files.amd)
 		.pipe(concat(`linkify-${intrface}.amd.js`))
 		.pipe(wrap({src: `templates/linkify-${intrface}.amd.js`}))
+		.pipe(quickEs3())
 		.pipe(gulp.dest('build'));
 
 		streams.push(stream);
@@ -202,6 +201,7 @@ gulp.task('build-plugins', () => {
 		stream = gulp.src(`build/amd/linkify/plugins/${plugin}.js`)
 		.pipe(wrap({src: `templates/linkify/plugins/${plugin}.amd.js`}))
 		.pipe(concat(`linkify-plugin-${plugin}.amd.js`))
+		.pipe(quickEs3())
 		.pipe(gulp.dest('build'));
 		streams.push(stream);
 
@@ -210,20 +210,27 @@ gulp.task('build-plugins', () => {
 	return merge.apply(this, streams);
 });
 
+gulp.task('build-polyfill', () =>
+	gulp.src(paths.polyfill)
+	.pipe(concat('linkify-polyfill.js'))
+	.pipe(gulp.dest('build'))
+);
+
 // Build steps
 gulp.task('build', [
 	'babel',
 	'babel-amd',
 	'build-core',
 	'build-interfaces',
-	'build-plugins'
+	'build-plugins',
+	'build-polyfill'
 ], (cb) => { cb(); });
 
 /**
 	Lint using jshint
 */
 gulp.task('jshint', () =>
-	gulp.src([paths.src, paths.test, paths.spec])
+	gulp.src([paths.src, paths.test, paths.spec, paths.qunit])
 	.pipe(jshint())
 	.pipe(jshint.reporter(stylish))
 	.pipe(jshint.reporter('fail'))
@@ -232,7 +239,7 @@ gulp.task('jshint', () =>
 /**
 	Run mocha tests
 */
-gulp.task('mocha', ['build'], () =>
+gulp.task('mocha', ['jshint', 'build'], () =>
 	gulp.src(paths.test, {read: false})
 	.pipe(mocha())
 );
@@ -240,7 +247,7 @@ gulp.task('mocha', ['build'], () =>
 /**
 	Code coverage reort for mocha tests
 */
-gulp.task('coverage', ['build'], (callback) => {
+gulp.task('coverage', ['jshint', 'build'], (callback) => {
 	// IMPORTANT: return not required here (and will actually cause bugs!)
 	gulp.src(paths.libTest)
 	.pipe(istanbul()) // Covering files
@@ -253,7 +260,7 @@ gulp.task('coverage', ['build'], (callback) => {
 	});
 });
 
-gulp.task('karma', ['build'], (callback) => {
+gulp.task('karma', (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
@@ -261,14 +268,21 @@ gulp.task('karma', ['build'], (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-chrome', ['build'], (callback) => {
+gulp.task('karma-chrome', (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-ci', ['build'], (callback) => {
+gulp.task('karma-firefox', (callback) => {
+	let server = new Server({
+		configFile: __dirname + '/test/firefox.conf.js',
+	}, callback);
+	return server.start();
+});
+
+gulp.task('karma-ci', (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
@@ -276,10 +290,35 @@ gulp.task('karma-ci', ['build'], (callback) => {
 	return server.start();
 });
 
-gulp.task('qunit', ['build'], () =>
-	gulp.src(paths.qunit)
-	.pipe(qunit())
-);
+gulp.task('karma-amd', (callback) => {
+	let server = new Server({
+		configFile: __dirname + '/test/dev.amd.conf.js',
+		singleRun: true
+	}, callback);
+	return server.start();
+});
+
+gulp.task('karma-amd-chrome', (callback) => {
+	let server = new Server({
+		configFile: __dirname + '/test/chrome.amd.conf.js',
+	}, callback);
+	return server.start();
+});
+
+gulp.task('karma-amd-firefox', (callback) => {
+	let server = new Server({
+		configFile: __dirname + '/test/firefox.amd.conf.js',
+	}, callback);
+	return server.start();
+});
+
+gulp.task('karma-amd-ci', (callback) => {
+	let server = new Server({
+		configFile: __dirname + '/test/ci.amd.conf.js',
+		singleRun: true
+	}, callback);
+	return server.start();
+});
 
 // Build the deprecated legacy interface
 gulp.task('build-legacy', ['build'], () =>
@@ -322,14 +361,15 @@ gulp.task('uglify', ['build-legacy'], () => {
 
 gulp.task('dist', ['uglify']);
 gulp.task('test', (callback) =>
-	runSequence('jshint', 'qunit', 'coverage', callback)
+	runSequence('coverage', 'karma', 'karma-amd', callback)
 );
-gulp.task('test-ci', ['karma-ci']);
-// Using with other tasks causes an error here for some reason
+gulp.task('test-ci', (callback) =>
+	runSequence('karma-ci', 'karma-amd-ci', callback)
+);
 
 /**
 	Build JS and begin watching for changes
 */
-gulp.task('default', ['babel'], () =>
-	gulp.watch(paths.src, ['babel'])
+gulp.task('default', ['jshint', 'babel'], () =>
+	gulp.watch(paths.src, ['jshint', 'babel'])
 );

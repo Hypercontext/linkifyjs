@@ -1,6 +1,7 @@
 import HTML5Tokenizer from './simple-html-tokenizer';
 import * as linkify from './linkify';
 
+const options = linkify.options;
 const StartTag = 'StartTag';
 const EndTag = 'EndTag';
 const Chars = 'Chars';
@@ -27,7 +28,8 @@ export default function linkifyHtml(str, opts={}) {
 
 			// Ignore all the contents of ignored tags
 			let tagName = token.tagName.toUpperCase();
-			let isIgnored = tagName === 'A' || opts.ignoreTags.indexOf(tagName) >= 0;
+			let isIgnored = tagName === 'A' ||
+				options.contains(opts.ignoreTags, tagName);
 			if (!isIgnored) continue;
 
 			let preskipLen = linkifiedTokens.length;

@@ -3,7 +3,7 @@
 const util = require('gulp-util');
 const through = require('through2');
 const rollup = require('rollup').rollup;
-const extend = require('lodash').extend;
+const extend = require('lodash/extend');
 
 const PluginError = util.PluginError;
 const PLUGIN_NAME = 'gulp-rollup';

@@ -1,5 +1,4 @@
 var w = null;
-QUnit.config.autostart = false;
 
 require([
       'linkify',
@@ -13,5 +12,4 @@ require([
 		linkifyHtml: linkifyHtml,
 		linkifyStr: linkifyStr
 	};
-	QUnit.start();
 });

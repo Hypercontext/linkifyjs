@@ -9,18 +9,17 @@ module.exports = {
 
 	// list of files / patterns to load in the browser
 	files: [
+		'node_modules/requirejs/require.js',
 		'node_modules/jquery/dist/jquery.js',
 		'build/linkify-polyfill.js',
-		'build/linkify.js',
-		'build/*.js',
-		'test/qunit/globals.js',
+		'build/linkify.amd.js',
+		'build/*.amd.js',
+		'test/qunit/amd.js',
 		'test/qunit/main.js'
 	],
 
 	// list of files to exclude
-	exclude: [
-		'build/*.amd.js'
-	],
+	exclude: [],
 
 	// preprocess matching files before serving them to the browser
 	// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor

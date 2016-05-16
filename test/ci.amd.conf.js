@@ -1,7 +1,7 @@
 // Karma CI configuration
 
 var
-base = require('./conf'),
+base = require('./amd.conf'),
 extend = require('lodash/extend');
 
 module.exports = function (config) {
@@ -49,7 +49,7 @@ module.exports = function (config) {
 		// level of logging
 		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
 		sauceLabs: {
-			testName: 'Linkify Browser Tests',
+			testName: 'Linkify Browser AMD Tests',
 			browserDisconnectTimeout: 30000,
 			browserNoActivityTimeout: 30000,
 			browserDisconnectTolerance: 3
