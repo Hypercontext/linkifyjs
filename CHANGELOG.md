@@ -1,5 +1,11 @@
 # Linkify Changelog
 
+### v2.0.1
+
+* Updated build system and development dependencies
+* IE8 Support
+* Internal API updates
+
 ### v2.0.0
 
 * New link-detection technique based on lexicographical analysis via two-stage scanner - essentially regexp with more flexibility.
