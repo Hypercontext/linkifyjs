@@ -37,6 +37,7 @@ var paths = {
 	amd: 'build/amd/**/*.js',
 	test: 'test/index.js',
 	spec: 'test/spec/**.js',
+	qunit: 'test/qunit/**.js',
 	polyfill: 'polyfill.js'
 };
 
@@ -229,7 +230,7 @@ gulp.task('build', [
 	Lint using jshint
 */
 gulp.task('jshint', () =>
-	gulp.src([paths.src, paths.test, paths.spec])
+	gulp.src([paths.src, paths.test, paths.spec, paths.qunit])
 	.pipe(jshint())
 	.pipe(jshint.reporter(stylish))
 	.pipe(jshint.reporter('fail'))
