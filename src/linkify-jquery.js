@@ -1,14 +1,6 @@
 import $ from 'jquery';
 import linkifyElement from './linkify-element';
 
-let doc;
-
-try {
-	doc = document;
-} catch (e) {
-	doc = null;
-}
-
 // Applies the plugin to jQuery
 export default function ($, doc=null) {
 
@@ -22,7 +14,7 @@ export default function ($, doc=null) {
 		throw new Error(
 			'Cannot find document implementation. ' +
 			'If you are in a non-browser environment like Node.js, ' +
-			'pass the document implementation as the third argument to linkifyElement.'
+			'pass the document implementation as the second argument to linkify/jquery'
 		);
 	}
 
