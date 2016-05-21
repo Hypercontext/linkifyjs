@@ -90,7 +90,7 @@ function tokensToNodes(tokens, opts, doc) {
 function linkifyElementHelper(element, opts, doc) {
 
 	// Can the element be linkified?
-	if (!element || typeof element !== 'object' || element.nodeType !== HTML_NODE) {
+	if (!element || element.nodeType !== HTML_NODE) {
 		throw new Error(`Cannot linkify ${element} - Invalid DOM Node type`);
 	}
 
