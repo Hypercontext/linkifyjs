@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+### v2.0.3
+
+* Fixing element interface invalid DOM node error (#141)
+
 ### v2.0.1
 
 * Updated build system and development dependencies
