@@ -2,7 +2,7 @@ import $ from 'jquery';
 import linkifyElement from './linkify-element';
 
 // Applies the plugin to jQuery
-export default function ($, doc=null) {
+export default function apply($, doc=null) {
 
 	$.fn = $.fn || {};
 
@@ -61,4 +61,4 @@ export default function ($, doc=null) {
 }
 
 // Try assigning linkifyElement to the browser scope
-try { window.linkifyElement = linkifyElement; } catch (e) {}
+try { let a = !define && (window.linkifyElement = linkifyElement); } catch (e) {}

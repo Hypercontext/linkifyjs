@@ -24,6 +24,9 @@ const wrap = require('gulp-wrap');
 const rollup = require('./tasks/rollup');
 const quickEs3 = require('./tasks/quick-es3');
 
+// All properties that are part of the public/plugin APIs
+const unmangleableProps = require('./tasks/uglify').unmangleableProps
+
 var paths = {
 	src: 'src/**/*.js',
 	srcCore: 'src/linkify.js',
@@ -247,7 +250,7 @@ gulp.task('mocha', ['jshint', 'build'], () =>
 /**
 	Code coverage reort for mocha tests
 */
-gulp.task('coverage', ['jshint', 'build'], (callback) => {
+gulp.task('coverage', ['jshint', 'dist'], (callback) => {
 	// IMPORTANT: return not required here (and will actually cause bugs!)
 	gulp.src(paths.libTest)
 	.pipe(istanbul()) // Covering files
@@ -340,7 +343,7 @@ gulp.task('build-benchmark', ['build-legacy'], () =>
 gulp.task('uglify', ['build-legacy'], () => {
 	let options = {
 		mangleProperties: {
-			regex: /classCallCheck|inherits|possibleConstructorReturn/
+			regex: new RegExp(`^(?!(${unmangleableProps.join('|')})).*$`)
 		}
 	};
 
