@@ -53,9 +53,11 @@ export default function linkifyHtml(str, opts={}) {
 		let token = linkifiedTokens[i];
 		switch (token.type) {
 		case StartTag:
-			let attrs = attrsToStrings(token.attributes);
 			let link = '<' + token.tagName;
-			if (attrs.length > 0) { link += ' ' + attrs.join(' '); }
+			if (token.attributes.length > 0) {
+				let attrs = attrsToStrings(token.attributes);
+				link += ' ' + attrs.join(' ');
+			}
 			link += '>';
 			linkified.push(link);
 			break;

@@ -10,16 +10,16 @@ module.exports = {
 	// list of files / patterns to load in the browser
 	files: [
 		'node_modules/jquery/dist/jquery.js',
-		'build/linkify-polyfill.js',
-		'build/linkify.js',
-		'build/*.js',
+		'dist/linkify-polyfill.min.js',
+		'dist/linkify.min.js',
+		'dist/*.min.js',
 		'test/qunit/globals.js',
 		'test/qunit/main.js'
 	],
 
 	// list of files to exclude
 	exclude: [
-		'build/*.amd.js'
+		'dist/*.amd.min.js'
 	],
 
 	// preprocess matching files before serving them to the browser

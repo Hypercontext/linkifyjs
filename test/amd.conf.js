@@ -11,9 +11,9 @@ module.exports = {
 	files: [
 		'node_modules/requirejs/require.js',
 		'node_modules/jquery/dist/jquery.js',
-		'build/linkify-polyfill.js',
-		'build/linkify.amd.js',
-		'build/*.amd.js',
+		'dist/linkify-polyfill.min.js',
+		'dist/linkify.amd.min.js',
+		'dist/*.amd.min.js',
 		'test/qunit/amd.js',
 		'test/qunit/main.js'
 	],
