@@ -1,5 +1,12 @@
 # Linkify Changelog
 
+### v2.0.4
+
+* Optimize class code to reduce file size (#147).
+* Update test and dev dependencies
+* Allow uglify to mangle properties, except for the specified ones (#146)
+* Updated tlds.js (#121)
+
 ### v2.0.3
 
 * Fixing element interface invalid DOM node error (#141)
