@@ -1,3 +1,11 @@
+import {inherits} from '../utils/class';
+
+function createStateClass() {
+	return function (tClass) {
+		this.j = [];
+		this.T = tClass || null;
+	};
+}
 
 /**
 	A simple state machine that can emit token classes
@@ -18,17 +26,13 @@
 
 	@class BaseState
 */
-class BaseState {
-
+const BaseState = createStateClass();
+BaseState.prototype = {
 	/**
 		@method constructor
 		@param {Class} tClass Pass in the kind of token to emit if there are
 			no jumps after this state and the state is accepting.
 	*/
-	constructor(tClass) {
-		this.j = [];
-		this.T = tClass || null;
-	}
 
 	/**
 		On the given symbol(s), this machine should go to the given state
@@ -48,7 +52,7 @@ class BaseState {
 		}
 		this.j.push([symbol, state]);
 		return this;
-	}
+	},
 
 	/**
 		Given the next item, returns next state for that item
@@ -71,7 +75,7 @@ class BaseState {
 
 		// Nowhere left to jump!
 		return false;
-	}
+	},
 
 	/**
 		Does this state accept?
@@ -82,7 +86,7 @@ class BaseState {
 	*/
 	accepts() {
 		return !!this.T;
-	}
+	},
 
 	/**
 		Determine whether a given item "symbolizes" the symbol, where symbol is
@@ -97,7 +101,7 @@ class BaseState {
 	*/
 	test(item, symbol) {
 		return item === symbol;
-	}
+	},
 
 	/**
 		Emit the token for this State (just return it in this case)
@@ -108,8 +112,7 @@ class BaseState {
 	emit() {
 		return this.T;
 	}
-}
-
+};
 
 /**
 	State machine for string-based input
@@ -117,8 +120,7 @@ class BaseState {
 	@class CharacterState
 	@extends BaseState
 */
-class CharacterState extends BaseState {
-
+const CharacterState = inherits(BaseState, createStateClass(), {
 	/**
 		Does the given character match the given character or regular
 		expression?
@@ -133,7 +135,7 @@ class CharacterState extends BaseState {
 			charOrRegExp instanceof RegExp && charOrRegExp.test(character)
 		);
 	}
-}
+});
 
 
 /**
@@ -142,7 +144,7 @@ class CharacterState extends BaseState {
 	@class TokenState
 	@extends BaseState
 */
-class TokenState extends BaseState {
+const TokenState = inherits(BaseState, createStateClass(), {
 
 	/**
 		Is the given token an instance of the given token class?
@@ -155,7 +157,7 @@ class TokenState extends BaseState {
 	test(token, tokenClass) {
 		return token instanceof tokenClass;
 	}
-}
+});
 
 /**
 	Given a non-empty target string, generates states (if required) for each

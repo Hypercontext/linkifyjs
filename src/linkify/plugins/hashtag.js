@@ -9,13 +9,14 @@ export default function hashtag(linkify) {
 	S_START = linkify.parser.start,
 	S_HASH, S_HASHTAG;
 
-	class HASHTAG extends MultiToken {
-		constructor(value) {
-			super(value);
-			this.type = 'hashtag';
-			this.isLink = true;
-		}
+	function HASHTAG(value) {
+		this.v = value;
 	}
+
+	linkify.inherits(MultiToken, HASHTAG, {
+		type: 'hashtag',
+		isLink: true
+	});
 
 	S_HASH = new linkify.parser.State();
 	S_HASHTAG = new linkify.parser.State(HASHTAG);
