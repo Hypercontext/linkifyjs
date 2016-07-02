@@ -1,3 +1,4 @@
+import inherits from './linkify/utils/inherits';
 import * as options from './linkify/utils/options';
 import * as scanner from './linkify/core/scanner';
 import * as parser from './linkify/core/parser';
@@ -60,4 +61,4 @@ let test = function (str, type=null) {
 
 // Scanner and parser provide states and tokens for the lexicographic stage
 // (will be used to add additional link types)
-export {find, options, parser, scanner, test, tokenize};
+export {find, inherits, options, parser, scanner, test, tokenize};

@@ -22,7 +22,7 @@ describe('linkify/core/tokens#TEXT_TOKENS', function () {
 		var at;
 
 		before(function () {
-			at = new TEXT_TOKENS.AT('asdf'); // should ignore passed-in value
+			at = new TEXT_TOKENS.AT();
 		});
 
 		describe('#toString()', function () {

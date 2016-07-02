@@ -1,3 +1,13 @@
+import inherits from '../utils/inherits';
+
+function createTokenClass() {
+	return function (value) {
+		if (value) {
+			this.v = value;
+		}
+	};
+}
+
 /******************************************************************************
 	Text Tokens
 	Tokens composed of strings
@@ -10,24 +20,19 @@
 	@class TextToken
 	@abstract
 */
-class TextToken {
-	/**
-		@method constructor
-		@param {String} value The string of characters representing this particular Token
-	*/
-	constructor(value) {
-		this.v = value;
-	}
 
-	/**
-		String representing the type for this token
-		@property type
-		@default 'TOKEN'
-	*/
+const TextToken = createTokenClass();
 
+TextToken.prototype = {
 	toString() {
 		return this.v + '';
 	}
+};
+
+
+function inheritsToken(value) {
+	var props = value ? {v: value} : {};
+	return inherits(TextToken, createTokenClass(), props);
 }
 
 /**
@@ -35,15 +40,13 @@ class TextToken {
 	@class DOMAIN
 	@extends TextToken
 */
-class DOMAIN extends TextToken {}
+const DOMAIN = inheritsToken();
 
 /**
 	@class AT
 	@extends TextToken
 */
-class AT extends TextToken {
-	constructor() { super('@'); }
-}
+const AT = inheritsToken('@');
 
 /**
 	Represents a single colon `:` character
@@ -51,17 +54,13 @@ class AT extends TextToken {
 	@class COLON
 	@extends TextToken
 */
-class COLON extends TextToken {
-	constructor() { super(':'); }
-}
+const COLON = inheritsToken(':');
 
 /**
 	@class DOT
 	@extends TextToken
 */
-class DOT extends TextToken {
-	constructor() { super('.'); }
-}
+const DOT = inheritsToken('.');
 
 /**
 	A character class that can surround the URL, but which the URL cannot begin
@@ -70,45 +69,39 @@ class DOT extends TextToken {
 	@class PUNCTUATION
 	@extends TextToken
 */
-class PUNCTUATION extends TextToken {}
+const PUNCTUATION = inheritsToken();
 
 /**
 	The word localhost (by itself)
 	@class LOCALHOST
 	@extends TextToken
 */
-class LOCALHOST extends TextToken {}
+const LOCALHOST = inheritsToken();
 
 /**
 	Newline token
 	@class TNL
 	@extends TextToken
 */
-class TNL extends TextToken {
-	constructor() { super('\n'); }
-}
+const TNL = inheritsToken('\n');
 
 /**
 	@class NUM
 	@extends TextToken
 */
-class NUM extends TextToken {}
+const NUM = inheritsToken();
 
 /**
 	@class PLUS
 	@extends TextToken
 */
-class PLUS extends TextToken {
-	constructor() { super('+'); }
-}
+const PLUS = inheritsToken('+');
 
 /**
 	@class POUND
 	@extends TextToken
 */
-class POUND extends TextToken {
-	constructor() { super('#'); }
-}
+const POUND = inheritsToken('#');
 
 /**
 	Represents a web URL protocol. Supported types include
@@ -122,36 +115,32 @@ class POUND extends TextToken {
 	@class PROTOCOL
 	@extends TextToken
 */
-class PROTOCOL extends TextToken {}
+const PROTOCOL = inheritsToken();
 
 /**
 	@class QUERY
 	@extends TextToken
 */
-class QUERY extends TextToken {
-	constructor() { super('?'); }
-}
+const QUERY = inheritsToken('?');
 
 /**
 	@class SLASH
 	@extends TextToken
 */
-class SLASH extends TextToken {
-	constructor() { super('/'); }
-}
+const SLASH = inheritsToken('/');
 
 /**
 	One ore more non-whitespace symbol.
 	@class SYM
 	@extends TextToken
 */
-class SYM extends TextToken {}
+const SYM = inheritsToken();
 
 /**
 	@class TLD
 	@extends TextToken
 */
-class TLD extends TextToken {}
+const TLD = inheritsToken();
 
 /**
 	Represents a string of consecutive whitespace characters
@@ -159,35 +148,18 @@ class TLD extends TextToken {}
 	@class WS
 	@extends TextToken
 */
-class WS extends TextToken {}
+const WS = inheritsToken();
 
 /**
 	Opening/closing bracket classes
 */
 
-class OPENBRACE extends TextToken {
-	constructor() { super('{'); }
-}
-
-class OPENBRACKET extends TextToken {
-	constructor() { super('['); }
-}
-
-class OPENPAREN extends TextToken {
-	constructor() { super('('); }
-}
-
-class CLOSEBRACE extends TextToken {
-	constructor() { super('}'); }
-}
-
-class CLOSEBRACKET extends TextToken {
-	constructor() { super(']'); }
-}
-
-class CLOSEPAREN extends TextToken {
-	constructor() { super(')'); }
-}
+const OPENBRACE = inheritsToken('{');
+const OPENBRACKET = inheritsToken('[');
+const OPENPAREN = inheritsToken('(');
+const CLOSEBRACE = inheritsToken('}');
+const CLOSEBRACKET = inheritsToken(']');
+const CLOSEPAREN = inheritsToken(')');
 
 let text = {
 	Base: TextToken,
@@ -238,29 +210,22 @@ function isDomainToken(token) {
 	@class MultiToken
 	@abstract
 */
-class MultiToken {
+const MultiToken = createTokenClass();
+
+MultiToken.prototype = {
 	/**
-		@method constructor
-		@param {Array} value The array of `TextToken`s representing this
-		particular MultiToken
+		String representing the type for this token
+		@property type
+		@default 'TOKEN'
 	*/
-	constructor(value) {
-		this.v = value;
+	type: 'token',
 
-		/**
-			String representing the type for this token
-			@property type
-			@default 'TOKEN'
-		*/
-		this.type = 'token';
-
-		/**
-			Is this multitoken a link?
-			@property isLink
-			@default false
-		*/
-		this.isLink = false;
-	}
+	/**
+		Is this multitoken a link?
+		@property isLink
+		@default false
+	*/
+	isLink: false,
 
 	/**
 		Return the string this token represents.
@@ -273,7 +238,7 @@ class MultiToken {
 			result.push(this.v[i].toString());
 		}
 		return result.join('');
-	}
+	},
 
 	/**
 		What should the value for this token be in the `href` HTML attribute?
@@ -284,7 +249,7 @@ class MultiToken {
 	*/
 	toHref() {
 		return this.toString();
-	}
+	},
 
 	/**
 		Returns a hash of relevant values for this token, which includes keys
@@ -304,62 +269,43 @@ class MultiToken {
 			href: this.toHref(protocol)
 		};
 	}
-}
+};
 
 /**
 	Represents a list of tokens making up a valid email address
 	@class EMAIL
 	@extends MultiToken
 */
-class EMAIL extends MultiToken {
-
-	constructor(value) {
-		super(value);
-		this.type = 'email';
-		this.isLink = true;
-	}
-
+const EMAIL = inherits(MultiToken, createTokenClass(), {
+	type: 'email',
+	isLink: true,
 	toHref() {
 		return 'mailto:' + this.toString();
 	}
-}
+});
 
 /**
 	Represents some plain text
 	@class TEXT
 	@extends MultiToken
 */
-class TEXT extends MultiToken {
-	constructor(value) {
-		super(value);
-		this.type = 'text';
-	}
-}
+const TEXT = inherits(MultiToken, createTokenClass(), {type: 'text'});
 
 /**
 	Multi-linebreak token - represents a line break
 	@class MNL
 	@extends MultiToken
 */
-class MNL extends MultiToken {
-	constructor(value) {
-		super(value);
-		this.type = 'nl';
-	}
-}
+const MNL = inherits(MultiToken, createTokenClass(), {type: 'nl'});
 
 /**
 	Represents a list of tokens making up a valid URL
 	@class URL
 	@extends MultiToken
 */
-class URL extends MultiToken {
-
-	constructor(value) {
-		super(value);
-		this.type = 'url';
-		this.isLink = true;
-	}
+const URL = inherits(MultiToken, createTokenClass(), {
+	type: 'url',
+	isLink: true,
 
 	/**
 		Lowercases relevant parts of the domain and adds the protocol if
@@ -407,16 +353,16 @@ class URL extends MultiToken {
 		result = result.join('');
 
 		if (!(hasProtocol || hasSlashSlash)) {
-			result = protocol + '://' + result;
+			result = `${protocol}://${result}`;
 		}
 
 		return result;
-	}
+	},
 
 	hasProtocol() {
 		return this.v[0] instanceof PROTOCOL;
 	}
-}
+});
 
 let multi = {
 	Base: MultiToken,
