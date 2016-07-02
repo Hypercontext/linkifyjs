@@ -49,6 +49,10 @@ QUnit.test('contains a scanner object', function (assert) {
 	assert.equal(typeof w.linkify.scanner, 'object');
 });
 
+QUnit.test('contains an inherits function', function (assert) {
+	assert.ok('inherits' in w.linkify);
+	assert.equal(typeof w.linkify.inherits, 'function');
+});
 
 QUnit.module('linkify.find');
 

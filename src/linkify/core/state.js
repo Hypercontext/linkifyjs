@@ -1,4 +1,4 @@
-import inherits from '../utils/inherits';
+import {inherits} from '../utils/class';
 
 function createStateClass() {
 	return function (tClass) {

@@ -1,4 +1,4 @@
-import inherits from './linkify/utils/inherits';
+import {inherits} from './linkify/utils/class';
 import * as options from './linkify/utils/options';
 import * as scanner from './linkify/core/scanner';
 import * as parser from './linkify/core/parser';

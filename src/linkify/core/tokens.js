@@ -1,4 +1,4 @@
-import inherits from '../utils/inherits';
+import {inherits} from '../utils/class';
 
 function createTokenClass() {
 	return function (value) {

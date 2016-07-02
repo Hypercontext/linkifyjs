@@ -3,7 +3,6 @@
 */
 export default function hashtag(linkify) {
 	let
-	inherits = linkify.inherits,
 	TT = linkify.scanner.TOKENS, // Text tokens
 	MT = linkify.parser.TOKENS, // Multi tokens
 	MultiToken = MT.Base,
@@ -14,7 +13,7 @@ export default function hashtag(linkify) {
 		this.v = value;
 	}
 
-	inherits(MultiToken, HASHTAG, {
+	linkify.inherits(MultiToken, HASHTAG, {
 		type: 'hashtag',
 		isLink: true
 	});
