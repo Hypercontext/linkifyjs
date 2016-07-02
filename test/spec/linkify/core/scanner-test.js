@@ -88,7 +88,7 @@ describe('linkify/core/scanner#run()', function () {
 			types = test[1],
 			values = test[2],
 			result = scanner.run(str);
-			debugger;
+
 			expect(result.map(function (token) {
 				return token.toString();
 			})).to.eql(values);
