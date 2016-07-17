@@ -7,6 +7,16 @@ function createStateClass() {
 	};
 }
 
+function makeStartState(baseStateClass, defaultTransition) {
+	var t = new inherits(baseStateClass, createStateClass(), {
+		d: defaultTransition,
+		next(item) {
+			return baseStateClass.prototype.next.call(this, item) || this.d;
+		}
+	});
+	return new t();
+}
+
 /**
 	A simple state machine that can emit token classes
 
@@ -210,4 +220,4 @@ function stateify(str, start, endToken, defaultToken) {
 	return newStates;
 }
 
-export {CharacterState, TokenState, stateify};
+export {CharacterState, TokenState, makeStartState, stateify};
