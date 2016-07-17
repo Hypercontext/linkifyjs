@@ -12,10 +12,10 @@ import {CharacterState as State, stateify} from './state';
 
 const tlds = __TLDS__; // macro, see gulpfile.js
 
-const
-REGEXP_NUM		= /[0-9]/,
-REGEXP_ALPHANUM	= /[a-z0-9]/,
-COLON			= ':';
+const NUM = '0123456789'.split('');
+const ALPHANUM = '0123456789abcdefghijklmnopqrstuvwxyz'.split('');
+const WHITESPACE = [' ', '\f', '\r', '\t', '\v']; // excluding line breaks
+const COLON = ':';
 
 let
 domainStates = [], // states that jump to DOMAIN on /[a-z0-9]/
@@ -30,7 +30,7 @@ T_TLD		= TOKENS.TLD,
 T_WS		= TOKENS.WS;
 
 const // Frequently used states
-S_START			= makeState(), // start state
+S_START			= makeState(),
 S_NUM			= makeState(T_NUM),
 S_DOMAIN		= makeState(T_DOMAIN),
 S_DOMAIN_HYPHEN	= makeState(), // domain followed by 1 or more hyphen characters
@@ -51,16 +51,16 @@ S_START
 .on('}', makeState(TOKENS.CLOSEBRACE))
 .on(']', makeState(TOKENS.CLOSEBRACKET))
 .on(')', makeState(TOKENS.CLOSEPAREN))
-.on(/[,;!]/, makeState(TOKENS.PUNCTUATION));
+.on([',', ';', '!', '"'], makeState(TOKENS.PUNCTUATION));
 
 // Whitespace jumps
 // Tokens of only non-newline whitespace are arbitrarily long
 S_START
-.on(/\n/, makeState(TOKENS.NL))
-.on(/\s/, S_WS);
+.on('\n', makeState(TOKENS.NL))
+.on(WHITESPACE, S_WS);
 
 // If any whitespace except newline, more whitespace!
-S_WS.on(/[^\S\n]/, S_WS);
+S_WS.on(WHITESPACE, S_WS);
 
 // Generates states for top-level domains
 // Note that this is most accurate when tlds are in alphabetical order
@@ -109,30 +109,30 @@ domainStates.push.apply(domainStates, partialLocalhostStates);
 // Everything else
 // DOMAINs make more DOMAINs
 // Number and character transitions
-S_START.on(REGEXP_NUM, S_NUM);
+S_START.on(NUM, S_NUM);
 S_NUM
 .on('-', S_DOMAIN_HYPHEN)
-.on(REGEXP_NUM, S_NUM)
-.on(REGEXP_ALPHANUM, S_DOMAIN); // number becomes DOMAIN
+.on(NUM, S_NUM)
+.on(ALPHANUM, S_DOMAIN); // number becomes DOMAIN
 
 S_DOMAIN
 .on('-', S_DOMAIN_HYPHEN)
-.on(REGEXP_ALPHANUM, S_DOMAIN);
+.on(ALPHANUM, S_DOMAIN);
 
 // All the generated states should have a jump to DOMAIN
 for (let i = 0; i < domainStates.length; i++) {
 	domainStates[i]
 	.on('-', S_DOMAIN_HYPHEN)
-	.on(REGEXP_ALPHANUM, S_DOMAIN);
+	.on(ALPHANUM, S_DOMAIN);
 }
 
 S_DOMAIN_HYPHEN
 .on('-', S_DOMAIN_HYPHEN)
-.on(REGEXP_NUM, S_DOMAIN)
-.on(REGEXP_ALPHANUM, S_DOMAIN);
+.on(NUM, S_DOMAIN)
+.on(ALPHANUM, S_DOMAIN);
 
-// Any other character is considered a single symbol token
-S_START.on(/./, makeState(TOKENS.SYM));
+// Set default transition
+S_START.defaultTransition = makeState(TOKENS.SYM);
 
 /**
 	Given a string, returns an array of TOKEN instances representing the

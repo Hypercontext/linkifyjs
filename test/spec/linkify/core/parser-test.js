@@ -138,6 +138,18 @@ var tests = [
 		'HTTP Auth URLs should work: http://username:password@example.com',
 		[TEXT, URL],
 		['HTTP Auth URLs should work: ', 'http://username:password@example.com']
+	], [
+		'Trailing equal symbol should work: http://example.com/foo/bar?token=CtFOYuk0wjiqvHZF==',
+		[TEXT, URL],
+		['Trailing equal symbol should work: ', 'http://example.com/foo/bar?token=CtFOYuk0wjiqvHZF==']
+	], [
+		'"https://surrounded.by.quotes/"',
+		[TEXT, URL, TEXT],
+		['"', 'https://surrounded.by.quotes/', '"']
+	], [
+		'More weird character in http://facebook.com/#aZ?/:@-._~!$&\'()*+,;= that URL',
+		[TEXT, URL, TEXT],
+		['More weird character in ', 'http://facebook.com/#aZ?/:@-._~!$&\'()*+,;=', ' that URL']
 	]
 ];
 

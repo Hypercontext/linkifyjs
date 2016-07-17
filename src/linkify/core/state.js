@@ -28,6 +28,8 @@ function createStateClass() {
 */
 const BaseState = createStateClass();
 BaseState.prototype = {
+	defaultTransition: false,
+
 	/**
 		@method constructor
 		@param {Class} tClass Pass in the kind of token to emit if there are
@@ -74,7 +76,7 @@ BaseState.prototype = {
 		}
 
 		// Nowhere left to jump!
-		return false;
+		return this.defaultTransition;
 	},
 
 	/**
