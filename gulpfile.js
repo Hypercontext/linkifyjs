@@ -112,7 +112,8 @@ gulp.task('build-interfaces', () => {
 			'simple-html-tokenizer/*.js',
 			'simple-html-tokenizer.js',
 			'html'
-		]
+		],
+		'react'
 	];
 
 	// Globals browser interface
@@ -141,12 +142,18 @@ gulp.task('build-interfaces', () => {
 		// Browser intrface
 		let stream = gulp.src(files.js)
 		.pipe(rollup({
-			rollup: {external: ['jquery', `${__dirname}/src/linkify.js`]},
+			rollup: {
+				external: [
+					'jquery', `${__dirname}/src/linkify.js`,
+					'react', `${__dirname}/src/linkify.js`
+				]
+			},
 			bundle: {
 				format: 'iife',
 				moduleName: moduleName,
 				globals: {
 					'jquery': '$',
+					'react': 'React',
 					[`${__dirname}/src/linkify.js`]: 'linkify'
 				}
 			}
