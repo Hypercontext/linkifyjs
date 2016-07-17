@@ -10,6 +10,8 @@ module.exports = {
 	// list of files / patterns to load in the browser
 	files: [
 		'node_modules/jquery/dist/jquery.js',
+		'node_modules/react/dist/react.js',
+		'node_modules/react-dom/dist/react-dom.js',
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.min.js',
 		'dist/*.min.js',
