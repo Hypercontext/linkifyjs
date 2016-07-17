@@ -24,7 +24,7 @@ function attributesToString(attributes) {
 	let result = [];
 
 	for (let attr in attributes) {
-		let val = (attributes[attr] + '').replace(/"/g, '&quot;');
+		let val = attributes[attr] + '';
 		result.push(`${attr}="${escapeAttr(val)}"`);
 	}
 	return result.join(' ');
