@@ -64,7 +64,7 @@ S_TLD					= makeState(T_URL), // (A) Simplest possible URL with no query string
 S_TLD_COLON				= makeState(), // (A) URL followed by colon (potential port number here)
 S_TLD_PORT				= makeState(T_URL), // TLD followed by a port number
 S_URL					= makeState(T_URL), // Long URL with optional port and maybe query string
-S_URL_SYMS				= makeState(), // URL followed by some symbols (will not be part of the final URL)
+S_URL_NON_ACCEPTING		= makeState(), // URL followed by some symbols (will not be part of the final URL)
 S_URL_OPENBRACE			= makeState(), // URL followed by {
 S_URL_OPENBRACKET		= makeState(), // URL followed by [
 S_URL_OPENPAREN			= makeState(), // URL followed by (
@@ -152,7 +152,8 @@ let qsAccepting = [
 	TT_POUND,
 	TT_PROTOCOL,
 	TT_SLASH,
-	TT_TLD
+	TT_TLD,
+	TT_SYM
 ];
 
 // Types of tokens that can follow a URL and be part of the query string
@@ -168,8 +169,7 @@ let qsNonAccepting = [
 	TT_CLOSEPAREN,
 	TT_OPENBRACE,
 	TT_OPENBRACKET,
-	TT_OPENPAREN,
-	TT_SYM
+	TT_OPENPAREN
 ];
 
 // These states are responsible primarily for determining whether or not to
@@ -182,7 +182,7 @@ S_URL
 .on(TT_OPENPAREN, S_URL_OPENPAREN);
 
 // URL with extra symbols at the end, followed by an opening bracket
-S_URL_SYMS
+S_URL_NON_ACCEPTING
 .on(TT_OPENBRACE, S_URL_OPENBRACE)
 .on(TT_OPENBRACKET, S_URL_OPENBRACKET)
 .on(TT_OPENPAREN, S_URL_OPENPAREN);
@@ -225,10 +225,10 @@ S_URL_OPENPAREN_SYMS.on(qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // Account for the query string
 S_URL.on(qsAccepting, S_URL);
-S_URL_SYMS.on(qsAccepting, S_URL);
+S_URL_NON_ACCEPTING.on(qsAccepting, S_URL);
 
-S_URL.on(qsNonAccepting, S_URL_SYMS);
-S_URL_SYMS.on(qsNonAccepting, S_URL_SYMS);
+S_URL.on(qsNonAccepting, S_URL_NON_ACCEPTING);
+S_URL_NON_ACCEPTING.on(qsNonAccepting, S_URL_NON_ACCEPTING);
 
 // Email address-specific state definitions
 // Note: We are not allowing '/' in email addresses since this would interfere
