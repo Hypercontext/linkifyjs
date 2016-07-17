@@ -8,7 +8,7 @@
 */
 
 import {text as TOKENS} from './tokens';
-import {CharacterState as State, makeStartState, stateify} from './state';
+import {CharacterState as State, stateify} from './state';
 
 const tlds = __TLDS__; // macro, see gulpfile.js
 
@@ -30,7 +30,7 @@ T_TLD		= TOKENS.TLD,
 T_WS		= TOKENS.WS;
 
 const // Frequently used states
-S_START			= makeStartState(State, false),
+S_START			= makeState(),
 S_NUM			= makeState(T_NUM),
 S_DOMAIN		= makeState(T_DOMAIN),
 S_DOMAIN_HYPHEN	= makeState(), // domain followed by 1 or more hyphen characters
@@ -132,7 +132,7 @@ S_DOMAIN_HYPHEN
 .on(ALPHANUM, S_DOMAIN);
 
 // Set default transition
-S_START.d = makeState(TOKENS.SYM);
+S_START.defaultTransition = makeState(TOKENS.SYM);
 
 /**
 	Given a string, returns an array of TOKEN instances representing the
