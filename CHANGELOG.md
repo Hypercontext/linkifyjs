@@ -1,5 +1,10 @@
 # Linkify Changelog
 
+### v2.0.5
+
+* Correct trailing symbol parsing (#149)
+* Linkify element fixes (#148)
+
 ### v2.0.4
 
 * Optimize class code to reduce file size (#147).
