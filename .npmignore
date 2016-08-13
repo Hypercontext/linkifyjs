@@ -15,7 +15,7 @@ test
 
 # Files
 .editorconfig
-.jshintrc
+.eslintrc
 .travis.yml
 bower.json
 gulpfile.js

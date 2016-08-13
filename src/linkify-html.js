@@ -30,7 +30,7 @@ export default function linkifyHtml(str, opts={}) {
 			let tagName = token.tagName.toUpperCase();
 			let isIgnored = tagName === 'A' ||
 				options.contains(opts.ignoreTags, tagName);
-			if (!isIgnored) continue;
+			if (!isIgnored) { continue; }
 
 			let preskipLen = linkifiedTokens.length;
 			skipTagTokens(tagName, tokens, ++i, linkifiedTokens);
@@ -86,7 +86,8 @@ function linkifyChars(str, opts) {
 
 	for (var i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		let validated = token.isLink && linkify.options.resolve(opts.validate, token.toString(), token.type);
+		let validated = token.isLink
+			&& linkify.options.resolve(opts.validate, token.toString(), token.type);
 
 		if (token.type === 'nl' && opts.nl2br) {
 			result.push({

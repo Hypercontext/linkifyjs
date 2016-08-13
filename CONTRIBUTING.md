@@ -57,14 +57,14 @@ Here are the primary build tasks used for development. See [gulpfile.js](https:/
 Here are the tools used for testing linkify:
 
 * [Mocha](http://mochajs.org/) is our primary test case framework
-* [JSHint](http://jshint.com/) for code linting
+* [ESLint](http://eslint.org) for code linting
 * [Istanbul](https://gotwarlost.github.io/istanbul/) for code coverage analysis
 * [Karma](http://karma-runner.github.io/0.12/index.html) is our browser test runner
 * [Sauce Labs](https://saucelabs.com/) for cross-browser testing
 
-These are all configured to run on gulp. Tasks `mocha` and `jshint` are the most basic you can run. Other tasks include:
+These are all configured to run on gulp. Tasks `mocha` and `eslint` are the most basic you can run. Other tasks include:
 
-* `test` transpiles the code and runs JSHint and Mocha
+* `test` transpiles the code and runs ESLint and Mocha
 * `coverage` runs Istanbul code coverage on the Mocha tests
 * Karma has a number of tasks that allow you to run Mocha tests on different browsers (via [Browserify](http://browserify.org/))
 	* `karma` runs tests on the [PhantomJS](http://phantomjs.org/) headless browser

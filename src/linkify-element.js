@@ -139,10 +139,10 @@ function linkifyElementHelper(element, opts, doc) {
 	return element;
 }
 
-function linkifyElement(element, opts, doc=null) {
+function linkifyElement(element, opts, doc = false) {
 
 	try {
-		doc = doc || window && window.document || global && global.document;
+		doc = doc || document || window && window.document || global && global.document;
 	} catch (e) { /* do nothing for now */ }
 
 	if (!doc) {

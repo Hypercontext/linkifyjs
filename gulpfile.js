@@ -6,18 +6,19 @@ const glob = require('glob');
 const Server = require('karma').Server;
 const merge = require('merge-stream');
 const path = require('path');
-const stylish = require('jshint-stylish');
 const runSequence = require('run-sequence');
 const tlds = require('./tlds');
 
 // Gulp plugins
 const babel = require('gulp-babel');
+const clean = require('gulp-clean');
 const concat = require('gulp-concat');
 const istanbul = require('gulp-istanbul');
-const jshint = require('gulp-jshint');
+const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
+// NOTE: DO NOT Upgrade gulp-uglify, it breaks IE8 and the options don't seem to be working
 const uglify = require('gulp-uglify');
 const wrap = require('gulp-wrap');
 
@@ -25,7 +26,7 @@ const rollup = require('./tasks/rollup');
 const quickEs3 = require('./tasks/quick-es3');
 
 // All properties that are part of the public/plugin APIs
-const unmangleableProps = require('./tasks/uglify').unmangleableProps
+const unmangleableProps = require('./tasks/uglify').unmangleableProps;
 
 var paths = {
 	src: 'src/**/*.js',
@@ -92,7 +93,7 @@ gulp.task('build-core', () =>
 	.pipe(babel())
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(replace('undefined.', 'window.'))
-	.pipe(wrap({src: `templates/linkify.js`}))
+	.pipe(wrap({src: 'templates/linkify.js'}))
 	.pipe(gulp.dest('build'))
 );
 
@@ -146,7 +147,7 @@ gulp.task('build-interfaces', () => {
 				moduleName: moduleName,
 				globals: {
 					'jquery': '$',
-					'./linkify.js': 'linkify'
+					[`${__dirname}/src/linkify.js`]: 'linkify'
 				}
 			}
 		}))
@@ -230,19 +231,26 @@ gulp.task('build', [
 ], (cb) => { cb(); });
 
 /**
-	Lint using jshint
+	Lint using eslint
 */
-gulp.task('jshint', () =>
-	gulp.src([paths.src, paths.test, paths.spec, paths.qunit])
-	.pipe(jshint())
-	.pipe(jshint.reporter(stylish))
-	.pipe(jshint.reporter('fail'))
+gulp.task('eslint', () =>
+	gulp.src([
+		'gulpfile.js',
+		paths.src,
+		paths.test,
+		paths.spec,
+		paths.qunit,
+		'!src/simple-html-tokenizer/**'
+	])
+	.pipe(eslint())
+	.pipe(eslint.format())
+	.pipe(eslint.failAfterError())
 );
 
 /**
 	Run mocha tests
 */
-gulp.task('mocha', ['jshint', 'build'], () =>
+gulp.task('mocha', ['eslint', 'build'], () =>
 	gulp.src(paths.test, {read: false})
 	.pipe(mocha())
 );
@@ -250,7 +258,7 @@ gulp.task('mocha', ['jshint', 'build'], () =>
 /**
 	Code coverage reort for mocha tests
 */
-gulp.task('coverage', ['jshint', 'dist'], (callback) => {
+gulp.task('coverage', ['eslint', 'dist'], (callback) => {
 	// IMPORTANT: return not required here (and will actually cause bugs!)
 	gulp.src(paths.libTest)
 	.pipe(istanbul()) // Covering files
@@ -340,6 +348,7 @@ gulp.task('build-benchmark', ['build-legacy'], () =>
 	.pipe(gulp.dest('build/benchmark'))
 );
 
+// NOTE: DO NOT Upgrade gulp-uglify, it breaks IE8 and the options don't seem to be working
 gulp.task('uglify', ['build-legacy'], () => {
 	let options = {
 		mangleProperties: {
@@ -370,9 +379,20 @@ gulp.task('test-ci', (callback) =>
 	runSequence('karma-ci', 'karma-amd-ci', callback)
 );
 
+gulp.task('clean', () =>
+	gulp.src([
+		'_sass',
+		'build',
+		'coverage',
+		'dist',
+		'js',
+		'lib',
+	], {read: false}).pipe(clean())
+);
+
 /**
 	Build JS and begin watching for changes
 */
-gulp.task('default', ['jshint', 'babel'], () =>
-	gulp.watch(paths.src, ['jshint', 'babel'])
+gulp.task('default', ['eslint', 'babel'], () =>
+	gulp.watch(paths.src, ['eslint', 'babel'])
 );

@@ -1,9 +1,10 @@
-var linkifyHtml = require('../../lib/linkify-html').default;
+var linkifyHtml = require(`${__base}linkify-html`).default;
 var htmlOptions = require('./html/options');
 
-describe('linkify-html', function () {
+describe('linkify-html', () => {
 
-	var options = { // test options
+	// test options
+	var options = {
 		tagName: 'span',
 		target: '_parent',
 		nl2br: true,
@@ -13,10 +14,10 @@ describe('linkify-html', function () {
 			rel: 'nofollow',
 			onclick: 'console.log(\'Hello World!\')'
 		},
-		format: function (val) {
+		format(val) {
 			return val.truncate(40);
 		},
-		formatHref: function (href, type) {
+		formatHref(href, type) {
 			if (type === 'email') {
 				href += '?subject=Hello%20from%20Linkify';
 			}
@@ -26,13 +27,13 @@ describe('linkify-html', function () {
 			'script',
 			'style'
 		]
-	},
+	};
 
 	// For each element in this array
 	// [0] - Original text
 	// [1] - Linkified with default options
 	// [2] - Linkified with new options
-	tests = [
+	var tests = [
 		[
 			'Test with no links',
 			'Test with no links',
@@ -60,26 +61,26 @@ describe('linkify-html', function () {
 		]
 	];
 
-	it('Works with default options', function () {
+	it('Works with default options', () => {
 		tests.map(function (test) {
 			expect(linkifyHtml(test[0])).to.be.eql(test[1]);
 		});
 	});
 
-	it('Works with overriden options (general)', function () {
+	it('Works with overriden options (general)', () => {
 		tests.map(function (test) {
 			expect(linkifyHtml(test[0], options)).to.be.eql(test[2]);
 		});
 	});
 
-	it('Works with overriden options (validate)', function () {
+	it('Works with overriden options (validate)', () => {
 		var optionsValidate = {
 			validate: function (text, type) {
 				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 			}
-		},
+		};
 
-		testsValidate = [
+		var testsValidate = [
 			[
 				'1.Test with no links',
 				'1.Test with no links'
@@ -106,20 +107,16 @@ describe('linkify-html', function () {
 		});
 	});
 
-	it('Works with HTML and default options', function () {
+	it('Works with HTML and default options', () => {
 		var linkified = linkifyHtml(htmlOptions.original);
-		expect(htmlOptions.linkified).to.contain(linkified);
+		expect(linkified).to.be.oneOf(htmlOptions.linkified);
 	});
 
-	it('Works with HTML and overriden options', function () {
+	it('Works with HTML and overriden options', () => {
 		var linkified = linkifyHtml(
 			htmlOptions.original,
 			htmlOptions.altOptions
 		);
-		expect(htmlOptions.linkifiedAlt).to.contain(linkified);
+		expect(linkified).to.be.oneOf(htmlOptions.linkifiedAlt);
 	});
-
-
-
-
 });

@@ -1,13 +1,10 @@
-var
-scanner = require('../../../../lib/linkify/core/scanner'),
-parser = require('../../../../lib/linkify/core/parser'),
-MULTI_TOKENS = require('../../../../lib/linkify/core/tokens').multi;
+const scanner = require(`${__base}linkify/core/scanner`);
+const parser = require(`${__base}linkify/core/parser`);
+const MULTI_TOKENS = require(`${__base}linkify/core/tokens`).multi;
 
-var
-TEXT	= MULTI_TOKENS.TEXT,
-URL		= MULTI_TOKENS.URL,
-EMAIL	= MULTI_TOKENS.EMAIL;
-// NL			= MULTI_TOKENS.NL; // new line
+const TEXT = MULTI_TOKENS.TEXT;
+const URL = MULTI_TOKENS.URL;
+const EMAIL = MULTI_TOKENS.EMAIL;
 
 /**
 	[0] - Original text to parse (should tokenize first)
@@ -153,15 +150,14 @@ var tests = [
 	]
 ];
 
-describe('linkify/core/parser#run()', function () {
+describe('linkify/core/parser#run()', () => {
 
 	function makeTest(test) {
-		return it('Tokenizes the string "' + test[0] + '"', function () {
-			var
-			str = test[0],
-			types = test[1],
-			values = test[2],
-			result = parser.run(scanner.run(str));
+		return it('Tokenizes the string "' + test[0] + '"', () => {
+			var str = test[0];
+			var types = test[1];
+			var values = test[2];
+			var result = parser.run(scanner.run(str));
 
 			expect(result.map(function (token) {
 				return token.toString();

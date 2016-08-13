@@ -23,10 +23,8 @@ let tokenize = function (str) {
 	Returns a list of linkable items in the given string.
 */
 let find = function (str, type=null) {
-
-	let
-	tokens = tokenize(str),
-	filtered = [];
+	let tokens = tokenize(str);
+	let filtered = [];
 
 	for (let i = 0; i < tokens.length; i++) {
 		if (tokens[i].isLink && (

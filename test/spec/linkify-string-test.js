@@ -1,6 +1,4 @@
-/*jshint scripturl:true*/
-
-var linkifyStr = require('../../lib/linkify-string').default;
+const linkifyStr = require(`${__base}linkify-string`).default;
 
 /**
 	Gracefully truncate a string to a given limit. Will replace extraneous
@@ -22,9 +20,8 @@ String.prototype.truncate = function (limit) {
 	return string;
 };
 
-describe('linkify-string', function () {
-	var
-	options = { // test options
+describe('linkify-string', () => {
+	const options = { // test options
 		tagName: 'span',
 		target: '_parent',
 		nl2br: true,
@@ -43,13 +40,13 @@ describe('linkify-string', function () {
 			}
 			return href;
 		}
-	},
+	};
 
 	// For each element in this array
 	// [0] - Original text
 	// [1] - Linkified with default options
 	// [2] - Linkified with new options
-	tests = [
+	const tests = [
 		[
 			'Test with no links',
 			'Test with no links',
@@ -66,27 +63,27 @@ describe('linkify-string', function () {
 		]
 	];
 
-	it('Works with default options', function () {
+	it('Works with default options', () => {
 		tests.map(function (test) {
 			expect(linkifyStr(test[0])).to.be.eql(test[1]);
 		});
 	});
 
-	it('Works with overriden options (general)', function () {
+	it('Works with overriden options (general)', () => {
 		tests.map(function (test) {
 			expect(linkifyStr(test[0], options)).to.be.eql(test[2]);
 		});
 	});
 
 	// Test specific options
-	it('Works with overriden options (validate)', function () {
-		var optionsValidate = {
+	it('Works with overriden options (validate)', () => {
+		const validateOptions = {
 			validate: function (text, type) {
 				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 			}
-		},
+		};
 
-		testsValidate = [
+		const validateTests = [
 			[
 				'1.Test with no links',
 				'1.Test with no links'
@@ -108,8 +105,8 @@ describe('linkify-string', function () {
 			]
 		];
 
-		testsValidate.map(function (test) {
-			expect(linkifyStr(test[0], optionsValidate)).to.be.eql(test[1]);
+		validateTests.map(function (test) {
+			expect(linkifyStr(test[0], validateOptions)).to.be.eql(test[1]);
 		});
 	});
 });

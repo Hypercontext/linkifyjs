@@ -2,12 +2,12 @@ import $ from 'jquery';
 import linkifyElement from './linkify-element';
 
 // Applies the plugin to jQuery
-export default function apply($, doc=null) {
+export default function apply($, doc = false) {
 
 	$.fn = $.fn || {};
 
 	try {
-		doc = doc || window && window.document || global && global.document;
+		doc = doc || document || window && window.document || global && global.document;
 	} catch (e) { /* do nothing for now */ }
 
 	if (!doc) {
@@ -34,13 +34,11 @@ export default function apply($, doc=null) {
 
 	$(doc).ready(function () {
 		$('[data-linkify]').each(function () {
-
-			let
-			$this = $(this),
-			data = $this.data(),
-			target = data.linkify,
-			nl2br = data.linkifyNlbr,
-			options = {
+			let $this = $(this);
+			let data = $this.data();
+			let target = data.linkify;
+			let nl2br = data.linkifyNlbr;
+			let options = {
 				linkAttributes:		data.linkifyAttributes,
 				defaultProtocol: 	data.linkifyDefaultProtocol,
 				events: 			data.linkifyEvents,

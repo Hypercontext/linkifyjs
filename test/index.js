@@ -1,4 +1,4 @@
-var glob = require('glob');
+const glob = require('glob');
 require('./init');
 global.__base = __dirname.replace(/test$/, 'lib/');
 

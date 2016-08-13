@@ -18,71 +18,67 @@ import {TokenState as State} from './state';
 
 let makeState = (tokenClass) => new State(tokenClass);
 
-const
-TT_DOMAIN		= TEXT_TOKENS.DOMAIN,
-TT_AT			= TEXT_TOKENS.AT,
-TT_COLON		= TEXT_TOKENS.COLON,
-TT_DOT			= TEXT_TOKENS.DOT,
-TT_PUNCTUATION	= TEXT_TOKENS.PUNCTUATION,
-TT_LOCALHOST	= TEXT_TOKENS.LOCALHOST,
-TT_NL			= TEXT_TOKENS.NL,
-TT_NUM			= TEXT_TOKENS.NUM,
-TT_PLUS			= TEXT_TOKENS.PLUS,
-TT_POUND		= TEXT_TOKENS.POUND,
-TT_PROTOCOL		= TEXT_TOKENS.PROTOCOL,
-TT_QUERY		= TEXT_TOKENS.QUERY,
-TT_SLASH		= TEXT_TOKENS.SLASH,
-TT_SYM			= TEXT_TOKENS.SYM,
-TT_TLD			= TEXT_TOKENS.TLD,
-TT_OPENBRACE	= TEXT_TOKENS.OPENBRACE,
-TT_OPENBRACKET	= TEXT_TOKENS.OPENBRACKET,
-TT_OPENPAREN	= TEXT_TOKENS.OPENPAREN,
-TT_CLOSEBRACE	= TEXT_TOKENS.CLOSEBRACE,
-TT_CLOSEBRACKET	= TEXT_TOKENS.CLOSEBRACKET,
-TT_CLOSEPAREN	= TEXT_TOKENS.CLOSEPAREN;
+const TT_DOMAIN			= TEXT_TOKENS.DOMAIN;
+const TT_AT				= TEXT_TOKENS.AT;
+const TT_COLON			= TEXT_TOKENS.COLON;
+const TT_DOT			= TEXT_TOKENS.DOT;
+const TT_PUNCTUATION	= TEXT_TOKENS.PUNCTUATION;
+const TT_LOCALHOST		= TEXT_TOKENS.LOCALHOST;
+const TT_NL				= TEXT_TOKENS.NL;
+const TT_NUM			= TEXT_TOKENS.NUM;
+const TT_PLUS			= TEXT_TOKENS.PLUS;
+const TT_POUND			= TEXT_TOKENS.POUND;
+const TT_PROTOCOL		= TEXT_TOKENS.PROTOCOL;
+const TT_QUERY			= TEXT_TOKENS.QUERY;
+const TT_SLASH			= TEXT_TOKENS.SLASH;
+const TT_SYM			= TEXT_TOKENS.SYM;
+const TT_TLD			= TEXT_TOKENS.TLD;
+const TT_OPENBRACE		= TEXT_TOKENS.OPENBRACE;
+const TT_OPENBRACKET	= TEXT_TOKENS.OPENBRACKET;
+const TT_OPENPAREN		= TEXT_TOKENS.OPENPAREN;
+const TT_CLOSEBRACE		= TEXT_TOKENS.CLOSEBRACE;
+const TT_CLOSEBRACKET	= TEXT_TOKENS.CLOSEBRACKET;
+const TT_CLOSEPAREN		= TEXT_TOKENS.CLOSEPAREN;
+// const TT_WS 			= TEXT_TOKENS.WS;
 
-// TT_WS 			= TEXT_TOKENS.WS;
-
-const
-T_EMAIL	= MULTI_TOKENS.EMAIL,
-T_NL	= MULTI_TOKENS.NL,
-T_TEXT	= MULTI_TOKENS.TEXT,
-T_URL	= MULTI_TOKENS.URL;
+const T_EMAIL	= MULTI_TOKENS.EMAIL;
+const T_NL		= MULTI_TOKENS.NL;
+const T_TEXT	= MULTI_TOKENS.TEXT;
+const T_URL		= MULTI_TOKENS.URL;
 
 // The universal starting state.
 let S_START = makeState();
 
 // Intermediate states for URLs. Note that domains that begin with a protocol
 // are treated slighly differently from those that don't.
-let
-S_PROTOCOL				= makeState(), // e.g., 'http:'
-S_PROTOCOL_SLASH		= makeState(), // e.g., '/', 'http:/''
-S_PROTOCOL_SLASH_SLASH	= makeState(),  // e.g., '//', 'http://'
-S_DOMAIN				= makeState(), // parsed string ends with a potential domain name (A)
-S_DOMAIN_DOT			= makeState(), // (A) domain followed by DOT
-S_TLD					= makeState(T_URL), // (A) Simplest possible URL with no query string
-S_TLD_COLON				= makeState(), // (A) URL followed by colon (potential port number here)
-S_TLD_PORT				= makeState(T_URL), // TLD followed by a port number
-S_URL					= makeState(T_URL), // Long URL with optional port and maybe query string
-S_URL_NON_ACCEPTING		= makeState(), // URL followed by some symbols (will not be part of the final URL)
-S_URL_OPENBRACE			= makeState(), // URL followed by {
-S_URL_OPENBRACKET		= makeState(), // URL followed by [
-S_URL_OPENPAREN			= makeState(), // URL followed by (
-S_URL_OPENBRACE_Q		= makeState(T_URL), // URL followed by { and some symbols that the URL can end it
-S_URL_OPENBRACKET_Q		= makeState(T_URL), // URL followed by [ and some symbols that the URL can end it
-S_URL_OPENPAREN_Q		= makeState(T_URL), // URL followed by ( and some symbols that the URL can end it
-S_URL_OPENBRACE_SYMS	= makeState(), // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
-S_URL_OPENBRACKET_SYMS	= makeState(), // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
-S_URL_OPENPAREN_SYMS	= makeState(), // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
-S_EMAIL_DOMAIN			= makeState(), // parsed string starts with local email info + @ with a potential domain name (C)
-S_EMAIL_DOMAIN_DOT		= makeState(), // (C) domain followed by DOT
-S_EMAIL					= makeState(T_EMAIL), // (C) Possible email address (could have more tlds)
-S_EMAIL_COLON			= makeState(), // (C) URL followed by colon (potential port number here)
-S_EMAIL_PORT			= makeState(T_EMAIL), // (C) Email address with a port
-S_LOCALPART				= makeState(), // Local part of the email address
-S_LOCALPART_AT			= makeState(), // Local part of the email address plus @
-S_LOCALPART_DOT			= makeState(), // Local part of the email address plus '.' (localpart cannot end in .)
-S_NL					= makeState(T_NL); // single new line
+let S_PROTOCOL				= makeState(); // e.g., 'http:'
+let S_PROTOCOL_SLASH		= makeState(); // e.g., '/', 'http:/''
+let S_PROTOCOL_SLASH_SLASH	= makeState();  // e.g., '//', 'http://'
+let S_DOMAIN				= makeState(); // parsed string ends with a potential domain name (A)
+let S_DOMAIN_DOT			= makeState(); // (A) domain followed by DOT
+let S_TLD					= makeState(T_URL); // (A) Simplest possible URL with no query string
+let S_TLD_COLON				= makeState(); // (A) URL followed by colon (potential port number here)
+let S_TLD_PORT				= makeState(T_URL); // TLD followed by a port number
+let S_URL					= makeState(T_URL); // Long URL with optional port and maybe query string
+let S_URL_NON_ACCEPTING		= makeState(); // URL followed by some symbols (will not be part of the final URL)
+let S_URL_OPENBRACE			= makeState(); // URL followed by {
+let S_URL_OPENBRACKET		= makeState(); // URL followed by [
+let S_URL_OPENPAREN			= makeState(); // URL followed by (
+let S_URL_OPENBRACE_Q		= makeState(T_URL); // URL followed by { and some symbols that the URL can end it
+let S_URL_OPENBRACKET_Q		= makeState(T_URL); // URL followed by [ and some symbols that the URL can end it
+let S_URL_OPENPAREN_Q		= makeState(T_URL); // URL followed by ( and some symbols that the URL can end it
+let S_URL_OPENBRACE_SYMS	= makeState(); // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
+let S_URL_OPENBRACKET_SYMS	= makeState(); // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
+let S_URL_OPENPAREN_SYMS	= makeState(); // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
+let S_EMAIL_DOMAIN			= makeState(); // parsed string starts with local email info + @ with a potential domain name (C)
+let S_EMAIL_DOMAIN_DOT		= makeState(); // (C) domain followed by DOT
+let S_EMAIL					= makeState(T_EMAIL); // (C) Possible email address (could have more tlds)
+let S_EMAIL_COLON			= makeState(); // (C) URL followed by colon (potential port number here)
+let S_EMAIL_PORT			= makeState(T_EMAIL); // (C) Email address with a port
+let S_LOCALPART				= makeState(); // Local part of the email address
+let S_LOCALPART_AT			= makeState(); // Local part of the email address plus @
+let S_LOCALPART_DOT			= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
+let S_NL					= makeState(T_NL); // single new line
 
 // Make path from start to protocol (with '//')
 S_START
@@ -269,21 +265,18 @@ S_LOCALPART_AT
 // States following `@` defined above
 
 let run = function (tokens) {
-	let
-	len = tokens.length,
-	cursor = 0,
-	multis = [],
-	textTokens = [];
+	let len = tokens.length;
+	let cursor = 0;
+	let multis = [];
+	let textTokens = [];
 
 	while (cursor < len) {
-
-		let
-		state = S_START,
-		secondState = null,
-		nextState = null,
-		multiLength = 0,
-		latestAccepting = null,
-		sinceAccepts = -1;
+		let state = S_START;
+		let secondState = null;
+		let nextState = null;
+		let multiLength = 0;
+		let latestAccepting = null;
+		let sinceAccepts = -1;
 
 		while (cursor < len && !(secondState = state.next(tokens[cursor]))) {
 			// Starting tokens with nowhere to jump to.
@@ -347,7 +340,7 @@ let run = function (tokens) {
 	return multis;
 };
 
-let
-TOKENS = MULTI_TOKENS,
-start = S_START;
+var TOKENS = MULTI_TOKENS;
+var start = S_START;
+
 export { State, TOKENS, run, start };

@@ -1,8 +1,6 @@
-/*jshint -W030 */
-var
-$, doc, testContainer, jsdom,
-applyLinkify = require('../../lib/linkify-jquery').default,
-htmlOptions = require('./html/options');
+var $, doc, testContainer, jsdom;
+const applyLinkify = require(`${__base}linkify-jquery`).default;
+const htmlOptions = require('./html/options');
 
 try {
 	doc = document;
@@ -54,13 +52,11 @@ describe('linkify-jquery', function () {
 		);
 	});
 
-	beforeEach(function () {
-		// Make sure we start out with a fresh DOM every time
-		testContainer.innerHTML = htmlOptions.original;
-	});
+	// Make sure we start out with a fresh DOM every time
+	beforeEach(() => testContainer.innerHTML = htmlOptions.original);
 
 	// This works but is inconsistent across browsers
-	it('Works with the DOM Data API', function () {
+	it('Works with the DOM Data API', () => {
 		expect($('header').first().html()).to.be.eql(
 			'Have a link to:<br><a href="https://github.com" class="linkified" target="_blank">github.com</a>!'
 		);
@@ -72,30 +68,30 @@ describe('linkify-jquery', function () {
 		);
 	});
 
-	it('Works with default options', function () {
+	it('Works with default options', () => {
 		var $container = $('#linkify-jquery-test-container');
 		expect(($container.length)).to.be.eql(1);
 		var result = $container.linkify();
 		// `should` is not defined on jQuery objects
 		expect((result === $container)).to.be.ok; // should return the same element
-		expect(htmlOptions.linkified).to.contain($container.html());
+		expect($container.html()).to.be.oneOf(htmlOptions.linkified);
 	});
 
-	it('Works with overriden options (general)', function () {
+	it('Works with overriden options (general)', () => {
 		var $container = $('#linkify-jquery-test-container');
 		expect(($container.length)).to.be.eql(1);
 		var result = $container.linkify(htmlOptions.altOptions);
 		// `should` is not defined on jQuery objects
 		expect((result === $container)).to.be.ok; // should return the same element
-		expect(htmlOptions.linkifiedAlt).to.contain($container.html());
+		expect($container.html()).to.be.oneOf(htmlOptions.linkifiedAlt);
 	});
 
-	it('Works with overriden options (validate)', function () {
+	it('Works with overriden options (validate)', () => {
 		var $container = $('#linkify-jquery-test-container');
 		expect(($container.length)).to.be.eql(1);
 		var result = $container.linkify(htmlOptions.validateOptions);
 		// `should` is not defined on jQuery objects
 		expect((result === $container)).to.be.ok; // should return the same element
-		expect(htmlOptions.linkifiedValidate).to.contain($container.html());
+		expect($container.html()).to.be.oneOf(htmlOptions.linkifiedValidate);
 	});
 });
