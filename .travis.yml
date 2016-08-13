@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-  - "6.2"
+  - "6.3"
   - "4.4"
 env:
   global:
