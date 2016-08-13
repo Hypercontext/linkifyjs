@@ -1,38 +1,34 @@
-var
-scanner = require('../../../../lib/linkify/core/scanner'),
-TEXT_TOKENS = require('../../../../lib/linkify/core/tokens').text;
+const scanner = require(`${__base}linkify/core/scanner`);
+const TEXTTOKENS = require(`${__base}linkify/core/tokens`).text;
 
-var
-DOMAIN		= TEXT_TOKENS.DOMAIN,
-AT			= TEXT_TOKENS.AT,
-COLON		= TEXT_TOKENS.COLON,
-DOT			= TEXT_TOKENS.DOT,
-PUNCTUATION	= TEXT_TOKENS.PUNCTUATION,
-LOCALHOST	= TEXT_TOKENS.LOCALHOST,
-NL			= TEXT_TOKENS.NL,
-NUM			= TEXT_TOKENS.NUM,
-PLUS		= TEXT_TOKENS.PLUS,
-POUND		= TEXT_TOKENS.POUND,
-PROTOCOL	= TEXT_TOKENS.PROTOCOL,
-QUERY		= TEXT_TOKENS.QUERY,
-SLASH		= TEXT_TOKENS.SLASH,
-SYM			= TEXT_TOKENS.SYM,
-TLD			= TEXT_TOKENS.TLD,
-WS			= TEXT_TOKENS.WS,
-
-OPENBRACE	= TEXT_TOKENS.OPENBRACE,
-OPENBRACKET	= TEXT_TOKENS.OPENBRACKET,
-OPENPAREN	= TEXT_TOKENS.OPENPAREN,
-CLOSEBRACE	= TEXT_TOKENS.CLOSEBRACE,
-CLOSEBRACKET	= TEXT_TOKENS.CLOSEBRACKET,
-CLOSEPAREN	= TEXT_TOKENS.CLOSEPAREN;
-
+const DOMAIN = TEXTTOKENS.DOMAIN;
+const AT = TEXTTOKENS.AT;
+const COLON = TEXTTOKENS.COLON;
+const DOT = TEXTTOKENS.DOT;
+const PUNCTUATION = TEXTTOKENS.PUNCTUATION;
+const LOCALHOST = TEXTTOKENS.LOCALHOST;
+const NL = TEXTTOKENS.NL;
+const NUM = TEXTTOKENS.NUM;
+const PLUS = TEXTTOKENS.PLUS;
+const POUND = TEXTTOKENS.POUND;
+const PROTOCOL = TEXTTOKENS.PROTOCOL;
+const QUERY = TEXTTOKENS.QUERY;
+const SLASH = TEXTTOKENS.SLASH;
+const SYM = TEXTTOKENS.SYM;
+const TLD = TEXTTOKENS.TLD;
+const WS = TEXTTOKENS.WS;
+const OPENBRACE = TEXTTOKENS.OPENBRACE;
+const OPENBRACKET = TEXTTOKENS.OPENBRACKET;
+const OPENPAREN = TEXTTOKENS.OPENPAREN;
+const CLOSEBRACE = TEXTTOKENS.CLOSEBRACE;
+const CLOSEBRACKET = TEXTTOKENS.CLOSEBRACKET;
+const CLOSEPAREN = TEXTTOKENS.CLOSEPAREN;
 
 // The elements are
 // 1. input string
 // 2. Types for the resulting instances
 // 3. String values for the resulting instances
-var tests = [
+const tests = [
 	['', [], []],
 	['@', [AT], ['@']],
 	[':', [COLON], [':']],
@@ -78,25 +74,16 @@ var tests = [
 	]
 ];
 
-describe('linkify/core/scanner#run()', function () {
-
+describe('linkify/core/scanner#run()', () => {
 	function makeTest(test) {
-		return it('Tokenizes the string "' + test[0] + '"', function () {
+		return it('Tokenizes the string "' + test[0] + '"', () => {
+			var str = test[0];
+			var types = test[1];
+			var values = test[2];
+			var result = scanner.run(str);
 
-			var
-			str = test[0],
-			types = test[1],
-			values = test[2],
-			result = scanner.run(str);
-
-			expect(result.map(function (token) {
-				return token.toString();
-			})).to.eql(values);
-
-			expect(result.map(function (token) {
-				return token.constructor;
-			})).to.eql(types);
-
+			expect(result.map((token) => token.toString())).to.eql(values);
+			expect(result.map((token) => token.constructor)).to.eql(types);
 		});
 	}
 

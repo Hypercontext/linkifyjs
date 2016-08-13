@@ -1,5 +1,5 @@
 // HTML to use with linkify-element and linkify-jquery
-var fs = require('fs');
+const fs = require('fs');
 
 module.exports = {
 	original: fs.readFileSync(__dirname + '/original.html', 'utf8').trim(),

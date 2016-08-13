@@ -1,11 +1,8 @@
-/*jshint -W030 */
-var
-linkify = require('../../../../lib/linkify'),
-hashtag = require('../../../../lib/linkify/plugins/hashtag').default;
+const linkify = require(`${__base}linkify`);
+const hashtag = require(`${__base}linkify/plugins/hashtag`).default;
 
-describe('linkify/plugins/hashtag', function () {
-
-	it('Cannot parse hashtags before applying the plugin', function () {
+describe('linkify/plugins/hashtag', () => {
+	it('Cannot parse hashtags before applying the plugin', () => {
 		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
 		.to.be.eql([]);
 
@@ -13,7 +10,7 @@ describe('linkify/plugins/hashtag', function () {
 		expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
 	});
 
-	it ('Can parse hashtags after applying the plugin', function () {
+	it ('Can parse hashtags after applying the plugin', () => {
 
 		hashtag(linkify);
 
