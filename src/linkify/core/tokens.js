@@ -317,12 +317,11 @@ const URL = inherits(MultiToken, createTokenClass(), {
 		@return {String}
 	*/
 	toHref(protocol = 'http') {
-		let
-		hasProtocol = false,
-		hasSlashSlash = false,
-		tokens = this.v,
-		result = [],
-		i = 0;
+		let hasProtocol = false;
+		let hasSlashSlash = false;
+		let tokens = this.v;
+		let result = [];
+		let i = 0;
 
 		// Make the first part of the domain lowercase
 		// Lowercase protocol

@@ -34,13 +34,11 @@ export default function apply($, doc=null) {
 
 	$(doc).ready(function () {
 		$('[data-linkify]').each(function () {
-
-			let
-			$this = $(this),
-			data = $this.data(),
-			target = data.linkify,
-			nl2br = data.linkifyNlbr,
-			options = {
+			let $this = $(this);
+			let data = $this.data();
+			let target = data.linkify;
+			let nl2br = data.linkifyNlbr;
+			let options = {
 				linkAttributes:		data.linkifyAttributes,
 				defaultProtocol: 	data.linkifyDefaultProtocol,
 				events: 			data.linkifyEvents,

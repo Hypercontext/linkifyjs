@@ -67,12 +67,12 @@ BaseState.prototype = {
 
 		for (let i = 0; i < this.j.length; i++) {
 
-			let jump = this.j[i],
-			symbol = jump[0],	// Next item to check for
-			state = jump[1];	// State to jump to if items match
+			let jump = this.j[i];
+			let symbol = jump[0]; // Next item to check for
+			let state = jump[1]; // State to jump to if items match
 
 			// compare item with symbol
-			if (this.test(item, symbol)) return state;
+			if (this.test(item, symbol)) { return state; }
 		}
 
 		// Nowhere left to jump!
@@ -183,11 +183,12 @@ const TokenState = inherits(BaseState, createStateClass(), {
 */
 function stateify(str, start, endToken, defaultToken) {
 
-	let i = 0,
-	len = str.length,
-	state = start,
-	newStates = [],
-	nextState;
+	let newStates = [];
+
+	var i = 0;
+	var len = str.length;
+	var state = start;
+	var nextState;
 
 	// Find the next state without a jump to the next character
 	while (i < len && (nextState = state.next(str[i]))) {
@@ -195,7 +196,7 @@ function stateify(str, start, endToken, defaultToken) {
 		i++;
 	}
 
-	if (i >= len) return []; // no new tokens were added
+	if (i >= len) { return []; } // no new tokens were added
 
 	while (i < len - 1) {
 		nextState = new CharacterState(defaultToken);

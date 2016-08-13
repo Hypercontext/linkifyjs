@@ -19,8 +19,7 @@ function escapeAttr(href) {
 }
 
 function attributesToString(attributes) {
-
-	if (!attributes) return '';
+	if (!attributes) { return ''; }
 	let result = [];
 
 	for (let attr in attributes) {
@@ -34,25 +33,23 @@ function linkifyStr(str, opts={}) {
 
 	opts = options.normalize(opts);
 
-	let
-	tokens = tokenize(str),
-	result = [];
+	let tokens = tokenize(str);
+	let result = [];
 
 	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		let validated = token.isLink && options.resolve(opts.validate, token.toString(), token.type);
+		let validated = token.isLink
+			&& options.resolve(opts.validate, token.toString(), token.type);
 
 		if (token.isLink && validated) {
 
-			let
-			href			= token.toHref(opts.defaultProtocol),
-			formatted		= options.resolve(opts.format, token.toString(), token.type),
-
-			formattedHref	= options.resolve(opts.formatHref, href, token.type),
-			attributesHash	= options.resolve(opts.attributes, href, token.type),
-			tagName			= options.resolve(opts.tagName, href, token.type),
-			linkClass		= options.resolve(opts.linkClass, href, token.type),
-			target			= options.resolve(opts.target, href, token.type);
+			let href			= token.toHref(opts.defaultProtocol);
+			let formatted		= options.resolve(opts.format, token.toString(), token.type);
+			let formattedHref	= options.resolve(opts.formatHref, href, token.type);
+			let attributesHash	= options.resolve(opts.attributes, href, token.type);
+			let tagName			= options.resolve(opts.tagName, href, token.type);
+			let linkClass		= options.resolve(opts.linkClass, href, token.type);
+			let target			= options.resolve(opts.target, href, token.type);
 
 			let link = `<${tagName} href="${escapeAttr(formattedHref)}" class="${escapeAttr(linkClass)}"`;
 			if (target) {

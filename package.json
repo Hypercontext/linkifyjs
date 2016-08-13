@@ -48,8 +48,6 @@
     "gulp-util": "^3.0.7",
     "gulp-wrap": "^0.13.0",
     "jsdom": "^9.3.0",
-    "jshint": "^2.9.1",
-    "jshint-stylish": "^2.0.1",
     "karma": "^1.1.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-firefox-launcher": "^1.0.0",
