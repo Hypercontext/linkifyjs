@@ -11,6 +11,7 @@ const tlds = require('./tlds');
 
 // Gulp plugins
 const babel = require('gulp-babel');
+const clean = require('gulp-clean');
 const concat = require('gulp-concat');
 const istanbul = require('gulp-istanbul');
 const eslint = require('gulp-eslint');
@@ -145,7 +146,7 @@ gulp.task('build-interfaces', () => {
 				moduleName: moduleName,
 				globals: {
 					'jquery': '$',
-					'./linkify.js': 'linkify'
+					[`${__dirname}/src/linkify.js`]: 'linkify'
 				}
 			}
 		}))
@@ -374,6 +375,17 @@ gulp.task('test', (callback) =>
 );
 gulp.task('test-ci', (callback) =>
 	runSequence('karma-ci', 'karma-amd-ci', callback)
+);
+
+gulp.task('clean', () =>
+	gulp.src([
+		'_sass',
+		'build',
+		'coverage',
+		'dist',
+		'js',
+		'lib',
+	], {read: false}).pipe(clean())
 );
 
 /**
