@@ -18,6 +18,7 @@ const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
+// NOTE: DO NOT Upgrade gulp-uglify, it breaks IE8 and the options don't seem to be working
 const uglify = require('gulp-uglify');
 const wrap = require('gulp-wrap');
 
@@ -347,6 +348,7 @@ gulp.task('build-benchmark', ['build-legacy'], () =>
 	.pipe(gulp.dest('build/benchmark'))
 );
 
+// NOTE: DO NOT Upgrade gulp-uglify, it breaks IE8 and the options don't seem to be working
 gulp.task('uglify', ['build-legacy'], () => {
 	let options = {
 		mangleProperties: {

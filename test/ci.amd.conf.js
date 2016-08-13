@@ -1,8 +1,7 @@
 // Karma CI configuration
 
-var
-base = require('./amd.conf'),
-extend = require('lodash/extend');
+const base = require('./amd.conf');
+const extend = require('lodash/extend');
 
 module.exports = function (config) {
 
@@ -17,6 +16,11 @@ module.exports = function (config) {
 			base: 'SauceLabs',
 			browserName: 'firefox',
 			version: '45'
+		},
+		sl_safari: {
+			base: 'SauceLabs',
+			browserName: 'safari',
+			version: '7'
 		},
 		sl_edge: {
 			base: 'SauceLabs',
@@ -49,11 +53,11 @@ module.exports = function (config) {
 		// level of logging
 		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
 		sauceLabs: {
-			testName: 'Linkify Browser AMD Tests',
-			browserDisconnectTimeout: 30000,
-			browserNoActivityTimeout: 30000,
-			browserDisconnectTolerance: 3
+			testName: 'Linkify Browser AMD Tests'
 		},
+		browserDisconnectTimeout: 30000,
+		browserNoActivityTimeout: 30000,
+		browserDisconnectTolerance: 3,
 		customLaunchers: customLaunchers,
 		browsers: Object.keys(customLaunchers),
 		autoWatch: false,

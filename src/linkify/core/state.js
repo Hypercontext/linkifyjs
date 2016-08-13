@@ -182,13 +182,11 @@ const TokenState = inherits(BaseState, createStateClass(), {
 	@return {Array} list of newly-created states
 */
 function stateify(str, start, endToken, defaultToken) {
-
-	let newStates = [];
-
-	var i = 0;
-	var len = str.length;
-	var state = start;
-	var nextState;
+	let i = 0,
+		len = str.length,
+		state = start,
+		newStates = [],
+		nextState;
 
 	// Find the next state without a jump to the next character
 	while (i < len && (nextState = state.next(str[i]))) {
