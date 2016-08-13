@@ -2,12 +2,12 @@ import $ from 'jquery';
 import linkifyElement from './linkify-element';
 
 // Applies the plugin to jQuery
-export default function apply($, doc=null) {
+export default function apply($, doc = false) {
 
 	$.fn = $.fn || {};
 
 	try {
-		doc = doc || window && window.document || global && global.document;
+		doc = doc || document || window && window.document || global && global.document;
 	} catch (e) { /* do nothing for now */ }
 
 	if (!doc) {
