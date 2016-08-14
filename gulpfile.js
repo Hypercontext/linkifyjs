@@ -143,10 +143,7 @@ gulp.task('build-interfaces', () => {
 		let stream = gulp.src(files.js)
 		.pipe(rollup({
 			rollup: {
-				external: [
-					'jquery', `${__dirname}/src/linkify.js`,
-					'react', `${__dirname}/src/linkify.js`
-				]
+				external: ['jquery', 'react', './linkify.js', `${__dirname}/src/linkify.js`]
 			},
 			bundle: {
 				format: 'iife',
@@ -154,7 +151,8 @@ gulp.task('build-interfaces', () => {
 				globals: {
 					'jquery': '$',
 					'react': 'React',
-					[`${__dirname}/src/linkify.js`]: 'linkify'
+					'./linkify.js': 'linkify',
+					[`${__dirname}/src/linkify.js`]: 'linkify',
 				}
 			}
 		}))
@@ -193,12 +191,16 @@ gulp.task('build-plugins', () => {
 		// Global plugins
 		var stream = gulp.src(`src/linkify/plugins/${plugin}.js`)
 		.pipe(rollup({
-			rollup: {external: [`${__dirname}/src/linkify.js`]},
+			rollup: {
+				external: ['./linkify', './linkify.js', `${__dirname}/src/linkify.js`]
+			},
 			bundle: {
 				format: 'iife',
 				moduleName: 'plugin',
 				globals: {
-					'./linkify.js': 'linkify'
+					'./linkify': 'linkify',
+					'./linkify.js': 'linkify',
+					[`${__dirname}/src/linkify.js`]: 'linkify'
 				}
 			}
 		}))
