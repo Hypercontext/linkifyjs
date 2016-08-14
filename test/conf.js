@@ -13,15 +13,16 @@ module.exports = {
 		'node_modules/react/dist/react.js',
 		'node_modules/react-dom/dist/react-dom.js',
 		'dist/linkify-polyfill.min.js',
-		'dist/linkify.min.js',
-		'dist/*.min.js',
+		'dist/linkify.js',
+		'dist/*.js',
 		'test/qunit/globals.js',
 		'test/qunit/main.js'
 	],
 
 	// list of files to exclude
 	exclude: [
-		'dist/*.amd.min.js'
+		'dist/*.min.js',
+		'dist/*.amd.js'
 	],
 
 	// preprocess matching files before serving them to the browser

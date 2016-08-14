@@ -9,10 +9,11 @@ function stringToElements(str, opts) {
 
 	let tokens = linkify.tokenize(str);
 	let elements = [];
+	var linkId = 0;
 
 	for (const token of tokens) {
 		if (token.type === 'nl' && opts.nl2br) {
-			elements.push(React.createElement('br'));
+			elements.push(React.createElement('br', {key: `linkified-${++linkId}`}));
 			continue;
 		} else if (
 			!token.isLink ||
@@ -33,6 +34,7 @@ function stringToElements(str, opts) {
 		let events = options.resolve(opts.events, href, token.type);
 
 		let props = {
+			key: `linkified-${++linkId}`,
 			href: href,
 			className: linkClass,
 		};
@@ -56,28 +58,41 @@ function stringToElements(str, opts) {
 }
 
 // Recursively linkify the contents of the given React Element instance
-function linkifyReactElement(element, opts) {
+function linkifyReactElement(element, opts, elementId = 0) {
+	if (React.Children.count(element.props.children) === 0) {
+		// No need to clone if the element had no children
+		return element;
+	}
+
 	let children = [];
+
 	React.Children.forEach(element.props.children, (child) => {
 		if (typeof child === 'string') {
 			children.push(...stringToElements(child, opts));
 		} else if (React.isValidElement(child)) {
-			children.push(linkifyReactElement(child, opts));
+			children.push(linkifyReactElement(child, opts, ++elementId));
 		} else {
 			// Unknown element type, just push and skip
 			children.push(element);
 		}
 	});
-	return React.cloneElement(element, element.props, children);
+
+	// Set a default unique key, copy over remaining props
+	let newProps = {key: `linkified-element-${elementId}`};
+	for (var prop in element.props) {
+		newProps[prop] = element.props;
+	}
+
+	return React.cloneElement(element, newProps, children);
 }
 
 var Linkify = React.createClass({
 	render() {
 		// Copy over all non-linkify-specific props
-		var newProps = {};
-		for (var key in this.props) {
-			if (key !== 'options' && key !== 'tagName') {
-				newProps[key] = this.props[key];
+		let newProps = {key: 'linkified-element-0'};
+		for (var prop in this.props) {
+			if (prop !== 'options' && prop !== 'tagName') {
+				newProps[prop] = this.props[prop];
 			}
 		}
 
@@ -85,7 +100,7 @@ var Linkify = React.createClass({
 		var tagName = this.props.tagName || 'span';
 		let element = React.createElement(tagName, newProps);
 
-		return linkifyReactElement(element, opts);
+		return linkifyReactElement(element, opts, 0);
 	}
 });
 
