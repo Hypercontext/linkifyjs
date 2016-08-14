@@ -9,21 +9,29 @@ module.exports = {
 
 	// list of files / patterns to load in the browser
 	files: [
-		'node_modules/jquery/dist/jquery.js',
-		'node_modules/react/dist/react.js',
-		'node_modules/react-dom/dist/react-dom.js',
+		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
+		{pattern: 'node_modules/react/dist/react.js', watched: false},
+		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false},
 		'dist/linkify-polyfill.min.js',
-		'dist/linkify.js',
-		'dist/*.js',
+		'dist/linkify.min.js',
+		'dist/*.min.js',
 		'test/qunit/globals.js',
 		'test/qunit/main.js'
 	],
 
 	// list of files to exclude
 	exclude: [
-		'dist/*.min.js',
-		'dist/*.amd.js'
+		'dist/*.amd.min.js'
 	],
+
+	// QUnit configuration
+	client: {
+		clearContext: true,
+		qunit: {
+			showUI: false,
+			autostart: false
+		}
+	},
 
 	// preprocess matching files before serving them to the browser
 	// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor

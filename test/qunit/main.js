@@ -313,15 +313,17 @@ QUnit.test('can be used to create valid components', function (assert) {
 QUnit.test('renders into a DOM element', function (assert) {
 	var linkified = w.React.createElement(
 		w.LinkifyReact,
-		null,
+		{tagName: 'em'},
 		'A few links are github.com and google.com and ',
-		React.createElement('strong', null, 'https://amazon.ca')
+		w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
 	);
 	var container = document.createElement('div');
 	document.body.appendChild(container);
 
 	w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
 
+	assert.ok(container.innerHTML.indexOf('<em>') > 0);
+	assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
 	assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
 	assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);
 	assert.ok(container.innerHTML.indexOf('href="https://amazon.ca"') > 0);
