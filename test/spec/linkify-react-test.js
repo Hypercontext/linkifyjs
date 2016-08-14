@@ -49,53 +49,53 @@ describe('linkify-react', () => {
 
 	it('Works with default options', function () {
 		tests.map((test) => {
-			let linkified = React.createElement(Linkify, null, test[0]);
-			let result = ReactDOMServer.renderToStaticMarkup(linkified);
+			var linkified = React.createElement(Linkify, null, test[0]);
+			var result = ReactDOMServer.renderToStaticMarkup(linkified);
 			expect(result).to.be.eql(test[1]);
 		});
 	});
 
 	it('Works with overriden options', function () {
 		tests.map((test) => {
-			let props = {options, tagName: 'div', className: 'lambda'};
-			let linkified = React.createElement(Linkify, props, test[0]);
-			let result = ReactDOMServer.renderToStaticMarkup(linkified);
+			var props = {options, tagName: 'div', className: 'lambda'};
+			var linkified = React.createElement(Linkify, props, test[0]);
+			var result = ReactDOMServer.renderToStaticMarkup(linkified);
 			expect(result).to.be.eql(test[2]);
 		});
 	});
 
 	it('Finds links recursively', function () {
-		let strong = React.createElement(
+		var strong = React.createElement(
 			'strong', null, 'https://facebook.github.io/react/'
 		);
-		let linkified = React.createElement(Linkify, null, 'A great site is google.com AND ', strong);
-		let result = ReactDOMServer.renderToStaticMarkup(linkified);
+		var linkified = React.createElement(Linkify, null, 'A great site is google.com AND ', strong);
+		var result = ReactDOMServer.renderToStaticMarkup(linkified);
 		expect(result).to.be.eql('<span>A great site is <a href="http://google.com" class="linkified" target="_blank">google.com</a> AND <strong><a href="https://facebook.github.io/react/" class="linkified" target="_blank">https://facebook.github.io/react/</a></strong></span>');
 	});
 
 	it('Excludes self-closing elements', () => {
-		let Delta = React.createClass({
+		var Delta = React.createClass({
 			render() {
 				return React.createElement(
 					'strong', this.props, 'https://facebook.github.io/react/'
 				);
 			}
 		});
-		let delta = React.createElement(Delta);
-		let linkified = React.createElement(Linkify, null, 'A great site is google.com AND ', delta);
-		let result = ReactDOMServer.renderToStaticMarkup(linkified);
+		var delta = React.createElement(Delta);
+		var linkified = React.createElement(Linkify, null, 'A great site is google.com AND ', delta);
+		var result = ReactDOMServer.renderToStaticMarkup(linkified);
 		expect(result).to.be.eql('<span>A great site is <a href="http://google.com" class="linkified" target="_blank">google.com</a> AND <strong>https://facebook.github.io/react/</strong></span>');
 	});
 
 	it('Obeys ignoreTags option', () => {
-		let options = {
+		var options = {
 			ignoreTags: ['em']
 		};
-		let em = React.createElement(
+		var em = React.createElement(
 			'em', null, 'https://facebook.github.io/react/'
 		);
-		let linkified = React.createElement(Linkify, {options}, 'A great site is google.com AND ', em);
-		let result = ReactDOMServer.renderToStaticMarkup(linkified);
+		var linkified = React.createElement(Linkify, {options}, 'A great site is google.com AND ', em);
+		var result = ReactDOMServer.renderToStaticMarkup(linkified);
 		expect(result).to.be.eql('<span>A great site is <a href="http://google.com" class="linkified" target="_blank">google.com</a> AND <em>https://facebook.github.io/react/</em></span>');
 
 	});
