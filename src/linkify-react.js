@@ -80,7 +80,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 	// Set a default unique key, copy over remaining props
 	let newProps = {key: `linkified-element-${elementId}`};
 	for (var prop in element.props) {
-		newProps[prop] = element.props;
+		newProps[prop] = element.props[prop];
 	}
 
 	return React.cloneElement(element, newProps, children);
