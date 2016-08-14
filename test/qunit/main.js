@@ -112,11 +112,10 @@ QUnit.test('returns in the hash of default options when given an empty object', 
 		format: function () {},
 		validate: function () {},
 		formatHref: function () {},
-		newLine: false, // deprecated
 		nl2br: false,
 		tagName: 'a',
 		target: function () {},
-		linkClass: 'linkified',
+		className: 'linkified',
 		ignoreTags: []
 	});
 	assert.equal(typeof result.format, 'function');
@@ -214,7 +213,7 @@ QUnit.test('works with default options', function (assert) {
 
 QUnit.test('works with overriden options', function (assert) {
 	var $elem = jQuery('#linkify-test-elem').linkify({
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});
@@ -246,7 +245,7 @@ QUnit.test('works with default options', function (assert) {
 QUnit.test('works with overriden options', function (assert) {
 	var elem = document.getElementById('linkify-test-elem');
 	w.linkifyElement(elem, {
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});
@@ -268,7 +267,7 @@ QUnit.test('works with default options', function (assert) {
 
 QUnit.test('works with overriden options', function (assert) {
 	var result = w.linkifyHtml(originalHtml, {
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});
@@ -290,7 +289,7 @@ QUnit.test('works with default options', function (assert) {
 
 QUnit.test('works with overriden options', function (assert) {
 	var result = w.linkifyStr('google.ca and me@gmail.com', {
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});

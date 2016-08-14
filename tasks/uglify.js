@@ -18,6 +18,7 @@ exports.unmangleableProps = [
 	'beforeAttributeValue',
 	'beforeData',
 	'chars',
+	'check',
 	'className',
 	'cloneElement',
 	'comment',
@@ -39,6 +40,8 @@ exports.unmangleableProps = [
 	'fn',
 	'format',
 	'formatHref',
+	'get',
+	'getObject',
 	'hasProtocol',
 	'hashtag',
 	'helper',
@@ -81,5 +84,5 @@ exports.unmangleableProps = [
 	'tokenize',
 	'type',
 	'validate',
-	'value'
+	'value',
 ];

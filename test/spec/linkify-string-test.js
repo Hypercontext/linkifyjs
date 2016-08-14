@@ -25,9 +25,9 @@ describe('linkify-string', () => {
 		tagName: 'span',
 		target: '_parent',
 		nl2br: true,
-		linkClass: 'my-linkify-class',
+		className: 'my-linkify-class',
 		defaultProtocol: 'https',
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow',
 			onclick: 'javascript:alert("Hello");'
 		},
@@ -77,8 +77,8 @@ describe('linkify-string', () => {
 	describe('Validation', () => {
 		// Test specific options
 		const options = {
-			validate: function (text, type) {
-				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
+			validate: {
+				url: (text) => /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www'
 			}
 		};
 

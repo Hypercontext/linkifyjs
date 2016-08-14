@@ -39,18 +39,17 @@ export default function apply($, doc = false) {
 			let target = data.linkify;
 			let nl2br = data.linkifyNlbr;
 			let options = {
-				linkAttributes:		data.linkifyAttributes,
-				defaultProtocol: 	data.linkifyDefaultProtocol,
-				events: 			data.linkifyEvents,
-				format:				data.linkifyFormat,
-				formatHref:			data.linkifyFormatHref,
-				newLine:			data.linkifyNewline, // deprecated
-				nl2br:				!!nl2br && nl2br !== 0 && nl2br !== 'false',
-				tagName:			data.linkifyTagname,
-				target:				data.linkifyTarget,
-				linkClass:			data.linkifyLinkclass,
-				validate:			data.linkifyValidate,
-				ignoreTags:			data.linkifyIgnoreTags
+				attributes: data.linkifyAttributes,
+				defaultProtocol: data.linkifyDefaultProtocol,
+				events: data.linkifyEvents,
+				format: data.linkifyFormat,
+				formatHref: data.linkifyFormatHref,
+				nl2br: !!nl2br && nl2br !== 0 && nl2br !== 'false',
+				tagName: data.linkifyTagname,
+				target: data.linkifyTarget,
+				className: data.linkifyClassName || data.linkifyLinkclass, // linkClass is deprecated
+				validate: data.linkifyValidate,
+				ignoreTags: data.linkifyIgnoreTags
 			};
 			let $target = target === 'this' ? $this : $this.find(target);
 			$target.linkify(options);

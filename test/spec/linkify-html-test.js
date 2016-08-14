@@ -8,20 +8,17 @@ describe('linkify-html', () => {
 		tagName: 'span',
 		target: '_parent',
 		nl2br: true,
-		linkClass: 'my-linkify-class',
+		className: 'my-linkify-class',
 		defaultProtocol: 'https',
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow',
 			onclick: 'console.log(\'Hello World!\')'
 		},
 		format(val) {
 			return val.truncate(40);
 		},
-		formatHref(href, type) {
-			if (type === 'email') {
-				href += '?subject=Hello%20from%20Linkify';
-			}
-			return href;
+		formatHref: {
+			email: (href) => href + '?subject=Hello%20from%20Linkify'
 		},
 		ignoreTags: [
 			'script',
@@ -75,8 +72,10 @@ describe('linkify-html', () => {
 
 	it('Works with overriden options (validate)', () => {
 		var optionsValidate = {
-			validate: function (text, type) {
-				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
+			validate: {
+				url: function (text) {
+					return /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
+				}
 			}
 		};
 

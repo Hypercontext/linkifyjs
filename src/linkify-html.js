@@ -1,7 +1,9 @@
 import HTML5Tokenizer from './simple-html-tokenizer';
 import * as linkify from './linkify';
 
-const options = linkify.options;
+const {options} = linkify;
+const {Options} = options;
+
 const StartTag = 'StartTag';
 const EndTag = 'EndTag';
 const Chars = 'Chars';
@@ -17,7 +19,7 @@ export default function linkifyHtml(str, opts={}) {
 	let linkified = [];
 	var i;
 
-	opts = linkify.options.normalize(opts);
+	opts = new Options(opts);
 
 	// Linkify the tokens given by the parser
 	for (i = 0; i < tokens.length; i++) {
@@ -86,8 +88,6 @@ function linkifyChars(str, opts) {
 
 	for (var i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		let validated = token.isLink
-			&& linkify.options.resolve(opts.validate, token.toString(), token.type);
 
 		if (token.type === 'nl' && opts.nl2br) {
 			result.push({
@@ -97,38 +97,43 @@ function linkifyChars(str, opts) {
 				selfClosing: true
 			});
 			continue;
-		} else if (!token.isLink || !validated) {
+		} else if (!token.isLink || !opts.check(token)) {
 			result.push({type: Chars, chars: token.toString()});
 			continue;
 		}
 
-		let href			= token.toHref(opts.defaultProtocol);
-		let formatted		= linkify.options.resolve(opts.format, token.toString(), token.type);
-		let formattedHref	= linkify.options.resolve(opts.formatHref, href, token.type);
-		let attributesHash	= linkify.options.resolve(opts.attributes, href, token.type);
-		let tagName			= linkify.options.resolve(opts.tagName, href, token.type);
-		let linkClass		= linkify.options.resolve(opts.linkClass, href, token.type);
-		let target			= linkify.options.resolve(opts.target, href, token.type);
+		let {
+			href,
+			formatted,
+			formattedHref,
+			tagName,
+			className,
+			target,
+			attributes
+		} = opts.resolve(token);
 
 		// Build up attributes
-		let attributes = [
+		let attributeArray = [
 			['href', formattedHref],
-			['class', linkClass]
 		];
 
-		if (target) {
-			attributes.push(['target', target]);
+		if (className) {
+			attributeArray.push(['class', className]);
 		}
 
-		for (var attr in attributesHash) {
-			attributes.push([attr, attributesHash[attr]]);
+		if (target) {
+			attributeArray.push(['target', target]);
+		}
+
+		for (var attr in attributes) {
+			attributeArray.push([attr, attributes[attr]]);
 		}
 
 		// Add the required tokens
 		result.push({
 			type: StartTag,
 			tagName: tagName,
-			attributes: attributes,
+			attributes: attributeArray,
 			selfClosing: false
 		});
 		result.push({type: Chars, chars: formatted});

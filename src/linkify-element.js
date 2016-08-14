@@ -3,8 +3,10 @@
 */
 
 import * as linkify from './linkify';
-let tokenize = linkify.tokenize;
-let options = linkify.options;
+
+const {tokenize, options} = linkify;
+const {Options} = options;
+
 let TEXT_TOKEN = linkify.parser.TOKENS.TEXT;
 
 const HTML_NODE = 1, TXT_NODE = 3;
@@ -33,41 +35,41 @@ function replaceChildWithChildren(parent, oldChild, newChildren) {
 function tokensToNodes(tokens, opts, doc) {
 	let result = [];
 
-	for (let i = 0; i < tokens.length; i++) {
-		let token = tokens[i];
-
+	for (const token of tokens) {
 		if (token.type === 'nl' && opts.nl2br) {
 			result.push(doc.createElement('br'));
 			continue;
-		} else if (
-			!token.isLink ||
-			!options.resolve(opts.validate, token.toString(), token.type)
-		) {
+		} else if (!token.isLink || !opts.check(token)) {
 			result.push(doc.createTextNode(token.toString()));
 			continue;
 		}
 
-		let href = token.toHref(opts.defaultProtocol);
-		let formatted = options.resolve(opts.format, token.toString(), token.type);
-		let formattedHref = options.resolve(opts.formatHref, href, token.type);
-		let attributesHash = options.resolve(opts.attributes, href, token.type);
-		let tagName = options.resolve(opts.tagName, href, token.type);
-		let linkClass = options.resolve(opts.linkClass, href, token.type);
-		let target = options.resolve(opts.target, href, token.type);
-		let events = options.resolve(opts.events, href, token.type);
+		let {
+			formatted,
+			formattedHref,
+			tagName,
+			className,
+			target,
+			events,
+			attributes,
+		} = opts.resolve(token);
 
 		// Build the link
 		let link = doc.createElement(tagName);
 		link.setAttribute('href', formattedHref);
-		link.setAttribute('class', linkClass);
+
+		if (className) {
+			link.setAttribute('class', className);
+		}
+
 		if (target) {
 			link.setAttribute('target', target);
 		}
 
 		// Build up additional attributes
-		if (attributesHash) {
-			for (var attr in attributesHash) {
-				link.setAttribute(attr, attributesHash[attr]);
+		if (attributes) {
+			for (var attr in attributes) {
+				link.setAttribute(attr, attributes[attr]);
 			}
 		}
 
@@ -153,12 +155,12 @@ function linkifyElement(element, opts, doc = false) {
 		);
 	}
 
-	opts = options.normalize(opts);
+	opts = new Options(opts);
 	return linkifyElementHelper(element, opts, doc);
 }
 
 // Maintain reference to the recursive helper to cache option-normalization
 linkifyElement.helper = linkifyElementHelper;
-linkifyElement.normalize = options.normalize;
+linkifyElement.normalize = (opts) => new Options(opts);
 
 export default linkifyElement;
