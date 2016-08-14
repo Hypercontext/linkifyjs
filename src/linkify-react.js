@@ -79,7 +79,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 				children.push(linkifyReactElement(child, opts, ++elementId));
 			}
 		} else {
-			// Unknown  element type, just push
+			// Unknown element type, just push
 			children.push(child);
 		}
 	});
