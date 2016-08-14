@@ -8,11 +8,18 @@ module.exports = {
 	frameworks: ['qunit'],
 
 	// list of files / patterns to load in the browser
+	// React doesn't like being loading synchronously when useing AMD modules,
+	// so test/qunit/react.amd.js will load React
 	files: [
-		'node_modules/requirejs/require.js',
-		'node_modules/jquery/dist/jquery.js',
+		{pattern: 'node_modules/requirejs/require.js', watched: false},
+		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
+		{pattern: 'node_modules/react/dist/react.js', watched: false, included: false, served: true},
+		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false, included: false, served: true},
+		{pattern: 'test/qunit/react.amd.js', included: false, served: true},
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.amd.min.js',
+		'test/qunit/ie8.js',
+		{pattern: 'dist/linkify-react.amd.min.js', included: false, served: true},
 		'dist/*.amd.min.js',
 		'test/qunit/amd.js',
 		'test/qunit/main.js'
@@ -20,6 +27,15 @@ module.exports = {
 
 	// list of files to exclude
 	exclude: [],
+
+	// QUnit configuration
+	client: {
+		clearContext: true,
+		qunit: {
+			showUI: false,
+			autostart: false
+		}
+	},
 
 	// preprocess matching files before serving them to the browser
 	// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor

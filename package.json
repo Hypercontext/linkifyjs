@@ -68,6 +68,8 @@
     "through2": "^2.0.1"
   },
   "optionalDependencies": {
-    "jquery": ">=1.9.0"
+    "jquery": ">=1.9.0",
+    "react": ">=0.14.0",
+    "react-dom": ">=0.14.0"
   }
 }

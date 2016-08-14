@@ -296,3 +296,40 @@ QUnit.test('works with overriden options', function (assert) {
 	});
 	assert.equal(result, '<a href="http://google.ca" class="linkified" target="_blank" rel="nofollow">google.ca</a> and <a href="mailto:me@gmail.com" class="linkified" rel="nofollow">me@gmail.com</a>');
 });
+
+
+if (!isIE8()) {
+	// React does not officially support IE8
+	// https://facebook.github.io/react/docs/working-with-the-browser.html#browser-support
+
+	QUnit.module('linkify-react');
+
+	QUnit.test('class exists', function (assert) {
+		assert.ok('LinkifyReact' in w);
+		assert.equal(typeof w.LinkifyReact, 'function');
+	});
+
+	QUnit.test('can be used to create valid components', function (assert) {
+		var linkified = w.React.createElement(w.LinkifyReact, null, 'github.com');
+		assert.ok(w.React.isValidElement(linkified));
+	});
+
+	QUnit.test('renders into a DOM element', function (assert) {
+		var linkified = w.React.createElement(
+			w.LinkifyReact,
+			{tagName: 'em'},
+			'A few links are github.com and google.com and ',
+			w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
+		);
+		var container = document.createElement('div');
+		document.body.appendChild(container);
+
+		w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
+
+		assert.ok(container.innerHTML.indexOf('<em>') > 0);
+		assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
+		assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
+		assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);
+		assert.ok(container.innerHTML.indexOf('href="https://amazon.ca"') > 0);
+	});
+}

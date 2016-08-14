@@ -55,7 +55,6 @@ describe('linkify-string', () => {
 			'The URL is google.com and the email is test@example.com',
 			'The URL is <a href="http://google.com" class="linkified" target="_blank">google.com</a> and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>',
 			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">google.com</span> and the email is <span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">test@example.com</span>',
-			'The URL is google.com and the email is test@example.com',
 		], [
 			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test.wut.yo@gmail.co.uk!\n',
 			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="linkified" target="_blank">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.wut.yo@gmail.co.uk" class="linkified">test.wut.yo@gmail.co.uk</a>!\n',
@@ -75,15 +74,15 @@ describe('linkify-string', () => {
 		});
 	});
 
-	// Test specific options
-	it('Works with overriden options (validate)', () => {
-		const validateOptions = {
+	describe('Validation', () => {
+		// Test specific options
+		const options = {
 			validate: function (text, type) {
 				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 			}
 		};
 
-		const validateTests = [
+		const tests = [
 			[
 				'1.Test with no links',
 				'1.Test with no links'
@@ -105,8 +104,10 @@ describe('linkify-string', () => {
 			]
 		];
 
-		validateTests.map(function (test) {
-			expect(linkifyStr(test[0], validateOptions)).to.be.eql(test[1]);
+		it('Works with overriden options (validate)', function () {
+			tests.map(function (test) {
+				expect(linkifyStr(test[0], options)).to.be.eql(test[1]);
+			});
 		});
 	});
 });

@@ -14,7 +14,6 @@ module.exports = function (options) {
 	}
 
 	function transform(file, enc, callback) {
-
 		if (file.isStream()) {
 			this.emit('error', new PluginError(PLUGIN_NAME, 'Streams not supported'));
 			return callback();
@@ -25,7 +24,7 @@ module.exports = function (options) {
 		rollup(extend({
 			entry: file.path
 		}, rollupOpts)).then((bundle) => {
-			let result = bundle.generate(options.bundle)
+			let result = bundle.generate(options.bundle);
 			file.contents = new Buffer(result.code, enc);
 			callback(null, file);
 		}).catch(err => {
@@ -41,4 +40,4 @@ module.exports = function (options) {
 		});
 	}
 	return through.obj(transform);
-}
+};

@@ -112,7 +112,8 @@ gulp.task('build-interfaces', () => {
 			'simple-html-tokenizer/*.js',
 			'simple-html-tokenizer.js',
 			'html'
-		]
+		],
+		'react'
 	];
 
 	// Globals browser interface
@@ -141,13 +142,17 @@ gulp.task('build-interfaces', () => {
 		// Browser intrface
 		let stream = gulp.src(files.js)
 		.pipe(rollup({
-			rollup: {external: ['jquery', `${__dirname}/src/linkify.js`]},
+			rollup: {
+				external: ['jquery', 'react', './linkify.js', `${__dirname}/src/linkify.js`]
+			},
 			bundle: {
 				format: 'iife',
 				moduleName: moduleName,
 				globals: {
 					'jquery': '$',
-					[`${__dirname}/src/linkify.js`]: 'linkify'
+					'react': 'React',
+					'./linkify.js': 'linkify',
+					[`${__dirname}/src/linkify.js`]: 'linkify',
 				}
 			}
 		}))
@@ -186,12 +191,16 @@ gulp.task('build-plugins', () => {
 		// Global plugins
 		var stream = gulp.src(`src/linkify/plugins/${plugin}.js`)
 		.pipe(rollup({
-			rollup: {external: [`${__dirname}/src/linkify.js`]},
+			rollup: {
+				external: ['./linkify', './linkify.js', `${__dirname}/src/linkify.js`]
+			},
 			bundle: {
 				format: 'iife',
 				moduleName: 'plugin',
 				globals: {
-					'./linkify.js': 'linkify'
+					'./linkify': 'linkify',
+					'./linkify.js': 'linkify',
+					[`${__dirname}/src/linkify.js`]: 'linkify'
 				}
 			}
 		}))

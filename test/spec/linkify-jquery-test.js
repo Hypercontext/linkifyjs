@@ -55,7 +55,6 @@ describe('linkify-jquery', function () {
 	// Make sure we start out with a fresh DOM every time
 	beforeEach(() => testContainer.innerHTML = htmlOptions.original);
 
-	// This works but is inconsistent across browsers
 	it('Works with the DOM Data API', () => {
 		expect($('header').first().html()).to.be.eql(
 			'Have a link to:<br><a href="https://github.com" class="linkified" target="_blank">github.com</a>!'
