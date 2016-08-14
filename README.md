@@ -61,7 +61,7 @@ bower install linkifyjs
 Add [linkify](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js) and [linkify-jquery](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.min.js) to your HTML following jQuery:
 
 ```html
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="linkify.min.js"></script>
 <script src="linkify-jquery.min.js"></script>
 ```
@@ -158,16 +158,23 @@ Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be de
 ### Browser globals
 
 ```html
-<script src="jquery.js"></script>
+<script src="react.js"></script>
+<script src="react-dom.js"></script>
 <script src="linkify.js"></script>
-<script src="linkify-string.js"></script>
-<script src="linkify-jquery.js"></script>
+<script src="linkify-react.js"></script>
 ```
 
-```js
+```jsx
+var Linkify = LinkifyReact;
+
 linkify.test('dev@example.com'); // true
-var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
-$('p').linkify();
+
+ReactDOM.render(
+  <Linkify options={{ignoreTags: ['style']}}>
+    Check out soapboxhq.com it is great!
+  </Linkify>,
+  document.getElementById('#container');
+);
 ```
 
 ## Internet Explorer
@@ -198,6 +205,7 @@ Download the [**latest release**](https://github.com/SoapBox/linkifyjs/releases)
 
 **Interfaces** _(recommended - include at least one)_
 
+* **[react](http://soapbox.github.io/linkifyjs/docs/linkify-react.html)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-react.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-react.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-react.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-react.amd.js)
 * **[jquery](http://soapbox.github.io/linkifyjs/docs/linkify-jquery.html)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-jquery.amd.js)
 * **[html](http://soapbox.github.io/linkifyjs/docs/linkify-html.html)**<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-html.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-html.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-html.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-html.amd.js)
 * **[element](http://soapbox.github.io/linkifyjs/docs/linkify-element.html)** _(Included with linkify-jquery)_<br> [`.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.min.js) · [`.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.js) · [`.amd.min.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.min.js) · [`.amd.js`](https://github.com/nfrasser/linkify-shim/raw/master/linkify-element.amd.js)
