@@ -70,10 +70,17 @@ function linkifyReactElement(element, opts, elementId = 0) {
 		if (typeof child === 'string') {
 			children.push(...stringToElements(child, opts));
 		} else if (React.isValidElement(child)) {
-			children.push(linkifyReactElement(child, opts, ++elementId));
+			if (typeof child.type === 'string'
+				&& options.contains(opts.ignoreTags, child.type.toUpperCase())
+			) {
+				// Don't linkify this element
+				children.push(child);
+			} else {
+				children.push(linkifyReactElement(child, opts, ++elementId));
+			}
 		} else {
-			// Unknown element type, just push and skip
-			children.push(element);
+			// Unknown  element type, just push
+			children.push(child);
 		}
 	});
 

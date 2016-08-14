@@ -86,4 +86,17 @@ describe('linkify-react', () => {
 		let result = ReactDOMServer.renderToStaticMarkup(linkified);
 		expect(result).to.be.eql('<span>A great site is <a href="http://google.com" class="linkified" target="_blank">google.com</a> AND <strong>https://facebook.github.io/react/</strong></span>');
 	});
+
+	it('Obeys ignoreTags option', () => {
+		let options = {
+			ignoreTags: ['em']
+		};
+		let em = React.createElement(
+			'em', null, 'https://facebook.github.io/react/'
+		);
+		let linkified = React.createElement(Linkify, {options}, 'A great site is google.com AND ', em);
+		let result = ReactDOMServer.renderToStaticMarkup(linkified);
+		expect(result).to.be.eql('<span>A great site is <a href="http://google.com" class="linkified" target="_blank">google.com</a> AND <em>https://facebook.github.io/react/</em></span>');
+
+	});
 });
