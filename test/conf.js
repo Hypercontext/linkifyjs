@@ -10,10 +10,12 @@ module.exports = {
 	// list of files / patterns to load in the browser
 	files: [
 		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
-		{pattern: 'node_modules/react/dist/react.js', watched: false},
-		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false},
+		{pattern: 'node_modules/react/dist/react.js', watched: false, included: false, served: true},
+		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false, included: false, served: true},
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.min.js',
+		'test/qunit/ie8.js',
+		{pattern: 'dist/linkify-react.min.js', included: false, served: true},
 		'dist/*.min.js',
 		'test/qunit/globals.js',
 		'test/qunit/main.js'

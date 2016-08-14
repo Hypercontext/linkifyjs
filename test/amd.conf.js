@@ -15,9 +15,11 @@ module.exports = {
 		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
 		{pattern: 'node_modules/react/dist/react.js', watched: false, included: false, served: true},
 		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false, included: false, served: true},
-		'test/qunit/react.amd.js',
+		{pattern: 'test/qunit/react.amd.js', included: false, served: true},
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.amd.min.js',
+		'test/qunit/ie8.js',
+		{pattern: 'dist/linkify-react.amd.min.js', included: false, served: true},
 		'dist/*.amd.min.js',
 		'test/qunit/amd.js',
 		'test/qunit/main.js'
