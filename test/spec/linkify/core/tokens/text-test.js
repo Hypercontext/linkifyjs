@@ -1,35 +1,33 @@
-var TEXT_TOKENS = require('../../../../../lib/linkify/core/tokens').text;
+const TEXT_TOKENS = require(`${__base}linkify/core/tokens`).text;
 
-describe('linkify/core/tokens#TEXT_TOKENS', function () {
+describe('linkify/core/tokens#TEXT_TOKENS', () => {
 
 	// Test for two commonly-used tokens
-
-	describe('DOMAIN', function () {
+	describe('DOMAIN', () => {
 		var DOMAIN;
 
-		before(function () {
+		before(() => {
 			DOMAIN = new TEXT_TOKENS.DOMAIN('abc123');
 		});
 
-		describe('#toString()', function () {
-			it ('should return the string "abc123"', function () {
+		describe('#toString()', () => {
+			it ('should return the string "abc123"', () => {
 				expect(DOMAIN.toString()).to.eql('abc123');
 			});
 		});
 	});
 
-	describe('AT', function () {
+	describe('AT', () => {
 		var at;
 
-		before(function () {
-			at = new TEXT_TOKENS.AT('asdf'); // should ignore passed-in value
+		before(() => {
+			at = new TEXT_TOKENS.AT();
 		});
 
-		describe('#toString()', function () {
-			it ('should return the string "@"', function () {
+		describe('#toString()', () => {
+			it ('should return the string "@"', () => {
 				expect(at.toString()).to.eql('@');
 			});
 		});
 	});
-
 });

@@ -1,6 +1,4 @@
-/*jshint scripturl:true*/
-
-var linkifyStr = require('../../lib/linkify-string');
+const linkifyStr = require(`${__base}linkify-string`).default;
 
 /**
 	Gracefully truncate a string to a given limit. Will replace extraneous
@@ -22,9 +20,8 @@ String.prototype.truncate = function (limit) {
 	return string;
 };
 
-describe('linkify-string', function () {
-	var
-	options = { // test options
+describe('linkify-string', () => {
+	const options = { // test options
 		tagName: 'span',
 		target: '_parent',
 		nl2br: true,
@@ -32,7 +29,7 @@ describe('linkify-string', function () {
 		defaultProtocol: 'https',
 		linkAttributes: {
 			rel: 'nofollow',
-			onclick: 'javascript:;'
+			onclick: 'javascript:alert("Hello");'
 		},
 		format: function (val) {
 			return val.truncate(40);
@@ -43,13 +40,13 @@ describe('linkify-string', function () {
 			}
 			return href;
 		}
-	},
+	};
 
 	// For each element in this array
 	// [0] - Original text
 	// [1] - Linkified with default options
 	// [2] - Linkified with new options
-	tests = [
+	const tests = [
 		[
 			'Test with no links',
 			'Test with no links',
@@ -57,36 +54,35 @@ describe('linkify-string', function () {
 		], [
 			'The URL is google.com and the email is test@example.com',
 			'The URL is <a href="http://google.com" class="linkified" target="_blank">google.com</a> and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>',
-			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">google.com</span> and the email is <span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test@example.com</span>',
-			'The URL is google.com and the email is test@example.com',
+			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">google.com</span> and the email is <span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">test@example.com</span>',
 		], [
-			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test."wut".yo@gmail.co.uk!\n',
-			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="linkified" target="_blank">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.&quot;wut&quot;.yo@gmail.co.uk" class="linkified">test."wut".yo@gmail.co.uk</a>!\n',
-			'Super long maps URL <span href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">https://www.google.ca/maps/@43.472082,-8…</span>, a #hash-tag, and an email: <span href="mailto:test.&quot;wut&quot;.yo@gmail.co.uk?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:;">test."wut".yo@gmail.co.uk</span>!<br>\n',
+			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test.wut.yo@gmail.co.uk!\n',
+			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="linkified" target="_blank">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.wut.yo@gmail.co.uk" class="linkified">test.wut.yo@gmail.co.uk</a>!\n',
+			'Super long maps URL <span href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">https://www.google.ca/maps/@43.472082,-8…</span>, a #hash-tag, and an email: <span href="mailto:test.wut.yo@gmail.co.uk?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">test.wut.yo@gmail.co.uk</span>!<br>\n',
 		]
 	];
 
-	it('Works with default options', function () {
+	it('Works with default options', () => {
 		tests.map(function (test) {
 			expect(linkifyStr(test[0])).to.be.eql(test[1]);
 		});
 	});
 
-	it('Works with overriden options (general)', function () {
+	it('Works with overriden options (general)', () => {
 		tests.map(function (test) {
 			expect(linkifyStr(test[0], options)).to.be.eql(test[2]);
 		});
 	});
 
-	// Test specific options
-	it('Works with overriden options (validate)', function () {
-		var optionsValidate = {
+	describe('Validation', () => {
+		// Test specific options
+		const options = {
 			validate: function (text, type) {
 				return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 			}
-		},
+		};
 
-		testsValidate = [
+		const tests = [
 			[
 				'1.Test with no links',
 				'1.Test with no links'
@@ -108,8 +104,10 @@ describe('linkify-string', function () {
 			]
 		];
 
-		testsValidate.map(function (test) {
-			expect(linkifyStr(test[0], optionsValidate)).to.be.eql(test[1]);
+		it('Works with overriden options (validate)', function () {
+			tests.map(function (test) {
+				expect(linkifyStr(test[0], options)).to.be.eql(test[1]);
+			});
 		});
 	});
 });

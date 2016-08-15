@@ -3,7 +3,14 @@
 */
 QUnit.assert.oneOf = function (value, possibleExpected, message) {
 	message = message || 'Expected ' + value + ' to be contained in ' + possibleExpected + '.';
-	this.push(possibleExpected.indexOf(value) >= 0, value, possibleExpected, message);
+	var test = false;
+	for (var i = 0; i < possibleExpected.length; i++) {
+		if (value === possibleExpected[i]) {
+			test = true;
+			break;
+		}
+	}
+	this.push(test, value, possibleExpected[i-1], message);
 };
 
 QUnit.module('linkify');
@@ -42,6 +49,10 @@ QUnit.test('contains a scanner object', function (assert) {
 	assert.equal(typeof w.linkify.scanner, 'object');
 });
 
+QUnit.test('contains an inherits function', function (assert) {
+	assert.ok('inherits' in w.linkify);
+	assert.equal(typeof w.linkify.inherits, 'function');
+});
 
 QUnit.module('linkify.find');
 
@@ -105,7 +116,8 @@ QUnit.test('returns in the hash of default options when given an empty object', 
 		nl2br: false,
 		tagName: 'a',
 		target: function () {},
-		linkClass: 'linkified'
+		linkClass: 'linkified',
+		ignoreTags: []
 	});
 	assert.equal(typeof result.format, 'function');
 	assert.equal(typeof result.validate, 'function');
@@ -159,21 +171,24 @@ QUnit.test('finds valid hashtags', function (assert) {
 });
 
 // HTML rendered in body
-var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this and localhost:8080, pretty neat right? <p>Here\'s a nested github.com/SoapBox/linkifyjs paragraph</p>';
+var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this and localhost:8080, pretty neat right? <p>Here is a nested github.com/SoapBox/linkifyjs paragraph</p>';
 
 // Possible results with regular settings (will vary by browser)
 var linkifiedHtml = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>'
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" target=_blank>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" target=_blank>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" target=_blank>github.com/SoapBox/linkifyjs</A> paragraph</P>' // IE8
 ];
 
 // Possible results with overriden settings
 var linkifiedHtmlAlt = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a rel="nofollow" target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a rel="nofollow" target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a rel="nofollow" target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" rel="nofollow" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" rel="nofollow" target="_blank">localhost:8080</a>, pretty neat right? <p>Here\'s a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" rel="nofollow" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>'
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a rel="nofollow" target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a rel="nofollow" target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a rel="nofollow" target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" rel="nofollow" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" rel="nofollow" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" rel="nofollow" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" rel=nofollow target=_blank>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" rel=nofollow target=_blank>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" rel=nofollow target=_blank>github.com/SoapBox/linkifyjs</A> paragraph</P>', // IE8
+	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" target=_blank rel=nofollow>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" target=_blank rel=nofollow>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" target=_blank rel=nofollow>github.com/SoapBox/linkifyjs</A> paragraph</P>' // IE8, emulated
 ];
 
 QUnit.module('linkify-jquery', {
@@ -281,3 +296,40 @@ QUnit.test('works with overriden options', function (assert) {
 	});
 	assert.equal(result, '<a href="http://google.ca" class="linkified" target="_blank" rel="nofollow">google.ca</a> and <a href="mailto:me@gmail.com" class="linkified" rel="nofollow">me@gmail.com</a>');
 });
+
+
+if (!isIE8()) {
+	// React does not officially support IE8
+	// https://facebook.github.io/react/docs/working-with-the-browser.html#browser-support
+
+	QUnit.module('linkify-react');
+
+	QUnit.test('class exists', function (assert) {
+		assert.ok('LinkifyReact' in w);
+		assert.equal(typeof w.LinkifyReact, 'function');
+	});
+
+	QUnit.test('can be used to create valid components', function (assert) {
+		var linkified = w.React.createElement(w.LinkifyReact, null, 'github.com');
+		assert.ok(w.React.isValidElement(linkified));
+	});
+
+	QUnit.test('renders into a DOM element', function (assert) {
+		var linkified = w.React.createElement(
+			w.LinkifyReact,
+			{tagName: 'em'},
+			'A few links are github.com and google.com and ',
+			w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
+		);
+		var container = document.createElement('div');
+		document.body.appendChild(container);
+
+		w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
+
+		assert.ok(container.innerHTML.indexOf('<em>') > 0);
+		assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
+		assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
+		assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);
+		assert.ok(container.innerHTML.indexOf('href="https://amazon.ca"') > 0);
+	});
+}

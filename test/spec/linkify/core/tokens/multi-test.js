@@ -1,16 +1,13 @@
-/*jshint -W030 */
-var
-TEXT_TOKENS = require('../../../../../lib/linkify/core/tokens').text,
-MULTI_TOKENS = require('../../../../../lib/linkify/core/tokens').multi;
+const tokens = require(`${__base}linkify/core/tokens`);
+const TEXT_TOKENS = tokens.text;
+const MULTI_TOKENS = tokens.multi;
 
-describe('linkify/core/tokens/MULTI_TOKENS', function () {
+describe('linkify/core/tokens/MULTI_TOKENS', () => {
 
-	describe('URL', function () {
-		var
-		urlTextTokens1, urlTextTokens2, urlTextTokens3,
-		url1, url2, url3;
+	describe('URL', () => {
+		var urlTextTokens1, urlTextTokens2, urlTextTokens3, url1, url2, url3;
 
-		before(function () {
+		before(() => {
 			urlTextTokens1 = [ // 'Ftps://www.github.com/SoapBox/linkify'
 				new TEXT_TOKENS.PROTOCOL('Ftps:'),
 				new TEXT_TOKENS.SLASH(),
@@ -59,39 +56,39 @@ describe('linkify/core/tokens/MULTI_TOKENS', function () {
 			url3 = new MULTI_TOKENS.URL(urlTextTokens3);
 		});
 
-		describe('#isLink', function () {
-			it('Is true in all cases', function () {
+		describe('#isLink', () => {
+			it('Is true in all cases', () => {
 				expect(url1.isLink).to.be.ok;
 				expect(url2.isLink).to.be.ok;
 				expect(url3.isLink).to.be.ok;
 			});
 		});
 
-		describe('#toString()', function () {
-			it('Returns the exact URL text', function () {
+		describe('#toString()', () => {
+			it('Returns the exact URL text', () => {
 				expect(url1.toString()).to.be.eql('Ftps://www.github.com/SoapBox/linkify');
 				expect(url2.toString()).to.be.eql('//Amazon.ca/Sales');
 				expect(url3.toString()).to.be.eql('co.co?o=%2D&p=@gc#wat');
 			});
 		});
 
-		describe('#toHref()', function () {
-			it('Keeps the protocol the same as the original URL (and lowercases it)', function () {
+		describe('#toHref()', () => {
+			it('Keeps the protocol the same as the original URL (and lowercases it)', () => {
 				expect(url1.toHref()).to.be.eql('ftps://www.github.com/SoapBox/linkify');
 			});
 
-			it('Lowercases the domain name only and leaves off the protocol if the URL begins with "//"', function () {
+			it('Lowercases the domain name only and leaves off the protocol if the URL begins with "//"', () => {
 				expect(url2.toHref()).to.be.eql('//amazon.ca/Sales');
 			});
 
-			it('Adds a default protocol, if required', function () {
+			it('Adds a default protocol, if required', () => {
 				expect(url3.toHref()).to.be.eql('http://co.co?o=%2D&p=@gc#wat');
 				expect(url3.toHref('ftp')).to.be.eql('ftp://co.co?o=%2D&p=@gc#wat');
 			});
 		});
 
-		describe('#toObject()', function () {
-			it('Returns a hash with correct type, value, and href', function () {
+		describe('#toObject()', () => {
+			it('Returns a hash with correct type, value, and href', () => {
 
 				expect(url1.toObject('file')).to.be.eql({
 					type: 'url',
@@ -113,11 +110,11 @@ describe('linkify/core/tokens/MULTI_TOKENS', function () {
 			});
 		});
 
-		describe('#hasProtocol()', function () {
-			it('Tests true when there is a protocol', function () {
+		describe('#hasProtocol()', () => {
+			it('Tests true when there is a protocol', () => {
 				expect(url1.hasProtocol()).to.be.ok;
 			});
-			it('Tests false when there is no protocol', function () {
+			it('Tests false when there is no protocol', () => {
 				expect(url2.hasProtocol()).to.not.be.ok;
 				expect(url3.hasProtocol()).to.not.be.ok;
 			});
@@ -125,10 +122,10 @@ describe('linkify/core/tokens/MULTI_TOKENS', function () {
 
 	});
 
-	describe('EMAIL', function () {
+	describe('EMAIL', () => {
 		var emailTextTokens, email;
 
-		before(function () {
+		before(() => {
 			emailTextTokens = [ // test@example.com
 				new TEXT_TOKENS.DOMAIN('test'),
 				new TEXT_TOKENS.AT(),
@@ -139,51 +136,51 @@ describe('linkify/core/tokens/MULTI_TOKENS', function () {
 			email = new MULTI_TOKENS.EMAIL(emailTextTokens);
 		});
 
-		describe('#isLink', function () {
-			it('Is true in all cases', function () {
+		describe('#isLink', () => {
+			it('Is true in all cases', () => {
 				expect(email.isLink).to.be.ok;
 			});
 		});
 
-		describe('#toString()', function () {
-			it('Returns the exact email address text', function () {
+		describe('#toString()', () => {
+			it('Returns the exact email address text', () => {
 				expect(email.toString()).to.be.eql('test@example.com');
 			});
 		});
 
-		describe('#toHref()', function () {
-			it('Appends "mailto:" to the email address', function () {
+		describe('#toHref()', () => {
+			it('Appends "mailto:" to the email address', () => {
 				expect(email.toHref()).to.be.eql('mailto:test@example.com');
 			});
 		});
 
 	});
 
-	describe('NL', function () {
+	describe('NL', () => {
 		var nlTokens, nl;
 
-		before(function () {
+		before(() => {
 			nlTokens = [new TEXT_TOKENS.NL()];
 			nl = new MULTI_TOKENS.NL(nlTokens);
 		});
 
-		describe('#isLink', function () {
-			it('Is false in all cases', function () {
+		describe('#isLink', () => {
+			it('Is false in all cases', () => {
 				expect(nl.isLink).to.not.be.ok;
 			});
 		});
 
-		describe('#toString()', function () {
-			it('Returns a single newline character', function () {
+		describe('#toString()', () => {
+			it('Returns a single newline character', () => {
 				expect(nl.toString()).to.be.eql('\n');
 			});
 		});
 	});
 
-	describe('TEXT', function () {
+	describe('TEXT', () => {
 		var textTokens, text;
 
-		before(function () {
+		before(() => {
 			textTokens = [ // 'Hello, World!'
 				new TEXT_TOKENS.DOMAIN('Hello'),
 				new TEXT_TOKENS.SYM(','),
@@ -194,14 +191,14 @@ describe('linkify/core/tokens/MULTI_TOKENS', function () {
 			text = new MULTI_TOKENS.TEXT(textTokens);
 		});
 
-		describe('#isLink', function () {
-			it('Is false in all cases', function () {
+		describe('#isLink', () => {
+			it('Is false in all cases', () => {
 				expect(text.isLink).to.not.be.ok;
 			});
 		});
 
-		describe('#toString()', function () {
-			it('Returns the original string text', function () {
+		describe('#toString()', () => {
+			it('Returns the original string text', () => {
 				expect(text.toString()).to.be.eql('Hello, World!');
 			});
 		});

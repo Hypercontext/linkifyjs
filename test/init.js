@@ -1,7 +1,7 @@
 if (typeof expect !== 'function') {
 	if (typeof window !== 'undefined') {
-		window.expect = require('expect.js');
+		window.expect = require('chai').expect;
 	} else if (typeof global !== 'undefined') {
-		global.expect = require('expect.js');
+		global.expect = require('chai').expect;
 	}
 }

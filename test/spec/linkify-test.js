@@ -1,8 +1,5 @@
-var
-linkify = require('../../lib/linkify');
-// MultiToken = linkify.parser.TOKENS.Base;
-
-var tokensTest = [
+const linkify = require(`${__base}linkify`);
+const tokensTest = [
 	'The string is the URL https://github.com/ but www.gihub.com/search?utf8=✓ works too with the email test@example.com the end.',
 	['text', 'url', 'text', 'url', 'text', 'email', 'text'],
 	[{
@@ -20,27 +17,26 @@ var tokensTest = [
 	}],
 ];
 
-describe('linkify', function () {
-
-	describe('tokenize', function () {
-		it('is a function', function () {
+describe('linkify', () => {
+	describe('tokenize', () => {
+		it('is a function', () => {
 			expect(linkify.tokenize).to.be.a('function');
 		});
-		it('takes a single argument', function () {
+		it('takes a single argument', () => {
 			expect(linkify.tokenize.length).to.be.eql(1);
 		});
 	});
 
-	describe('find', function () {
-		it('is a function', function () {
+	describe('find', () => {
+		it('is a function', () => {
 			expect(linkify.find).to.be.a('function');
 		});
-		it('takes a single argument', function () {
+		it('takes a single argument', () => {
 			expect(linkify.find.length).to.be.eql(1); // type is optional
 		});
 	});
 
-	describe('test', function () {
+	describe('test', () => {
 		/*
 			For each element,
 
@@ -63,15 +59,14 @@ describe('linkify', function () {
 			['test@g.co t.co', false] // can only be one
 		];
 
-		it('is a function', function () {
+		it('is a function', () => {
 			expect(linkify.test).to.be.a('function');
 		});
-		it('takes a single argument', function () {
+		it('takes a single argument', () => {
 			expect(linkify.test.length).to.be.eql(1); // type is optional
 		});
 
 		var test, testName;
-		/* jshint loopfunc: true */
 		for (var i = 0; i < tests.length; i++) {
 			test = tests[i];
 			testName = 'Correctly tests the string "' + test[0] + '"';
@@ -81,26 +76,26 @@ describe('linkify', function () {
 			}
 			testName += '.';
 
-			it(testName, function () {
+			it(testName, () => {
 				expect(linkify.test(test[0], test[2])).to.be.eql(test[1]);
 			});
 		}
 	});
 
-	describe('options', function () {
-		it('is an object', function () {
+	describe('options', () => {
+		it('is an object', () => {
 			expect(linkify.options).to.be.a('object');
 		});
 	});
 
-	describe('parser', function () {
-		it('is an object', function () {
+	describe('parser', () => {
+		it('is an object', () => {
 			expect(linkify.parser).to.be.a('object');
 		});
 	});
 
-	describe('scanner', function () {
-		it('is an object', function () {
+	describe('scanner', () => {
+		it('is an object', () => {
 			expect(linkify.scanner).to.be.a('object');
 		});
 	});

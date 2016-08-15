@@ -3,61 +3,52 @@ module.exports = {
 	// base path that will be used to resolve all patterns (eg. files, exclude)
 	basePath: __dirname.replace(/\/?test\/?$/, '/'),
 
-
 	// frameworks to use
 	// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-	frameworks: ['mocha', 'browserify'],
-
+	frameworks: ['qunit'],
 
 	// list of files / patterns to load in the browser
 	files: [
-		'test/shim.js',
-		'lib/*.js',
-		'lib/**/*.js',
-		'test/init.js',
-		'test/spec/*.js',
-		'test/spec/**/*.js',
+		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
+		{pattern: 'node_modules/react/dist/react.js', watched: false, included: false, served: true},
+		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false, included: false, served: true},
+		'dist/linkify-polyfill.min.js',
+		'dist/linkify.min.js',
+		'test/qunit/ie8.js',
+		{pattern: 'dist/linkify-react.min.js', included: false, served: true},
+		'dist/*.min.js',
+		'test/qunit/globals.js',
+		'test/qunit/main.js'
 	],
-
 
 	// list of files to exclude
 	exclude: [
+		'dist/*.amd.min.js'
 	],
 
+	// QUnit configuration
+	client: {
+		clearContext: true,
+		qunit: {
+			showUI: false,
+			autostart: false
+		}
+	},
 
 	// preprocess matching files before serving them to the browser
 	// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-	preprocessors: {
-		'test/shim.js': ['browserify'],
-		'lib/*.js': ['browserify'],
-		'lib/**/*.js': ['browserify'],
-		'test/init.js': ['browserify'],
-		'test/spec/*.js': ['browserify'],
-		'test/spec/**/*.js': ['browserify'],
-	},
-
-	browserify: {
-		debug: false,
-		ignore: ['jsdom'],
-		transform: ['brfs'],
-		configure: function (bundle) {
-			bundle.ignore('jsdom');
-		},
-	},
+	preprocessors: {},
 
 	// test results reporter to use
 	// possible values: 'dots', 'progress'
 	// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-	reporters: ['progress'],
-
+	reporters: ['dots'],
 
 	// web server port
 	port: 9876,
 
-
 	// enable / disable colors in the output (reporters and logs)
 	colors: true,
-
 
 	// enable / disable watching file and executing tests whenever any file changes
 	autoWatch: true,

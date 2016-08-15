@@ -2,7 +2,10 @@
 	Linkify a HTML DOM node
 */
 
-import {tokenize, options} from './linkify';
+import * as linkify from './linkify';
+let tokenize = linkify.tokenize;
+let options = linkify.options;
+let TEXT_TOKEN = linkify.parser.TOKENS.TEXT;
 
 const HTML_NODE = 1, TXT_NODE = 3;
 
@@ -32,53 +35,54 @@ function tokensToNodes(tokens, opts, doc) {
 
 	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		let validated = token.isLink && options.resolve(opts.validate, token.toString(), token.type);
 
-		if (token.isLink && validated) {
-
-			let
-			href			= token.toHref(opts.defaultProtocol),
-			formatted		= options.resolve(opts.format, token.toString(), token.type),
-			formattedHref	= options.resolve(opts.formatHref, href, token.type),
-			attributesHash	= options.resolve(opts.attributes, href, token.type),
-			tagName			= options.resolve(opts.tagName, href, token.type),
-			linkClass		= options.resolve(opts.linkClass, href, token.type),
-			target			= options.resolve(opts.target, href, token.type),
-			events			= options.resolve(opts.events, href, token.type);
-
-			// Build the link
-			let link = doc.createElement(tagName);
-			link.setAttribute('href', formattedHref);
-			link.setAttribute('class', linkClass);
-			if (target) {
-				link.setAttribute('target', target);
-			}
-
-			// Build up additional attributes
-			if (attributesHash) {
-				for (var attr in attributesHash) {
-					link.setAttribute(attr, attributesHash[attr]);
-				}
-			}
-
-			if (events) {
-				for (var event in events) {
-					if (link.addEventListener) {
-						link.addEventListener(event, events[event]);
-					} else if (link.attachEvent)  {
-						link.attachEvent('on' + event, events[event]);
-					}
-				}
-			}
-
-			link.appendChild(doc.createTextNode(formatted));
-			result.push(link);
-
-		} else if (token.type === 'nl' && opts.nl2br) {
+		if (token.type === 'nl' && opts.nl2br) {
 			result.push(doc.createElement('br'));
-		} else {
+			continue;
+		} else if (
+			!token.isLink ||
+			!options.resolve(opts.validate, token.toString(), token.type)
+		) {
 			result.push(doc.createTextNode(token.toString()));
+			continue;
 		}
+
+		let href = token.toHref(opts.defaultProtocol);
+		let formatted = options.resolve(opts.format, token.toString(), token.type);
+		let formattedHref = options.resolve(opts.formatHref, href, token.type);
+		let attributesHash = options.resolve(opts.attributes, href, token.type);
+		let tagName = options.resolve(opts.tagName, href, token.type);
+		let linkClass = options.resolve(opts.linkClass, href, token.type);
+		let target = options.resolve(opts.target, href, token.type);
+		let events = options.resolve(opts.events, href, token.type);
+
+		// Build the link
+		let link = doc.createElement(tagName);
+		link.setAttribute('href', formattedHref);
+		link.setAttribute('class', linkClass);
+		if (target) {
+			link.setAttribute('target', target);
+		}
+
+		// Build up additional attributes
+		if (attributesHash) {
+			for (var attr in attributesHash) {
+				link.setAttribute(attr, attributesHash[attr]);
+			}
+		}
+
+		if (events) {
+			for (var event in events) {
+				if (link.addEventListener) {
+					link.addEventListener(event, events[event]);
+				} else if (link.attachEvent)  {
+					link.attachEvent('on' + event, events[event]);
+				}
+			}
+		}
+
+		link.appendChild(doc.createTextNode(formatted));
+		result.push(link);
 	}
 
 	return result;
@@ -88,12 +92,14 @@ function tokensToNodes(tokens, opts, doc) {
 function linkifyElementHelper(element, opts, doc) {
 
 	// Can the element be linkified?
-	if (!element || typeof element !== 'object' || element.nodeType !== HTML_NODE) {
+	if (!element || element.nodeType !== HTML_NODE) {
 		throw new Error(`Cannot linkify ${element} - Invalid DOM Node type`);
 	}
 
+	let ignoreTags = opts.ignoreTags;
+
 	// Is this element already a link?
-	if (element.tagName === 'A' /*|| element.hasClass('linkified')*/) {
+	if (element.tagName === 'A' || options.contains(ignoreTags, element.tagName)) {
 		// No need to linkify
 		return element;
 	}
@@ -108,15 +114,20 @@ function linkifyElementHelper(element, opts, doc) {
 			break;
 		case TXT_NODE:
 
-			let
-			str = childElement.nodeValue,
-			tokens = tokenize(str),
-			nodes = tokensToNodes(tokens, opts, doc);
+			let str = childElement.nodeValue;
+			let tokens = tokenize(str);
+
+			if (tokens.length === 0 || tokens.length === 1 && tokens[0] instanceof TEXT_TOKEN) {
+				// No node replacement required
+				break;
+			}
+
+			let nodes = tokensToNodes(tokens, opts, doc);
 
 			// Swap out the current child for the set of nodes
 			replaceChildWithChildren(element, childElement, nodes);
 
-			// so that the correct sibling is selected
+			// so that the correct sibling is selected next
 			childElement = nodes[nodes.length - 1];
 
 			break;
@@ -128,10 +139,10 @@ function linkifyElementHelper(element, opts, doc) {
 	return element;
 }
 
-function linkifyElement(element, opts, doc=null) {
+function linkifyElement(element, opts, doc = false) {
 
 	try {
-		doc = doc || window && window.document || global && global.document;
+		doc = doc || document || window && window.document || global && global.document;
 	} catch (e) { /* do nothing for now */ }
 
 	if (!doc) {

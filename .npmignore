@@ -8,7 +8,6 @@ bower_components
 build
 coverage
 demo
-dist
 js
 src
 templates
@@ -16,7 +15,7 @@ test
 
 # Files
 .editorconfig
-.jshintrc
+.eslintrc
 .travis.yml
 bower.json
 gulpfile.js

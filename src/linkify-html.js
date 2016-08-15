@@ -1,6 +1,7 @@
 import HTML5Tokenizer from './simple-html-tokenizer';
 import * as linkify from './linkify';
 
+const options = linkify.options;
 const StartTag = 'StartTag';
 const EndTag = 'EndTag';
 const Chars = 'Chars';
@@ -22,11 +23,17 @@ export default function linkifyHtml(str, opts={}) {
 	for (i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
 
-		if (token.type === StartTag && token.tagName.toUpperCase() === 'A') {
-			// Ignore all the contents of an anchor tag
+		if (token.type === StartTag) {
 			linkifiedTokens.push(token);
+
+			// Ignore all the contents of ignored tags
+			let tagName = token.tagName.toUpperCase();
+			let isIgnored = tagName === 'A' ||
+				options.contains(opts.ignoreTags, tagName);
+			if (!isIgnored) { continue; }
+
 			let preskipLen = linkifiedTokens.length;
-			skipTagTokens('A', tokens, ++i, linkifiedTokens);
+			skipTagTokens(tagName, tokens, ++i, linkifiedTokens);
 			i += linkifiedTokens.length - preskipLen - 1;
 			continue;
 
@@ -46,9 +53,11 @@ export default function linkifyHtml(str, opts={}) {
 		let token = linkifiedTokens[i];
 		switch (token.type) {
 		case StartTag:
-			let attrs = attrsToStrings(token.attributes);
 			let link = '<' + token.tagName;
-			if (attrs.length > 0) { link += ' ' + attrs.join(' '); }
+			if (token.attributes.length > 0) {
+				let attrs = attrsToStrings(token.attributes);
+				link += ' ' + attrs.join(' ');
+			}
 			link += '>';
 			linkified.push(link);
 			break;
@@ -77,7 +86,8 @@ function linkifyChars(str, opts) {
 
 	for (var i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		let validated = token.isLink && linkify.options.resolve(opts.validate, token.toString(), token.type);
+		let validated = token.isLink
+			&& linkify.options.resolve(opts.validate, token.toString(), token.type);
 
 		if (token.type === 'nl' && opts.nl2br) {
 			result.push({

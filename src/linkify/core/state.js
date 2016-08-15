@@ -1,3 +1,11 @@
+import {inherits} from '../utils/class';
+
+function createStateClass() {
+	return function (tClass) {
+		this.j = [];
+		this.T = tClass || null;
+	};
+}
 
 /**
 	A simple state machine that can emit token classes
@@ -18,17 +26,15 @@
 
 	@class BaseState
 */
-class BaseState {
+const BaseState = createStateClass();
+BaseState.prototype = {
+	defaultTransition: false,
 
 	/**
 		@method constructor
 		@param {Class} tClass Pass in the kind of token to emit if there are
 			no jumps after this state and the state is accepting.
 	*/
-	constructor(tClass) {
-		this.j = [];
-		this.T = tClass || null;
-	}
 
 	/**
 		On the given symbol(s), this machine should go to the given state
@@ -44,10 +50,11 @@ class BaseState {
 			for (let i = 0; i < symbol.length; i++) {
 				this.j.push([symbol[i], state]);
 			}
-			return;
+			return this;
 		}
 		this.j.push([symbol, state]);
-	}
+		return this;
+	},
 
 	/**
 		Given the next item, returns next state for that item
@@ -60,17 +67,17 @@ class BaseState {
 
 		for (let i = 0; i < this.j.length; i++) {
 
-			let jump = this.j[i],
-			symbol = jump[0],	// Next item to check for
-			state = jump[1];	// State to jump to if items match
+			let jump = this.j[i];
+			let symbol = jump[0]; // Next item to check for
+			let state = jump[1]; // State to jump to if items match
 
 			// compare item with symbol
-			if (this.test(item, symbol)) return state;
+			if (this.test(item, symbol)) { return state; }
 		}
 
 		// Nowhere left to jump!
-		return false;
-	}
+		return this.defaultTransition;
+	},
 
 	/**
 		Does this state accept?
@@ -81,7 +88,7 @@ class BaseState {
 	*/
 	accepts() {
 		return !!this.T;
-	}
+	},
 
 	/**
 		Determine whether a given item "symbolizes" the symbol, where symbol is
@@ -96,7 +103,7 @@ class BaseState {
 	*/
 	test(item, symbol) {
 		return item === symbol;
-	}
+	},
 
 	/**
 		Emit the token for this State (just return it in this case)
@@ -107,8 +114,7 @@ class BaseState {
 	emit() {
 		return this.T;
 	}
-}
-
+};
 
 /**
 	State machine for string-based input
@@ -116,8 +122,7 @@ class BaseState {
 	@class CharacterState
 	@extends BaseState
 */
-class CharacterState extends BaseState {
-
+const CharacterState = inherits(BaseState, createStateClass(), {
 	/**
 		Does the given character match the given character or regular
 		expression?
@@ -132,7 +137,7 @@ class CharacterState extends BaseState {
 			charOrRegExp instanceof RegExp && charOrRegExp.test(character)
 		);
 	}
-}
+});
 
 
 /**
@@ -141,7 +146,7 @@ class CharacterState extends BaseState {
 	@class TokenState
 	@extends BaseState
 */
-class TokenState extends BaseState {
+const TokenState = inherits(BaseState, createStateClass(), {
 
 	/**
 		Is the given token an instance of the given token class?
@@ -154,7 +159,7 @@ class TokenState extends BaseState {
 	test(token, tokenClass) {
 		return token instanceof tokenClass;
 	}
-}
+});
 
 /**
 	Given a non-empty target string, generates states (if required) for each
@@ -177,12 +182,11 @@ class TokenState extends BaseState {
 	@return {Array} list of newly-created states
 */
 function stateify(str, start, endToken, defaultToken) {
-
 	let i = 0,
-	len = str.length,
-	state = start,
-	newStates = [],
-	nextState;
+		len = str.length,
+		state = start,
+		newStates = [],
+		nextState;
 
 	// Find the next state without a jump to the next character
 	while (i < len && (nextState = state.next(str[i]))) {
@@ -190,7 +194,7 @@ function stateify(str, start, endToken, defaultToken) {
 		i++;
 	}
 
-	if (i >= len) return []; // no new tokens were added
+	if (i >= len) { return []; } // no new tokens were added
 
 	while (i < len - 1) {
 		nextState = new CharacterState(defaultToken);

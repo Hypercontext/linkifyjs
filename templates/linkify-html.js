@@ -1,5 +1,4 @@
-;(function (linkify) {
-"use strict";
+;(function (window, linkify) {
 <%= contents %>
 window.linkifyHtml = linkifyHtml;
-})(window.linkify);
+})(window, linkify);

@@ -3,7 +3,7 @@
 
 var
 base = require('./conf'),
-extend = require('lodash').extend;
+extend = require('lodash/extend');
 
 module.exports = function (config) {
 

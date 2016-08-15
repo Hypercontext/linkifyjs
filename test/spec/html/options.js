@@ -1,5 +1,5 @@
 // HTML to use with linkify-element and linkify-jquery
-var fs = require('fs');
+const fs = require('fs');
 
 module.exports = {
 	original: fs.readFileSync(__dirname + '/original.html', 'utf8').trim(),
@@ -29,7 +29,11 @@ module.exports = {
 			mouseover: function () {
 				throw 'Hovered!';
 			}
-		}
+		},
+		ignoreTags: [
+			'script',
+			'style'
+		]
 	},
 
 	validateOptions: {
@@ -37,4 +41,5 @@ module.exports = {
 			return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
 		}
 	}
+
 };

@@ -1,28 +1,20 @@
-import jQuery from 'jquery';
+import $ from 'jquery';
 import linkifyElement from './linkify-element';
 
-let doc;
-
-try {
-	doc = document;
-} catch (e) {
-	doc = null;
-}
-
 // Applies the plugin to jQuery
-function apply($, doc=null) {
+export default function apply($, doc = false) {
 
 	$.fn = $.fn || {};
 
 	try {
-		doc = doc || window && window.document || global && global.document;
+		doc = doc || document || window && window.document || global && global.document;
 	} catch (e) { /* do nothing for now */ }
 
 	if (!doc) {
 		throw new Error(
 			'Cannot find document implementation. ' +
 			'If you are in a non-browser environment like Node.js, ' +
-			'pass the document implementation as the third argument to linkifyElement.'
+			'pass the document implementation as the second argument to linkify/jquery'
 		);
 	}
 
@@ -42,13 +34,11 @@ function apply($, doc=null) {
 
 	$(doc).ready(function () {
 		$('[data-linkify]').each(function () {
-
-			let
-			$this = $(this),
-			data = $this.data(),
-			target = data.linkify,
-			nl2br = data.linkifyNlbr,
-			options = {
+			let $this = $(this);
+			let data = $this.data();
+			let target = data.linkify;
+			let nl2br = data.linkifyNlbr;
+			let options = {
 				linkAttributes:		data.linkifyAttributes,
 				defaultProtocol: 	data.linkifyDefaultProtocol,
 				events: 			data.linkifyEvents,
@@ -60,6 +50,7 @@ function apply($, doc=null) {
 				target:				data.linkifyTarget,
 				linkClass:			data.linkifyLinkclass,
 				validate:			data.linkifyValidate,
+				ignoreTags:			data.linkifyIgnoreTags
 			};
 			let $target = target === 'this' ? $this : $this.find(target);
 			$target.linkify(options);
@@ -67,9 +58,5 @@ function apply($, doc=null) {
 	});
 }
 
-// Apply it right away if possible
-if (typeof jQuery !== 'undefined' && doc) {
-	apply(jQuery, doc);
-}
-
-export default apply;
+// Try assigning linkifyElement to the browser scope
+try { let a = !define && (window.linkifyElement = linkifyElement); } catch (e) {}

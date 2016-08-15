@@ -1,3 +1,4 @@
+import {inherits} from './linkify/utils/class';
 import * as options from './linkify/utils/options';
 import * as scanner from './linkify/core/scanner';
 import * as parser from './linkify/core/parser';
@@ -22,10 +23,8 @@ let tokenize = function (str) {
 	Returns a list of linkable items in the given string.
 */
 let find = function (str, type=null) {
-
-	let
-	tokens = tokenize(str),
-	filtered = [];
+	let tokens = tokenize(str);
+	let filtered = [];
 
 	for (let i = 0; i < tokens.length; i++) {
 		if (tokens[i].isLink && (
@@ -60,4 +59,4 @@ let test = function (str, type=null) {
 
 // Scanner and parser provide states and tokens for the lexicographic stage
 // (will be used to add additional link types)
-export {find, options, parser, scanner, test, tokenize};
+export {find, inherits, options, parser, scanner, test, tokenize};

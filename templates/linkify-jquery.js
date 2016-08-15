@@ -1,6 +1,6 @@
-;(function (jQuery, linkify) {
-"use strict";
-var tokenize = linkify.tokenize, options = linkify.options;
+;(function (window, linkify, $) {
 <%= contents %>
-window.linkifyElement = linkifyElement;
-})(window.jQuery, window.linkify);
+if (typeof $.fn.linkify !== 'function') {
+    linkifyJquery($);
+}
+})(window, linkify, jQuery);

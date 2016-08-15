@@ -1,4 +1,4 @@
 ;(function (linkify) {
 <%= contents %>
-hashtag(linkify);
-})(window.linkify);
+plugin(linkify);
+})(linkify);

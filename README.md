@@ -3,9 +3,10 @@
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
 [![Dependency Status](https://gemnasium.com/SoapBox/linkifyjs.svg)](https://gemnasium.com/SoapBox/linkifyjs)
 [![Build Status](https://travis-ci.org/SoapBox/linkifyjs.svg)](https://travis-ci.org/SoapBox/linkifyjs)
+[![Build Status](https://saucelabs.com/open_sauce/build_status/nfrasser.svg)](https://saucelabs.com/beta/builds/c63720f642964f77927b2fda198b4a94)
 [![Coverage Status](https://coveralls.io/repos/SoapBox/linkifyjs/badge.svg?branch=master)](https://coveralls.io/r/SoapBox/linkifyjs?branch=master)
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/nfrasser.svg)](https://saucelabs.com/u/nfrasser)
+[![Build Status](https://saucelabs.com/open_sauce/build_matrix/nfrasser.svg)](https://saucelabs.com/beta/builds/c63720f642964f77927b2fda198b4a94)
 
 Linkify is a small yet comprehensive JavaScript plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 
@@ -17,10 +18,10 @@ __Jump to__
 - [Demo](#demo)
 - [Installation and Usage](#installation-and-usage)
   - [Quick Start](#quick-start)
-  - [Usage](#usage)
-    - [Node.js/Browserify](#node-js-browserify)
-    - [AMD Modules](#amd-modules)
-    - [Browser](#browser)
+  - [Node.js/Browserify](#node-js-browserify)
+  - [AMD Modules](#amd-modules)
+  - [Browser](#browser)
+- [Internet Explorer](#internet-explorer)
 - [Downloads](#downloads)
 - [API Documentation](#api-documentation)
 - [Caveats](#caveats)
@@ -30,11 +31,11 @@ __Jump to__
 ## Features
 
 * **Accuracy**<br>Linkify uses a (close to) complete list of valid top-level domains to ensure that only valid URLs and email addresses are matched.
-* **Speed**<br>Each string is analyzied exactly once to detect every kind of linkable entity
+* **Speed**<br>Each string is analyzed exactly once to detect every kind of linkable entity
 * **Extensibility**<br>Linkify is designed to be fast and lightweight, but comes with a powerful plugin API that lets you detect even more information like #hashtags and @mentions.
 * **Small footprint**<br>Linkify and its jQuery interface clock in at approximately 15KB minified (5KB gzipped) - approximately 50% the size of Twitter Text
 * **Modern implementation**<br>Linkify is written in ECMAScript6 and compiles to ES5 for modern JavaScript runtimes.
-  * Linkify is compatible with all modern browsers, as well as Internet Explorer 9 and up. Full IE8 support coming soon.
+  * Linkify is compatible with all modern browsers, as well as Internet Explorer 8 and up.
 
 ## Demo
 [Launch demo](http://soapbox.github.io/linkifyjs/)
@@ -64,6 +65,8 @@ Add [linkify](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js
 <script src="linkify.min.js"></script>
 <script src="linkify-jquery.min.js"></script>
 ```
+
+**Note:** A [polyfill](#internet-explorer) is required for Internet Explorer 8.
 
 #### Find all links and convert them to anchor tags
 
@@ -100,7 +103,7 @@ Returns the following array
 See [all available options](http://soapbox.github.io/linkifyjs/docs/options.html)
 
 
-### Node.js/io.js/Browserify
+### Node.js/Browserify
 
 ```js
 var linkify = require('linkifyjs');
@@ -146,7 +149,6 @@ require(['linkify-element'], function (linkifyElement) {
 
   // Linkify all paragraph tags
   document.getElementsByTagName('p').map(linkifyElement);
-
 });
 
 ```
@@ -166,6 +168,22 @@ Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be de
 linkify.test('dev@example.com'); // true
 var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
 $('p').linkify();
+```
+
+## Internet Explorer
+
+Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is supported with a polyfill.
+
+You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also required) or the provided `linkify-polyfill.js`:
+
+```html
+<script src="jquery.js"></script>
+
+<!--[if IE 8]>
+<script src="linkify-polyfill.js"></script>
+<![endif]-->
+<script src="linkify.js"></script>
+<script src="linkify-jquery.js"></script>
 ```
 
 ## Downloads

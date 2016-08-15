@@ -1,8 +1,6 @@
 // Karma CI configuration
-
-var
-base = require('./conf'),
-extend = require('lodash').extend;
+const base = require('./conf');
+const extend = require('lodash/extend');
 
 module.exports = function (config) {
 
@@ -11,18 +9,23 @@ module.exports = function (config) {
 		sl_chrome: {
 			base: 'SauceLabs',
 			browserName: 'chrome',
-			version: '35'
+			version: '48'
 		},
 		sl_firefox: {
 			base: 'SauceLabs',
 			browserName: 'firefox',
-			version: '30'
+			version: '45'
+		},
+		sl_safari: {
+			base: 'SauceLabs',
+			browserName: 'safari',
+			version: '7'
 		},
 		sl_edge: {
 			base: 'SauceLabs',
 			browserName: 'MicrosoftEdge',
 			platform: 'Windows 10',
-			version: '20.10240'
+			version: '13'
 		},
 		sl_ie_11: {
 			base: 'SauceLabs',
@@ -35,13 +38,13 @@ module.exports = function (config) {
 			browserName: 'internet explorer',
 			platform: 'Windows 7',
 			version: '9'
-		}/*,
+		},
 		sl_ie_8: {
 			base: 'SauceLabs',
 			browserName: 'internet explorer',
 			platform: 'Windows 7',
 			version: '8'
-		}*/
+		}
 	};
 
 	config.set(extend(base, {
@@ -51,10 +54,17 @@ module.exports = function (config) {
 		sauceLabs: {
 			testName: 'Linkify Browser Tests'
 		},
+		browserDisconnectTimeout: 30000,
+		browserNoActivityTimeout: 30000,
+		browserDisconnectTolerance: 3,
 		customLaunchers: customLaunchers,
 		browsers: Object.keys(customLaunchers),
 		autoWatch: false,
 		singleRun: true,
-		logLevel: config.LOG_WARN
+		logLevel: config.LOG_WARN,
+		reporters: [
+			'dots',
+			'saucelabs'
+		],
 	}));
 };
