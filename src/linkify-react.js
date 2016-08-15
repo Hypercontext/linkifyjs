@@ -12,7 +12,9 @@ function stringToElements(str, opts) {
 	let elements = [];
 	var linkId = 0;
 
-	for (const token of tokens) {
+	for (var i  = 0; i < tokens.length; i++) {
+		let token = tokens[i];
+
 		if (token.type === 'nl' && opts.nl2br) {
 			elements.push(React.createElement('br', {key: `linkified-${++linkId}`}));
 			continue;

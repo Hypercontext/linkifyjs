@@ -1,6 +1,4 @@
-export var defaults;
-
-defaults = {
+var defaults = {
 	defaultProtocol: 'http',
 	events: null,
 	format: noop,
@@ -14,7 +12,9 @@ defaults = {
 	className: 'linkified', // Deprecated value - no default class will be provided in the future
 };
 
-export function Options(opts) {
+export {defaults, Options, contains};
+
+function Options(opts) {
 	opts = opts || {};
 
 	this.defaultProtocol = opts.defaultProtocol || defaults.defaultProtocol;
