@@ -31,7 +31,7 @@ __Jump to__
 ## Features
 
 * **Accuracy**<br>Linkify uses a (close to) complete list of valid top-level domains to ensure that only valid URLs and email addresses are matched.
-* **Speed**<br>Each string is analyed exactly once to detect every kind of linkable entity
+* **Speed**<br>Each string is analyzed exactly once to detect every kind of linkable entity
 * **Extensibility**<br>Linkify is designed to be fast and lightweight, but comes with a powerful plugin API that lets you detect even more information like #hashtags and @mentions.
 * **Small footprint**<br>Linkify and its jQuery interface clock in at approximately 15KB minified (5KB gzipped) - approximately 50% the size of Twitter Text
 * **Modern implementation**<br>Linkify is written in ECMAScript6 and compiles to ES5 for modern JavaScript runtimes.
