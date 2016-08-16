@@ -2,24 +2,83 @@
 	Quick Mention parser plugin for linkify
 */
 export default function mention(linkify) {
-	let TT = linkify.scanner.TOKENS; // Text tokens
-	let MT = linkify.parser.TOKENS; // Multi tokens
-	let MultiToken = MT.Base;
-	let S_START = linkify.parser.start;
-	let S_AT, S_MENTION;
+	const TT = linkify.scanner.TOKENS; // Text tokens
+	const {TOKENS: MT, State} = linkify.parser; // Multi tokens, state
+	const MultiToken = MT.Base;
+	const S_START = linkify.parser.start;
 
-	class MENTION extends MultiToken {
-		constructor(value) {
-			super(value);
-			this.type = 'mention';
-			this.isLink = true;
-		}
+	const TT_DOMAIN = TT.DOMAIN;
+	const TT_LOCALHOST = TT.LOCALHOST;
+	const TT_NUM = TT.NUM;
+	const TT_SLASH = TT.SLASH;
+	const TT_TLD = TT.TLD;
+	const TT_UNDERSCORE = TT.UNDERSCORE;
+
+	function MENTION(value) {
+		this.v = value;
 	}
 
-	S_AT = new linkify.parser.State();
-	S_MENTION = new linkify.parser.State(MENTION);
+	linkify.inherits(MultiToken, MENTION, {
+		type: 'mention',
+		isLink: true,
+		toHref() {
+			return '/' + this.toString().substr(1);
+		}
+	});
 
+	const S_AT = new State();
+	const S_AT_SYMS = new State();
+	const S_MENTION = new State(MENTION);
+	const S_MENTION_SLASH = new State();
+	const S_MENTION_SLASH_SYMS = new State();
+
+	// @
 	S_START.on(TT.AT, S_AT);
-	S_AT.on(TT.DOMAIN, S_MENTION);
-	S_AT.on(TT.TLD, S_MENTION);
+
+	// @_,
+	S_AT.on(TT_UNDERSCORE, S_AT_SYMS);
+
+	//  @_*
+	S_AT_SYMS.on(TT_UNDERSCORE, S_AT_SYMS);
+
+	// Valid mention (not made up entirely of symbols)
+	S_AT
+	.on(TT_DOMAIN, S_MENTION)
+	.on(TT_LOCALHOST, S_MENTION)
+	.on(TT_TLD, S_MENTION)
+	.on(TT_NUM, S_MENTION);
+
+	S_AT_SYMS
+	.on(TT_DOMAIN, S_MENTION)
+	.on(TT_LOCALHOST, S_MENTION)
+	.on(TT_TLD, S_MENTION)
+	.on(TT_NUM, S_MENTION);
+
+	// More valid mentions
+	S_MENTION
+	.on(TT_DOMAIN, S_MENTION)
+	.on(TT_LOCALHOST, S_MENTION)
+	.on(TT_TLD, S_MENTION)
+	.on(TT_NUM, S_MENTION)
+	.on(TT_UNDERSCORE, S_MENTION);
+
+	// Mention with a slash
+	S_MENTION.on(TT_SLASH, S_MENTION_SLASH);
+
+	// Mention _ trailing stash plus syms
+	S_MENTION_SLASH.on(TT_UNDERSCORE, S_MENTION_SLASH_SYMS);
+	S_MENTION_SLASH_SYMS.on(TT_UNDERSCORE, S_MENTION_SLASH_SYMS);
+
+	// Once we get a word token, mentions can start up again
+	S_MENTION_SLASH
+	.on(TT_DOMAIN, S_MENTION)
+	.on(TT_LOCALHOST, S_MENTION)
+	.on(TT_TLD, S_MENTION)
+	.on(TT_NUM, S_MENTION);
+
+	S_MENTION_SLASH_SYMS
+	.on(TT_DOMAIN, S_MENTION)
+	.on(TT_LOCALHOST, S_MENTION)
+	.on(TT_TLD, S_MENTION)
+	.on(TT_NUM, S_MENTION);
 }
