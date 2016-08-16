@@ -1,1 +1,1 @@
-module.exports = require('../lib/linkify/plugins/mention');
+module.exports = require('../lib/linkify/plugins/mention').default;

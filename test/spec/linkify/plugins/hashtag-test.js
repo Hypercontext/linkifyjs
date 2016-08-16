@@ -10,22 +10,25 @@ describe('linkify/plugins/hashtag', () => {
 		expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
 	});
 
-	it ('Can parse hashtags after applying the plugin', () => {
+	describe('after plugin is applied', () => {
+		before(() => {
+			hashtag(linkify);
+		});
 
-		hashtag(linkify);
+		it ('Can parse hashtags after applying the plugin', () => {
+			expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
+			.to.be.eql([{
+				type: 'hashtag',
+				value: '#hashtag',
+				href: '#hashtag'
+			}, {
+				type: 'hashtag',
+				value: '#YOLO-2015',
+				href: '#YOLO-2015'
+			}]);
 
-		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
-		.to.be.eql([{
-			type: 'hashtag',
-			value: '#hashtag',
-			href: '#hashtag'
-		}, {
-			type: 'hashtag',
-			value: '#YOLO-2015',
-			href: '#YOLO-2015'
-		}]);
-
-		expect(linkify.test('#wat', 'hashtag')).to.be.ok;
-		expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
+			expect(linkify.test('#wat', 'hashtag')).to.be.ok;
+			expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
+		});
 	});
 });
