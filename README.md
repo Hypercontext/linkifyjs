@@ -144,7 +144,7 @@ require(['linkify-element'], function (linkifyElement) {
 
   // Linkify the #sidebar element
   linkifyElement(document.getElementById('sidebar'), {
-    linkClass: 'my-link'
+    className: 'my-link'
   });
 
   // Linkify all paragraph tags

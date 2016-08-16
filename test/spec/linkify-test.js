@@ -67,8 +67,7 @@ describe('linkify', () => {
 		});
 
 		var test, testName;
-		for (var i = 0; i < tests.length; i++) {
-			test = tests[i];
+		for (var test of tests) {
 			testName = 'Correctly tests the string "' + test[0] + '"';
 			testName += ' as `' + (test[1] ? 'true' : 'false') + '`';
 			if (test[2]) {

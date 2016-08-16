@@ -4,8 +4,8 @@
 
 import * as linkify from './linkify';
 
-var tokenize = linkify.tokenize;
-var options = linkify.options;
+const {tokenize, options} = linkify;
+const {Options} = options;
 
 function escapeText(text) {
 	return text
@@ -29,56 +29,56 @@ function attributesToString(attributes) {
 	return result.join(' ');
 }
 
-function linkifyStr(str, opts={}) {
-
-	opts = options.normalize(opts);
+function linkifyStr(str, opts = {}) {
+	opts = new Options(opts);
 
 	let tokens = tokenize(str);
 	let result = [];
 
 	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
-		let validated = token.isLink
-			&& options.resolve(opts.validate, token.toString(), token.type);
 
-		if (token.isLink && validated) {
-
-			let href			= token.toHref(opts.defaultProtocol);
-			let formatted		= options.resolve(opts.format, token.toString(), token.type);
-			let formattedHref	= options.resolve(opts.formatHref, href, token.type);
-			let attributesHash	= options.resolve(opts.attributes, href, token.type);
-			let tagName			= options.resolve(opts.tagName, href, token.type);
-			let linkClass		= options.resolve(opts.linkClass, href, token.type);
-			let target			= options.resolve(opts.target, href, token.type);
-
-			let link = `<${tagName} href="${escapeAttr(formattedHref)}" class="${escapeAttr(linkClass)}"`;
-			if (target) {
-				link += ` target="${escapeAttr(target)}"`;
-			}
-
-			if (attributesHash) {
-				link += ` ${attributesToString(attributesHash)}`;
-			}
-
-			link += `>${escapeText(formatted)}</${tagName}>`;
-			result.push(link);
-		} else if (token.type === 'nl' && opts.nl2br) {
-			if (opts.newLine) {
-				result.push(opts.newLine);
-			} else {
-				result.push('<br>\n');
-			}
-		} else {
+		if (token.type === 'nl' && opts.nl2br) {
+			result.push('<br>\n');
+			continue;
+		} else if (!token.isLink || !opts.check(token)) {
 			result.push(escapeText(token.toString()));
+			continue;
 		}
+
+		let {
+			formatted,
+			formattedHref,
+			tagName,
+			className,
+			target,
+			attributes,
+		} = opts.resolve(token);
+
+		let link = `<${tagName} href="${escapeAttr(formattedHref)}"`;
+
+		if (className) {
+			link += ` class="${escapeAttr(className)}"`;
+		}
+
+		if (target) {
+			link += ` target="${escapeAttr(target)}"`;
+		}
+
+		if (attributes) {
+			link += ` ${attributesToString(attributes)}`;
+		}
+
+		link += `>${escapeText(formatted)}</${tagName}>`;
+		result.push(link);
 	}
 
 	return result.join('');
 }
 
 if (!String.prototype.linkify) {
-	String.prototype.linkify = function (options) {
-		return linkifyStr(this, options);
+	String.prototype.linkify = function (opts) {
+		return linkifyStr(this, opts);
 	};
 }
 

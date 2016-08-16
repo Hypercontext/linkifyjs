@@ -90,68 +90,31 @@ QUnit.test('correctly identifies text as not an email', function (assert) {
 
 QUnit.module('linkify.options');
 
-QUnit.test('contains normalize function', function (assert) {
-	assert.ok('normalize' in w.linkify.options);
-	assert.equal(typeof w.linkify.options.normalize, 'function');
+QUnit.test('contains defaults object', function (assert) {
+	assert.ok('defaults' in w.linkify.options);
+	assert.equal(typeof w.linkify.options.defaults, 'object');
 });
 
-QUnit.test('contains resolve function', function (assert) {
-	assert.ok('resolve' in w.linkify.options);
-	assert.equal(typeof w.linkify.options.resolve, 'function');
+QUnit.test('contains Options class', function (assert) {
+	assert.ok('Options' in w.linkify.options);
+	assert.equal(typeof w.linkify.options.Options, 'function');
 });
 
 
-QUnit.module('linkify.options.normalize');
+QUnit.module('linkify.options.Options');
 
-QUnit.test('returns in the hash of default options when given an empty object', function (assert) {
-	var result = w.linkify.options.normalize({});
-	assert.propEqual(result, {
-		attributes: null,
-		defaultProtocol: 'http',
-		events: null,
-		format: function () {},
-		validate: function () {},
-		formatHref: function () {},
-		newLine: false, // deprecated
-		nl2br: false,
-		tagName: 'a',
-		target: function () {},
-		linkClass: 'linkified',
-		ignoreTags: []
-	});
+QUnit.test('returns the hash of default options when given an empty object', function (assert) {
+	var result = new w.linkify.options.Options({});
+	assert.propEqual(result, w.linkify.options.defaults);
+
 	assert.equal(typeof result.format, 'function');
-	assert.equal(typeof result.validate, 'function');
+	assert.equal(typeof result.validate, 'boolean');
 	assert.equal(result.format('test'), 'test');
 	assert.equal(typeof result.formatHref, 'function');
 	assert.equal(result.formatHref('test'), 'test');
 	assert.equal(typeof result.target, 'function');
 	assert.equal(result.target('test', 'url'), '_blank');
 	assert.equal(result.target('email'), null);
-});
-
-
-QUnit.module('linkify.options.resolve');
-
-QUnit.test('results in the value given when called with a non-function', function (assert) {
-	var result0 = 0;
-	var result1 = 1;
-	var result2 = 'test';
-	var result3 = {test: 'test'};
-
-	assert.equal(w.linkify.options.resolve(result0), result0);
-	assert.equal(w.linkify.options.resolve(result1), result1);
-	assert.equal(w.linkify.options.resolve(result2), result2);
-	assert.equal(w.linkify.options.resolve(result3), result3);
-});
-
-QUnit.test('Results the results of the function when called with a function and arguments', function (assert) {
-	function concat(str1, str2) {
-		return str1 + str2;
-	}
-
-	assert.equal(
-		w.linkify.options.resolve(concat, 'testone', 'testtwo'), 'testonetesttwo'
-	);
 });
 
 
@@ -214,7 +177,7 @@ QUnit.test('works with default options', function (assert) {
 
 QUnit.test('works with overriden options', function (assert) {
 	var $elem = jQuery('#linkify-test-elem').linkify({
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});
@@ -246,7 +209,7 @@ QUnit.test('works with default options', function (assert) {
 QUnit.test('works with overriden options', function (assert) {
 	var elem = document.getElementById('linkify-test-elem');
 	w.linkifyElement(elem, {
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});
@@ -268,7 +231,7 @@ QUnit.test('works with default options', function (assert) {
 
 QUnit.test('works with overriden options', function (assert) {
 	var result = w.linkifyHtml(originalHtml, {
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});
@@ -290,7 +253,7 @@ QUnit.test('works with default options', function (assert) {
 
 QUnit.test('works with overriden options', function (assert) {
 	var result = w.linkifyStr('google.ca and me@gmail.com', {
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		}
 	});

@@ -22,15 +22,14 @@ let tokenize = function (str) {
 /**
 	Returns a list of linkable items in the given string.
 */
-let find = function (str, type=null) {
+let find = function (str, type = null) {
 	let tokens = tokenize(str);
 	let filtered = [];
 
-	for (let i = 0; i < tokens.length; i++) {
-		if (tokens[i].isLink && (
-			!type || tokens[i].type === type
-		)) {
-			filtered.push(tokens[i].toObject());
+	for (var i = 0; i < tokens.length; i++) {
+		let token = tokens[i];
+		if (token.isLink && (!type || token.type === type)) {
+			filtered.push(token.toObject());
 		}
 	}
 
@@ -50,7 +49,7 @@ let find = function (str, type=null) {
 
 	Will return `true` if str is a valid email.
 */
-let test = function (str, type=null) {
+let test = function (str, type = null) {
 	let tokens = tokenize(str);
 	return tokens.length === 1 && tokens[0].isLink && (
 		!type || tokens[0].type === type

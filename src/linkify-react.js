@@ -1,7 +1,8 @@
 import React from 'react';
 import * as linkify from './linkify';
 
-let options = linkify.options;
+const {options} = linkify;
+const {Options} = options;
 
 // Given a string, converts to an array of valid React components
 // (which may include strings)
@@ -11,33 +12,37 @@ function stringToElements(str, opts) {
 	let elements = [];
 	var linkId = 0;
 
-	for (const token of tokens) {
+	for (var i  = 0; i < tokens.length; i++) {
+		let token = tokens[i];
+
 		if (token.type === 'nl' && opts.nl2br) {
 			elements.push(React.createElement('br', {key: `linkified-${++linkId}`}));
 			continue;
-		} else if (
-			!token.isLink ||
-			!options.resolve(opts.validate, token.toString(), token.type)
-		) {
+		} else if (!token.isLink || !opts.check(token)) {
 			// Regular text
 			elements.push(token.toString());
 			continue;
 		}
 
-		let href = token.toHref(opts.defaultProtocol);
-		let formatted = options.resolve(opts.format, token.toString(), token.type);
-		let formattedHref = options.resolve(opts.formatHref, href, token.type);
-		let attributesHash = options.resolve(opts.attributes, href, token.type);
-		let tagName = options.resolve(opts.tagName, href, token.type);
-		let linkClass = options.resolve(opts.linkClass, href, token.type);
-		let target = options.resolve(opts.target, href, token.type);
-		let events = options.resolve(opts.events, href, token.type);
+		let {
+			href,
+			formatted,
+			formattedHref,
+			tagName,
+			className,
+			target,
+			attributes,
+			events
+		} = opts.resolve(token);
 
 		let props = {
 			key: `linkified-${++linkId}`,
-			href: href,
-			className: linkClass,
+			href: formattedHref,
 		};
+
+		if (className) {
+			props.className = className;
+		}
 
 		if (target) {
 			props.target = target;
@@ -45,9 +50,9 @@ function stringToElements(str, opts) {
 
 		// Build up additional attributes
 		// Support for events via attributes hash
-		if (attributesHash) {
-			for (var attr in attributesHash) {
-				props[attr] = attributesHash[attr];
+		if (attributes) {
+			for (var attr in attributes) {
+				props[attr] = attributes[attr];
 			}
 		}
 
@@ -103,8 +108,8 @@ var Linkify = React.createClass({
 			}
 		}
 
-		var opts = options.normalize(this.props.options);
-		var tagName = this.props.tagName || 'span';
+		let opts = new Options(this.props.options);
+		let tagName = this.props.tagName || 'span';
 		let element = React.createElement(tagName, newProps);
 
 		return linkifyReactElement(element, opts, 0);

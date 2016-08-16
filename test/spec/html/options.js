@@ -19,7 +19,7 @@ module.exports = {
 
 	extra: fs.readFileSync(__dirname + '/extra.html', 'utf8').trim(), // for jQuery plugin tests
 	altOptions: {
-		linkAttributes: {
+		attributes: {
 			rel: 'nofollow'
 		},
 		events: {
@@ -37,9 +37,10 @@ module.exports = {
 	},
 
 	validateOptions: {
-		validate: function (text, type) {
-			return type !== 'url' || /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
+		validate: {
+			url: function (text) {
+				return /^(http|ftp)s?:\/\//.test(text) || text.slice(0,3) === 'www';
+			}
 		}
 	}
-
 };
