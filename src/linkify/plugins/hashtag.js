@@ -3,10 +3,8 @@
 */
 export default function hashtag(linkify) {
 	let TT = linkify.scanner.TOKENS; // Text tokens
-	let MT = linkify.parser.TOKENS; // Multi tokens
-	let MultiToken = MT.Base;
+	let MultiToken = linkify.parser.TOKENS.Base; // Base Multi token class
 	let S_START = linkify.parser.start;
-	let S_HASH, S_HASHTAG;
 
 	function HASHTAG(value) {
 		this.v = value;
@@ -17,10 +15,10 @@ export default function hashtag(linkify) {
 		isLink: true
 	});
 
-	S_HASH = new linkify.parser.State();
-	S_HASHTAG = new linkify.parser.State(HASHTAG);
+	const S_HASH = S_START.jump(TT.POUND);
+	const S_HASHTAG = new linkify.parser.State(HASHTAG);
 
-	S_START.on(TT.POUND, S_HASH);
 	S_HASH.on(TT.DOMAIN, S_HASHTAG);
 	S_HASH.on(TT.TLD, S_HASHTAG);
+	S_HASH.on(TT.LOCALHOST, S_HASHTAG);
 }

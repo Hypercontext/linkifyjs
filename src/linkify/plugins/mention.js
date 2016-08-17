@@ -1,5 +1,5 @@
 /**
-	Quick Mention parser plugin for linkify
+	Mention parser plugin for linkify
 */
 export default function mention(linkify) {
 	const TT = linkify.scanner.TOKENS; // Text tokens
@@ -26,14 +26,11 @@ export default function mention(linkify) {
 		}
 	});
 
-	const S_AT = new State();
+	const S_AT = S_START.jump(TT.AT); // @
 	const S_AT_SYMS = new State();
 	const S_MENTION = new State(MENTION);
 	const S_MENTION_SLASH = new State();
 	const S_MENTION_SLASH_SYMS = new State();
-
-	// @
-	S_START.on(TT.AT, S_AT);
 
 	// @_,
 	S_AT.on(TT_UNDERSCORE, S_AT_SYMS);
