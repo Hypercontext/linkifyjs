@@ -1,4 +1,4 @@
 ;(function (linkify) {
 <%= contents %>
-mention(linkify);
+plugin(linkify);
 })(window.linkify);
