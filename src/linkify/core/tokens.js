@@ -130,6 +130,12 @@ const QUERY = inheritsToken('?');
 const SLASH = inheritsToken('/');
 
 /**
+	@class UNDERSCORE
+	@extends TextToken
+*/
+const UNDERSCORE = inheritsToken('_');
+
+/**
 	One ore more non-whitespace symbol.
 	@class SYM
 	@extends TextToken
@@ -176,6 +182,7 @@ let text = {
 	QUERY,
 	PROTOCOL,
 	SLASH,
+	UNDERSCORE,
 	SYM,
 	TLD,
 	WS,

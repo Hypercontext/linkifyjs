@@ -43,6 +43,7 @@ S_START
 .on('#', makeState(TOKENS.POUND))
 .on('?', makeState(TOKENS.QUERY))
 .on('/', makeState(TOKENS.SLASH))
+.on('_', makeState(TOKENS.UNDERSCORE))
 .on(COLON, makeState(TOKENS.COLON))
 .on('{', makeState(TOKENS.OPENBRACE))
 .on('[', makeState(TOKENS.OPENBRACKET))

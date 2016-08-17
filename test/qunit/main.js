@@ -133,6 +133,22 @@ QUnit.test('finds valid hashtags', function (assert) {
 	}]);
 });
 
+
+QUnit.module('linkify-plugin-metntion');
+
+QUnit.test('finds valid metntions', function (assert) {
+	var result = w.linkify.find('Hey @foo say hello to @bar!');
+	assert.deepEqual(result, [{
+		type: 'mention',
+		value: '@foo',
+		href: '/foo',
+	}, {
+		type: 'mention',
+		value: '@bar',
+		href: '/bar'
+	}]);
+});
+
 // HTML rendered in body
 var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this and localhost:8080, pretty neat right? <p>Here is a nested github.com/SoapBox/linkifyjs paragraph</p>';
 

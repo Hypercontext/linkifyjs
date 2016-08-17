@@ -147,6 +147,10 @@ var tests = [
 		'More weird character in http://facebook.com/#aZ?/:@-._~!$&\'()*+,;= that URL',
 		[TEXT, URL, TEXT],
 		['More weird character in ', 'http://facebook.com/#aZ?/:@-._~!$&\'()*+,;=', ' that URL']
+	], [
+		'Email with a underscore is n_frasser@example.xyz asd',
+		[TEXT, EMAIL, TEXT],
+		['Email with a underscore is ', 'n_frasser@example.xyz', ' asd']
 	]
 ];
 
