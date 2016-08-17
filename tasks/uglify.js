@@ -49,6 +49,7 @@ exports.unmangleableProps = [
 	'ignoreTags',
 	'inherits',
 	'isLink',
+	'jump',
 	'key',
 	'linkAttributes',
 	'linkClass',

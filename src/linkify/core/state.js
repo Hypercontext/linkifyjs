@@ -64,9 +64,7 @@ BaseState.prototype = {
 		@return {State} state Returns false if no jumps are available
 	*/
 	next(item) {
-
 		for (let i = 0; i < this.j.length; i++) {
-
 			let jump = this.j[i];
 			let symbol = jump[0]; // Next item to check for
 			let state = jump[1]; // State to jump to if items match
@@ -147,6 +145,26 @@ const CharacterState = inherits(BaseState, createStateClass(), {
 	@extends BaseState
 */
 const TokenState = inherits(BaseState, createStateClass(), {
+
+	/**
+	 * Similar to `on`, but returns the state the results in the transition from
+	 * the given item
+	 * @method jump
+	 * @param {Mixed} item
+	 * @param {Token} [token]
+	 * @return state
+	 */
+	jump(token, tClass = null) {
+		var state = this.next(new token('')); // dummy temp token
+		if (state === this.defaultTransition) {
+			// Make a new state!
+			state = new this.constructor(tClass);
+			this.on(token, state);
+		} else if (tClass) {
+			state.T = tClass;
+		}
+		return state;
+	},
 
 	/**
 		Is the given token an instance of the given token class?
