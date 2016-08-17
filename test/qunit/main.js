@@ -125,7 +125,7 @@ QUnit.test('finds valid hashtags', function (assert) {
 	assert.deepEqual(result, [{
 		type: 'hashtag',
 		value: '#urls',
-		href: '#urls',
+		href: '#urls'
 	}, {
 		type: 'hashtag',
 		value: '#awesome2015',
@@ -134,18 +134,29 @@ QUnit.test('finds valid hashtags', function (assert) {
 });
 
 
-QUnit.module('linkify-plugin-metntion');
+QUnit.module('linkify-plugin-mention');
 
-QUnit.test('finds valid metntions', function (assert) {
+QUnit.test('finds valid mentions', function (assert) {
 	var result = w.linkify.find('Hey @foo say hello to @bar!');
 	assert.deepEqual(result, [{
 		type: 'mention',
 		value: '@foo',
-		href: '/foo',
+		href: '/foo'
 	}, {
 		type: 'mention',
 		value: '@bar',
 		href: '/bar'
+	}]);
+});
+
+QUnit.module('linkify-plugin-ticket');
+
+QUnit.test('finds valid tickets', function (assert) {
+	var result = w.linkify.find('Please see issue #42!');
+	assert.deepEqual(result, [{
+		type: 'ticket',
+		value: '#42',
+		href: '#42'
 	}]);
 });
 

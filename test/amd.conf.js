@@ -18,15 +18,20 @@ module.exports = {
 		{pattern: 'test/qunit/react.amd.js', included: false, served: true},
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.amd.min.js',
+		// 'dist/linkify.amd.js', // Uncompressed
 		'test/qunit/ie8.js',
 		{pattern: 'dist/linkify-react.amd.min.js', included: false, served: true},
+		// {pattern: 'dist/linkify-react.amd.js', included: false, served: true}, // Uncompressed
 		'dist/*.amd.min.js',
+		// 'dist/*.amd.js', // Uncompressed
 		'test/qunit/amd.js',
 		'test/qunit/main.js'
 	],
 
 	// list of files to exclude
-	exclude: [],
+	exclude: [
+		// '*.min.js', // Uncompressed
+	],
 
 	// QUnit configuration
 	client: {

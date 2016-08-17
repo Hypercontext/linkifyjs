@@ -14,16 +14,21 @@ module.exports = {
 		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false, included: false, served: true},
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.min.js',
+		// 'dist/linkify.js', // Uncompressed
 		'test/qunit/ie8.js',
 		{pattern: 'dist/linkify-react.min.js', included: false, served: true},
+		// {pattern: 'dist/linkify-reactjs', included: false, served: true}, // Uncompressed
 		'dist/*.min.js',
+		// 'dist/*.js', // Uncompressed
 		'test/qunit/globals.js',
 		'test/qunit/main.js'
 	],
 
 	// list of files to exclude
 	exclude: [
-		'dist/*.amd.min.js'
+		'dist/*.amd.min.js',
+		// 'dist/*.amd.js', // Uncompressed
+		// 'dist/*.min.js', // Uncompressed
 	],
 
 	// QUnit configuration
