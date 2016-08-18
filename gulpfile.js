@@ -61,7 +61,7 @@ gulp.task('babel', () =>
 /**
 	ES6 to babel AMD modules
 */
-gulp.task('babel-amd', () =>
+gulp.task('babel-amd-core', () =>
 	gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
@@ -72,10 +72,29 @@ gulp.task('babel-amd', () =>
 		moduleIds: true
 		// moduleRoot: 'linkifyjs'
 	}))
-	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
-	.pipe(amdOptimize('linkify'))
-	.pipe(concat('linkify.amd.js'))
 	.pipe(quickEs3())
+	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
+);
+
+
+/**
+	ES6 to babel AMD modules
+	Must run interfaces first because a more optimized core linkify payload will
+	overwrite the AMD-generated one
+*/
+gulp.task('babel-amd', ['babel-amd-core'], () =>
+	gulp.src(paths.srcCore)
+	.pipe(rollup({
+		bundle: {
+			format: 'amd',
+			moduleId: 'linkify',
+			moduleName: 'linkify'
+		}
+	}))
+	.pipe(babel())
+	.pipe(replace('__TLDS__', tldsReplaceStr))
+	.pipe(quickEs3())
+	.pipe(concat('linkify.amd.js'))
 	.pipe(gulp.dest('build'))
 );
 
@@ -232,6 +251,7 @@ gulp.task('build-polyfill', () =>
 // Build steps
 gulp.task('build', [
 	'babel',
+	'babel-amd-core',
 	'babel-amd',
 	'build-core',
 	'build-interfaces',
