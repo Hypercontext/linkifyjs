@@ -55,6 +55,7 @@ Finds all links in the given string
   - `'url'`
   - `'email'`
   - `'hashtag'` (with Hashtag plugin)
+  - `'mention'` (with Mention plugin)
 * **value** is the original entity substring.
 * **href** should be the value of this link's `href` attribute.
 
