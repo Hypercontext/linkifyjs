@@ -5,6 +5,7 @@ exports.unmangleableProps = [
 	'CharacterState',
 	'Children',
 	'State',
+	'T',
 	'TokenState',
 	'accepts',
 	'afterAttributeName',
@@ -49,6 +50,7 @@ exports.unmangleableProps = [
 	'ignoreTags',
 	'inherits',
 	'isLink',
+	'j',
 	'jump',
 	'key',
 	'linkAttributes',
@@ -84,6 +86,7 @@ exports.unmangleableProps = [
 	'toString',
 	'tokenize',
 	'type',
+	'v',
 	'validate',
 	'value',
 ];
