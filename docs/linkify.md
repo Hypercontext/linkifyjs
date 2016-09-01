@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: Standard linkify · Documentation
+title: Core linkify · Documentation
 ---
 
 #### Jump to…
@@ -18,25 +18,25 @@ title: Standard linkify · Documentation
 
 ### Node.js/Browserify
 
-{% highlight js %}
+```js
 var linkify = require('linkifyjs');
-{% endhighlight %}
+```
 
 ### AMD
 
-{% highlight html %}
+```html
 <script src="linkify.amd.js"></script>
 <script>
   require(['linkify'], function (linkify) {
     // …
   });
 </script>
-{% endhighlight %}
+```
 
 ### Browser globals
-{% highlight html %}
+```html
 <script src="linkify.js"></script>
-{% endhighlight %}
+```
 
 ## Methods
 
@@ -59,13 +59,13 @@ Finds all links in the given string
 * **value** is the original entity substring.
 * **href** should be the value of this link's `href` attribute.
 
-{% highlight js %}
+```js
 linkify.find('For help with GitHub.com, please email support@github.com');
-{% endhighlight %}
+```
 
 Returns the array
 
-{% highlight js %}
+```js
 [
   {
     type: 'url',
@@ -78,7 +78,7 @@ Returns the array
     href: 'mailto:support@github.com'
   }
 ]
-{% endhighlight %}
+```
 
 ### linkify.test _(str [, type])_
 
@@ -91,10 +91,10 @@ Is the given string a link? Not to be used for strict validation - See [Caveats]
 
 **Returns** _`Boolean`_
 
-{% highlight js %}
+```js
 linkify.test('google.com'); // true
 linkify.test('google.com', 'email'); // false
-{% endhighlight %}
+```
 
 ### linkify.tokenize _(str)_
 

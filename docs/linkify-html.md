@@ -21,13 +21,19 @@ Interface for replacing links with anchor tags within JavaScript strings contain
 npm install linkifyjs
 ```
 
-{% highlight js %}
+```js
 var linkifyHtml = require('linkifyjs/html');
-{% endhighlight %}
+```
+
+or with ES6 modules
+
+```js
+import linkifyHtml from 'linkifyjs/html';
+```
 
 ### AMD
 
-{% highlight html %}
+```html
 <script src="linkify.amd.js"></script>
 <script src="linkify-html.amd.js"></script>
 <script>
@@ -35,32 +41,32 @@ var linkifyHtml = require('linkifyjs/html');
     // …
   });
 </script>
-{% endhighlight %}
+```
 
 ### Browser globals
 
-{% highlight html %}
+```html
 <script src="linkify.js"></script>
 <script src="linkify-html.js"></script>
-{% endhighlight %}
+```
 
 ## Usage
 
-{% highlight js %}
+```js
 var options = {/* … */};
 var str = '<p>For help with GitHub.com, please email support@github.com</p>';
 linkifyHtml(str, options);
-{% endhighlight %}
+```
 
 Returns
 
-{% highlight js %}
+```js
 '<p>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></p>'
-{% endhighlight %}
+```
 
 **Params**
 
 * _`String`_ **`str`** String to linkify
-* _`Object`_ [**`options`**] [Options](options.html) hash
+* _`Object`_ [**`options`**] [Options](options.html) object
 
 **Returns** _`String`_ Linkified htmlString

@@ -33,34 +33,34 @@ bower install linkifyjs
 
 Add linkify and linkify-jquery to your HTML following jQuery:
 
-{% highlight html %}
+```html
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="linkify.min.js"></script>
 <script src="linkify-jquery.min.js"></script>
-{% endhighlight %}
+```
 
 **Note:** A [polyfill](#internet-explorer) is required for Internet Explorer 8.
 
 ### Find all links and convert them to anchor tags
 
-{% highlight js %}
+```js
 $('p').linkify();
 $('#sidebar').linkify({
     target: "_blank"
 });
-{% endhighlight %}
+```
 
 This behaviour is also available without jQuery via [linkify-element](linkify-element.html).
 
 ### Find all links in the given string
 
-{% highlight js %}
+```js
 linkify.find('Any links to github.com here? If not, contact test@example.com');
-{% endhighlight %}
+```
 
 Returns the following array
 
-{% highlight js %}
+```js
 [
   {
     type: 'url',
@@ -73,7 +73,7 @@ Returns the following array
     href: 'mailto:test@example.com'
   }
 ]
-{% endhighlight %}
+```
 
 See [all available options](options.html)
 
@@ -84,36 +84,46 @@ See [all available options](options.html)
 npm install linkifyjs
 ```
 
-{% highlight js %}
+```js
 var linkify = require('linkifyjs');
-require('linkifyjs/plugins/hashtag')(linkify); // optional
 var linkifyHtml = require('linkifyjs/html');
-{% endhighlight %}
+require('linkifyjs/plugins/hashtag')(linkify); // optional
+```
+
+or with ES6 modules
+
+```js
+import linkify from 'linkifyjs';
+import linkifyHtml from 'linkifyjs/html';
+import hashtag from 'linkifyjs/plugins/hashtag'; // optional
+
+hashtag(linkify);
+```
 
 ### Example string usage
 
-{% highlight js %}
+```js
 linkifyHtml('The site github.com is #awesome.', {
   defaultProtocol: 'https'
 });
-{% endhighlight %}
+```
 
 Returns the following string
 
-{% highlight js %}
+```js
 'The site <a href="https://github.com">github.com</a> is <a href="#awesome">#awesome</a>.'
-{% endhighlight %}
+```
 
 ## AMD
 
-{% highlight html %}
+```html
 <script src="r.js"></script>
 <script src="linkify.amd.js"></script>
 <script src="linkify-plugin-hashtag.amd.js"></script> <!-- optional -->
 <script src="linkify-element.amd.js"></script>
-{% endhighlight %}
+```
 
-{% highlight js %}
+```js
 require(['linkify'], function (linkify) {
   linkify.test('github.com'); // true
   linkify.test('github.com', 'email'); // false
@@ -130,24 +140,24 @@ require(['linkify-element'], function (linkifyElement) {
   document.getElementsByTagName('p').map(linkifyElement);
 
 });
-{% endhighlight %}
+```
 
 Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be defined.
 
 ## Browser globals
 
-{% highlight html %}
+```html
 <script src="jquery.js"></script>
 <script src="linkify.js"></script>
 <script src="linkify-string.js"></script>
 <script src="linkify-jquery.js"></script>
-{% endhighlight %}
+```
 
-{% highlight js %}
+```js
 linkify.test('dev@example.com'); // true
 var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
 $('p').linkify();
-{% endhighlight %}
+```
 
 # Internet Explorer
 
@@ -155,7 +165,7 @@ Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is 
 
 You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also required) or the provided `linkify-polyfill.js`:
 
-{% highlight html %}
+```html
 <script src="jquery.js"></script>
 
 <!--[if IE 8]>
@@ -163,4 +173,4 @@ You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also r
 <![endif]-->
 <script src="linkify.js"></script>
 <script src="linkify-jquery.js"></script>
-{% endhighlight %}
+```
