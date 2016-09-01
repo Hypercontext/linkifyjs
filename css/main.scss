@@ -12,6 +12,7 @@ $font-family-monospace:     Monaco, Consolas, "Courier New", monospace;
 
 $spacing-unit:              30px;
 
+$line-height-base:          1.75;
 $font-size-base:            16px;
 
 $navbar-height:             75px;
@@ -48,4 +49,3 @@ body {
 // Pages
 @import "home";
 @import "docs";
-
