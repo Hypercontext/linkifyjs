@@ -165,8 +165,6 @@ Note that if you are using `linkify-jquery.amd.js`, a `jquery` module must be de
 ```
 
 ```jsx
-var Linkify = LinkifyReact;
-
 linkify.test('dev@example.com'); // true
 
 ReactDOM.render(
