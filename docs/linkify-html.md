@@ -3,7 +3,8 @@ layout: doc
 title: linkify-html · Documentation
 ---
 
-Interface for replacing links with anchor tags within JavaScript strings containing HTML.
+`linkify-html` is an interface for replacing links with anchor tags within
+JavaScript strings containing HTML.
 
 #### Jump to
 

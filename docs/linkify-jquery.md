@@ -3,7 +3,9 @@ layout: doc
 title: linkify-jquery · Documentation
 ---
 
-Provides the Linkify jQuery plugin. This functionality is also available in plain JavaScript via [linkify-element](linkify-element.html).
+`linkify-jquery` is an provides the Linkify jQuery plugin. This functionality is
+also available in vanilla JavaScript via
+[linkify-element](linkify-element.html).
 
 #### Jump to
 

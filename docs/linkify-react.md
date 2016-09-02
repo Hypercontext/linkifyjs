@@ -3,8 +3,8 @@ layout: doc
 title: linkify-react · Documentation
 ---
 
-Provides a React component that walks through its children and replaces strings
-containing URLs with strings and `<a>` elements.
+`linkify-react` provides a React component that walks through its children and
+replaces strings containing URLs with strings and `<a>` elements.
 
 #### Jump to
 
@@ -78,9 +78,9 @@ This will render the following HTML into the outer element
 
 ### Events
 
-You can add events handlers to the discovered links by passing them in the
-`options.attributes` object. Define event listeners same way you would for a
-regular React element:
+You can add events handlers to the discovered links by specifying them in the
+`options.attributes` object. Define event listeners in the same way you would
+for a regular React element:
 
 ```jsx
 let linkProps = {

@@ -3,7 +3,9 @@ layout: doc
 title: linkify-element · Documentation
 ---
 
-Interface for replacing links within native DOM elements with anchor tags. Note that `linkify-element` is included with `linkify-jquery`, so you do not have to install it if you are using `linkify-jquery`.
+`linkify-element` is an interface for replacing links within native DOM elements
+with anchor tags. Note that `linkify-element` is included with `linkify-jquery`,
+so you do not have to install it if you are using `linkify-jquery`.
 
 #### Jump to
 

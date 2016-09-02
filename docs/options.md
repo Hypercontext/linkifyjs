@@ -28,6 +28,8 @@ linkify.options.defaults = {
 };
 ```
 
+**Note:** The default `.linkified` class will be removed in a future release
+
 These defaults are stored at `linkify.options.defaults` can be set globally from
 there.
 
@@ -67,11 +69,11 @@ React.createElement(Linkify, {options: options}, str);
 * **Type**: `Object | Function (String href, String type)`
 * **Default**: `null`
 
-Hash of attributes to add to each new link. **Note:** the [`class`](#classname)
+Object of attributes to add to each new link. **Note:** the [`class`](#classname)
 and [`target`](#target) attributes have dedicated options.
 
-Also accepts a function that takes the unformatted href, the  link type (e.g.,
-`'url'`, `'email'`, etc.) and returns the hash.
+Also accepts a function that takes the unformatted href, the link type (e.g.,
+`'url'`, `'email'`, etc.) and returns the object.
 
 ```js
 'github.com'.linkify({
