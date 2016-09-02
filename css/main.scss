@@ -44,6 +44,10 @@ body {
     "{{ site.baseurl }}/img/logo@2x.png",
     650px, 400px
   );
+
+  &.with-announcement-banner {
+    background-position: center 215px;
+  }
 }
 
 #new-release-announcement {
