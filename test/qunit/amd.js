@@ -10,7 +10,7 @@ window.__karma__.start = (function (start) {
 			'linkify-html',
 			'linkify-string',
 			'linkify-react'
-		], function (React, ReactDOM, linkify, linkifyElement, linkifyHtml, linkifyStr, LinkifyReact) {
+		], function (React, ReactDOM, linkify, linkifyElement, linkifyHtml, linkifyStr, Linkify) {
 			w = {
 				React: React,
 				ReactDOM: ReactDOM,
@@ -18,7 +18,7 @@ window.__karma__.start = (function (start) {
 				linkifyElement: linkifyElement,
 				linkifyHtml: linkifyHtml,
 				linkifyStr: linkifyStr,
-				LinkifyReact: LinkifyReact
+				Linkify: Linkify
 			};
 			start();
 		});

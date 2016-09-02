@@ -1,4 +1,4 @@
 ;(function (window, React, linkify) {
 <%= contents %>
-window.LinkifyReact = linkifyReact;
+window.Linkify = window.LinkifyReact = linkifyReact;
 })(window, React, linkify);
