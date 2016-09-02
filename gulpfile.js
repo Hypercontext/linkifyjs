@@ -360,16 +360,8 @@ gulp.task('karma-amd-ci', (callback) => {
 	return server.start();
 });
 
-// Build the deprecated legacy interface
-gulp.task('build-legacy', ['build'], () =>
-	gulp.src(['build/linkify.js', 'build/linkify-jquery.js'])
-	.pipe(concat('jquery.linkify.js'))
-	.pipe(wrap({src: 'templates/linkify-legacy.js'}))
-	.pipe(gulp.dest('build/dist'))
-);
-
 // Build a file that can be used for easy headless benchmarking
-gulp.task('build-benchmark', ['build-legacy'], () =>
+gulp.task('build-benchmark', ['build'], () =>
 	gulp.src('build/dist/jquery.linkify.js')
 	.pipe(concat('linkify-benchmark.js'))
 	.pipe(wrap({src: 'templates/linkify-benchmark.js'}))
@@ -378,26 +370,18 @@ gulp.task('build-benchmark', ['build-legacy'], () =>
 );
 
 // NOTE: DO NOT Upgrade gulp-uglify, it breaks IE8 and the options don't seem to be working
-gulp.task('uglify', ['build-legacy'], () => {
+gulp.task('uglify', ['build'], () => {
 	let options = {
 		mangleProperties: {
 			regex: new RegExp(`^(?!(${unmangleableProps.join('|')})).*$`)
 		}
 	};
 
-	let task = gulp.src('build/*.js')
+	return gulp.src('build/*.js')
 	.pipe(gulp.dest('dist')) // non-minified copy
 	.pipe(rename((path) => path.extname = '.min.js'))
 	.pipe(uglify(options))
 	.pipe(gulp.dest('dist'));
-
-	let taskLegacy = gulp.src('build/dist/jquery.linkify.js')
-	.pipe(gulp.dest('dist/dist')) // non-minified copy
-	.pipe(rename((path) => path.extname = '.min.js'))
-	.pipe(uglify(options))
-	.pipe(gulp.dest('dist/dist'));
-
-	return merge(task, taskLegacy);
 });
 
 gulp.task('dist', ['uglify']);
