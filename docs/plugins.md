@@ -3,29 +3,42 @@ layout: doc
 title: Plugins · Documentation
 ---
 
-Plugins provide no new interfaces but add additional detection functionality to Linkify. A custom plugin API is currently in the works.
+Plugins provide no new interfaces but add additional detection functionality to
+Linkify. A custom plugin API is currently in the works.
 
-**Note:** Plugins should be included before interfaces.
+Plugins are available for the following link types:
+
+* [Twitter-style hashtags](plugin-hashtag.html)
+* ["@" Mentions](plugin-mention.html)
+* [GitHub-style ticket/issue numbers](plugin-ticket.html)
 
 ## General Installation
 
 ### Node.js/Browserify
 
-{% highlight js %}
+```js
 var linkify = require('linkifyjs')
 require('linkifyjs/plugin/<name>')(linkify);
-{% endhighlight %}
+```
+
+or with ES6 modules
+
+```js
+import linkify from 'linkifyjs';
+import plugin from 'linkifyjs/plugin/<name>';
+plugin(linkify);
+```
 
 ### AMD
 
-{% highlight html %}
+```html
 <script src="linkify.amd.js"></script>
 <script src="linkify-plugin-<name>.amd.js"></script>
-{% endhighlight %}
+```
 
 ### Browser globals
 
-{% highlight html %}
+```html
 <script src="linkify.js"></script>
 <script src="linkify-plugin-<name>.js"></script>
-{% endhighlight %}
+```

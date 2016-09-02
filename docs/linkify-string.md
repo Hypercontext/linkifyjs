@@ -3,9 +3,13 @@ layout: doc
 title: linkify-string · Documentation
 ---
 
-Interface for replacing links with anchor tags within JavaScript strings.
+`linkify-string` is an interface for replacing links with anchor tags within
+JavaScript strings.
 
-Note that this function will ***not*** parse HTML strings properly - use [`linkify-html`](linkify-html.html) instead. Alternatively, if you're using linkify with a DOM, use [`linkify-jquery`](linkify-html.html) or [`linkify-element`](linkify-element.html)
+Note that this function will ***not*** parse HTML strings properly - use
+[`linkify-html`](linkify-html.html) instead. Alternatively, if you're using
+linkify with a DOM, use [`linkify-jquery`](linkify-html.html) or
+[`linkify-element`](linkify-element.html)
 
 #### Jump to
 
@@ -14,6 +18,7 @@ Note that this function will ***not*** parse HTML strings properly - use [`linki
   * [AMD](#amd)
   * [Browser globals](#browser-globals)
 * [Usage](#usage)
+* [Usage with HTML](#usage-with-html)
 
 ### Installation
 
@@ -23,13 +28,18 @@ Note that this function will ***not*** parse HTML strings properly - use [`linki
 npm install linkifyjs
 ```
 
-{% highlight js %}
+```js
 var linkifyStr = require('linkifyjs/string');
-{% endhighlight %}
+```
+or with ES6 modules
+
+```js
+import linkifyStr from 'linkifyjs/string';
+```
 
 ### AMD
 
-{% highlight html %}
+```html
 <script src="linkify.amd.js"></script>
 <script src="linkify-string.amd.js"></script>
 <script>
@@ -37,52 +47,57 @@ var linkifyStr = require('linkifyjs/string');
     // …
   });
 </script>
-{% endhighlight %}
+```
 
 ### Browser globals
 
-{% highlight html %}
+```html
 <script src="linkify.js"></script>
 <script src="linkify-string.js"></script>
-{% endhighlight %}
+```
 
 ## Usage
 
-{% highlight js %}
+```js
 var options = {/* … */};
 var str = 'For help with GitHub.com, please email support@github.com';
 linkifyStr(str, options);
 // or
 str.linkify(options);
-{% endhighlight %}
+```
 
 Returns
 
-{% highlight js %}
+```js
 'For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a>'
-{% endhighlight %}
+```
 
-## Usage with html string
+## Usage with HTML
 
 `linkify-string` automatically escapes HTML input.
 
-{% highlight js %}
+```js
 var options = {/* … */};
 var str = '<p>For help with GitHub.com, please email support@github.com</p>';
 linkifyStr(str, options);
 // or
 str.linkify(options);
-{% endhighlight %}
+```
 
 Returns
 
-{% highlight js %}
+```js
 '&lt;p&gt;For help with <a href="http://github.com" class="linkified" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com" class="linkified">support@github.com</a>&lt;/p&gt;'
-{% endhighlight %}
+```
+
+See [Caveats](caveats.html#cross-site-scripting) for more about linkify and XSS.
+
+Use [`linkify-html`](linkify-html.html) if you'd like to preserve all HTML
+entities.
 
 **Params**
 
 * _`String`_ **`str`** String to linkify
-* _`Object`_ [**`options`**] [Options](options.html) hash
+* _`Object`_ [**`options`**] [Options](options.html) object
 
 **Returns** _`String`_ Linkified string

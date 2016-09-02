@@ -3,7 +3,9 @@ layout: doc
 title: linkify-element · Documentation
 ---
 
-Interface for replacing links within native DOM elements with anchor tags. Note that `linkify-element` is included with `linkify-jquery`, so you do not have to install it if you are using `linkify-jquery`.
+`linkify-element` is an interface for replacing links within native DOM elements
+with anchor tags. Note that `linkify-element` is included with `linkify-jquery`,
+so you do not have to install it if you are using `linkify-jquery`.
 
 #### Jump to
 
@@ -21,13 +23,19 @@ Interface for replacing links within native DOM elements with anchor tags. Note 
 npm install linkifyjs
 ```
 
-{% highlight js %}
+```js
 var linkifyElement = require('linkifyjs/element');
-{% endhighlight %}
+```
+
+or with ES6 modules
+
+```js
+import linkifyElement from 'linkifyjs/element';
+```
 
 ### AMD
 
-{% highlight html %}
+```html
 <script src="linkify.amd.js"></script>
 <script src="linkify-element.amd.js"></script>
 <script>
@@ -35,28 +43,28 @@ var linkifyElement = require('linkifyjs/element');
         // …
     });
 </script>
-{% endhighlight %}
+```
 
 ### Browser globals
 
-{% highlight html %}
+```html
 <script src="linkify.js"></script>
 <script src="linkify-element.js"></script>
-{% endhighlight %}
+```
 
 ## Usage
 
-{% highlight js %}
+```js
 var options = {/* … */};
 linkifyElement(document.getElementById('id'), options, document);
-{% endhighlight %}
+```
 
 This recursively finds links in text nodes within element `#id`.
 
 **Params**
 
 * _`HTMLElement`_ **`element`** DOM Element to linkify
-* _`Object`_ [**`options`**]  [Options](options.html) hash
+* _`Object`_ [**`options`**]  [Options](options.html) object
 * _`HTMLDocument`_ [**`doc`**] Explicitly pass in the document object or document implementation if on a non-browser environment like Node.js
 
 **Returns** _`HTMLElement`_ **`element`** The same element provided as input
