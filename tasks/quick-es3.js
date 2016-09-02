@@ -9,6 +9,6 @@ module.exports = lazypipe()
 	.pipe(replace, /([^a-zA-Z0-9\.])default:/g, '$1\'default\':')
 	.pipe(
 		replace,
-		/(Object\.defineProperty\(exports,\W*['"]__esModule['"],\W*\{\W*value:\W*true\W*\}\);)/g,
-		'try { $1 } catch (e) { exports[\'__esModule\'] = true; }'
+		/(Object\.defineProperty\(exports,\s*['"]__esModule['"],\s*\{\s*value:\s*true\s*\}\);)/g,
+		(match) => `try { ${match} } catch (e) { exports['__esModule'] = true; }`
 	);

@@ -84,7 +84,7 @@ Options.prototype = {
 		case 'function': return option(operator, token.type);
 		case 'object':
 			let optionValue = option[token.type] || defaults[key];
-			return typeof optionValue === 'function' ? optionValue(operator) : optionValue;
+			return typeof optionValue === 'function' ? optionValue(operator, token.type) : optionValue;
 		}
 
 		return option;

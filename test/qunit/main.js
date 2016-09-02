@@ -295,18 +295,18 @@ if (!isIE8()) {
 	QUnit.module('linkify-react');
 
 	QUnit.test('class exists', function (assert) {
-		assert.ok('LinkifyReact' in w);
-		assert.equal(typeof w.LinkifyReact, 'function');
+		assert.ok('Linkify' in w);
+		assert.equal(typeof w.Linkify, 'function');
 	});
 
 	QUnit.test('can be used to create valid components', function (assert) {
-		var linkified = w.React.createElement(w.LinkifyReact, null, 'github.com');
+		var linkified = w.React.createElement(w.Linkify, null, 'github.com');
 		assert.ok(w.React.isValidElement(linkified));
 	});
 
 	QUnit.test('renders into a DOM element', function (assert) {
 		var linkified = w.React.createElement(
-			w.LinkifyReact,
+			w.Linkify,
 			{tagName: 'em'},
 			'A few links are github.com and google.com and ',
 			w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
