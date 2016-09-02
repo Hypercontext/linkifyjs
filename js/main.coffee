@@ -59,10 +59,27 @@
     $('.version').html '{{ site.version }}'
     $('.version-download').attr 'href', 'https://github.com/SoapBox/linkifyjs/releases/download/{{ site.version }}/linkifyjs.zip'
 
+    # Show new release banner, if required
+    do ->
+      $banner = $('#new-release-banner')
+      return if $banner.length == 0
+
+      version = $banner.data('version')
+      if !localStorage || localStorage.getItem("linkify_seen_announcement_#{version}")
+        $banner.remove()
+        return
+
+      $('body').addClass 'with-announcement-banner'
+      $banner.find('.close').on 'click', ->
+        $banner.remove()
+        localStorage.setItem("linkify_seen_announcement_#{version}", true)
+        $('body').removeClass 'with-announcement-banner'
+        false
+
+    # Fix scroll position when using named anchors (the top navigation is tall)
     $(window).on 'hashchange', ->
       $w = $(window)
-      $navbar = $('#navbar')
-      height = $navbar.height()
+      height = $('#navbar').height() + $('#new-release-banner').height()
       scrollDistance = $w.scrollTop()
       newScrollDistance = scrollDistance - height - 15
       $w.scrollTop(Math.max(newScrollDistance, 0))

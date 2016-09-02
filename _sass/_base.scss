@@ -17,6 +17,9 @@ header {
   z-index: 1031;
   text-align: center;
   border-top: none;
+  .with-announcement-banner & {
+    top: 40px;
+  }
 }
 
 footer {
@@ -132,15 +135,16 @@ pre {
   @include transition(top 0.3s ease);
   &.top {
     top: 0;
+    .with-announcement-banner & {
+      top: 40px;
+    }
   }
 }
 
 .navbrand-linkify {
-
 }
 
-body.offset {
-
+.offset {
   .page-title {
     @media (min-width: $screen-sm-min) {
       height: 100px;
@@ -161,8 +165,15 @@ body.offset {
       display: none;
     }
   }
-}
 
+  &.with-announcement-banner {
+    .navbar-fixed-top {
+      @media (min-width: $screen-sm-min) {
+        top: 143px;
+      }
+    }
+  }
+}
 
 .page-tagline {
   font-size: 40px;

@@ -3,6 +3,8 @@ layout: doc
 title: Documentation
 ---
 
+{% include new-release-announcement.html %}
+
 #### Jump to
 
 * [Installation/Getting Started](#installationgetting-started)
