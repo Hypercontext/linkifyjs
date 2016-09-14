@@ -68,7 +68,7 @@ return <Linkify tagName="p" options={options}>{content}</Linkify>;
 This will render the following HTML into the outer element
 
 ```js
-'<span>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></span>'
+'<p>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></p>'
 ```
 
 ### Properties
