@@ -95,7 +95,7 @@ require('linkifyjs/plugins/hashtag')(linkify); // optional
 or with ES6 modules
 
 ```js
-import linkify from 'linkifyjs';
+import * as linkify from 'linkifyjs';;
 import linkifyHtml from 'linkifyjs/html';
 import hashtag from 'linkifyjs/plugins/hashtag'; // optional
 

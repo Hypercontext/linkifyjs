@@ -24,7 +24,7 @@ require('linkifyjs/plugin/<name>')(linkify);
 or with ES6 modules
 
 ```js
-import linkify from 'linkifyjs';
+import * as linkify from 'linkifyjs';;
 import plugin from 'linkifyjs/plugin/<name>';
 plugin(linkify);
 ```
