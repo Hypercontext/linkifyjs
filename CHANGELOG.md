@@ -1,5 +1,10 @@
 # Linkify Changelog
 
+
+### v2.1.1
+
+* Detect additional whitespace characters (#163)
+
 ### v2.1.0
 
 #### BREAKING CHANGES
