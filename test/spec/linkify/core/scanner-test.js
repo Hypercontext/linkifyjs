@@ -67,6 +67,7 @@ const tests = [
 	['-500px', [SYM, DOMAIN], ['-', '500px']],
 	['500px-', [DOMAIN, SYM], ['500px', '-']],
 	['123-456', [DOMAIN], ['123-456']],
+	['foo\u00a0bar', [TLD, WS, TLD], ['foo', '\u00a0', 'bar']], // nbsp
 	[
 		'Direniş İzleme Grubu\'nun',
 		[DOMAIN, SYM, WS, SYM, DOMAIN, WS, DOMAIN, SYM, DOMAIN],

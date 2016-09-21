@@ -151,6 +151,10 @@ var tests = [
 		'Email with a underscore is n_frasser@example.xyz asd',
 		[TEXT, EMAIL, TEXT],
 		['Email with a underscore is ', 'n_frasser@example.xyz', ' asd']
+	], [
+		'Url followed by nbsp: example.com/foo\u00a0bar',
+		[TEXT, URL, TEXT],
+		['Url followed by nbsp: ', 'example.com/foo', '\u00a0bar']
 	]
 ];
 
