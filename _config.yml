@@ -10,7 +10,7 @@ baseurl: "/linkifyjs" # the subpath of your site, e.g. /blog/
 url: "http://soapbox.github.io" # the base hostname & protocol for your site
 twitter_username: SoapBoxHQ
 github_username:  SoapBox
-version: v2.1.0
+version: v2.1.1
 
 # Build settings
 markdown: kramdown
