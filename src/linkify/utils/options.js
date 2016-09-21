@@ -99,7 +99,7 @@ Options.prototype = {
 /**
  * Quick indexOf replacement for checking the ignoreTags option
  */
-export function contains(arr, value) {
+function contains(arr, value) {
 	for (var i = 0; i < arr.length; i++) {
 		if (arr[i] === value) { return true; }
 	}
