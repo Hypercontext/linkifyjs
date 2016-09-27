@@ -1,5 +1,8 @@
 # Linkify Changelog
 
+### v2.1.2
+
+* Single quotes should be treated as punctuation (#165)
 
 ### v2.1.1
 
