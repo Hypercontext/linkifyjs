@@ -67,7 +67,7 @@ S_START
 .on('}', makeState(CLOSEBRACE))
 .on(']', makeState(CLOSEBRACKET))
 .on(')', makeState(CLOSEPAREN))
-.on([',', ';', '!', '"'], makeState(PUNCTUATION));
+.on([',', ';', '!', '"', '\''], makeState(PUNCTUATION));
 
 // Whitespace jumps
 // Tokens of only non-newline whitespace are arbitrarily long

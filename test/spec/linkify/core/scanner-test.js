@@ -41,7 +41,7 @@ const tests = [
 	['&', [SYM], ['&']],
 	['&?<>(', [SYM, QUERY, SYM, SYM, OPENPAREN], ['&', '?', '<', '>', '(']],
 	['([{}])', [OPENPAREN, OPENBRACKET, OPENBRACE, CLOSEBRACE, CLOSEBRACKET, CLOSEPAREN], ['(', '[', '{', '}', ']', ')']],
-	['!,;', [PUNCTUATION, PUNCTUATION, PUNCTUATION], ['!', ',', ';']],
+	['!,;\'', [PUNCTUATION, PUNCTUATION, PUNCTUATION, PUNCTUATION], ['!', ',', ';', '\'']],
 	['hello', [DOMAIN], ['hello']],
 	['Hello123', [DOMAIN], ['Hello123']],
 	['hello123world', [DOMAIN], ['hello123world']],
@@ -70,7 +70,7 @@ const tests = [
 	['foo\u00a0bar', [TLD, WS, TLD], ['foo', '\u00a0', 'bar']], // nbsp
 	[
 		'Direniş İzleme Grubu\'nun',
-		[DOMAIN, SYM, WS, SYM, DOMAIN, WS, DOMAIN, SYM, DOMAIN],
+		[DOMAIN, SYM, WS, SYM, DOMAIN, WS, DOMAIN, PUNCTUATION, DOMAIN],
 		['Direni', 'ş', ' ', 'İ', 'zleme', ' ', 'Grubu', '\'', 'nun']
 	]
 ];
