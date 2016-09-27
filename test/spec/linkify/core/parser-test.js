@@ -155,6 +155,10 @@ var tests = [
 		'Url followed by nbsp: example.com/foo\u00a0bar',
 		[TEXT, URL, TEXT],
 		['Url followed by nbsp: ', 'example.com/foo', '\u00a0bar']
+	], [
+		'A link in \'singlequote.club/wat\' extra fluff at the end',
+		[TEXT, URL, TEXT],
+		['A link in \'', 'singlequote.club/wat', '\' extra fluff at the end']
 	]
 ];
 
