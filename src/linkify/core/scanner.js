@@ -26,9 +26,11 @@ import {
 	COLON,
 	OPENBRACE,
 	OPENBRACKET,
+	OPENANGLEBRACKET,
 	OPENPAREN,
 	CLOSEBRACE,
 	CLOSEBRACKET,
+	CLOSEANGLEBRACKET,
 	CLOSEPAREN,
 	PUNCTUATION,
 	NL,
@@ -63,9 +65,11 @@ S_START
 .on(':', makeState(COLON))
 .on('{', makeState(OPENBRACE))
 .on('[', makeState(OPENBRACKET))
+.on('<', makeState(OPENANGLEBRACKET))
 .on('(', makeState(OPENPAREN))
 .on('}', makeState(CLOSEBRACE))
 .on(']', makeState(CLOSEBRACKET))
+.on('>', makeState(CLOSEANGLEBRACKET))
 .on(')', makeState(CLOSEPAREN))
 .on([',', ';', '!', '"', '\''], makeState(PUNCTUATION));
 
