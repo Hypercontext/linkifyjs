@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+### v2.1.3
+
+* Links in angle brackets (#166)
+
 ### v2.1.2
 
 * Single quotes should be treated as punctuation (#165)
