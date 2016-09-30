@@ -35,9 +35,11 @@ import {
 	TLD,
 	OPENBRACE,
 	OPENBRACKET,
+	OPENANGLEBRACKET,
 	OPENPAREN,
 	CLOSEBRACE,
 	CLOSEBRACKET,
+	CLOSEANGLEBRACKET,
 	CLOSEPAREN,
 } from './tokens/text';
 
@@ -55,34 +57,37 @@ let S_START = makeState();
 
 // Intermediate states for URLs. Note that domains that begin with a protocol
 // are treated slighly differently from those that don't.
-let S_PROTOCOL				= makeState(); // e.g., 'http:'
-let S_PROTOCOL_SLASH		= makeState(); // e.g., '/', 'http:/''
-let S_PROTOCOL_SLASH_SLASH	= makeState();  // e.g., '//', 'http://'
-let S_DOMAIN				= makeState(); // parsed string ends with a potential domain name (A)
-let S_DOMAIN_DOT			= makeState(); // (A) domain followed by DOT
-let S_TLD					= makeState(URL); // (A) Simplest possible URL with no query string
-let S_TLD_COLON				= makeState(); // (A) URL followed by colon (potential port number here)
-let S_TLD_PORT				= makeState(URL); // TLD followed by a port number
-let S_URL					= makeState(URL); // Long URL with optional port and maybe query string
-let S_URL_NON_ACCEPTING		= makeState(); // URL followed by some symbols (will not be part of the final URL)
-let S_URL_OPENBRACE			= makeState(); // URL followed by {
-let S_URL_OPENBRACKET		= makeState(); // URL followed by [
-let S_URL_OPENPAREN			= makeState(); // URL followed by (
-let S_URL_OPENBRACE_Q		= makeState(URL); // URL followed by { and some symbols that the URL can end it
-let S_URL_OPENBRACKET_Q		= makeState(URL); // URL followed by [ and some symbols that the URL can end it
-let S_URL_OPENPAREN_Q		= makeState(URL); // URL followed by ( and some symbols that the URL can end it
-let S_URL_OPENBRACE_SYMS	= makeState(); // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
-let S_URL_OPENBRACKET_SYMS	= makeState(); // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
-let S_URL_OPENPAREN_SYMS	= makeState(); // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
-let S_EMAIL_DOMAIN			= makeState(); // parsed string starts with local email info + @ with a potential domain name (C)
-let S_EMAIL_DOMAIN_DOT		= makeState(); // (C) domain followed by DOT
-let S_EMAIL					= makeState(EMAIL); // (C) Possible email address (could have more tlds)
-let S_EMAIL_COLON			= makeState(); // (C) URL followed by colon (potential port number here)
-let S_EMAIL_PORT			= makeState(EMAIL); // (C) Email address with a port
-let S_LOCALPART				= makeState(); // Local part of the email address
-let S_LOCALPART_AT			= makeState(); // Local part of the email address plus @
-let S_LOCALPART_DOT			= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
-let S_NL					= makeState(MNL); // single new line
+let S_PROTOCOL					= makeState(); // e.g., 'http:'
+let S_PROTOCOL_SLASH			= makeState(); // e.g., '/', 'http:/''
+let S_PROTOCOL_SLASH_SLASH		= makeState();  // e.g., '//', 'http://'
+let S_DOMAIN					= makeState(); // parsed string ends with a potential domain name (A)
+let S_DOMAIN_DOT				= makeState(); // (A) domain followed by DOT
+let S_TLD						= makeState(URL); // (A) Simplest possible URL with no query string
+let S_TLD_COLON					= makeState(); // (A) URL followed by colon (potential port number here)
+let S_TLD_PORT					= makeState(URL); // TLD followed by a port number
+let S_URL						= makeState(URL); // Long URL with optional port and maybe query string
+let S_URL_NON_ACCEPTING			= makeState(); // URL followed by some symbols (will not be part of the final URL)
+let S_URL_OPENBRACE				= makeState(); // URL followed by {
+let S_URL_OPENBRACKET			= makeState(); // URL followed by [
+let S_URL_OPENANGLEBRACKET		= makeState(); // URL followed by <
+let S_URL_OPENPAREN				= makeState(); // URL followed by (
+let S_URL_OPENBRACE_Q			= makeState(URL); // URL followed by { and some symbols that the URL can end it
+let S_URL_OPENBRACKET_Q			= makeState(URL); // URL followed by [ and some symbols that the URL can end it
+let S_URL_OPENANGLEBRACKET_Q	= makeState(URL); // URL followed by < and some symbols that the URL can end it
+let S_URL_OPENPAREN_Q			= makeState(URL); // URL followed by ( and some symbols that the URL can end it
+let S_URL_OPENBRACE_SYMS		= makeState(); // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
+let S_URL_OPENBRACKET_SYMS		= makeState(); // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
+let S_URL_OPENANGLEBRACKET_SYMS	= makeState(); // S_URL_OPENANGLEBRACKET_Q followed by some symbols it cannot end it
+let S_URL_OPENPAREN_SYMS		= makeState(); // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
+let S_EMAIL_DOMAIN				= makeState(); // parsed string starts with local email info + @ with a potential domain name (C)
+let S_EMAIL_DOMAIN_DOT			= makeState(); // (C) domain followed by DOT
+let S_EMAIL						= makeState(EMAIL); // (C) Possible email address (could have more tlds)
+let S_EMAIL_COLON				= makeState(); // (C) URL followed by colon (potential port number here)
+let S_EMAIL_PORT				= makeState(EMAIL); // (C) Email address with a port
+let S_LOCALPART					= makeState(); // Local part of the email address
+let S_LOCALPART_AT				= makeState(); // Local part of the email address plus @
+let S_LOCALPART_DOT				= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
+let S_NL						= makeState(MNL); // single new line
 
 // Make path from start to protocol (with '//')
 S_START
@@ -167,9 +172,11 @@ let qsNonAccepting = [
 	PUNCTUATION,
 	CLOSEBRACE,
 	CLOSEBRACKET,
+	CLOSEANGLEBRACKET,
 	CLOSEPAREN,
 	OPENBRACE,
 	OPENBRACKET,
+	OPENANGLEBRACKET,
 	OPENPAREN
 ];
 
@@ -180,23 +187,28 @@ let qsNonAccepting = [
 S_URL
 .on(OPENBRACE, S_URL_OPENBRACE)
 .on(OPENBRACKET, S_URL_OPENBRACKET)
+.on(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
 .on(OPENPAREN, S_URL_OPENPAREN);
 
 // URL with extra symbols at the end, followed by an opening bracket
 S_URL_NON_ACCEPTING
 .on(OPENBRACE, S_URL_OPENBRACE)
 .on(OPENBRACKET, S_URL_OPENBRACKET)
+.on(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
 .on(OPENPAREN, S_URL_OPENPAREN);
 
 // Closing bracket component. This character WILL be included in the URL
 S_URL_OPENBRACE.on(CLOSEBRACE, S_URL);
 S_URL_OPENBRACKET.on(CLOSEBRACKET, S_URL);
+S_URL_OPENANGLEBRACKET.on(CLOSEANGLEBRACKET, S_URL);
 S_URL_OPENPAREN.on(CLOSEPAREN, S_URL);
 S_URL_OPENBRACE_Q.on(CLOSEBRACE, S_URL);
 S_URL_OPENBRACKET_Q.on(CLOSEBRACKET, S_URL);
+S_URL_OPENANGLEBRACKET_Q.on(CLOSEANGLEBRACKET, S_URL);
 S_URL_OPENPAREN_Q.on(CLOSEPAREN, S_URL);
 S_URL_OPENBRACE_SYMS.on(CLOSEBRACE, S_URL);
 S_URL_OPENBRACKET_SYMS.on(CLOSEBRACKET, S_URL);
+S_URL_OPENANGLEBRACKET_SYMS.on(CLOSEANGLEBRACKET, S_URL);
 S_URL_OPENPAREN_SYMS.on(CLOSEPAREN, S_URL);
 
 // URL that beings with an opening bracket, followed by a symbols.
@@ -204,24 +216,30 @@ S_URL_OPENPAREN_SYMS.on(CLOSEPAREN, S_URL);
 // has a single opening bracket for some reason).
 S_URL_OPENBRACE.on(qsAccepting, S_URL_OPENBRACE_Q);
 S_URL_OPENBRACKET.on(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET.on(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
 S_URL_OPENPAREN.on(qsAccepting, S_URL_OPENPAREN_Q);
 S_URL_OPENBRACE.on(qsNonAccepting, S_URL_OPENBRACE_SYMS);
 S_URL_OPENBRACKET.on(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+S_URL_OPENANGLEBRACKET.on(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
 S_URL_OPENPAREN.on(qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // URL that begins with an opening bracket, followed by some symbols
 S_URL_OPENBRACE_Q.on(qsAccepting, S_URL_OPENBRACE_Q);
 S_URL_OPENBRACKET_Q.on(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET_Q.on(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
 S_URL_OPENPAREN_Q.on(qsAccepting, S_URL_OPENPAREN_Q);
 S_URL_OPENBRACE_Q.on(qsNonAccepting, S_URL_OPENBRACE_Q);
 S_URL_OPENBRACKET_Q.on(qsNonAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET_Q.on(qsNonAccepting, S_URL_OPENANGLEBRACKET_Q);
 S_URL_OPENPAREN_Q.on(qsNonAccepting, S_URL_OPENPAREN_Q);
 
 S_URL_OPENBRACE_SYMS.on(qsAccepting, S_URL_OPENBRACE_Q);
 S_URL_OPENBRACKET_SYMS.on(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET_SYMS.on(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
 S_URL_OPENPAREN_SYMS.on(qsAccepting, S_URL_OPENPAREN_Q);
 S_URL_OPENBRACE_SYMS.on(qsNonAccepting, S_URL_OPENBRACE_SYMS);
 S_URL_OPENBRACKET_SYMS.on(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+S_URL_OPENANGLEBRACKET_SYMS.on(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
 S_URL_OPENPAREN_SYMS.on(qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // Account for the query string

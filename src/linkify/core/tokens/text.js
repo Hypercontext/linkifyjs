@@ -153,9 +153,11 @@ const WS = inheritsToken();
 
 const OPENBRACE = inheritsToken('{');
 const OPENBRACKET = inheritsToken('[');
+const OPENANGLEBRACKET = inheritsToken('<');
 const OPENPAREN = inheritsToken('(');
 const CLOSEBRACE = inheritsToken('}');
 const CLOSEBRACKET = inheritsToken(']');
+const CLOSEANGLEBRACKET = inheritsToken('>');
 const CLOSEPAREN = inheritsToken(')');
 
 export {
@@ -179,8 +181,10 @@ export {
 	WS,
 	OPENBRACE,
 	OPENBRACKET,
+	OPENANGLEBRACKET,
 	OPENPAREN,
 	CLOSEBRACE,
 	CLOSEBRACKET,
+	CLOSEANGLEBRACKET,
 	CLOSEPAREN
 };

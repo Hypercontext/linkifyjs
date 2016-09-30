@@ -128,6 +128,14 @@ var tests = [
 		[TEXT, URL, TEXT],
 		['A really funky one (', 'example.com/?id=asd2{hellow}and%20it%20continues(23&((@)', ') and it ends']
 	], [
+		'URL enclosed in angle brackets: <http://example.com/exemplary> should not include trailing bracket',
+		[TEXT, URL, TEXT],
+		['URL enclosed in angle brackets: <', 'http://example.com/exemplary', '> should not include trailing bracket']
+	], [
+		'URL with angle brackets in it: http://example.com/exemplary_<remix> should be included',
+		[TEXT, URL, TEXT],
+		['URL with angle brackets in it: ', 'http://example.com/exemplary_<remix>', ' should be included']
+	], [
 		'Force http:/ and http:// are not but http://a and http://b.local?qeasd3qas=23 are all links',
 		[TEXT, URL, TEXT, URL, TEXT],
 		['Force http:/ and http:// are not but ', 'http://a', ' and ', 'http://b.local?qeasd3qas=23', ' are all links']
