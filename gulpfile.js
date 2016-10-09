@@ -111,7 +111,7 @@ gulp.task('build-core', () =>
 	}))
 	.pipe(babel())
 	.pipe(replace('__TLDS__', tldsReplaceStr))
-	.pipe(replace('undefined.', 'window.'))
+	.pipe(replace('undefined.', 'self.'))
 	.pipe(wrap({src: 'templates/linkify.js'}))
 	.pipe(gulp.dest('build'))
 );
