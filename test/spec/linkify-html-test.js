@@ -118,4 +118,12 @@ describe('linkify-html', () => {
 		);
 		expect(linkified).to.be.oneOf(htmlOptions.linkifiedAlt);
 	});
+
+	it('Treats null target options properly', () => {
+		var linkified = linkifyHtml('http://google.com', { target: { url: null }});
+		expect(linkified).to.be.eql('<a href="http://google.com" class="linkified">http://google.com</a>');
+
+		var linkified = linkifyHtml('http://google.com', { target: null });
+		expect(linkified).to.be.eql('<a href="http://google.com" class="linkified">http://google.com</a>');
+	});
 });
