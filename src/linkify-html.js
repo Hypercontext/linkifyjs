@@ -164,6 +164,7 @@ function skipTagTokens(tagName, tokens, i, skippedTokens) {
 
 	while (i < tokens.length && stackCount > 0) {
 		let token = tokens[i];
+
 		if (token.type === StartTag && token.tagName.toUpperCase() === tagName) {
 			// Nested tag of the same type, "add to stack"
 			stackCount++;
@@ -171,6 +172,7 @@ function skipTagTokens(tagName, tokens, i, skippedTokens) {
 			// Closing tag
 			stackCount--;
 		}
+
 		skippedTokens.push(token);
 		i++;
 	}

@@ -41,6 +41,7 @@ import {
 	CLOSEBRACKET,
 	CLOSEANGLEBRACKET,
 	CLOSEPAREN,
+	AMPERSAND
 } from './tokens/text';
 
 import {
@@ -105,7 +106,7 @@ S_START
 .on(LOCALHOST, S_TLD)
 .on(NUM, S_DOMAIN);
 
-// Force URL for anything sane followed by protocol
+// Force URL for protocol followed by anything sane
 S_PROTOCOL_SLASH_SLASH
 .on(TLD, S_URL)
 .on(DOMAIN, S_URL)
@@ -159,7 +160,8 @@ let qsAccepting = [
 	SLASH,
 	TLD,
 	UNDERSCORE,
-	SYM
+	SYM,
+	AMPERSAND
 ];
 
 // Types of tokens that can follow a URL and be part of the query string
@@ -262,6 +264,7 @@ let localpartAccepting = [
 	QUERY,
 	UNDERSCORE,
 	SYM,
+	AMPERSAND,
 	TLD
 ];
 
