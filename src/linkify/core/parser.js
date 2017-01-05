@@ -28,6 +28,7 @@ import {
 	PLUS,
 	POUND,
 	PROTOCOL,
+	MAILTO,
 	QUERY,
 	SLASH,
 	UNDERSCORE,
@@ -45,6 +46,7 @@ import {
 } from './tokens/text';
 
 import {
+	MAILTOEMAIL,
 	EMAIL,
 	NL as MNL,
 	TEXT,
@@ -59,6 +61,7 @@ let S_START = makeState();
 // Intermediate states for URLs. Note that domains that begin with a protocol
 // are treated slighly differently from those that don't.
 let S_PROTOCOL					= makeState(); // e.g., 'http:'
+let S_MAILTO					= makeState(); // 'mailto:'
 let S_PROTOCOL_SLASH			= makeState(); // e.g., '/', 'http:/''
 let S_PROTOCOL_SLASH_SLASH		= makeState();  // e.g., '//', 'http://'
 let S_DOMAIN					= makeState(); // parsed string ends with a potential domain name (A)
@@ -85,6 +88,8 @@ let S_EMAIL_DOMAIN_DOT			= makeState(); // (C) domain followed by DOT
 let S_EMAIL						= makeState(EMAIL); // (C) Possible email address (could have more tlds)
 let S_EMAIL_COLON				= makeState(); // (C) URL followed by colon (potential port number here)
 let S_EMAIL_PORT				= makeState(EMAIL); // (C) Email address with a port
+let S_MAILTO_EMAIL				= makeState(MAILTOEMAIL); // Email that begins with the mailto prefix (D)
+let S_MAILTO_EMAIL_NON_ACCEPTING = makeState(); // (D) Followed by some non-query string chars
 let S_LOCALPART					= makeState(); // Local part of the email address
 let S_LOCALPART_AT				= makeState(); // Local part of the email address plus @
 let S_LOCALPART_DOT				= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
@@ -94,6 +99,7 @@ let S_NL						= makeState(MNL); // single new line
 S_START
 .on(TNL, S_NL)
 .on(PROTOCOL, S_PROTOCOL)
+.on(MAILTO, S_MAILTO)
 .on(SLASH, S_PROTOCOL_SLASH);
 
 S_PROTOCOL.on(SLASH, S_PROTOCOL_SLASH);
@@ -255,6 +261,23 @@ S_URL_NON_ACCEPTING.on(qsNonAccepting, S_URL_NON_ACCEPTING);
 // Note: We are not allowing '/' in email addresses since this would interfere
 // with real URLs
 
+// For addresses with the mailto prefix
+// 'mailto:' followed by anything sane is a valid email
+S_MAILTO
+.on(TLD, S_MAILTO_EMAIL)
+.on(DOMAIN, S_MAILTO_EMAIL)
+.on(NUM, S_MAILTO_EMAIL)
+.on(LOCALHOST, S_MAILTO_EMAIL);
+
+// Greedily get more potential valid email values
+S_MAILTO_EMAIL
+.on(qsAccepting, S_MAILTO_EMAIL)
+.on(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
+S_MAILTO_EMAIL_NON_ACCEPTING
+.on(qsAccepting, S_MAILTO_EMAIL)
+.on(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
+
+// For addresses without the mailto prefix
 // Tokens allowed in the localpart of the email
 let localpartAccepting = [
 	DOMAIN,
