@@ -1,5 +1,14 @@
 # Linkify Changelog
 
+### v2.1.4
+
+* Add explicit support for mailto: addresses (#186)
+* Add support for mentions containing dots (#185)
+* URL followed by `&nbsp;` now works as expected in linkify-html (#184)
+* Small dependency updates (#183)
+* Drop deprecated babel-preset-es2015-loose dependency (#172)
+* Web workers support (#168)
+
 ### v2.1.3
 
 * Links in angle brackets (#166)
