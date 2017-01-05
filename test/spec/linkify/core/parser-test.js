@@ -5,6 +5,7 @@ const MULTI_TOKENS = require(`${__base}linkify/core/tokens`).multi;
 const TEXT = MULTI_TOKENS.TEXT;
 const URL = MULTI_TOKENS.URL;
 const EMAIL = MULTI_TOKENS.EMAIL;
+const MAILTOEMAIL = MULTI_TOKENS.MAILTOEMAIL;
 
 /**
 	[0] - Original text to parse (should tokenize first)
@@ -108,9 +109,17 @@ var tests = [
 		[TEXT, EMAIL],
 		['Emails cannot have two dots, e.g.: nick..', 'f@yahoo.ca']
 	], [
-		'The `mailto:` part should not be included in mailto:this.is.a.test@yandex.ru',
-		[TEXT, EMAIL],
-		['The `mailto:` part should not be included in mailto:', 'this.is.a.test@yandex.ru']
+		'The `mailto:` part should be included in mailto:this.is.a.test@yandex.ru',
+		[TEXT, MAILTOEMAIL],
+		['The `mailto:` part should be included in ', 'mailto:this.is.a.test@yandex.ru']
+	], [
+		'mailto:echalk-dev@logicify.com?Subject=Hello%20again is another test',
+		[MAILTOEMAIL, TEXT],
+		['mailto:echalk-dev@logicify.com?Subject=Hello%20again', ' is another test']
+	], [
+		'Mailto is greedy mailto:localhost?subject=Hello%20World.',
+		[TEXT, MAILTOEMAIL, TEXT],
+		['Mailto is greedy ', 'mailto:localhost?subject=Hello%20World', '.']
 	], [
 		'Bu haritanın verileri Direniş İzleme Grubu\'nun yaptığı Türkiye İşçi Eylemleri haritası ile birleşebilir esasen. https://graphcommons.com/graphs/00af1cd8-5a67-40b1-86e5-32beae436f7c?show=Comments',
 		[TEXT, URL],

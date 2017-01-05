@@ -101,12 +101,19 @@ const POUND = inheritsToken('#');
 	* `https:`
 	* `ftp:`
 	* `ftps:`
-	* There's Another super weird one
 
 	@class PROTOCOL
 	@extends TextToken
 */
 const PROTOCOL = inheritsToken();
+
+/**
+	Represents the start of the email URI protocol
+
+	@class MAILTO
+	@extends TextToken
+*/
+const MAILTO = inheritsToken('mailto:');
 
 /**
 	@class QUERY
@@ -176,6 +183,7 @@ export {
 	POUND,
 	QUERY,
 	PROTOCOL,
+	MAILTO,
 	SLASH,
 	UNDERSCORE,
 	SYM,

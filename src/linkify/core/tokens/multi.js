@@ -1,6 +1,6 @@
 import {createTokenClass} from './create-token-class';
 import {inherits} from '../../utils/class';
-import {DOMAIN, PROTOCOL, TLD, SLASH} from './text';
+import {DOMAIN, PROTOCOL, TLD, SLASH, MAILTO} from './text';
 
 /******************************************************************************
 	Multi-Tokens
@@ -86,6 +86,16 @@ MultiToken.prototype = {
 };
 
 /**
+	Represents an arbitrarily mailto email address with the prefix included
+	@class MAILTO
+	@extends MultiToken
+*/
+const MAILTOEMAIL = inherits(MultiToken, createTokenClass(), {
+	type: 'email',
+	isLink: true
+});
+
+/**
 	Represents a list of tokens making up a valid email address
 	@class EMAIL
 	@extends MultiToken
@@ -94,6 +104,7 @@ const EMAIL = inherits(MultiToken, createTokenClass(), {
 	type: 'email',
 	isLink: true,
 	toHref() {
+		let tokens = this.v;
 		return 'mailto:' + this.toString();
 	}
 });
@@ -179,6 +190,7 @@ const URL = inherits(MultiToken, createTokenClass(), {
 
 export {
 	MultiToken as Base,
+	MAILTOEMAIL,
 	EMAIL,
 	NL,
 	TEXT,

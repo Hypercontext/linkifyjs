@@ -156,6 +156,41 @@ describe('linkify/core/tokens/MULTI_TOKENS', () => {
 
 	});
 
+	describe('MAILTOEMAIL', () => {
+		var emailTextTokens, email;
+
+		before(() => {
+			emailTextTokens = [ // test@example.com
+				new TEXT_TOKENS.MAILTO(),
+				new TEXT_TOKENS.DOMAIN('test'),
+				new TEXT_TOKENS.AT(),
+				new TEXT_TOKENS.DOMAIN('example'),
+				new TEXT_TOKENS.DOT(),
+				new TEXT_TOKENS.TLD('com')
+			];
+			email = new MULTI_TOKENS.MAILTOEMAIL(emailTextTokens);
+		});
+
+		describe('#isLink', () => {
+			it('Is true in all cases', () => {
+				expect(email.isLink).to.be.ok;
+			});
+		});
+
+		describe('#toString()', () => {
+			it('Returns mailto:test@example.com', () => {
+				expect(email.toString()).to.be.eql('mailto:test@example.com');
+			});
+		});
+
+		describe('#toHref()', () => {
+			it('Returns mailto:test@example.com', () => {
+				expect(email.toHref()).to.be.eql('mailto:test@example.com');
+			});
+		});
+
+	});
+
 	describe('NL', () => {
 		var nlTokens, nl;
 

@@ -12,6 +12,7 @@ const NUM = TEXTTOKENS.NUM;
 const PLUS = TEXTTOKENS.PLUS;
 const POUND = TEXTTOKENS.POUND;
 const PROTOCOL = TEXTTOKENS.PROTOCOL;
+const MAILTO = TEXTTOKENS.MAILTO;
 const QUERY = TEXTTOKENS.QUERY;
 const SLASH = TEXTTOKENS.SLASH;
 const SYM = TEXTTOKENS.SYM;
@@ -56,6 +57,8 @@ const tests = [
 	['files:', [DOMAIN, COLON], ['files', ':']],
 	['file//', [DOMAIN, SLASH, SLASH], ['file', '/', '/']],
 	['ftp://', [PROTOCOL, SLASH, SLASH], ['ftp:', '/', '/']],
+	['mailto', [DOMAIN], ['mailto']],
+	['mailto:', [MAILTO], ['mailto:']],
 	['c', [DOMAIN], ['c']],
 	['co', [TLD], ['co']],
 	['com', [TLD], ['com']],
