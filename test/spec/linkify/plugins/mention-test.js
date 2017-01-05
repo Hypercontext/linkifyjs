@@ -58,7 +58,7 @@ describe('linkify/plugins/mention', () => {
 			}]);
 		});
 
-		it('parses mentions github team-style mentions with slashes', () => {
+		it('parses github team-style mentions with slashes', () => {
 			expect(linkify.find('Hey @500px/web please review this')).to.deep.equal([{
 				type: 'mention',
 				value: '@500px/web',
@@ -75,6 +75,26 @@ describe('linkify/plugins/mention', () => {
 				type: 'mention',
 				value: '@soapbox/cs',
 				href: '/soapbox/cs'
+			}]);
+		});
+
+		it('parses mentions with dots', () => {
+			expect(linkify.find('Hey @john.doe please review this')).to.deep.equal([{
+				type: 'mention',
+				value: '@john.doe',
+				href: '/john.doe'
+			}]);
+		});
+
+		it('ignores extra dots at the end of mentions', () => {
+			expect(linkify.find('We should get ...@soapbox._developers.@soapbox.cs.... to be awesome')).to.deep.equal([{
+				type: 'mention',
+				value: '@soapbox._developers',
+				href: '/soapbox._developers'
+			}, {
+				type: 'mention',
+				value: '@soapbox.cs',
+				href: '/soapbox.cs'
 			}]);
 		});
 
