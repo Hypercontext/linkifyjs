@@ -32,6 +32,7 @@ import {
 	CLOSEBRACKET,
 	CLOSEANGLEBRACKET,
 	CLOSEPAREN,
+	AMPERSAND,
 	PUNCTUATION,
 	NL,
 	SYM
@@ -71,6 +72,7 @@ S_START
 .on(']', makeState(CLOSEBRACKET))
 .on('>', makeState(CLOSEANGLEBRACKET))
 .on(')', makeState(CLOSEPAREN))
+.on('&', makeState(AMPERSAND))
 .on([',', ';', '!', '"', '\''], makeState(PUNCTUATION));
 
 // Whitespace jumps

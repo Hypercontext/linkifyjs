@@ -55,6 +55,10 @@ describe('linkify-html', () => {
 			'Ignore tags like <script>var a = {}; a.ca = "Hello";</script> and <style>b.com {color: blue;}</style>',
 			'Ignore tags like <script>var a = {}; <a href="http://a.ca" class="linkified" target="_blank">a.ca</a> = "Hello";</script> and <style><a href="http://b.com" class="linkified" target="_blank">b.com</a> {color: blue;}</style>',
 			'Ignore tags like <script>var a = {}; a.ca = "Hello";</script> and <style>b.com {color: blue;}</style>'
+		], [
+			'6. Link followed by nbsp escape sequence https://github.com&nbsp;',
+			'6. Link followed by nbsp escape sequence <a href="https://github.com" class="linkified" target="_blank">https://github.com</a>\u00a0',
+			'6. Link followed by nbsp escape sequence <span href="https://github.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">https://github.com</span>\u00a0'
 		]
 	];
 

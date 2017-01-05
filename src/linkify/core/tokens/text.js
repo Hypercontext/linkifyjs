@@ -160,6 +160,8 @@ const CLOSEBRACKET = inheritsToken(']');
 const CLOSEANGLEBRACKET = inheritsToken('>');
 const CLOSEPAREN = inheritsToken(')');
 
+const AMPERSAND = inheritsToken('&');
+
 export {
 	TextToken as Base,
 	DOMAIN,
@@ -186,5 +188,6 @@ export {
 	CLOSEBRACE,
 	CLOSEBRACKET,
 	CLOSEANGLEBRACKET,
-	CLOSEPAREN
+	CLOSEPAREN,
+	AMPERSAND
 };

@@ -25,6 +25,7 @@ const CLOSEBRACE = TEXTTOKENS.CLOSEBRACE;
 const CLOSEBRACKET = TEXTTOKENS.CLOSEBRACKET;
 const CLOSEANGLEBRACKET = TEXTTOKENS.CLOSEANGLEBRACKET;
 const CLOSEPAREN = TEXTTOKENS.CLOSEPAREN;
+const AMPERSAND = TEXTTOKENS.AMPERSAND;
 
 // The elements are
 // 1. input string
@@ -40,8 +41,8 @@ const tests = [
 	['+', [PLUS], ['+']],
 	['#', [POUND], ['#']],
 	['/', [SLASH], ['/']],
-	['&', [SYM], ['&']],
-	['&?<>(', [SYM, QUERY, OPENANGLEBRACKET, CLOSEANGLEBRACKET, OPENPAREN], ['&', '?', '<', '>', '(']],
+	['&', [AMPERSAND], ['&']],
+	['&?<>(', [AMPERSAND, QUERY, OPENANGLEBRACKET, CLOSEANGLEBRACKET, OPENPAREN], ['&', '?', '<', '>', '(']],
 	['([{}])', [OPENPAREN, OPENBRACKET, OPENBRACE, CLOSEBRACE, CLOSEBRACKET, CLOSEPAREN], ['(', '[', '{', '}', ']', ')']],
 	['!,;\'', [PUNCTUATION, PUNCTUATION, PUNCTUATION, PUNCTUATION], ['!', ',', ';', '\'']],
 	['hello', [DOMAIN], ['hello']],
