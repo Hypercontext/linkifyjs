@@ -6,7 +6,7 @@ node_v=$(node --version)
 # * The node version is 6.*
 #	- so only a single member machine in the matrix calls sauce
 
-if [[ $(echo $TRAVIS_BRANCH) = "master" && $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v6.* ]]; then
+if [[ $(echo $TRAVIS_BRANCH) = "master" && $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v7.* ]]; then
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
 	npm test || exit 1

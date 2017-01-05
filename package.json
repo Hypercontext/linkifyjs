@@ -49,7 +49,7 @@
     "gulp-wrap": "^0.13.0",
     "jsdom": "^9.3.0",
     "karma": "^1.1.0",
-    "karma-chrome-launcher": "^1.0.1",
+    "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-qunit": "^1.0.0",
@@ -61,9 +61,9 @@
     "phantomjs-prebuilt": "^2.1.7",
     "qunitjs": "^1.14.0",
     "requirejs": "^2.1.22",
-    "rollup": "^0.34.7",
+    "rollup": "~0.40.0",
     "run-sequence": "^1.1.5",
-    "simple-html-tokenizer": "git+https://github.com/nfrasser/simple-html-tokenizer.git#master",
+    "simple-html-tokenizer": "git+https://github.com/nfrasser/simple-html-tokenizer.git#a907972303094c14680d2fd9870965429a893398",
     "through2": "^2.0.1"
   },
   "optionalDependencies": {

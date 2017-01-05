@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
 [![Dependency Status](https://gemnasium.com/SoapBox/linkifyjs.svg)](https://gemnasium.com/SoapBox/linkifyjs)
 [![Build Status](https://travis-ci.org/SoapBox/linkifyjs.svg)](https://travis-ci.org/SoapBox/linkifyjs)
-[![Build Status](https://saucelabs.com/open_sauce/build_status/nfrasser.svg)](https://saucelabs.com/beta/builds/c63720f642964f77927b2fda198b4a94)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/nfrasser)](https://saucelabs.com/u/nfrasser)
 [![Coverage Status](https://coveralls.io/repos/SoapBox/linkifyjs/badge.svg?branch=master)](https://coveralls.io/r/SoapBox/linkifyjs?branch=master)
 
 [![Build Status](https://saucelabs.com/open_sauce/build_matrix/nfrasser.svg)](https://saucelabs.com/beta/builds/c63720f642964f77927b2fda198b4a94)
