@@ -111,4 +111,27 @@ describe('linkify/utils/options', () => {
 			});
 		});
 	});
+
+	describe('Nullifying Options', () => {
+		var opts;
+
+		beforeEach(() => {
+			opts = new Options({
+				target: null,
+				className: null
+			});
+		});
+
+		describe('target', () => {
+			it('should be nulled', () => {
+				expect(opts.target).to.be.null;
+			});
+		});
+
+		describe('className', () => {
+			it('should be nulled', () => {
+				expect(opts.className).to.be.null;
+			});
+		});
+	});
 });
