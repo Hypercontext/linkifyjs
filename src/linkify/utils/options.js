@@ -23,13 +23,13 @@ function Options(opts) {
 	this.formatHref = opts.formatHref || defaults.formatHref;
 	this.nl2br = opts.nl2br || defaults.nl2br;
 	this.tagName = opts.tagName || defaults.tagName;
-	this.target = opts.target !== undefined ? opts.target : defaults.target;
+	this.target = opts.hasOwnProperty('target') ? opts.target : defaults.target;
 	this.validate = opts.validate || defaults.validate;
 	this.ignoreTags = [];
 
 	// linkAttributes and linkClass is deprecated
 	this.attributes = opts.attributes || opts.linkAttributes || defaults.attributes;
-	this.className = opts.className !== undefined ? opts.className : (opts.linkClass || defaults.className);
+	this.className = opts.hasOwnProperty('className') ? opts.className : (opts.linkClass || defaults.className);
 
 	// Make all tags names upper case
 
