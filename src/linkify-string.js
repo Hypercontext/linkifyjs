@@ -77,9 +77,24 @@ function linkifyStr(str, opts = {}) {
 }
 
 if (!String.prototype.linkify) {
-	String.prototype.linkify = function (opts) {
-		return linkifyStr(this, opts);
-	};
+	try {
+		Object.defineProperty(String.prototype, 'linkify', {
+			set: function() {},
+			get: function() {
+				return function linkify(opts) {
+					return linkifyStr(this, opts);
+				};
+			}
+		});
+	} catch (e) {
+		// IE 8 doesn't like Object.defineProperty on non-DOM objects
+		if (!String.prototype.linkify) {
+			String.prototype.linkify = function (opts) {
+				return linkifyStr(this, opts);
+			};
+		}
+	}
+
 }
 
 export default linkifyStr;
