@@ -1,5 +1,5 @@
-import React from "react";
-import * as linkify from "./linkify";
+import React from 'react';
+import * as linkify from './linkify';
 
 const {options} = linkify;
 const {Options} = options;
@@ -113,7 +113,6 @@ class Linkify extends React.Component {
 		let element = React.createElement(tagName, newProps);
 
 		return linkifyReactElement(element, opts, 0);
-
 	}
 }
 
