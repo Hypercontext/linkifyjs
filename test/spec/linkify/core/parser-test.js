@@ -176,6 +176,10 @@ var tests = [
 		'A link in \'singlequote.club/wat\' extra fluff at the end',
 		[TEXT, URL, TEXT],
 		['A link in \'', 'singlequote.club/wat', '\' extra fluff at the end']
+	], [
+		'Email with mailsomething dot com domain in foo@mailsomething.com',
+		[TEXT, EMAIL],
+		['Email with mailsomething dot com domain in ', 'foo@mailsomething.com']
 	]
 ];
 
