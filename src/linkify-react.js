@@ -12,7 +12,7 @@ function stringToElements(str, opts) {
 	let elements = [];
 	var linkId = 0;
 
-	for (var i  = 0; i < tokens.length; i++) {
+	for (var i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
 
 		if (token.type === 'nl' && opts.nl2br) {
@@ -98,7 +98,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 	return React.cloneElement(element, newProps, children);
 }
 
-var Linkify = React.createClass({
+class Linkify extends React.Component {
 	render() {
 		// Copy over all non-linkify-specific props
 		let newProps = {key: 'linkified-element-0'};
@@ -114,6 +114,6 @@ var Linkify = React.createClass({
 
 		return linkifyReactElement(element, opts, 0);
 	}
-});
+}
 
 export default Linkify;
