@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+### v2.1.5
+
+* React plugin compatibility updates
+
 ### v2.1.4
 
 * Add explicit support for mailto: addresses (#186)
