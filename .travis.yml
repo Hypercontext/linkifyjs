@@ -10,7 +10,7 @@ env:
     - secure: Okwm1aAR3oo09AhHDsjFSq1UGlIUtWYYvYeoolJScC/UVFGMiK9oC4fzRtUHv3kXcnshDlcVDrr/Q5JL9Qx6E+tosPJp+tioaqE8X4IDbVk7PPs/ToOOEmWnGvxkgmfCGSDuneG8RVhILkhls3fbm0z+rRWlvJkjefeA96T6zps=
 install:
   - npm install
-  - npm install jquery@1
-  - npm install react@16
+  - npm install "jquery@1"
+  - npm install "react@16"
 script: ./run-tests.sh
 after_script: npm run coverage
