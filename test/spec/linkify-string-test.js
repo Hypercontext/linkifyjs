@@ -74,6 +74,20 @@ describe('linkify-string', () => {
 		});
 	});
 
+	describe('Prototype method', () => {
+		it('Works with default options', () => {
+			tests.map(function (test) {
+				expect(test[0].linkify()).to.be.eql(test[1]);
+			});
+		});
+
+		it('Works with overriden options (general)', () => {
+			tests.map(function (test) {
+				expect(test[0].linkify(options)).to.be.eql(test[2]);
+			});
+		});
+	});
+
 	describe('Validation', () => {
 		// Test specific options
 		const options = {
