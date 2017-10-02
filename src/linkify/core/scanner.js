@@ -102,6 +102,7 @@ let partialProtocolMailtoStates = stateify('mailto', S_START, DOMAIN, DOMAIN);
 domainStates.push.apply(domainStates, partialProtocolFileStates);
 domainStates.push.apply(domainStates, partialProtocolFtpStates);
 domainStates.push.apply(domainStates, partialProtocolHttpStates);
+domainStates.push.apply(domainStates, partialProtocolMailtoStates);
 
 // Protocol states
 let S_PROTOCOL_FILE = partialProtocolFileStates.pop();
