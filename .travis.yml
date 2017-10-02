@@ -1,8 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-  - "7.4"
-  - "6.9"
+  - "8.6"
+  - "6.11"
   - "4.4"
 env:
   global:
@@ -11,5 +11,6 @@ env:
 install:
   - npm install
   - npm install jquery@1
+  - npm install react@16
 script: ./run-tests.sh
 after_script: npm run coverage
