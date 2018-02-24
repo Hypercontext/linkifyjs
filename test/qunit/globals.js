@@ -1,1 +1,1 @@
-var w = window;
+this.w = window;

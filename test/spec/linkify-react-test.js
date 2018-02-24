@@ -1,6 +1,3 @@
-const jsdom = require('jsdom');
-const htmlOptions = require('./html/options');
-const extend = require('lodash/extend');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const Linkify = require(`${__base}linkify-react`).default;
@@ -71,13 +68,14 @@ describe('linkify-react', () => {
 	});
 
 	it('Excludes self-closing elements', () => {
-		var Delta = React.createClass({
+		class Delta extends React.Component {
 			render() {
 				return React.createElement(
 					'strong', this.props, 'https://facebook.github.io/react/'
 				);
 			}
-		});
+		}
+
 		var delta = React.createElement(Delta);
 		var linkified = React.createElement(Linkify, null, 'A great site is google.com AND ', delta);
 		var result = ReactDOMServer.renderToStaticMarkup(linkified);

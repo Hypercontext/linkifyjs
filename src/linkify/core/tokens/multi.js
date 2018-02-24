@@ -1,6 +1,6 @@
 import {createTokenClass} from './create-token-class';
 import {inherits} from '../../utils/class';
-import {DOMAIN, PROTOCOL, TLD, SLASH, MAILTO} from './text';
+import {DOMAIN, PROTOCOL, TLD, SLASH} from './text';
 
 /******************************************************************************
 	Multi-Tokens
@@ -104,7 +104,6 @@ const EMAIL = inherits(MultiToken, createTokenClass(), {
 	type: 'email',
 	isLink: true,
 	toHref() {
-		let tokens = this.v;
 		return 'mailto:' + this.toString();
 	}
 });

@@ -1,7 +1,6 @@
 'use strict';
 
 const gulp = require('gulp');
-const amdOptimize = require('amd-optimize');
 const glob = require('glob');
 const Server = require('karma').Server;
 const merge = require('merge-stream');
@@ -259,6 +258,17 @@ gulp.task('build', [
 	'build-polyfill'
 ], (cb) => { cb(); });
 
+// Copy React into vendor directory for use in tests
+// This is required because React's location may vary between versions
+gulp.task('vendor', () => {
+	gulp.src([
+		'node_modules/react/dist/react.min.js',
+		'node_modules/react-dom/dist/react-dom.min.js',
+		'node_modules/react/umd/react.min.js',
+		'node_modules/react-dom/umd/react-dom.min.js'
+	]).pipe(gulp.dest('vendor'));
+});
+
 /**
 	Lint using eslint
 */
@@ -300,7 +310,7 @@ gulp.task('coverage', ['eslint', 'dist'], (callback) => {
 	});
 });
 
-gulp.task('karma', (callback) => {
+gulp.task('karma', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
@@ -308,21 +318,21 @@ gulp.task('karma', (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-chrome', (callback) => {
+gulp.task('karma-chrome', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-firefox', (callback) => {
+gulp.task('karma-firefox', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-ci', (callback) => {
+gulp.task('karma-ci', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
@@ -345,14 +355,14 @@ gulp.task('karma-amd-chrome', (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-amd-firefox', (callback) => {
+gulp.task('karma-amd-firefox', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.amd.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-amd-ci', (callback) => {
+gulp.task('karma-amd-ci', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.amd.conf.js',
 		singleRun: true
@@ -400,6 +410,7 @@ gulp.task('clean', () =>
 		'dist',
 		'js',
 		'lib',
+		'vendor'
 	], {read: false}).pipe(clean())
 );
 

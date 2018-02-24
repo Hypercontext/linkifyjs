@@ -10,8 +10,8 @@ module.exports = {
 	// list of files / patterns to load in the browser
 	files: [
 		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
-		{pattern: 'node_modules/react/dist/react.js', watched: false, included: false, served: true},
-		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false, included: false, served: true},
+		{pattern: 'vendor/react.min.js', watched: false, included: false, served: true},
+		{pattern: 'vendor/react-dom.min.js', watched: false, included: false, served: true},
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.min.js',
 		// 'dist/linkify.js', // Uncompressed

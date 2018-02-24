@@ -13,8 +13,7 @@
 	@main parser
 */
 
-import {TokenState as State} from './state';
-import * as TEXT_TOKENS from './tokens/text';
+import { TokenState as State } from './state';
 import * as MULTI_TOKENS from './tokens/multi';
 import {
 	DOMAIN,

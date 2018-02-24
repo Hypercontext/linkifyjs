@@ -12,28 +12,29 @@ var defaults = {
 	className: 'linkified', // Deprecated value - no default class will be provided in the future
 };
 
-export {defaults, Options, contains};
+export { defaults, Options, contains };
 
 function Options(opts) {
 	opts = opts || {};
 
-	this.defaultProtocol = opts.defaultProtocol || defaults.defaultProtocol;
-	this.events = opts.events || defaults.events;
-	this.format = opts.format || defaults.format;
-	this.formatHref = opts.formatHref || defaults.formatHref;
-	this.nl2br = opts.nl2br || defaults.nl2br;
-	this.tagName = opts.tagName || defaults.tagName;
+	this.defaultProtocol = opts.hasOwnProperty('defaultProtocol') ? opts.defaultProtocol : defaults.defaultProtocol;
+	this.events = opts.hasOwnProperty('events') ? opts.events : defaults.events;
+	this.format = opts.hasOwnProperty('format') ? opts.format : defaults.format;
+	this.formatHref = opts.hasOwnProperty('formatHref') ? opts.formatHref : defaults.formatHref;
+	this.nl2br = opts.hasOwnProperty('nl2br') ? opts.nl2br : defaults.nl2br;
+	this.tagName = opts.hasOwnProperty('tagName') ? opts.tagName : defaults.tagName;
 	this.target = opts.hasOwnProperty('target') ? opts.target : defaults.target;
-	this.validate = opts.validate || defaults.validate;
+	this.validate = opts.hasOwnProperty('validate') ? opts.validate : defaults.validate;
 	this.ignoreTags = [];
 
 	// linkAttributes and linkClass is deprecated
 	this.attributes = opts.attributes || opts.linkAttributes || defaults.attributes;
-	this.className = opts.hasOwnProperty('className') ? opts.className : (opts.linkClass || defaults.className);
+	this.className = opts.hasOwnProperty('className')
+		? opts.className
+		: (opts.linkClass || defaults.className);
 
 	// Make all tags names upper case
-
-	let ignoredTags = opts.ignoreTags || defaults.ignoreTags;
+	let ignoredTags = opts.hasOwnProperty('ignoreTags') ? opts.ignoreTags : defaults.ignoreTags;
 	for (var i = 0; i < ignoredTags.length; i++) {
 		this.ignoreTags.push(ignoredTags[i].toUpperCase());
 	}
@@ -69,21 +70,18 @@ Options.prototype = {
 	/**
 	 * Resolve an option's value based on the value of the option and the given
 	 * params.
-	 * @param [String] key Name of option to use
+	 * @param {String} key Name of option to use
 	 * @param operator will be passed to the target option if it's method
-	 * @param [MultiToken] token The token from linkify.tokenize
+	 * @param {MultiToken} token The token from linkify.tokenize
 	 */
 	get(key, operator, token) {
-		let option = this[key];
-
-		if (!option) {
-			return option;
-		}
+		let optionValue, option = this[key];
+		if (!option) { return option; }
 
 		switch (typeof option) {
 		case 'function': return option(operator, token.type);
 		case 'object':
-			let optionValue = option[token.type] || defaults[key];
+			optionValue = option.hasOwnProperty(token.type) ? option[token.type] : defaults[key];
 			return typeof optionValue === 'function' ? optionValue(operator, token.type) : optionValue;
 		}
 

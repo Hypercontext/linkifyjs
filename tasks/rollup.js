@@ -28,12 +28,12 @@ module.exports = function (options) {
 			file.contents = new Buffer(result.code, enc);
 			callback(null, file);
 		}).catch(err => {
-			let message = originalError.annotated || originalError.message;
+			let message = err.annotated || err.message;
 			let details = {
-				name: originalError.name,
-				stack: originalError.stack,
-				fileName: originalError.fileName,
-				lineNumber: originalError.lineNumber
+				name: err.name,
+				stack: err.stack,
+				fileName: err.fileName,
+				lineNumber: err.lineNumber
 			};
 			this.emit('error', new PluginError(PLUGIN_NAME, message, details));
 			callback();

@@ -41,6 +41,7 @@ build
 !test/qunit/build
 dist
 lib
+vendor
 
 # Specific to plugin website branch
 .sass-cache

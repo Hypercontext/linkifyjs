@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import linkifyElement from './linkify-element';
 
 // Applies the plugin to jQuery
@@ -38,19 +37,55 @@ export default function apply($, doc = false) {
 			let data = $this.data();
 			let target = data.linkify;
 			let nl2br = data.linkifyNlbr;
+
 			let options = {
-				attributes: data.linkifyAttributes,
-				defaultProtocol: data.linkifyDefaultProtocol,
-				events: data.linkifyEvents,
-				format: data.linkifyFormat,
-				formatHref: data.linkifyFormatHref,
-				nl2br: !!nl2br && nl2br !== 0 && nl2br !== 'false',
-				tagName: data.linkifyTagname,
-				target: data.linkifyTarget,
-				className: data.linkifyClassName || data.linkifyLinkclass, // linkClass is deprecated
-				validate: data.linkifyValidate,
-				ignoreTags: data.linkifyIgnoreTags
+				nl2br: !!nl2br && nl2br !== 0 && nl2br !== 'false'
 			};
+
+			if ('linkifyAttributes' in data) {
+				options.attributes = data.linkifyAttributes;
+			}
+
+			if ('linkifyDefaultProtocol' in data) {
+				options.defaultProtocol = data.linkifyDefaultProtocol;
+			}
+
+			if ('linkifyEvents' in data) {
+				options.events = data.linkifyEvents;
+			}
+
+			if ('linkifyFormat' in data) {
+				options.format = data.linkifyFormat;
+			}
+
+			if ('linkifyFormatHref' in data) {
+				options.formatHref = data.linkifyFormatHref;
+			}
+
+			if ('linkifyTagname' in data) {
+				options.tagName = data.linkifyTagname;
+			}
+
+			if ('linkifyTarget' in data) {
+				options.target = data.linkifyTarget;
+			}
+
+			if ('linkifyValidate' in data) {
+				options.validate = data.linkifyValidate;
+			}
+
+			if ('linkifyIgnoreTags' in data) {
+				options.ignoreTags = data.linkifyIgnoreTags;
+			}
+
+			if ('linkifyClassName' in data) {
+				options.className = data.linkifyClassName;
+			} else if ('linkifyLinkclass' in data) { // linkClass is deprecated
+				options.className = data.linkifyLinkclass;
+			}
+
+			options = linkifyElement.normalize(options);
+
 			let $target = target === 'this' ? $this : $this.find(target);
 			$target.linkify(options);
 		});
@@ -58,4 +93,4 @@ export default function apply($, doc = false) {
 }
 
 // Try assigning linkifyElement to the browser scope
-try { let a = !define && (window.linkifyElement = linkifyElement); } catch (e) {}
+try { !this.define && (window.linkifyElement = linkifyElement); } catch (e) { /**/ }

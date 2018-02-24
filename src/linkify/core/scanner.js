@@ -184,14 +184,12 @@ let run = function (str) {
 	// Tokenize the string
 	while (cursor < len) {
 		let state = S_START;
-		let secondState = null;
 		let nextState = null;
 		let tokenLength = 0;
 		let latestAccepting = null;
 		let sinceAccepts = -1;
 
 		while (cursor < len && (nextState = state.next(lowerStr[cursor]))) {
-			secondState = null;
 			state = nextState;
 
 			// Keep track of the latest accepting state
