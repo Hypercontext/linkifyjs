@@ -9,10 +9,10 @@ node_v=$(node --version)
 if [[ $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v4.* && $(echo $JQUERY_VERSION) == 1.* ]]; then
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
-	yarn test || exit 1
-	yarn test-ci || exit 1
+	npm test || exit 1
+	npm run test-ci || exit 1
 else
 	# Run basic tests
 	echo "Running basic tests..."
-	yarn test || exit 1
+	npm test || exit 1
 fi
