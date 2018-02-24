@@ -3,7 +3,7 @@ language: node_js
 node_js:
   - "9.4"
   - "8.9"
-  - "4.4"
+  - "6.13"
 env:
   global:
     - secure: LhH+mMqOktTe6cIt97PGKBfgUjZM8vRd0qddyg61FSxg7a3WrHQoHE8WdRioJ9+DDzpu/NSTsHEUFUpGN+kSRw1UY4tsNLH6HoBQnqrNN4tVOeefudJpdeteOKZrJ8r8TaA/eO7sAgXO2T+RLJ8+qTbhx8FVZtLaCAgkrS0w9Qk=
@@ -15,8 +15,8 @@ env:
 install:
   - npm install
 before_script:
-  - 'if [ "$JQUERY_VERSION" ]; then npm install jquery@~$JQUERY_VERSION; fi'
-  - 'if [ "$REACT_VERSION" ]; then npm install react@~$REACT_VERSION; fi'
-  - 'if [ "$REACT_VERSION" ]; then npm install react-dom@~$REACT_VERSION; fi'
+  - 'if [ "$JQUERY_VERSION" ]; then npm uninstall jquery && npm install jquery@~$JQUERY_VERSION; fi'
+  - 'if [ "$REACT_VERSION" ]; then npm uninstall react && npm install react@~$REACT_VERSION; fi'
+  - 'if [ "$REACT_VERSION" ]; then npm uninstall react-dom && npm install react-dom@~$REACT_VERSION; fi'
 script: ./run-tests.sh
 after_script: yarn coverage
