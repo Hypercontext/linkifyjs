@@ -262,9 +262,11 @@ gulp.task('vendor', () =>
 	gulp.src([
 		'node_modules/react/dist/react.min.js',
 		'node_modules/react-dom/dist/react-dom.min.js',
-		'node_modules/react/umd/react.min.js',
-		'node_modules/react-dom/umd/react-dom.min.js'
-	]).pipe(gulp.dest('vendor'))
+		'node_modules/react/umd/react.production.min.js',
+		'node_modules/react-dom/umd/react-dom.production.min.js'
+	])
+	.pipe(rename(path => path.basename = path.basename.replace(/\.production/, '')))
+	.pipe(gulp.dest('vendor'))
 );
 
 /**
@@ -306,7 +308,7 @@ gulp.task('mocha', ['coverage-setup'], () =>
 	}))
 );
 
-gulp.task('karma', ['vendor', 'dist'], (callback) => {
+gulp.task('karma', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
@@ -314,21 +316,21 @@ gulp.task('karma', ['vendor', 'dist'], (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-chrome', ['vendor', 'dist'], (callback) => {
+gulp.task('karma-chrome', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-firefox', ['vendor', 'dist'], (callback) => {
+gulp.task('karma-firefox', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-ci', ['vendor', 'dist'], (callback) => {
+gulp.task('karma-ci', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
@@ -336,7 +338,7 @@ gulp.task('karma-ci', ['vendor', 'dist'], (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-amd', ['vendor', 'dist'], (callback) => {
+gulp.task('karma-amd', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.amd.conf.js',
 		singleRun: true
@@ -344,21 +346,21 @@ gulp.task('karma-amd', ['vendor', 'dist'], (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-amd-chrome', ['vendor', 'dist'], (callback) => {
+gulp.task('karma-amd-chrome', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.amd.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-amd-firefox', ['vendor', 'dist'], (callback) => {
+gulp.task('karma-amd-firefox', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.amd.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-amd-ci', ['vendor', 'dist'], (callback) => {
+gulp.task('karma-amd-ci', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.amd.conf.js',
 		singleRun: true
@@ -392,10 +394,10 @@ gulp.task('uglify', ['build'], () => {
 
 gulp.task('dist', ['uglify']);
 gulp.task('test', (callback) =>
-	runSequence('eslint', 'mocha', 'karma', 'karma-amd', callback)
+	runSequence('eslint', 'mocha', 'dist', 'karma', 'karma-amd', callback)
 );
 gulp.task('test-ci', (callback) =>
-	runSequence('karma-ci', 'karma-amd-ci', callback)
+	runSequence('dist', 'karma-ci', 'karma-amd-ci', callback)
 );
 
 gulp.task('clean', () =>
