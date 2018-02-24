@@ -50,7 +50,7 @@ var tldsReplaceStr = `'${tlds.join('|')}'.split('|')`;
 	ES6 ~> babel (with CJS Node Modules)
 	This populates the `lib` folder, allows usage with Node.js
 */
-gulp.task('babel', () =>
+gulp.task('lib', () =>
 	gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel())
@@ -60,7 +60,7 @@ gulp.task('babel', () =>
 /**
 	ES6 to babel AMD modules
 */
-gulp.task('babel-amd-core', () =>
+gulp.task('amd', () =>
 	gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
@@ -73,28 +73,6 @@ gulp.task('babel-amd-core', () =>
 	}))
 	.pipe(quickEs3())
 	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
-);
-
-
-/**
-	ES6 to babel AMD modules
-	Must run interfaces first because a more optimized core linkify payload will
-	overwrite the AMD-generated one
-*/
-gulp.task('babel-amd', ['babel-amd-core'], () =>
-	gulp.src(paths.srcCore)
-	.pipe(rollup({
-		bundle: {
-			format: 'amd',
-			moduleId: 'linkify',
-			moduleName: 'linkify'
-		}
-	}))
-	.pipe(babel())
-	.pipe(replace('__TLDS__', tldsReplaceStr))
-	.pipe(quickEs3())
-	.pipe(concat('linkify.amd.js'))
-	.pipe(gulp.dest('build'))
 );
 
 /**
@@ -116,10 +94,31 @@ gulp.task('build-core', () =>
 );
 
 /**
+	ES6 to babel AMD modules
+	Must run interfaces first because a more optimized core linkify payload will
+	overwrite the AMD-generated one
+*/
+gulp.task('build-amd-core', () =>
+	gulp.src(paths.srcCore)
+	.pipe(rollup({
+		bundle: {
+			format: 'amd',
+			moduleId: 'linkify',
+			moduleName: 'linkify'
+		}
+	}))
+	.pipe(babel())
+	.pipe(replace('__TLDS__', tldsReplaceStr))
+	.pipe(quickEs3())
+	.pipe(concat('linkify.amd.js'))
+	.pipe(gulp.dest('build'))
+);
+
+/**
 	Build root linkify interfaces (files located at the root src folder other
 	than linkify.js).
 */
-gulp.task('build-interfaces', () => {
+gulp.task('build-interfaces', ['amd'], () => {
 
 	// Core linkify functionality as plugins
 	let interfaces = [
@@ -194,7 +193,7 @@ gulp.task('build-interfaces', () => {
 });
 
 
-gulp.task('build-plugins', () => {
+gulp.task('build-plugins', ['amd'], () => {
 
 	let streams = [];
 
@@ -249,14 +248,13 @@ gulp.task('build-polyfill', () =>
 
 // Build steps
 gulp.task('build', [
-	'babel',
-	'babel-amd-core',
-	'babel-amd',
+	'lib',
 	'build-core',
+	'build-amd-core',
 	'build-interfaces',
 	'build-plugins',
 	'build-polyfill'
-], (cb) => { cb(); });
+]);
 
 // Copy React into vendor directory for use in tests
 // This is required because React's location may vary between versions
@@ -287,30 +285,28 @@ gulp.task('eslint', () =>
 );
 
 /**
-	Run mocha tests
-*/
-gulp.task('mocha', ['eslint', 'build'], () =>
-	gulp.src(paths.test, {read: false})
-	.pipe(mocha())
-);
-
-/**
 	Code coverage reort for mocha tests
 */
-gulp.task('coverage', ['eslint', 'dist'], (callback) => {
+gulp.task('coverage-setup', ['build'], () => (
 	// IMPORTANT: return not required here (and will actually cause bugs!)
 	gulp.src(paths.libTest)
 	.pipe(istanbul()) // Covering files
 	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
-	.on('finish', () => {
-		gulp.src(paths.test, {read: false})
-		.pipe(mocha())
-		.pipe(istanbul.writeReports()) // Creating the reports after tests runned
-		.on('end', callback);
-	});
-});
+));
 
-gulp.task('karma', ['vendor'], (callback) => {
+/**
+	Run mocha tests
+*/
+gulp.task('mocha', ['coverage-setup'], () =>
+	gulp.src(paths.test)
+	.pipe(mocha())
+	.pipe(istanbul.writeReports())
+	.pipe(istanbul.enforceThresholds({
+		thresholds: { global: 90 }
+	}))
+);
+
+gulp.task('karma', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
@@ -318,21 +314,21 @@ gulp.task('karma', ['vendor'], (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-chrome', ['vendor'], (callback) => {
+gulp.task('karma-chrome', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-firefox', ['vendor'], (callback) => {
+gulp.task('karma-firefox', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-ci', ['vendor'], (callback) => {
+gulp.task('karma-ci', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
@@ -340,7 +336,7 @@ gulp.task('karma-ci', ['vendor'], (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-amd', (callback) => {
+gulp.task('karma-amd', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.amd.conf.js',
 		singleRun: true
@@ -348,21 +344,21 @@ gulp.task('karma-amd', (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-amd-chrome', (callback) => {
+gulp.task('karma-amd-chrome', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.amd.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-amd-firefox', ['vendor'], (callback) => {
+gulp.task('karma-amd-firefox', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.amd.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-amd-ci', ['vendor'], (callback) => {
+gulp.task('karma-amd-ci', ['vendor', 'dist'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.amd.conf.js',
 		singleRun: true
@@ -396,7 +392,7 @@ gulp.task('uglify', ['build'], () => {
 
 gulp.task('dist', ['uglify']);
 gulp.task('test', (callback) =>
-	runSequence('coverage', 'karma', 'karma-amd', callback)
+	runSequence('eslint', 'mocha', 'karma', 'karma-amd', callback)
 );
 gulp.task('test-ci', (callback) =>
 	runSequence('karma-ci', 'karma-amd-ci', callback)
@@ -417,6 +413,6 @@ gulp.task('clean', () =>
 /**
 	Build JS and begin watching for changes
 */
-gulp.task('default', ['eslint', 'babel'], () =>
-	gulp.watch(paths.src, ['eslint', 'babel'])
+gulp.task('default', ['eslint', 'lib'], () =>
+	gulp.watch(paths.src, ['eslint', 'lib'])
 );
