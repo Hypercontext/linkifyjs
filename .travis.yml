@@ -19,8 +19,7 @@ cache:
 install:
   - npm install
 before_script:
-  - 'if [ "$JQUERY_VERSION" ]; then npm uninstall jquery; npm install jquery@~$JQUERY_VERSION; fi'
-  - 'if [ "$REACT_VERSION" ]; then npm uninstall react; npm install react@~$REACT_VERSION; fi'
-  - 'if [ "$REACT_VERSION" ]; then npm uninstall react-dom; npm install react-dom@~$REACT_VERSION; fi'
+  - 'if [ "$JQUERY_VERSION" ]; then npm install --force jquery@~$JQUERY_VERSION; fi'
+  - 'if [ "$REACT_VERSION" ]; then npm install --force react-dom@~$REACT_VERSION react@~$REACT_VERSION; fi'
 script: ./run-tests.sh
 after_script: yarn coverage
