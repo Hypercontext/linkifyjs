@@ -260,14 +260,14 @@ gulp.task('build', [
 
 // Copy React into vendor directory for use in tests
 // This is required because React's location may vary between versions
-gulp.task('vendor', () => {
+gulp.task('vendor', () =>
 	gulp.src([
 		'node_modules/react/dist/react.min.js',
 		'node_modules/react-dom/dist/react-dom.min.js',
 		'node_modules/react/umd/react.min.js',
 		'node_modules/react-dom/umd/react-dom.min.js'
-	]).pipe(gulp.dest('vendor'));
-});
+	]).pipe(gulp.dest('vendor'))
+);
 
 /**
 	Lint using eslint
