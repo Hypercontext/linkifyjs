@@ -18,14 +18,14 @@ Plugins are available for the following link types:
 
 ```js
 var linkify = require('linkifyjs')
-require('linkifyjs/plugin/<name>')(linkify);
+require('linkifyjs/plugins/<name>')(linkify);
 ```
 
 or with ES6 modules
 
 ```js
 import * as linkify from 'linkifyjs';;
-import plugin from 'linkifyjs/plugin/<name>';
+import plugin from 'linkifyjs/plugins/<name>';
 plugin(linkify);
 ```
 
