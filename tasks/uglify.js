@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 // All object properties that will cause parts of the plugin to fail if mangled
 // Uglify will skip all of these when mangling
 exports.unmangleableProps = [

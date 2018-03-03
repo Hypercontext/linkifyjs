@@ -1,4 +1,4 @@
-'use strict';
+/* istanbul ignore file */
 
 const util = require('gulp-util');
 const through = require('through2');

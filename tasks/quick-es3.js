@@ -1,4 +1,4 @@
-'use strict';
+/* istanbul ignore file */
 
 const replace = require('gulp-replace');
 const lazypipe = require('lazypipe');

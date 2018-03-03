@@ -1,4 +1,4 @@
-'use strict';
+/* istanbul ignore file */
 
 const gulp = require('gulp');
 const glob = require('glob');
@@ -12,7 +12,6 @@ const tlds = require('./tlds');
 const babel = require('gulp-babel');
 const clean = require('gulp-clean');
 const concat = require('gulp-concat');
-const istanbul = require('gulp-istanbul');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const rename = require('gulp-rename');
@@ -287,25 +286,10 @@ gulp.task('eslint', () =>
 );
 
 /**
-	Code coverage reort for mocha tests
-*/
-gulp.task('coverage-setup', ['build'], () => (
-	// IMPORTANT: return not required here (and will actually cause bugs!)
-	gulp.src(paths.libTest)
-	.pipe(istanbul()) // Covering files
-	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
-));
-
-/**
 	Run mocha tests
 */
-gulp.task('mocha', ['coverage-setup'], () =>
-	gulp.src(paths.test)
-	.pipe(mocha())
-	.pipe(istanbul.writeReports())
-	.pipe(istanbul.enforceThresholds({
-		thresholds: { global: 90 }
-	}))
+gulp.task('mocha', () =>
+	gulp.src(paths.test).pipe(mocha())
 );
 
 gulp.task('karma', ['vendor'], (callback) => {
