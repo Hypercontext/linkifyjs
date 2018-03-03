@@ -1,21 +1,4 @@
 const linkify = require(`${__base}linkify`);
-const tokensTest = [
-	'The string is the URL https://github.com/ but www.gihub.com/search?utf8=✓ works too with the email test@example.com the end.',
-	['text', 'url', 'text', 'url', 'text', 'email', 'text'],
-	[{
-		type: 'url',
-		value: 'https://github.com/',
-		href: 'https://github.com/'
-	}, {
-		type: 'url',
-		value: 'www.gihub.com/search?utf8=✓',
-		href: 'http://www.gihub.com/search?utf8=✓'
-	}, {
-		type: 'email',
-		value: 'test@example.com',
-		href: 'mailto:test@example.com'
-	}],
-];
 
 describe('linkify', () => {
 	describe('tokenize', () => {
@@ -67,7 +50,7 @@ describe('linkify', () => {
 			expect(linkify.test.length).to.be.eql(1); // type is optional
 		});
 
-		var test, testName;
+		var testName;
 		for (var test of tests) {
 			testName = 'Correctly tests the string "' + test[0] + '"';
 			testName += ' as `' + (test[1] ? 'true' : 'false') + '`';

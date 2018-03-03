@@ -25,14 +25,12 @@ function stringToElements(str, opts) {
 		}
 
 		let {
-			href,
 			formatted,
 			formattedHref,
 			tagName,
 			className,
 			target,
-			attributes,
-			events
+			attributes
 		} = opts.resolve(token);
 
 		let props = {

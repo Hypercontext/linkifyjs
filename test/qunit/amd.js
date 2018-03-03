@@ -1,4 +1,4 @@
-var w = null;
+this.w = null;
 
 window.__karma__.start = (function (start) {
 	return function () {
@@ -11,7 +11,7 @@ window.__karma__.start = (function (start) {
 			'linkify-string',
 			'linkify-react'
 		], function (React, ReactDOM, linkify, linkifyElement, linkifyHtml, linkifyStr, Linkify) {
-			w = {
+			this.w = {
 				React: React,
 				ReactDOM: ReactDOM,
 				linkify: linkify,

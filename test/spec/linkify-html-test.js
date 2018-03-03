@@ -127,7 +127,7 @@ describe('linkify-html', () => {
 		var linkified = linkifyHtml('http://google.com', { target: { url: null }});
 		expect(linkified).to.be.eql('<a href="http://google.com" class="linkified">http://google.com</a>');
 
-		var linkified = linkifyHtml('http://google.com', { target: null });
+		linkified = linkifyHtml('http://google.com', { target: null });
 		expect(linkified).to.be.eql('<a href="http://google.com" class="linkified">http://google.com</a>');
 	});
 });

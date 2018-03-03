@@ -1,7 +1,6 @@
-'use strict';
+/* istanbul ignore file */
 
 const gulp = require('gulp');
-const amdOptimize = require('amd-optimize');
 const glob = require('glob');
 const Server = require('karma').Server;
 const merge = require('merge-stream');
@@ -13,7 +12,6 @@ const tlds = require('./tlds');
 const babel = require('gulp-babel');
 const clean = require('gulp-clean');
 const concat = require('gulp-concat');
-const istanbul = require('gulp-istanbul');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const rename = require('gulp-rename');
@@ -51,7 +49,7 @@ var tldsReplaceStr = `'${tlds.join('|')}'.split('|')`;
 	ES6 ~> babel (with CJS Node Modules)
 	This populates the `lib` folder, allows usage with Node.js
 */
-gulp.task('babel', () =>
+gulp.task('lib', () =>
 	gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel())
@@ -61,7 +59,7 @@ gulp.task('babel', () =>
 /**
 	ES6 to babel AMD modules
 */
-gulp.task('babel-amd-core', () =>
+gulp.task('amd', () =>
 	gulp.src(paths.src)
 	.pipe(replace('__TLDS__', tldsReplaceStr))
 	.pipe(babel({
@@ -74,28 +72,6 @@ gulp.task('babel-amd-core', () =>
 	}))
 	.pipe(quickEs3())
 	.pipe(gulp.dest('build/amd')) // Required for building plugins separately
-);
-
-
-/**
-	ES6 to babel AMD modules
-	Must run interfaces first because a more optimized core linkify payload will
-	overwrite the AMD-generated one
-*/
-gulp.task('babel-amd', ['babel-amd-core'], () =>
-	gulp.src(paths.srcCore)
-	.pipe(rollup({
-		bundle: {
-			format: 'amd',
-			moduleId: 'linkify',
-			moduleName: 'linkify'
-		}
-	}))
-	.pipe(babel())
-	.pipe(replace('__TLDS__', tldsReplaceStr))
-	.pipe(quickEs3())
-	.pipe(concat('linkify.amd.js'))
-	.pipe(gulp.dest('build'))
 );
 
 /**
@@ -117,10 +93,31 @@ gulp.task('build-core', () =>
 );
 
 /**
+	ES6 to babel AMD modules
+	Must run interfaces first because a more optimized core linkify payload will
+	overwrite the AMD-generated one
+*/
+gulp.task('build-amd-core', () =>
+	gulp.src(paths.srcCore)
+	.pipe(rollup({
+		bundle: {
+			format: 'amd',
+			moduleId: 'linkify',
+			moduleName: 'linkify'
+		}
+	}))
+	.pipe(babel())
+	.pipe(replace('__TLDS__', tldsReplaceStr))
+	.pipe(quickEs3())
+	.pipe(concat('linkify.amd.js'))
+	.pipe(gulp.dest('build'))
+);
+
+/**
 	Build root linkify interfaces (files located at the root src folder other
 	than linkify.js).
 */
-gulp.task('build-interfaces', () => {
+gulp.task('build-interfaces', ['amd'], () => {
 
 	// Core linkify functionality as plugins
 	let interfaces = [
@@ -195,7 +192,7 @@ gulp.task('build-interfaces', () => {
 });
 
 
-gulp.task('build-plugins', () => {
+gulp.task('build-plugins', ['amd'], () => {
 
 	let streams = [];
 
@@ -250,14 +247,26 @@ gulp.task('build-polyfill', () =>
 
 // Build steps
 gulp.task('build', [
-	'babel',
-	'babel-amd-core',
-	'babel-amd',
+	'lib',
 	'build-core',
+	'build-amd-core',
 	'build-interfaces',
 	'build-plugins',
 	'build-polyfill'
-], (cb) => { cb(); });
+]);
+
+// Copy React into vendor directory for use in tests
+// This is required because React's location may vary between versions
+gulp.task('vendor', () =>
+	gulp.src([
+		'node_modules/react/dist/react.min.js',
+		'node_modules/react-dom/dist/react-dom.min.js',
+		'node_modules/react/umd/react.production.min.js',
+		'node_modules/react-dom/umd/react-dom.production.min.js'
+	])
+	.pipe(rename(path => path.basename = path.basename.replace(/\.production/, '')))
+	.pipe(gulp.dest('vendor'))
+);
 
 /**
 	Lint using eslint
@@ -279,28 +288,11 @@ gulp.task('eslint', () =>
 /**
 	Run mocha tests
 */
-gulp.task('mocha', ['eslint', 'build'], () =>
-	gulp.src(paths.test, {read: false})
-	.pipe(mocha())
+gulp.task('mocha', ['build'], () =>
+	gulp.src(paths.test).pipe(mocha())
 );
 
-/**
-	Code coverage reort for mocha tests
-*/
-gulp.task('coverage', ['eslint', 'dist'], (callback) => {
-	// IMPORTANT: return not required here (and will actually cause bugs!)
-	gulp.src(paths.libTest)
-	.pipe(istanbul()) // Covering files
-	.pipe(istanbul.hookRequire()) // Force `require` to return covered files
-	.on('finish', () => {
-		gulp.src(paths.test, {read: false})
-		.pipe(mocha())
-		.pipe(istanbul.writeReports()) // Creating the reports after tests runned
-		.on('end', callback);
-	});
-});
-
-gulp.task('karma', (callback) => {
+gulp.task('karma', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.conf.js',
 		singleRun: true
@@ -308,21 +300,21 @@ gulp.task('karma', (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-chrome', (callback) => {
+gulp.task('karma-chrome', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-firefox', (callback) => {
+gulp.task('karma-firefox', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-ci', (callback) => {
+gulp.task('karma-ci', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.conf.js',
 		singleRun: true
@@ -330,7 +322,7 @@ gulp.task('karma-ci', (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-amd', (callback) => {
+gulp.task('karma-amd', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/dev.amd.conf.js',
 		singleRun: true
@@ -338,21 +330,21 @@ gulp.task('karma-amd', (callback) => {
 	return server.start();
 });
 
-gulp.task('karma-amd-chrome', (callback) => {
+gulp.task('karma-amd-chrome', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/chrome.amd.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-amd-firefox', (callback) => {
+gulp.task('karma-amd-firefox', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/firefox.amd.conf.js',
 	}, callback);
 	return server.start();
 });
 
-gulp.task('karma-amd-ci', (callback) => {
+gulp.task('karma-amd-ci', ['vendor'], (callback) => {
 	let server = new Server({
 		configFile: __dirname + '/test/ci.amd.conf.js',
 		singleRun: true
@@ -386,10 +378,10 @@ gulp.task('uglify', ['build'], () => {
 
 gulp.task('dist', ['uglify']);
 gulp.task('test', (callback) =>
-	runSequence('coverage', 'karma', 'karma-amd', callback)
+	runSequence('eslint', 'mocha', 'dist', 'karma', 'karma-amd', callback)
 );
 gulp.task('test-ci', (callback) =>
-	runSequence('karma-ci', 'karma-amd-ci', callback)
+	runSequence('dist', 'karma-ci', 'karma-amd-ci', callback)
 );
 
 gulp.task('clean', () =>
@@ -400,12 +392,13 @@ gulp.task('clean', () =>
 		'dist',
 		'js',
 		'lib',
+		'vendor'
 	], {read: false}).pipe(clean())
 );
 
 /**
 	Build JS and begin watching for changes
 */
-gulp.task('default', ['eslint', 'babel'], () =>
-	gulp.watch(paths.src, ['eslint', 'babel'])
+gulp.task('default', ['eslint', 'lib'], () =>
+	gulp.watch(paths.src, ['eslint', 'lib'])
 );

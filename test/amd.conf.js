@@ -11,10 +11,11 @@ module.exports = {
 	// React doesn't like being loading synchronously when useing AMD modules,
 	// so test/qunit/react.amd.js will load React
 	files: [
+		{pattern: 'node_modules/babel-polyfill/dist/polyfill.js', watched: false, included: false, served: true},
 		{pattern: 'node_modules/requirejs/require.js', watched: false},
 		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
-		{pattern: 'node_modules/react/dist/react.js', watched: false, included: false, served: true},
-		{pattern: 'node_modules/react-dom/dist/react-dom.js', watched: false, included: false, served: true},
+		{pattern: 'vendor/react.min.js', watched: false, included: false, served: true},
+		{pattern: 'vendor/react-dom.min.js', watched: false, included: false, served: true},
 		{pattern: 'test/qunit/react.amd.js', included: false, served: true},
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.amd.min.js',

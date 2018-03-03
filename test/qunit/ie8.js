@@ -4,14 +4,16 @@ function isIE8() {
 }
 
 if (!isIE8()) {
+	document.write('<script src="base/node_modules/babel-polyfill/dist/polyfill.js" crossorigin="anonymous"></script>');
+
 	if (typeof define === 'function') {
 		// Include shim modules for React to be loaded asynchronously
-		document.write('<script src="base/test/qunit/react.amd.js"></script>');
-		document.write('<script src="base/dist/linkify-react.amd.min.js"></script>');
+		document.write('<script src="/base/test/qunit/react.amd.js" crossorigin="anonymous"></script>');
+		document.write('<script src="/base/dist/linkify-react.amd.min.js" crossorigin="anonymous"></script>');
 	} else {
 		// Include React on the page directly
-		document.write('<script src="base/node_modules/react/dist/react.js"></script>');
-		document.write('<script src="base/node_modules/react-dom/dist/react-dom.js"></script>');
-		document.write('<script src="base/dist/linkify-react.min.js"></script>');
+		document.write('<script src="/base/vendor/react.min.js" crossorigin="anonymous"></script>');
+		document.write('<script src="/base/vendor/react-dom.min.js" crossorigin="anonymous"></script>');
+		document.write('<script src="/base/dist/linkify-react.min.js" crossorigin="anonymous"></script>');
 	}
 }

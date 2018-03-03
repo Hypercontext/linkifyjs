@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 // All object properties that will cause parts of the plugin to fail if mangled
 // Uglify will skip all of these when mangling
 exports.unmangleableProps = [
@@ -38,6 +40,7 @@ exports.unmangleableProps = [
 	'events',
 	'exports',
 	'find',
+	'firstChild',
 	'fn',
 	'format',
 	'formatHref',
@@ -64,6 +67,8 @@ exports.unmangleableProps = [
 	'newLine',
 	'next',
 	'nl2br',
+	'nodeType',
+	'nodeValue',
 	'normalize',
 	'on',
 	'options',

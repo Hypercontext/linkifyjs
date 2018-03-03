@@ -12,6 +12,7 @@ js
 src
 templates
 test
+vendor
 
 # Files
 .editorconfig

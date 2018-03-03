@@ -1,4 +1,4 @@
-var doc, testContainer, jsdom, Ev;
+var doc, testContainer, JSDOM;
 const linkifyElement = require(`${__base}linkify-element`).default;
 const htmlOptions = require('./html/options');
 
@@ -8,7 +8,9 @@ try {
 	doc = null;
 }
 
-jsdom = doc ? null : require('jsdom');
+if (!doc) {
+	JSDOM = require('jsdom').JSDOM;
+}
 
 describe('linkify-element', () => {
 
@@ -21,25 +23,17 @@ describe('linkify-element', () => {
 		function onDoc(doc) {
 			testContainer = doc.createElement('div');
 			testContainer.id = 'linkify-element-test-container';
-
 			doc.body.appendChild(testContainer);
 			done();
 		}
 
 		if (doc) {
-			Ev = window.Event;
 			return onDoc(doc);
 		}
 
-		jsdom.env(
-			'<html><head><title>Linkify Test</title></head><body></body></html>',
-			function (errors, window) {
-				if (errors) { throw errors; }
-				doc = window.document;
-				Ev = window.Event;
-				return onDoc(window.document);
-			}
-		);
+		const dom = new JSDOM('<html><head><title>Linkify Test</title></head><body></body></html>');
+		doc = dom.window.document;
+		return onDoc(dom.window.document);
 	});
 
 	beforeEach(() => {

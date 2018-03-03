@@ -1,3 +1,7 @@
+/* global QUnit */
+/* global w */
+/* global isIE8 */
+
 /**
 	Linkify basic global tests
 */
@@ -316,7 +320,7 @@ if (!isIE8()) {
 
 		w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
 
-		assert.ok(container.innerHTML.indexOf('<em>') > 0);
+		assert.ok(container.innerHTML.indexOf('<em') > 0);
 		assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
 		assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
 		assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);

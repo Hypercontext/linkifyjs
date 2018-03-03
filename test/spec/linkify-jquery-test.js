@@ -1,4 +1,4 @@
-var $, doc, testContainer, jsdom;
+var $, doc, testContainer, JSDOM;
 const applyLinkify = require(`${__base}linkify-jquery`).default;
 const htmlOptions = require('./html/options');
 
@@ -8,6 +8,10 @@ try {
 } catch (e) {
 	doc = null;
 	$ = null;
+}
+
+if (!doc) {
+	JSDOM = require('jsdom').JSDOM;
 }
 
 describe('linkify-jquery', function () {
@@ -39,17 +43,15 @@ describe('linkify-jquery', function () {
 		if (doc) { return onDoc($, doc); }
 		// no document element, use a virtual dom to test
 
-		jsdom = require('jsdom');
-		jsdom.env(
-			'<html><head><title>Linkify Test</title></head><body></body></html>',
-			['http://code.jquery.com/jquery.js'],
-			function (errors, window) {
-				if (errors) { throw errors; }
-				doc = window.document;
-				$ = window.$; // this is pretty weird
-				return onDoc(window.$, window.document);
-			}
-		);
+		let dom = new JSDOM('<html><head><title>Linkify Test</title></head><body><script src="https://code.jquery.com/jquery.js"></script></body></html>', {
+			runScripts: 'dangerously',
+			resources: 'usable'
+		});
+		doc = dom.window.document;
+		dom.window.onload = () => {
+			$ = dom.window.jQuery;
+			onDoc($, doc);
+		};
 	});
 
 	// Make sure we start out with a fresh DOM every time

@@ -109,22 +109,22 @@ function linkifyElementHelper(element, opts, doc) {
 	let childElement = element.firstChild;
 
 	while (childElement) {
+		let str, tokens, nodes;
 
 		switch (childElement.nodeType) {
 		case HTML_NODE:
 			linkifyElementHelper(childElement, opts, doc);
 			break;
-		case TXT_NODE:
-
-			let str = childElement.nodeValue;
-			let tokens = tokenize(str);
+		case TXT_NODE: {
+			str = childElement.nodeValue;
+			tokens = tokenize(str);
 
 			if (tokens.length === 0 || tokens.length === 1 && tokens[0] instanceof TEXT_TOKEN) {
 				// No node replacement required
 				break;
 			}
 
-			let nodes = tokensToNodes(tokens, opts, doc);
+			nodes = tokensToNodes(tokens, opts, doc);
 
 			// Swap out the current child for the set of nodes
 			replaceChildWithChildren(element, childElement, nodes);
@@ -133,6 +133,7 @@ function linkifyElementHelper(element, opts, doc) {
 			childElement = nodes[nodes.length - 1];
 
 			break;
+		}
 		}
 
 		childElement = childElement.nextSibling;
