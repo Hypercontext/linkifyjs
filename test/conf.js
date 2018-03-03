@@ -9,7 +9,7 @@ module.exports = {
 
 	// list of files / patterns to load in the browser
 	files: [
-		'node_modules/babel-polyfill/dist/polyfill.js',
+		{pattern: 'node_modules/babel-polyfill/dist/polyfill.js', watched: false, included: false, served: true},
 		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
 		{pattern: 'vendor/react.min.js', watched: false, included: false, served: true},
 		{pattern: 'vendor/react-dom.min.js', watched: false, included: false, served: true},

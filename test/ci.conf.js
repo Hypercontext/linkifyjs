@@ -19,7 +19,7 @@ module.exports = function (config) {
 		sl_safari: {
 			base: 'SauceLabs',
 			browserName: 'safari',
-			version: '7'
+			version: '9'
 		},
 		sl_edge: {
 			base: 'SauceLabs',

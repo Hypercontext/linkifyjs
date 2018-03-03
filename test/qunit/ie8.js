@@ -4,6 +4,8 @@ function isIE8() {
 }
 
 if (!isIE8()) {
+	document.write('<script src="base/node_modules/babel-polyfill/dist/polyfill.js" crossorigin="anonymous"></script>');
+
 	if (typeof define === 'function') {
 		// Include shim modules for React to be loaded asynchronously
 		document.write('<script src="/base/test/qunit/react.amd.js" crossorigin="anonymous"></script>');
