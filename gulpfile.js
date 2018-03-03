@@ -288,7 +288,7 @@ gulp.task('eslint', () =>
 /**
 	Run mocha tests
 */
-gulp.task('mocha', () =>
+gulp.task('mocha', ['build'], () =>
 	gulp.src(paths.test).pipe(mocha())
 );
 
