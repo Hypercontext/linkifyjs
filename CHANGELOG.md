@@ -1,5 +1,14 @@
 # Linkify Changelog
 
+### v2.1.6
+
+* Fix a bug where unique element IDs aren't unique (#215)
+* Update tlds.js (#213)
+* Automated browser test fixes (#224)
+* Add partialProtocolMailtoStates to domainStates (#210)
+* Use Object.defineProperty to extend String prototype so that 'linkify' function is not enumerable (#197)
+* Allow null overrides in options for target and className (#189)
+
 ### v2.1.5
 
 * React plugin compatibility updates
