@@ -1,5 +1,10 @@
 # Linkify Changelog
 
+### v2.1.7
+
+* Update dependencies (#243)
+* Ignore .babelrc file (854e6fc)
+
 ### v2.1.6
 
 * Fix a bug where unique element IDs aren't unique (#215)
