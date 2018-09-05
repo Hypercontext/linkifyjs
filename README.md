@@ -1,7 +1,6 @@
 # Linkify
 
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
-[![Dependency Status](https://gemnasium.com/SoapBox/linkifyjs.svg)](https://gemnasium.com/SoapBox/linkifyjs)
 [![Build Status](https://travis-ci.org/SoapBox/linkifyjs.svg)](https://travis-ci.org/SoapBox/linkifyjs)
 [![Sauce Test Status](https://saucelabs.com/buildstatus/nfrasser)](https://saucelabs.com/u/nfrasser)
 [![Coverage Status](https://coveralls.io/repos/SoapBox/linkifyjs/badge.svg?branch=master)](https://coveralls.io/r/SoapBox/linkifyjs?branch=master)
@@ -18,10 +17,11 @@ __Jump to__
 - [Demo](#demo)
 - [Installation and Usage](#installation-and-usage)
   - [Quick Start](#quick-start)
-  - [Node.js/Browserify](#node-js-browserify)
-  - [AMD Modules](#amd-modules)
-  - [Browser](#browser)
-- [Internet Explorer](#internet-explorer)
+  - [Node.js/Browserify](#nodejsbrowserify)
+  - [AMD Modules](#amd)
+  - [Browser](#browser-globals)
+- [Browser Support](#browser-support)
+- [Node.js Support](#nodejs-support)
 - [Downloads](#downloads)
 - [API Documentation](#api-documentation)
 - [Caveats](#caveats)
@@ -35,7 +35,7 @@ __Jump to__
 * **Extensibility**<br>Linkify is designed to be fast and lightweight, but comes with a powerful plugin API that lets you detect even more information like #hashtags and @mentions.
 * **Small footprint**<br>Linkify and its jQuery interface clock in at approximately 15KB minified (5KB gzipped) - approximately 50% the size of Twitter Text
 * **Modern implementation**<br>Linkify is written in ECMAScript6 and compiles to ES5 for modern JavaScript runtimes.
-  * Linkify is compatible with all modern browsers, as well as Internet Explorer 8 and up.
+  * Linkify is compatible with all modern browsers, as well as Browser Support 8 and up.
 
 ## Demo
 [Launch demo](http://soapbox.github.io/linkifyjs/)
@@ -66,7 +66,7 @@ Add [linkify](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js
 <script src="linkify-jquery.min.js"></script>
 ```
 
-**Note:** A [polyfill](#internet-explorer) is required for Internet Explorer 8.
+**Note:** A [polyfill](#browser-support) is required for Internet Explorer 8.
 
 #### Find all links and convert them to anchor tags
 
@@ -175,7 +175,9 @@ ReactDOM.render(
 );
 ```
 
-## Internet Explorer
+## Browser Support
+
+Linkify works on all modern brwosers.
 
 Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is supported with a polyfill.
 
@@ -190,6 +192,10 @@ You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also r
 <script src="linkify.js"></script>
 <script src="linkify-jquery.js"></script>
 ```
+
+## Node.js Support
+
+Linkify is tested on Node.js 6 and up. Older versions are unofficially supported.
 
 ## Downloads
 

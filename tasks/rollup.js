@@ -25,7 +25,7 @@ module.exports = function (options) {
 			entry: file.path
 		}, rollupOpts)).then((bundle) => {
 			let result = bundle.generate(options.bundle);
-			file.contents = new Buffer(result.code, enc);
+			file.contents = Buffer.from(result.code, enc);
 			callback(null, file);
 		}).catch(err => {
 			let message = err.annotated || err.message;
