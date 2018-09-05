@@ -10,7 +10,7 @@ if [[ $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v8.* && $(echo $JQUERY
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
 	npx gulp test || exit 1
-	npx gulp test-ci || exit 1
+	npx karma start test/ci.conf.js || exit 1
 else
 	# Run basic tests
 	echo "Running basic tests..."
