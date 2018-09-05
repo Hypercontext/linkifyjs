@@ -8,13 +8,11 @@ module.exports = function (config) {
 	var customLaunchers = {
 		sl_chrome: {
 			base: 'SauceLabs',
-			browserName: 'chrome',
-			version: '48'
+			browserName: 'chrome'
 		},
 		sl_firefox: {
 			base: 'SauceLabs',
-			browserName: 'firefox',
-			version: '45'
+			browserName: 'firefox'
 		},
 		sl_safari: {
 			base: 'SauceLabs',
@@ -24,8 +22,7 @@ module.exports = function (config) {
 		sl_edge: {
 			base: 'SauceLabs',
 			browserName: 'MicrosoftEdge',
-			platform: 'Windows 10',
-			version: '13'
+			platform: 'Windows 10'
 		},
 		sl_ie_11: {
 			base: 'SauceLabs',
