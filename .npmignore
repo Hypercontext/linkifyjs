@@ -15,6 +15,7 @@ test
 vendor
 
 # Files
+.babelrc
 .editorconfig
 .eslintrc
 .travis.yml
