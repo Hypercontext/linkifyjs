@@ -84,7 +84,11 @@ for a regular React element:
 
 ```jsx
 let linkProps = {
-  onClick: () => confirm('Are you sure you want to leave this page')
+  onClick: (event) => {
+    if (!confirm('Are you sure you want to leave this page?')) {
+       event.preventDefault()
+    }
+  }
 };
 return <Linkify options={% raw %}{{attributes: linkProps}}{% endraw %}>
   ...
