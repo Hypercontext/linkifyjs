@@ -14,6 +14,7 @@ export default function mention(linkify) {
 	const TT_TLD = TT.TLD;
 	const TT_UNDERSCORE = TT.UNDERSCORE;
 	const TT_DOT = TT.DOT;
+	const TT_AT = TT.AT;
 
 	function MENTION(value) {
 		this.v = value;
@@ -65,7 +66,8 @@ export default function mention(linkify) {
 	// Mention with a divider
 	S_MENTION
 	.on(TT_SLASH, S_MENTION_DIVIDER)
-	.on(TT_DOT, S_MENTION_DIVIDER);
+	.on(TT_DOT, S_MENTION_DIVIDER)
+	.on(TT_AT, S_MENTION_DIVIDER);
 
 	// Mention _ trailing stash plus syms
 	S_MENTION_DIVIDER.on(TT_UNDERSCORE, S_MENTION_DIVIDER_SYMS);
