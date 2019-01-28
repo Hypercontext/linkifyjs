@@ -44,6 +44,12 @@ dist
 lib
 vendor
 
+# IntelliJ
+.idea
+*.iws
+*.iml
+*.ipr
+
 # Specific to plugin website branch
 .sass-cache
 _site
