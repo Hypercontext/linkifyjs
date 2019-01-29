@@ -1,4 +1,5 @@
 # All compiled code will be in the `lib` folders
+.nyc_output
 .sass-cache
 _sass
 _site
