@@ -5,6 +5,11 @@ node_js:
   - "10"
   - "8"
   - "6"
+
+branches:
+  only:
+    - master
+
 env:
   global:
     - secure: LhH+mMqOktTe6cIt97PGKBfgUjZM8vRd0qddyg61FSxg7a3WrHQoHE8WdRioJ9+DDzpu/NSTsHEUFUpGN+kSRw1UY4tsNLH6HoBQnqrNN4tVOeefudJpdeteOKZrJ8r8TaA/eO7sAgXO2T+RLJ8+qTbhx8FVZtLaCAgkrS0w9Qk=
