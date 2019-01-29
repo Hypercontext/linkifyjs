@@ -39,8 +39,19 @@ node_modules
 
 # Build files
 build
+!test/qunit/build
 dist
 lib
+vendor
 
+# IntelliJ
+.idea
+*.iws
+*.iml
+*.ipr
+
+# Specific to plugin website branch
 .sass-cache
 _site
+_sass
+js
