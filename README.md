@@ -195,7 +195,7 @@ You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also r
 
 ## Node.js Support
 
-Linkify is tested on Node.js 6 and up. Older versions are unofficially supported.
+Linkify is tested on Node.js 8 and up. Older versions are unofficially supported.
 
 ## Downloads
 

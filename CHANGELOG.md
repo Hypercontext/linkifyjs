@@ -3,7 +3,7 @@
 ### v2.1.8
 
 * Allow mentions with inner @ sign for federated mentions - thanks @juliushaertl!
-* Drop official Internet Explorer 8 support (still supported unofficially but may break in future releases)
+* Drop official support for Internet Explorer 8 and Node.js 6 (still supported unofficially but may break in future releases)
 * Update dev dependencies
 
 ### v2.1.7
