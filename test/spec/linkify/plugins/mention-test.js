@@ -58,6 +58,27 @@ describe('linkify/plugins/mention', () => {
 			}]);
 		});
 
+		it('parses mentions with email syntax', () => {
+			expect(linkify.find('Hey @developers@soapbox')).to.deep.equal([{
+				type: 'mention',
+				value: '@developers@soapbox',
+				href: '/developers@soapbox'
+			}]);
+
+			expect(linkify.find('Hey @developers@soapbox.example.com')).to.deep.equal([{
+				type: 'mention',
+				value: '@developers@soapbox.example.com',
+				href: '/developers@soapbox.example.com'
+			}]);
+
+			expect(linkify.find('Hey @developers@soapbox you can mail me at someone@soapbox')).to.deep.equal([{
+				type: 'mention',
+				value: '@developers@soapbox',
+				href: '/developers@soapbox'
+			}]);
+
+		});
+
 		it('parses github team-style mentions with slashes', () => {
 			expect(linkify.find('Hey @500px/web please review this')).to.deep.equal([{
 				type: 'mention',
