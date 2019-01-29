@@ -2,7 +2,7 @@ node_v=$(node --version)
 
 # Run complete test suite only these conditions hold
 # * SauceLabs credentials are defined
-# * The node version is 6.*
+# * The node version is 8.*
 # * The jQuery version is 1.*
 #	- so only a single member machine in the matrix calls sauce
 

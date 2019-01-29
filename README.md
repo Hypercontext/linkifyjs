@@ -35,7 +35,7 @@ __Jump to__
 * **Extensibility**<br>Linkify is designed to be fast and lightweight, but comes with a powerful plugin API that lets you detect even more information like #hashtags and @mentions.
 * **Small footprint**<br>Linkify and its jQuery interface clock in at approximately 15KB minified (5KB gzipped) - approximately 50% the size of Twitter Text
 * **Modern implementation**<br>Linkify is written in ECMAScript6 and compiles to ES5 for modern JavaScript runtimes.
-  * Linkify is compatible with all modern browsers, as well as Browser Support 8 and up.
+  * Linkify is compatible with all modern browsers, as well as Internet Explorer 9 and up.
 
 ## Demo
 [Launch demo](http://soapbox.github.io/linkifyjs/)
@@ -179,7 +179,7 @@ ReactDOM.render(
 
 Linkify works on all modern brwosers.
 
-Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is supported with a polyfill.
+Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is unofficially supported with a polyfill.
 
 You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also required) or the provided `linkify-polyfill.js`:
 
