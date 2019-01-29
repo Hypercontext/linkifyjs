@@ -163,7 +163,7 @@ $('p').linkify();
 
 # Internet Explorer
 
-Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is supported with a polyfill.
+Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is unofficially supported with a polyfill.
 
 You can use either [es5-shim](https://github.com/es-shims/es5-shim) (sham also required) or the provided `linkify-polyfill.js`:
 
