@@ -25,8 +25,11 @@ to HTML &lt;a&gt; tags via linkifyjs and more <3.
 
 View all the directives in action at [https://anthonynahas.github.io/ngx-linkifyjs](https://anthonynahas.github.io/ngx-linkifyjs)
 
-## Installation
+## Dependencies
 
+* [Angular](https://angular.io) (*requires* Angular 2 or higher, developed with 7.x) 
+
+## Installation
 
 Install above dependencies via *npm*. 
 
