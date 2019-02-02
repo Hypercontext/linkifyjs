@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: [ngx-linkifyjs](https://github.com/AnthonyNahas/ngx-linkifyjs) · Documentation
+title: ngx-linkifyjs · Documentation
 ---
 
 `ngx-linkifyjs` is an angular V7 wrapper for linkifyjs -  library for finding links in plain text and converting them 
