@@ -199,7 +199,7 @@ Is the given string a link? Not to be used for strict validation - See [Caveats]
 
 **Params**
 
-* **`value`** : _`String`_ |  _`Array<String>`_  Test string
+* **value** : _`String`_ |  _`Array<String>`_  Test string
 
 **Returns** _`Boolean`_
 
