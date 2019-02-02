@@ -193,7 +193,7 @@ export class HomeComponent {
 
 <a name="test_method"/>
 
-#### test _(value: string | string[]: boolean_
+#### test _(value: string | string[]): boolean_
 
 Is the given string a link? Not to be used for strict validation - See [Caveats](caveats.html)
 
