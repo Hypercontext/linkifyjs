@@ -3,7 +3,7 @@ layout: doc
 title: ngx-linkifyjs · Documentation
 ---
 
-`ngx-linkifyjs` is an angular V7 wrapper for linkifyjs -  library for finding links in plain text and converting them 
+`ngx-linkifyjs` is an Angular V7 wrapper for linkifyjs - a library for finding links in plain text and converting them 
 to HTML &lt;a&gt; tags via linkifyjs and more <3.
 
 #### Jump to
