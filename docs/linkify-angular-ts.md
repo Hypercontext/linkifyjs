@@ -227,7 +227,7 @@ export class HomeComponent {
 #### Configuration
 
 
-Enable/Disable the hash and mention
+Enable/Disable the hash and mention.
 
 The config argument is 100% optional, otherwise we will take the default values `true`
 
