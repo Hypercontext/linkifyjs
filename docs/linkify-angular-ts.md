@@ -142,7 +142,7 @@ Finds all links in the given string
 
 **Params**
 
-*  **`text`** : _`String`_ search text string
+*  **text** : _`String`_ search text string
 
 **Returns** _`Array<Link>`_ List of links where each element is a hash with properties type, value, and href:
 
