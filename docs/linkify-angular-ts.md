@@ -229,7 +229,7 @@ export class HomeComponent {
 
 Enable/Disable the hash and mention.
 
-The config argument is 100% optional, otherwise we will take the default values `true`
+The config argument is optional (defaults to `true`).
 
 ```typescript
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
