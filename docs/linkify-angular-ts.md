@@ -37,7 +37,7 @@ npm i -s ngx-linkifyjs
 
 ---
 ##### SystemJS
->**Note**:If you are using `SystemJS`, you should adjust your configuration to point to the UMD bundle.
+>**Note**: If you are using `SystemJS`, adjust your configuration to point to the UMD bundle.
 In your systemjs config file, `map` needs to tell the System loader where to look for `ngx-linkifyjs`:
 ```js
 map: {
