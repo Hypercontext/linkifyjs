@@ -55,3 +55,6 @@ vendor
 _site
 _sass
 js
+
+# yarn
+yarn.lock
