@@ -3,6 +3,8 @@ var defaults = {
 	events: null,
 	format: noop,
 	formatHref: noop,
+  prefix: noop,
+  postfix: noop,
 	nl2br: false,
 	tagName: 'a',
 	target: typeToTarget,
@@ -20,6 +22,8 @@ function Options(opts) {
 	this.defaultProtocol = opts.hasOwnProperty('defaultProtocol') ? opts.defaultProtocol : defaults.defaultProtocol;
 	this.events = opts.hasOwnProperty('events') ? opts.events : defaults.events;
 	this.format = opts.hasOwnProperty('format') ? opts.format : defaults.format;
+	this.prefix = opts.hasOwnProperty('prefix') ? opts.prefix : defaults.prefix;
+	this.postfix = opts.hasOwnProperty('postfix') ? opts.postfix : defaults.postfix;
 	this.formatHref = opts.hasOwnProperty('formatHref') ? opts.formatHref : defaults.formatHref;
 	this.nl2br = opts.hasOwnProperty('nl2br') ? opts.nl2br : defaults.nl2br;
 	this.tagName = opts.hasOwnProperty('tagName') ? opts.tagName : defaults.tagName;
@@ -49,6 +53,8 @@ Options.prototype = {
 		return {
 			formatted: this.get('format', token.toString(), token),
 			formattedHref: this.get('formatHref', href, token),
+      prefix: this.get('prefix', href, token),
+      postfix: this.get('postfix', href, token),
 			tagName: this.get('tagName', href, token),
 			className: this.get('className', href, token),
 			target: this.get('target', href, token),
