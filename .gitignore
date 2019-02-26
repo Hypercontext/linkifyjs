@@ -56,5 +56,5 @@ _site
 _sass
 js
 
-# yarn
-yarn.lock
+# BUGBUG: does ignoring this break the travis ci build?
+# yarn.lock
