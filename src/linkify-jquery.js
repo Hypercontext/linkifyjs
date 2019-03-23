@@ -78,6 +78,9 @@ export default function apply($, doc = false) {
 				options.ignoreTags = data.linkifyIgnoreTags;
 			}
 
+			if ('linkifyIgnoreElementClasses' in data) {
+				options.ignoreElementClasses = data.linkifyIgnoreElementClasses;
+			}
 			if ('linkifyClassName' in data) {
 				options.className = data.linkifyClassName;
 			} else if ('linkifyLinkclass' in data) { // linkClass is deprecated

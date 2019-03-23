@@ -77,7 +77,7 @@ function tokensToNodes(tokens, opts, doc) {
 			for (var event in events) {
 				if (link.addEventListener) {
 					link.addEventListener(event, events[event]);
-				} else if (link.attachEvent)  {
+				} else if (link.attachEvent) {
 					link.attachEvent('on' + event, events[event]);
 				}
 			}
@@ -99,6 +99,7 @@ function linkifyElementHelper(element, opts, doc) {
 	}
 
 	let ignoreTags = opts.ignoreTags;
+	let ignoreElementClasses = opts.ignoreElementClasses;
 
 	// Is this element already a link?
 	if (element.tagName === 'A' || options.contains(ignoreTags, element.tagName)) {
@@ -106,6 +107,17 @@ function linkifyElementHelper(element, opts, doc) {
 		return element;
 	}
 
+	// Is this an ignored class?
+	if (ignoreElementClasses.length > 0  && element.classList.length > 0) {
+		let i, y;
+		for (i = 0; i < ignoreElementClasses.length; i++) { 
+			for (y = 0; y < element.classList.length; y++) {
+				if (ignoreElementClasses[i] === element.classList[y].toLowerCase()) {
+					return element;
+				}
+			}
+		}
+	} 
 	let childElement = element.firstChild;
 
 	while (childElement) {
