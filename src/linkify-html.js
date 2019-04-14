@@ -109,7 +109,8 @@ function linkifyChars(str, opts) {
 			tagName,
 			className,
 			target,
-			attributes
+			attributes,
+			truncate
 		} = opts.resolve(token);
 
 		// Build up attributes
@@ -123,6 +124,10 @@ function linkifyChars(str, opts) {
 
 		if (target) {
 			attributeArray.push(['target', target]);
+		}
+
+		if (truncate && formatted.length > truncate) {
+			formatted = formatted.substring(0, truncate) + '…';
 		}
 
 		for (var attr in attributes) {
