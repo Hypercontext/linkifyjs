@@ -63,7 +63,7 @@
     "qunitjs": "^1.14.0",
     "requirejs": "^2.3.6",
     "rollup": "~0.40.0",
-    "simple-html-tokenizer": "git+https://github.com/nfrasser/simple-html-tokenizer.git#04799f4638ec5ed903a4e5aa6e832269fa59be6b",
+    "simple-html-tokenizer": "git+https://github.com/willamesoares/simple-html-tokenizer.git#2dde938cd1e46ed7c013e0592e37442fb4b202ba",
     "through2": "^2.0.5"
   },
   "optionalDependencies": {
