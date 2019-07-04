@@ -183,7 +183,7 @@ ReactDOM.render(
 
 ## Browser Support
 
-Linkify works on all modern brwosers.
+Linkify works on all modern browsers.
 
 Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is unofficially supported with a polyfill.
 
