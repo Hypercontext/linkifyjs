@@ -47,6 +47,7 @@
     "gulp-uglify": "^1.5.4",
     "gulp-util": "^3.0.7",
     "gulp-wrap": "^0.13.0",
+    "jquery": "^3.3.1",
     "jsdom": "^11.12.0",
     "karma": "^4.0.1",
     "karma-chrome-launcher": "^2.2.0",
@@ -61,12 +62,14 @@
     "nyc": "^13.3.0",
     "phantomjs-prebuilt": "^2.1.15",
     "qunitjs": "^1.14.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "requirejs": "^2.3.6",
     "rollup": "~0.40.0",
     "simple-html-tokenizer": "git+https://github.com/nfrasser/simple-html-tokenizer.git#04799f4638ec5ed903a4e5aa6e832269fa59be6b",
     "through2": "^2.0.5"
   },
-  "optionalDependencies": {
+  "peerDependencies": {
     "jquery": "^3.3.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2"
