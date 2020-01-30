@@ -22,7 +22,6 @@ cache:
     - node_modules
 
 install:
-  - npm install -g npx
   - npm install
 before_script:
   - 'if [ "$JQUERY_VERSION" ]; then npm install --force jquery@~$JQUERY_VERSION; fi'
