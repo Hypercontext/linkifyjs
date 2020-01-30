@@ -1,5 +1,11 @@
 # Linkify Changelog
 
+### v2.1.9
+
+* Move optional dependencies to peerdependencies (#282)
+* Fix `npm install` displays vulnerabilities. (#265)
+* Fix typo (#275)
+
 ### v2.1.8
 
 * Allow mentions with inner @ sign for federated mentions - thanks @juliushaertl!

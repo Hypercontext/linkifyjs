@@ -47,13 +47,13 @@ __Jump to__
 Download the [latest release](https://github.com/SoapBox/linkifyjs/releases), or install via [NPM](https://www.npmjs.com/)
 
 ```
-npm install --no-optional linkifyjs
+npm install linkifyjs
 ```
 
 or [Yarn](https://yarnpkg.com/)
 
 ```
-yarn add --ignore-optional linkifyjs
+yarn add linkifyjs
 ```
 
 or [Bower](http://bower.io/)
