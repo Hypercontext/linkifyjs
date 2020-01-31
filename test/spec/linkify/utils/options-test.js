@@ -56,7 +56,8 @@ describe('linkify/utils/options', () => {
 				},
 				ignoreTags: ['script', 'style'],
 				attributes: () => ({rel: 'nofollow'}),
-				className: 'custom-class-name'
+				className: 'custom-class-name',
+				truncate: 40
 			});
 
 			urlToken = {
@@ -84,7 +85,8 @@ describe('linkify/utils/options', () => {
 					className: 'custom-class-name',
 					target: '_blank',
 					events: opts.events,
-					attributes: {rel: 'nofollow'}
+					attributes: {rel: 'nofollow'},
+					truncate: 40
 				});
 			});
 
@@ -96,7 +98,8 @@ describe('linkify/utils/options', () => {
 					className: 'custom-class-name',
 					target: null,
 					events: opts.events,
-					attributes: {rel: 'nofollow'}
+					attributes: {rel: 'nofollow'},
+					truncate: 40
 				});
 			});
 		});

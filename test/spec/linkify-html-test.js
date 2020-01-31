@@ -74,6 +74,17 @@ describe('linkify-html', () => {
 		});
 	});
 
+	it('Works with truncate options (truncate has priority in formatting chars)', () => {
+		options.truncate = 30;
+
+		expect(linkifyHtml(
+			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en',
+			options
+		)).to.be.eql(
+			'Super long maps URL <span href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">https://www.google.ca/maps/@43…</span>'
+		);
+	});
+
 	it('Works with overriden options (validate)', () => {
 		var optionsValidate = {
 			validate: {

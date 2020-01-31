@@ -10,6 +10,7 @@ var defaults = {
 	ignoreTags: [],
 	attributes: null,
 	className: 'linkified', // Deprecated value - no default class will be provided in the future
+	truncate: 0
 };
 
 export { defaults, Options, contains };
@@ -25,6 +26,7 @@ function Options(opts) {
 	this.tagName = opts.hasOwnProperty('tagName') ? opts.tagName : defaults.tagName;
 	this.target = opts.hasOwnProperty('target') ? opts.target : defaults.target;
 	this.validate = opts.hasOwnProperty('validate') ? opts.validate : defaults.validate;
+	this.truncate = opts.hasOwnProperty('truncate') ? opts.truncate : defaults.truncate;
 	this.ignoreTags = [];
 
 	// linkAttributes and linkClass is deprecated
@@ -54,6 +56,7 @@ Options.prototype = {
 			target: this.get('target', href, token),
 			events: this.getObject('events', href, token),
 			attributes: this.getObject('attributes', href, token),
+			truncate: this.get('truncate', href, token),
 		};
 	},
 
