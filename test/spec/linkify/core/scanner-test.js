@@ -54,6 +54,7 @@ const tests = [
 	['http', [DOMAIN], ['http']],
 	['http:', [PROTOCOL], ['http:']],
 	['https:', [PROTOCOL], ['https:']],
+	['smb:', [PROTOCOL], ['smb:']],
 	['files:', [DOMAIN, COLON], ['files', ':']],
 	['file//', [DOMAIN, SLASH, SLASH], ['file', '/', '/']],
 	['ftp://', [PROTOCOL, SLASH, SLASH], ['ftp:', '/', '/']],

@@ -97,17 +97,20 @@ let partialProtocolFileStates = stateify('file', S_START, DOMAIN, DOMAIN);
 let partialProtocolFtpStates = stateify('ftp', S_START, DOMAIN, DOMAIN);
 let partialProtocolHttpStates = stateify('http', S_START, DOMAIN, DOMAIN);
 let partialProtocolMailtoStates = stateify('mailto', S_START, DOMAIN, DOMAIN);
+let partialProtocolSmbStates = stateify('smb', S_START, DOMAIN, DOMAIN);
 
 // Add the states to the array of DOMAINeric states
 domainStates.push.apply(domainStates, partialProtocolFileStates);
 domainStates.push.apply(domainStates, partialProtocolFtpStates);
 domainStates.push.apply(domainStates, partialProtocolHttpStates);
 domainStates.push.apply(domainStates, partialProtocolMailtoStates);
+domainStates.push.apply(domainStates, partialProtocolSmbStates);
 
 // Protocol states
 let S_PROTOCOL_FILE = partialProtocolFileStates.pop();
 let S_PROTOCOL_FTP = partialProtocolFtpStates.pop();
 let S_PROTOCOL_HTTP = partialProtocolHttpStates.pop();
+let S_PROTOCOL_SMB = partialProtocolSmbStates.pop();
 let S_MAILTO = partialProtocolMailtoStates.pop();
 let S_PROTOCOL_SECURE = makeState(DOMAIN);
 let S_FULL_PROTOCOL = makeState(PROTOCOL); // Full protocol ends with COLON
@@ -127,6 +130,7 @@ domainStates.push(S_PROTOCOL_SECURE);
 // Become protocol tokens after a COLON
 S_PROTOCOL_FILE.on(':', S_FULL_PROTOCOL);
 S_PROTOCOL_SECURE.on(':', S_FULL_PROTOCOL);
+S_PROTOCOL_SMB.on(':', S_FULL_PROTOCOL);
 S_MAILTO.on(':', S_FULL_MAILTO);
 
 // Localhost
