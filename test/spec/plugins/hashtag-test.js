@@ -1,7 +1,7 @@
+delete require.cache[require.resolve(`${__base}linkify`)];
 const linkify = require(`${__base}linkify`);
-const hashtag = require(`${__base}linkify/plugins/hashtag`).default;
 
-describe('linkify/plugins/hashtag', () => {
+describe('linkify/hashtag', () => {
 	it('cannot parse hashtags before applying the plugin', () => {
 		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
 		.to.be.eql([]);
@@ -11,9 +11,7 @@ describe('linkify/plugins/hashtag', () => {
 	});
 
 	describe('after plugin is applied', () => {
-		before(() => {
-			hashtag(linkify);
-		});
+		before(() => { require(`${__base}plugins/hashtag`) });
 
 		it ('can parse hashtags after applying the plugin', () => {
 			expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))

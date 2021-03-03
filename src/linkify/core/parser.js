@@ -96,62 +96,62 @@ let S_NL							= makeState(MNL); // single new line
 
 // Make path from start to protocol (with '//')
 S_START
-.on(TNL, S_NL)
-.on(PROTOCOL, S_PROTOCOL)
-.on(MAILTO, S_MAILTO)
-.on(SLASH, S_PROTOCOL_SLASH);
+.t(TNL, S_NL)
+.t(PROTOCOL, S_PROTOCOL)
+.t(MAILTO, S_MAILTO)
+.t(SLASH, S_PROTOCOL_SLASH);
 
-S_PROTOCOL.on(SLASH, S_PROTOCOL_SLASH);
-S_PROTOCOL_SLASH.on(SLASH, S_PROTOCOL_SLASH_SLASH);
+S_PROTOCOL.t(SLASH, S_PROTOCOL_SLASH);
+S_PROTOCOL_SLASH.t(SLASH, S_PROTOCOL_SLASH_SLASH);
 
 // The very first potential domain name
 S_START
-.on(TLD, S_DOMAIN)
-.on(DOMAIN, S_DOMAIN)
-.on(LOCALHOST, S_TLD)
-.on(NUM, S_DOMAIN);
+.t(TLD, S_DOMAIN)
+.t(DOMAIN, S_DOMAIN)
+.t(LOCALHOST, S_TLD)
+.t(NUM, S_DOMAIN);
 
 // Force URL for protocol followed by anything sane
 S_PROTOCOL_SLASH_SLASH
-.on(TLD, S_URL)
-.on(DOMAIN, S_URL)
-.on(NUM, S_URL)
-.on(LOCALHOST, S_URL);
+.t(TLD, S_URL)
+.t(DOMAIN, S_URL)
+.t(NUM, S_URL)
+.t(LOCALHOST, S_URL);
 
 // Account for dots and hyphens
 // hyphens are usually parts of domain names
-S_DOMAIN.on(DOT, S_DOMAIN_DOT);
-S_EMAIL_DOMAIN.on(DOT, S_EMAIL_DOMAIN_DOT);
+S_DOMAIN.t(DOT, S_DOMAIN_DOT);
+S_EMAIL_DOMAIN.t(DOT, S_EMAIL_DOMAIN_DOT);
 
 // Hyphen can jump back to a domain name
 
 // After the first domain and a dot, we can find either a URL or another domain
 S_DOMAIN_DOT
-.on(TLD, S_TLD)
-.on(DOMAIN, S_DOMAIN)
-.on(NUM, S_DOMAIN)
-.on(LOCALHOST, S_DOMAIN);
+.t(TLD, S_TLD)
+.t(DOMAIN, S_DOMAIN)
+.t(NUM, S_DOMAIN)
+.t(LOCALHOST, S_DOMAIN);
 
 S_EMAIL_DOMAIN_DOT
-.on(TLD, S_EMAIL)
-.on(DOMAIN, S_EMAIL_DOMAIN)
-.on(NUM, S_EMAIL_DOMAIN)
-.on(LOCALHOST, S_EMAIL_DOMAIN);
+.t(TLD, S_EMAIL)
+.t(DOMAIN, S_EMAIL_DOMAIN)
+.t(NUM, S_EMAIL_DOMAIN)
+.t(LOCALHOST, S_EMAIL_DOMAIN);
 
 // S_TLD accepts! But the URL could be longer, try to find a match greedily
 // The `run` function should be able to "rollback" to the accepting state
-S_TLD.on(DOT, S_DOMAIN_DOT);
-S_EMAIL.on(DOT, S_EMAIL_DOMAIN_DOT);
+S_TLD.t(DOT, S_DOMAIN_DOT);
+S_EMAIL.t(DOT, S_EMAIL_DOMAIN_DOT);
 
 // Become real URLs after `SLASH` or `COLON NUM SLASH`
 // Here PSS and non-PSS converge
 S_TLD
-.on(COLON, S_TLD_COLON)
-.on(SLASH, S_URL);
-S_TLD_COLON.on(NUM, S_TLD_PORT);
-S_TLD_PORT.on(SLASH, S_URL);
-S_EMAIL.on(COLON, S_EMAIL_COLON);
-S_EMAIL_COLON.on(NUM, S_EMAIL_PORT);
+.t(COLON, S_TLD_COLON)
+.t(SLASH, S_URL);
+S_TLD_COLON.t(NUM, S_TLD_PORT);
+S_TLD_PORT.t(SLASH, S_URL);
+S_EMAIL.t(COLON, S_EMAIL_COLON);
+S_EMAIL_COLON.t(NUM, S_EMAIL_PORT);
 
 // Types of characters the URL can definitely end in
 let qsAccepting = [
@@ -192,69 +192,69 @@ let qsNonAccepting = [
 
 // URL, followed by an opening bracket
 S_URL
-.on(OPENBRACE, S_URL_OPENBRACE)
-.on(OPENBRACKET, S_URL_OPENBRACKET)
-.on(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
-.on(OPENPAREN, S_URL_OPENPAREN);
+.t(OPENBRACE, S_URL_OPENBRACE)
+.t(OPENBRACKET, S_URL_OPENBRACKET)
+.t(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
+.t(OPENPAREN, S_URL_OPENPAREN);
 
 // URL with extra symbols at the end, followed by an opening bracket
 S_URL_NON_ACCEPTING
-.on(OPENBRACE, S_URL_OPENBRACE)
-.on(OPENBRACKET, S_URL_OPENBRACKET)
-.on(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
-.on(OPENPAREN, S_URL_OPENPAREN);
+.t(OPENBRACE, S_URL_OPENBRACE)
+.t(OPENBRACKET, S_URL_OPENBRACKET)
+.t(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
+.t(OPENPAREN, S_URL_OPENPAREN);
 
 // Closing bracket component. This character WILL be included in the URL
-S_URL_OPENBRACE.on(CLOSEBRACE, S_URL);
-S_URL_OPENBRACKET.on(CLOSEBRACKET, S_URL);
-S_URL_OPENANGLEBRACKET.on(CLOSEANGLEBRACKET, S_URL);
-S_URL_OPENPAREN.on(CLOSEPAREN, S_URL);
-S_URL_OPENBRACE_Q.on(CLOSEBRACE, S_URL);
-S_URL_OPENBRACKET_Q.on(CLOSEBRACKET, S_URL);
-S_URL_OPENANGLEBRACKET_Q.on(CLOSEANGLEBRACKET, S_URL);
-S_URL_OPENPAREN_Q.on(CLOSEPAREN, S_URL);
-S_URL_OPENBRACE_SYMS.on(CLOSEBRACE, S_URL);
-S_URL_OPENBRACKET_SYMS.on(CLOSEBRACKET, S_URL);
-S_URL_OPENANGLEBRACKET_SYMS.on(CLOSEANGLEBRACKET, S_URL);
-S_URL_OPENPAREN_SYMS.on(CLOSEPAREN, S_URL);
+S_URL_OPENBRACE.t(CLOSEBRACE, S_URL);
+S_URL_OPENBRACKET.t(CLOSEBRACKET, S_URL);
+S_URL_OPENANGLEBRACKET.t(CLOSEANGLEBRACKET, S_URL);
+S_URL_OPENPAREN.t(CLOSEPAREN, S_URL);
+S_URL_OPENBRACE_Q.t(CLOSEBRACE, S_URL);
+S_URL_OPENBRACKET_Q.t(CLOSEBRACKET, S_URL);
+S_URL_OPENANGLEBRACKET_Q.t(CLOSEANGLEBRACKET, S_URL);
+S_URL_OPENPAREN_Q.t(CLOSEPAREN, S_URL);
+S_URL_OPENBRACE_SYMS.t(CLOSEBRACE, S_URL);
+S_URL_OPENBRACKET_SYMS.t(CLOSEBRACKET, S_URL);
+S_URL_OPENANGLEBRACKET_SYMS.t(CLOSEANGLEBRACKET, S_URL);
+S_URL_OPENPAREN_SYMS.t(CLOSEPAREN, S_URL);
 
 // URL that beings with an opening bracket, followed by a symbols.
 // Note that the final state can still be `S_URL_OPENBRACE_Q` (if the URL only
 // has a single opening bracket for some reason).
-S_URL_OPENBRACE.on(qsAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET.on(qsAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET.on(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN.on(qsAccepting, S_URL_OPENPAREN_Q);
-S_URL_OPENBRACE.on(qsNonAccepting, S_URL_OPENBRACE_SYMS);
-S_URL_OPENBRACKET.on(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
-S_URL_OPENANGLEBRACKET.on(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
-S_URL_OPENPAREN.on(qsNonAccepting, S_URL_OPENPAREN_SYMS);
+S_URL_OPENBRACE.ts(qsAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET.ts(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET.ts(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
+S_URL_OPENPAREN.ts(qsAccepting, S_URL_OPENPAREN_Q);
+S_URL_OPENBRACE.ts(qsNonAccepting, S_URL_OPENBRACE_SYMS);
+S_URL_OPENBRACKET.ts(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+S_URL_OPENANGLEBRACKET.ts(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
+S_URL_OPENPAREN.ts(qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // URL that begins with an opening bracket, followed by some symbols
-S_URL_OPENBRACE_Q.on(qsAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET_Q.on(qsAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET_Q.on(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN_Q.on(qsAccepting, S_URL_OPENPAREN_Q);
-S_URL_OPENBRACE_Q.on(qsNonAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET_Q.on(qsNonAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET_Q.on(qsNonAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN_Q.on(qsNonAccepting, S_URL_OPENPAREN_Q);
+S_URL_OPENBRACE_Q.ts(qsAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET_Q.ts(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET_Q.ts(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
+S_URL_OPENPAREN_Q.ts(qsAccepting, S_URL_OPENPAREN_Q);
+S_URL_OPENBRACE_Q.ts(qsNonAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET_Q.ts(qsNonAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET_Q.ts(qsNonAccepting, S_URL_OPENANGLEBRACKET_Q);
+S_URL_OPENPAREN_Q.ts(qsNonAccepting, S_URL_OPENPAREN_Q);
 
-S_URL_OPENBRACE_SYMS.on(qsAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET_SYMS.on(qsAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET_SYMS.on(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN_SYMS.on(qsAccepting, S_URL_OPENPAREN_Q);
-S_URL_OPENBRACE_SYMS.on(qsNonAccepting, S_URL_OPENBRACE_SYMS);
-S_URL_OPENBRACKET_SYMS.on(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
-S_URL_OPENANGLEBRACKET_SYMS.on(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
-S_URL_OPENPAREN_SYMS.on(qsNonAccepting, S_URL_OPENPAREN_SYMS);
+S_URL_OPENBRACE_SYMS.ts(qsAccepting, S_URL_OPENBRACE_Q);
+S_URL_OPENBRACKET_SYMS.ts(qsAccepting, S_URL_OPENBRACKET_Q);
+S_URL_OPENANGLEBRACKET_SYMS.ts(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
+S_URL_OPENPAREN_SYMS.ts(qsAccepting, S_URL_OPENPAREN_Q);
+S_URL_OPENBRACE_SYMS.ts(qsNonAccepting, S_URL_OPENBRACE_SYMS);
+S_URL_OPENBRACKET_SYMS.ts(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+S_URL_OPENANGLEBRACKET_SYMS.ts(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
+S_URL_OPENPAREN_SYMS.ts(qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // Account for the query string
-S_URL.on(qsAccepting, S_URL);
-S_URL_NON_ACCEPTING.on(qsAccepting, S_URL);
+S_URL.ts(qsAccepting, S_URL);
+S_URL_NON_ACCEPTING.ts(qsAccepting, S_URL);
 
-S_URL.on(qsNonAccepting, S_URL_NON_ACCEPTING);
-S_URL_NON_ACCEPTING.on(qsNonAccepting, S_URL_NON_ACCEPTING);
+S_URL.ts(qsNonAccepting, S_URL_NON_ACCEPTING);
+S_URL_NON_ACCEPTING.ts(qsNonAccepting, S_URL_NON_ACCEPTING);
 
 // Email address-specific state definitions
 // Note: We are not allowing '/' in email addresses since this would interfere
@@ -263,18 +263,18 @@ S_URL_NON_ACCEPTING.on(qsNonAccepting, S_URL_NON_ACCEPTING);
 // For addresses with the mailto prefix
 // 'mailto:' followed by anything sane is a valid email
 S_MAILTO
-.on(TLD, S_MAILTO_EMAIL)
-.on(DOMAIN, S_MAILTO_EMAIL)
-.on(NUM, S_MAILTO_EMAIL)
-.on(LOCALHOST, S_MAILTO_EMAIL);
+.t(TLD, S_MAILTO_EMAIL)
+.t(DOMAIN, S_MAILTO_EMAIL)
+.t(NUM, S_MAILTO_EMAIL)
+.t(LOCALHOST, S_MAILTO_EMAIL);
 
 // Greedily get more potential valid email values
 S_MAILTO_EMAIL
-.on(qsAccepting, S_MAILTO_EMAIL)
-.on(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
+.ts(qsAccepting, S_MAILTO_EMAIL)
+.ts(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
 S_MAILTO_EMAIL_NON_ACCEPTING
-.on(qsAccepting, S_MAILTO_EMAIL)
-.on(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
+.ts(qsAccepting, S_MAILTO_EMAIL)
+.ts(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
 
 // For addresses without the mailto prefix
 // Tokens allowed in the localpart of the email
@@ -293,24 +293,24 @@ let localpartAccepting = [
 // Some of the tokens in `localpartAccepting` are already accounted for here and
 // will not be overwritten (don't worry)
 S_DOMAIN
-.on(localpartAccepting, S_LOCALPART)
-.on(AT, S_LOCALPART_AT);
+.ts(localpartAccepting, S_LOCALPART)
+.t(AT, S_LOCALPART_AT);
 S_TLD
-.on(localpartAccepting, S_LOCALPART)
-.on(AT, S_LOCALPART_AT);
-S_DOMAIN_DOT.on(localpartAccepting, S_LOCALPART);
+.ts(localpartAccepting, S_LOCALPART)
+.t(AT, S_LOCALPART_AT);
+S_DOMAIN_DOT.ts(localpartAccepting, S_LOCALPART);
 
 // Okay we're on a localpart. Now what?
 // TODO: IP addresses and what if the email starts with numbers?
 S_LOCALPART
-.on(localpartAccepting, S_LOCALPART)
-.on(AT, S_LOCALPART_AT) // close to an email address now
-.on(DOT, S_LOCALPART_DOT);
-S_LOCALPART_DOT.on(localpartAccepting, S_LOCALPART);
+.ts(localpartAccepting, S_LOCALPART)
+.t(AT, S_LOCALPART_AT) // close to an email address now
+.t(DOT, S_LOCALPART_DOT);
+S_LOCALPART_DOT.ts(localpartAccepting, S_LOCALPART);
 S_LOCALPART_AT
-.on(TLD, S_EMAIL_DOMAIN)
-.on(DOMAIN, S_EMAIL_DOMAIN)
-.on(LOCALHOST, S_EMAIL);
+.t(TLD, S_EMAIL_DOMAIN)
+.t(DOMAIN, S_EMAIL_DOMAIN)
+.t(LOCALHOST, S_EMAIL);
 // States following `@` defined above
 
 let run = function (tokens) {

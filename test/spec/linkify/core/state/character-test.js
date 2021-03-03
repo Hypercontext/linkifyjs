@@ -17,8 +17,8 @@ describe('linkify/core/state/CharacterState', () => {
 		});
 
 		it('Should return an new state for the ":" character', () => {
-			S_START.on('.', S_DOT);
-			S_START.on(/[0-9]/, S_NUM);
+			S_START.t('.', S_DOT);
+			S_START.t(/[0-9]/, S_NUM);
 
 			var results = [
 				S_START.next('.'),
@@ -37,7 +37,7 @@ describe('linkify/core/state/CharacterState', () => {
 		});
 
 		it('Can return itself (has recursion)', () => {
-			S_NUM.on(/[0-9]/, S_NUM);
+			S_NUM.t(/[0-9]/, S_NUM);
 			expect(S_NUM.next('8')).to.be.eql(S_NUM);
 			expect(S_NUM.next('0').next('4')).to.be.eql(S_NUM);
 		});

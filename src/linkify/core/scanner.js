@@ -39,7 +39,7 @@ import {
 	SYM
 } from './tokens/text';
 
-const tlds = __TLDS__; // macro, see gulpfile.js
+import tlds from './tlds';
 
 const NUMBERS = '0123456789'.split('');
 const ALPHANUM = '0123456789abcdefghijklmnopqrstuvwxyz'.split('');
@@ -57,33 +57,33 @@ const S_WS				= makeState(WS);
 
 // States for special URL symbols
 S_START
-.on('@', makeState(AT))
-.on('.', makeState(DOT))
-.on('+', makeState(PLUS))
-.on('#', makeState(POUND))
-.on('?', makeState(QUERY))
-.on('/', makeState(SLASH))
-.on('_', makeState(UNDERSCORE))
-.on(':', makeState(COLON))
-.on('{', makeState(OPENBRACE))
-.on('[', makeState(OPENBRACKET))
-.on('<', makeState(OPENANGLEBRACKET))
-.on('(', makeState(OPENPAREN))
-.on('}', makeState(CLOSEBRACE))
-.on(']', makeState(CLOSEBRACKET))
-.on('>', makeState(CLOSEANGLEBRACKET))
-.on(')', makeState(CLOSEPAREN))
-.on('&', makeState(AMPERSAND))
-.on([',', ';', '!', '"', '\''], makeState(PUNCTUATION));
+.t('@', makeState(AT))
+.t('.', makeState(DOT))
+.t('+', makeState(PLUS))
+.t('#', makeState(POUND))
+.t('?', makeState(QUERY))
+.t('/', makeState(SLASH))
+.t('_', makeState(UNDERSCORE))
+.t(':', makeState(COLON))
+.t('{', makeState(OPENBRACE))
+.t('[', makeState(OPENBRACKET))
+.t('<', makeState(OPENANGLEBRACKET))
+.t('(', makeState(OPENPAREN))
+.t('}', makeState(CLOSEBRACE))
+.t(']', makeState(CLOSEBRACKET))
+.t('>', makeState(CLOSEANGLEBRACKET))
+.t(')', makeState(CLOSEPAREN))
+.t('&', makeState(AMPERSAND))
+.ts([',', ';', '!', '"', '\''], makeState(PUNCTUATION));
 
 // Whitespace jumps
 // Tokens of only non-newline whitespace are arbitrarily long
 S_START
-.on('\n', makeState(NL))
-.on(WHITESPACE, S_WS);
+.t('\n', makeState(NL))
+.ts(WHITESPACE, S_WS);
 
 // If any whitespace except newline, more whitespace!
-S_WS.on(WHITESPACE, S_WS);
+S_WS.ts(WHITESPACE, S_WS);
 
 // Generates states for top-level domains
 // Note that this is most accurate when tlds are in alphabetical order
@@ -115,19 +115,19 @@ let S_FULL_MAILTO = makeState(MAILTO); // Mailto ends with COLON
 
 // Secure protocols (end with 's')
 S_PROTOCOL_FTP
-.on('s', S_PROTOCOL_SECURE)
-.on(':', S_FULL_PROTOCOL);
+.t('s', S_PROTOCOL_SECURE)
+.t(':', S_FULL_PROTOCOL);
 
 S_PROTOCOL_HTTP
-.on('s', S_PROTOCOL_SECURE)
-.on(':', S_FULL_PROTOCOL);
+.t('s', S_PROTOCOL_SECURE)
+.t(':', S_FULL_PROTOCOL);
 
 domainStates.push(S_PROTOCOL_SECURE);
 
 // Become protocol tokens after a COLON
-S_PROTOCOL_FILE.on(':', S_FULL_PROTOCOL);
-S_PROTOCOL_SECURE.on(':', S_FULL_PROTOCOL);
-S_MAILTO.on(':', S_FULL_MAILTO);
+S_PROTOCOL_FILE.t(':', S_FULL_PROTOCOL);
+S_PROTOCOL_SECURE.t(':', S_FULL_PROTOCOL);
+S_MAILTO.t(':', S_FULL_MAILTO);
 
 // Localhost
 let partialLocalhostStates = stateify('localhost', S_START, LOCALHOST, DOMAIN);
@@ -136,27 +136,27 @@ domainStates.push.apply(domainStates, partialLocalhostStates);
 // Everything else
 // DOMAINs make more DOMAINs
 // Number and character transitions
-S_START.on(NUMBERS, S_NUM);
+S_START.ts(NUMBERS, S_NUM);
 S_NUM
-.on('-', S_DOMAIN_HYPHEN)
-.on(NUMBERS, S_NUM)
-.on(ALPHANUM, S_DOMAIN); // number becomes DOMAIN
+.t('-', S_DOMAIN_HYPHEN)
+.ts(NUMBERS, S_NUM)
+.ts(ALPHANUM, S_DOMAIN); // number becomes DOMAIN
 
 S_DOMAIN
-.on('-', S_DOMAIN_HYPHEN)
-.on(ALPHANUM, S_DOMAIN);
+.t('-', S_DOMAIN_HYPHEN)
+.ts(ALPHANUM, S_DOMAIN);
 
 // All the generated states should have a jump to DOMAIN
 for (let i = 0; i < domainStates.length; i++) {
 	domainStates[i]
-	.on('-', S_DOMAIN_HYPHEN)
-	.on(ALPHANUM, S_DOMAIN);
+	.t('-', S_DOMAIN_HYPHEN)
+	.ts(ALPHANUM, S_DOMAIN);
 }
 
 S_DOMAIN_HYPHEN
-.on('-', S_DOMAIN_HYPHEN)
-.on(NUMBERS, S_DOMAIN)
-.on(ALPHANUM, S_DOMAIN);
+.t('-', S_DOMAIN_HYPHEN)
+.ts(NUMBERS, S_DOMAIN)
+.ts(ALPHANUM, S_DOMAIN);
 
 // Set default transition
 S_START.defaultTransition = makeState(SYM);

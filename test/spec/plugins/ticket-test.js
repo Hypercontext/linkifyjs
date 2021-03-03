@@ -1,7 +1,6 @@
 const linkify = require(`${__base}linkify`);
-const ticket = require(`${__base}linkify/plugins/ticket`).default;
 
-describe('linkify/plugins/ticket', () => {
+describe('plugins/ticket', () => {
 	it('cannot parse tickets before applying the plugin', () => {
 		expect(
 			linkify.find('This is ticket #2015 and #1234 and #%^&*( should not work')
@@ -12,7 +11,7 @@ describe('linkify/plugins/ticket', () => {
 	});
 
 	describe('after plugin is applied', () => {
-		before(() => { ticket(linkify); });
+		before(() => { require(`${__base}plugins/ticket`) });
 
 		it ('can parse tickets after applying the plugin', () => {
 			expect(linkify.find('Check out issue #42')).to.be.eql([{

@@ -1,1 +1,1 @@
-module.exports = require('../lib/linkify/plugins/ticket').default;
+module.exports = require('../lib/plugins/ticket').default;

@@ -2,8 +2,8 @@ import {inherits} from '../utils/class';
 
 function createStateClass() {
 	return function (tClass) {
-		this.j = [];
 		this.T = tClass || null;
+		this.init();
 	};
 }
 
@@ -30,6 +30,10 @@ const BaseState = createStateClass();
 BaseState.prototype = {
 	defaultTransition: false,
 
+	init() {
+		this.j = [];
+	},
+
 	/**
 		@method constructor
 		@param {Class} tClass Pass in the kind of token to emit if there are
@@ -37,22 +41,24 @@ BaseState.prototype = {
 	*/
 
 	/**
-		On the given symbol(s), this machine should go to the given state
+		"t" for "transition". On the given symbol(s), this machine should go to
+		the given state
 
-		@method on
+		@method t
 		@param {Array|Mixed} symbol
 		@param {BaseState} state Note that the type of this state should be the
-			same as the current instance (i.e., don't pass in a different
-			subclass)
+		    same as the current instance (i.e., don't pass in a different
+		    subclass)
 	*/
-	on(symbol, state) {
-		if (symbol instanceof Array) {
-			for (let i = 0; i < symbol.length; i++) {
-				this.j.push([symbol[i], state]);
-			}
-			return this;
-		}
+	t(symbol, state) {
 		this.j.push([symbol, state]);
+		return this;
+	},
+
+	ts(symbols, state) {
+		for (let i = 0; i < symbols.length; i++) {
+			this.t(symbols[i], state);
+		}
 		return this;
 	},
 
@@ -121,7 +127,22 @@ BaseState.prototype = {
 	@extends BaseState
 */
 const CharacterState = inherits(BaseState, createStateClass(), {
+	init() {
+		this.j = [];
+		this.jr = []; // regular expression jumps
+	},
+
 	/**
+	 *
+	 * @param {RegExp} symbol regular expression to match for next character
+	 * @param {} state
+	 */
+	tr(symbol, state) {
+		this.jr.push([symbol, state])
+		return this
+	},
+
+		/**
 		Does the given character match the given character or regular
 		expression?
 
@@ -145,6 +166,9 @@ const CharacterState = inherits(BaseState, createStateClass(), {
 	@extends BaseState
 */
 const TokenState = inherits(BaseState, createStateClass(), {
+	init() {
+		this.j = [];
+	},
 
 	/**
 	 * Similar to `on`, but returns the state the results in the transition from
@@ -159,7 +183,7 @@ const TokenState = inherits(BaseState, createStateClass(), {
 		if (state === this.defaultTransition) {
 			// Make a new state!
 			state = new this.constructor(tClass);
-			this.on(token, state);
+			this.t(token, state);
 		} else if (tClass) {
 			state.T = tClass;
 		}
@@ -203,7 +227,6 @@ function stateify(str, start, endToken, defaultToken) {
 	let i = 0,
 		len = str.length,
 		state = start,
-		newStates = [],
 		nextState;
 
 	// Find the next state without a jump to the next character
@@ -214,17 +237,18 @@ function stateify(str, start, endToken, defaultToken) {
 
 	if (i >= len) { return []; } // no new tokens were added
 
+	const newStates = [];
 	while (i < len - 1) {
 		nextState = new CharacterState(defaultToken);
 		newStates.push(nextState);
-		state.on(str[i], nextState);
+		state.t(str[i], nextState);
 		state = nextState;
 		i++;
 	}
 
 	nextState = new CharacterState(endToken);
 	newStates.push(nextState);
-	state.on(str[len - 1], nextState);
+	state.t(str[len - 1], nextState);
 
 	return newStates;
 }

@@ -1,1 +1,1 @@
-module.exports = require('../lib/linkify/plugins/hashtag').default;
+module.exports = require('../lib/plugins/hashtag').default;

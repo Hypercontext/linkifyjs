@@ -1,7 +1,7 @@
+delete require.cache[require.resolve(`${__base}linkify`)];
 const linkify = require(`${__base}linkify`);
-const mention = require(`${__base}linkify/plugins/mention`).default;
 
-describe('linkify/plugins/mention', () => {
+describe('plugins/mention', () => {
 	it('Cannot parse mentions before applying the plugin', () => {
 		expect(linkify.find('There is a @mention @YOLO2016 and @1234 and @%^&*( should not work'))
 		.to.be.eql([]);
@@ -11,9 +11,7 @@ describe('linkify/plugins/mention', () => {
 	});
 
 	describe('after plugin is applied', () => {
-		before(() => {
-			mention(linkify);
-		});
+		before(() => { require(`${__base}plugins/mention`) });
 
 		it ('Can parse mentions after applying the plugin', () => {
 			expect(linkify.find('There is a @mention @YOLO2016 and @1234 and @%^&*( should not work')).to.deep.equal([{
@@ -158,6 +156,5 @@ describe('linkify/plugins/mention', () => {
 				href: '/456_78910__'
 			}]);
 		});
-
 	});
 });

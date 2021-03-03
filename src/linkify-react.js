@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import * as linkify from './linkify';
 
 const {options} = linkify;

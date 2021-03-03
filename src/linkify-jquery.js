@@ -1,3 +1,4 @@
+import jQuery from 'jquery';
 import linkifyElement from './linkify-element';
 
 // Applies the plugin to jQuery
@@ -6,7 +7,7 @@ export default function apply($, doc = false) {
 	$.fn = $.fn || {};
 
 	try {
-		doc = doc || document || window && window.document || global && global.document;
+		doc = doc || document || (window && window.document) || global && global.document;
 	} catch (e) { /* do nothing for now */ }
 
 	if (!doc) {
@@ -92,5 +93,8 @@ export default function apply($, doc = false) {
 	});
 }
 
+// Try applying to the globally-defined jQuery element, if possible
+try { apply(jQuery); } catch (e) { /**/ }
+
 // Try assigning linkifyElement to the browser scope
-try { !this.define && (window.linkifyElement = linkifyElement); } catch (e) { /**/ }
+try { window.linkifyElement = linkifyElement; } catch (e) { /**/ }

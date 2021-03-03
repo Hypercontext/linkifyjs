@@ -1,4 +1,4 @@
-import HTML5Tokenizer from './simple-html-tokenizer';
+import { tokenize } from 'simple-html-tokenizer';
 import * as linkify from './linkify';
 
 const { options } = linkify;
@@ -14,7 +14,7 @@ const Comment = 'Comment';
 	parser.
 */
 export default function linkifyHtml(str, opts = {}) {
-	let tokens = HTML5Tokenizer.tokenize(str);
+	let tokens = tokenize(str);
 	let linkifiedTokens = [];
 	let linkified = [];
 	var i;

@@ -4,7 +4,7 @@ const TEXT_TOKENS = tokens.text;
 const MULTI_TOKENS = tokens.multi;
 
 describe('linkify/core/state/TokenState', function () {
-	var S_START;
+	var S_START, state;
 
 	beforeEach(function () {
 		S_START = new TokenState();
@@ -44,8 +44,8 @@ describe('linkify/core/state/TokenState', function () {
 				S_START = new TokenState();
 				S_AT = new TokenState();
 				S_LOCALHOST = new TokenState(); // No accepting transition yet
-				S_START.on(TEXT_TOKENS.AT, S_AT);
-				S_START.on(TEXT_TOKENS.LOCALHOST, S_LOCALHOST);
+				S_START.t(TEXT_TOKENS.AT, S_AT);
+				S_START.t(TEXT_TOKENS.LOCALHOST, S_LOCALHOST);
 			});
 
 			context('with just a text token', () => {
