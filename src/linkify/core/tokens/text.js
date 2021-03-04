@@ -1,201 +1,60 @@
-import {createTokenClass} from './create-token-class';
-import {inherits} from '../../utils/class';
-
 /******************************************************************************
 	Text Tokens
 	Tokens composed of strings
 ******************************************************************************/
 
-/**
-	Abstract class used for manufacturing text tokens.
-	Pass in the value this token represents
+// A valid web domain token
+export const DOMAIN = 'DOMAIN'
+export const LOCALHOST = 'LOCALHOST' // special case of domain
 
-	@class TextToken
-	@abstract
-*/
-const TextToken = createTokenClass();
-TextToken.prototype = {
-	toString() {
-		return this.v + '';
-	}
-};
+// Valid top-level domain (see tlds.js)
+export const TLD = 'TLD'
 
+// Various punctionation
+export const AT = 'AT' // '@'
+export const COLON = 'COLON' // ':'
+export const DOT = 'DOT' // '.'
 
-function inheritsToken(value) {
-	var props = value ? {v: value} : {};
-	return inherits(TextToken, createTokenClass(), props);
-}
+// A character class that can surround the URL, but which the URL cannot begin
+// or end with. Does not include certain English punctuation like parentheses.
+export const PUNCTUATION = 'PUNCTUATION'
 
-/**
-	A valid domain token
-	@class DOMAIN
-	@extends TextToken
-*/
-const DOMAIN = inheritsToken();
+// New line (unix style)
+export const NL = 'NL' // '\n'
 
-/**
-	@class AT
-	@extends TextToken
-*/
-const AT = inheritsToken('@');
+// Any sequence of digies 0-9
+export const NUM = 'NUM'
 
-/**
-	Represents a single colon `:` character
+// Various symbols
+export const PLUS = 'PLUS' // '+'
+export const POUND = 'POUND' // '#'
+export const QUERY = 'QUERY' // '?'
+export const SLASH = 'SLASH' // '/'
+export const UNDERSCORE = 'UNDERSCORE' // '_'
 
-	@class COLON
-	@extends TextToken
-*/
-const COLON = inheritsToken(':');
+// A web URL protocol. Supported types include
+// - `http:`
+// - `https:`
+// - `ftp:`
+// - `ftps:`
+export const PROTOCOL = 'PROTOCOL'
 
-/**
-	@class DOT
-	@extends TextToken
-*/
-const DOT = inheritsToken('.');
+// Start of the email URI protocol
+export const MAILTO = 'MAILTO' // 'mailto:'
 
-/**
-	A character class that can surround the URL, but which the URL cannot begin
-	or end with. Does not include certain English punctuation like parentheses.
+// Any number of consecutive whitespace characters that are not newline
+export const WS = 'WS'
 
-	@class PUNCTUATION
-	@extends TextToken
-*/
-const PUNCTUATION = inheritsToken();
+// Opening/closing bracket classes
+export const OPENBRACE = 'OPENBRACE' // '{'
+export const OPENBRACKET = 'OPENBRACKET' // '['
+export const OPENANGLEBRACKET = 'OPENANGLEBRACKET' // '<'
+export const OPENPAREN = 'OPENPAREN' // '('
+export const CLOSEBRACE = 'CLOSEBRACE' // '}'
+export const CLOSEBRACKET = 'CLOSEBRACKET' // ']'
+export const CLOSEANGLEBRACKET = 'CLOSEANGLEBRACKET' // '>'
+export const CLOSEPAREN = 'CLOSEPAREN' // ')'
+export const AMPERSAND = 'AMPERSAND' // '&'
 
-/**
-	The word localhost (by itself)
-	@class LOCALHOST
-	@extends TextToken
-*/
-const LOCALHOST = inheritsToken();
-
-/**
-	Newline token
-	@class NL
-	@extends TextToken
-*/
-const NL = inheritsToken('\n');
-
-/**
-	@class NUM
-	@extends TextToken
-*/
-const NUM = inheritsToken();
-
-/**
-	@class PLUS
-	@extends TextToken
-*/
-const PLUS = inheritsToken('+');
-
-/**
-	@class POUND
-	@extends TextToken
-*/
-const POUND = inheritsToken('#');
-
-/**
-	Represents a web URL protocol. Supported types include
-
-	* `http:`
-	* `https:`
-	* `ftp:`
-	* `ftps:`
-
-	@class PROTOCOL
-	@extends TextToken
-*/
-const PROTOCOL = inheritsToken();
-
-/**
-	Represents the start of the email URI protocol
-
-	@class MAILTO
-	@extends TextToken
-*/
-const MAILTO = inheritsToken('mailto:');
-
-/**
-	@class QUERY
-	@extends TextToken
-*/
-const QUERY = inheritsToken('?');
-
-/**
-	@class SLASH
-	@extends TextToken
-*/
-const SLASH = inheritsToken('/');
-
-/**
-	@class UNDERSCORE
-	@extends TextToken
-*/
-const UNDERSCORE = inheritsToken('_');
-
-/**
-	One ore more non-whitespace symbol.
-	@class SYM
-	@extends TextToken
-*/
-const SYM = inheritsToken();
-
-/**
-	@class TLD
-	@extends TextToken
-*/
-const TLD = inheritsToken();
-
-/**
-	Represents a string of consecutive whitespace characters
-
-	@class WS
-	@extends TextToken
-*/
-const WS = inheritsToken();
-
-/**
-	Opening/closing bracket classes
-*/
-
-const OPENBRACE = inheritsToken('{');
-const OPENBRACKET = inheritsToken('[');
-const OPENANGLEBRACKET = inheritsToken('<');
-const OPENPAREN = inheritsToken('(');
-const CLOSEBRACE = inheritsToken('}');
-const CLOSEBRACKET = inheritsToken(']');
-const CLOSEANGLEBRACKET = inheritsToken('>');
-const CLOSEPAREN = inheritsToken(')');
-
-const AMPERSAND = inheritsToken('&');
-
-export {
-	TextToken as Base,
-	DOMAIN,
-	AT,
-	COLON,
-	DOT,
-	PUNCTUATION,
-	LOCALHOST,
-	NL,
-	NUM,
-	PLUS,
-	POUND,
-	QUERY,
-	PROTOCOL,
-	MAILTO,
-	SLASH,
-	UNDERSCORE,
-	SYM,
-	TLD,
-	WS,
-	OPENBRACE,
-	OPENBRACKET,
-	OPENANGLEBRACKET,
-	OPENPAREN,
-	CLOSEBRACE,
-	CLOSEBRACKET,
-	CLOSEANGLEBRACKET,
-	CLOSEPAREN,
-	AMPERSAND
-};
+// Default token - anything that is not one of the above
+export const SYM = 'SYM'

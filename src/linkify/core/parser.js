@@ -13,46 +13,16 @@
 	@main parser
 */
 
-import { TokenState as State } from './state';
-import * as MULTI_TOKENS from './tokens/multi';
 import {
-	DOMAIN,
-	AT,
-	COLON,
-	DOT,
-	PUNCTUATION,
-	LOCALHOST,
-	NL as TNL,
-	NUM,
-	PLUS,
-	POUND,
-	PROTOCOL,
-	MAILTO,
-	QUERY,
-	SLASH,
-	UNDERSCORE,
-	SYM,
-	TLD,
-	OPENBRACE,
-	OPENBRACKET,
-	OPENANGLEBRACKET,
-	OPENPAREN,
-	CLOSEBRACE,
-	CLOSEBRACKET,
-	CLOSEANGLEBRACKET,
-	CLOSEPAREN,
-	AMPERSAND
-} from './tokens/text';
-
-import {
-	MAILTOEMAIL,
-	EMAIL,
-	NL as MNL,
-	TEXT,
-	URL
-} from './tokens/multi';
-
-let makeState = (tokenClass) => new State(tokenClass);
+	makeState,
+	makeAcceptingState,
+	t,
+	makeT,
+	makeMultiT,
+	accepts
+} from './fsm';
+import * as tk from './tokens/text';
+import * as mtk from './tokens/multi';
 
 // The universal starting state.
 let S_START = makeState();
@@ -65,196 +35,188 @@ let S_PROTOCOL_SLASH				= makeState(); // e.g., '/', 'http:/''
 let S_PROTOCOL_SLASH_SLASH			= makeState();  // e.g., '//', 'http://'
 let S_DOMAIN						= makeState(); // parsed string ends with a potential domain name (A)
 let S_DOMAIN_DOT					= makeState(); // (A) domain followed by DOT
-let S_TLD							= makeState(URL); // (A) Simplest possible URL with no query string
+let S_TLD							= makeAcceptingState(mtk.URL); // (A) Simplest possible URL with no query string
 let S_TLD_COLON						= makeState(); // (A) URL followed by colon (potential port number here)
-let S_TLD_PORT						= makeState(URL); // TLD followed by a port number
-let S_URL							= makeState(URL); // Long URL with optional port and maybe query string
+let S_TLD_PORT						= makeAcceptingState(mtk.URL); // TLD followed by a port number
+let S_URL							= makeAcceptingState(mtk.URL); // Long URL with optional port and maybe query string
 let S_URL_NON_ACCEPTING				= makeState(); // URL followed by some symbols (will not be part of the final URL)
 let S_URL_OPENBRACE					= makeState(); // URL followed by {
 let S_URL_OPENBRACKET				= makeState(); // URL followed by [
 let S_URL_OPENANGLEBRACKET			= makeState(); // URL followed by <
 let S_URL_OPENPAREN					= makeState(); // URL followed by (
-let S_URL_OPENBRACE_Q				= makeState(URL); // URL followed by { and some symbols that the URL can end it
-let S_URL_OPENBRACKET_Q				= makeState(URL); // URL followed by [ and some symbols that the URL can end it
-let S_URL_OPENANGLEBRACKET_Q		= makeState(URL); // URL followed by < and some symbols that the URL can end it
-let S_URL_OPENPAREN_Q				= makeState(URL); // URL followed by ( and some symbols that the URL can end it
+let S_URL_OPENBRACE_Q				= makeAcceptingState(mtk.URL); // URL followed by { and some symbols that the URL can end it
+let S_URL_OPENBRACKET_Q				= makeAcceptingState(mtk.URL); // URL followed by [ and some symbols that the URL can end it
+let S_URL_OPENANGLEBRACKET_Q		= makeAcceptingState(mtk.URL); // URL followed by < and some symbols that the URL can end it
+let S_URL_OPENPAREN_Q				= makeAcceptingState(mtk.URL); // URL followed by ( and some symbols that the URL can end it
 let S_URL_OPENBRACE_SYMS			= makeState(); // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
 let S_URL_OPENBRACKET_SYMS			= makeState(); // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
 let S_URL_OPENANGLEBRACKET_SYMS		= makeState(); // S_URL_OPENANGLEBRACKET_Q followed by some symbols it cannot end it
 let S_URL_OPENPAREN_SYMS			= makeState(); // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
 let S_EMAIL_DOMAIN					= makeState(); // parsed string starts with local email info + @ with a potential domain name (C)
 let S_EMAIL_DOMAIN_DOT				= makeState(); // (C) domain followed by DOT
-let S_EMAIL							= makeState(EMAIL); // (C) Possible email address (could have more tlds)
+let S_EMAIL							= makeAcceptingState(mtk.EMAIL); // (C) Possible email address (could have more tlds)
 let S_EMAIL_COLON					= makeState(); // (C) URL followed by colon (potential port number here)
-let S_EMAIL_PORT					= makeState(EMAIL); // (C) Email address with a port
-let S_MAILTO_EMAIL					= makeState(MAILTOEMAIL); // Email that begins with the mailto prefix (D)
+let S_EMAIL_PORT					= makeAcceptingState(mtk.EMAIL); // (C) Email address with a port
+let S_MAILTO_EMAIL					= makeAcceptingState(mtk.MAILTOEMAIL); // Email that begins with the mailto prefix (D)
 let S_MAILTO_EMAIL_NON_ACCEPTING	= makeState(); // (D) Followed by some non-query string chars
 let S_LOCALPART						= makeState(); // Local part of the email address
 let S_LOCALPART_AT					= makeState(); // Local part of the email address plus @
 let S_LOCALPART_DOT					= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
-let S_NL							= makeState(MNL); // single new line
+let S_NL							= makeAcceptingState(mtk.NL); // single new line
 
 // Make path from start to protocol (with '//')
-S_START
-.t(TNL, S_NL)
-.t(PROTOCOL, S_PROTOCOL)
-.t(MAILTO, S_MAILTO)
-.t(SLASH, S_PROTOCOL_SLASH);
+makeT(S_START, tk.TNL, S_NL);
+makeT(S_START, tk.PROTOCOL, S_PROTOCOL);
+makeT(S_START, tk.MAILTO, S_MAILTO);
+makeT(S_START, tk.SLASH, S_PROTOCOL_SLASH);
 
-S_PROTOCOL.t(SLASH, S_PROTOCOL_SLASH);
-S_PROTOCOL_SLASH.t(SLASH, S_PROTOCOL_SLASH_SLASH);
+makeT(S_PROTOCOL, tk.SLASH, S_PROTOCOL_SLASH);
+makeT(S_PROTOCOL_SLASH, tk.SLASH, S_PROTOCOL_SLASH_SLASH);
 
 // The very first potential domain name
-S_START
-.t(TLD, S_DOMAIN)
-.t(DOMAIN, S_DOMAIN)
-.t(LOCALHOST, S_TLD)
-.t(NUM, S_DOMAIN);
+makeT(S_START, tk.TLD, S_DOMAIN);
+makeT(S_START, tk.DOMAIN, S_DOMAIN);
+makeT(S_START, tk.LOCALHOST, S_TLD);
+makeT(S_START, tk.NUM, S_DOMAIN);
 
 // Force URL for protocol followed by anything sane
-S_PROTOCOL_SLASH_SLASH
-.t(TLD, S_URL)
-.t(DOMAIN, S_URL)
-.t(NUM, S_URL)
-.t(LOCALHOST, S_URL);
+makeT(S_PROTOCOL_SLASH_SLASH, tk.TLD, S_URL);
+makeT(S_PROTOCOL_SLASH_SLASH, tk.DOMAIN, S_URL);
+makeT(S_PROTOCOL_SLASH_SLASH, tk.NUM, S_URL);
+makeT(S_PROTOCOL_SLASH_SLASH, tk.LOCALHOST, S_URL);
 
 // Account for dots and hyphens
 // hyphens are usually parts of domain names
-S_DOMAIN.t(DOT, S_DOMAIN_DOT);
-S_EMAIL_DOMAIN.t(DOT, S_EMAIL_DOMAIN_DOT);
+makeT(S_DOMAIN, tk.DOT, S_DOMAIN_DOT);
+makeT(S_EMAIL_DOMAIN, tk.DOT, S_EMAIL_DOMAIN_DOT);
 
 // Hyphen can jump back to a domain name
 
 // After the first domain and a dot, we can find either a URL or another domain
-S_DOMAIN_DOT
-.t(TLD, S_TLD)
-.t(DOMAIN, S_DOMAIN)
-.t(NUM, S_DOMAIN)
-.t(LOCALHOST, S_DOMAIN);
+makeT(S_DOMAIN_DOT, tk.TLD, S_TLD);
+makeT(S_DOMAIN_DOT, tk.DOMAIN, S_DOMAIN);
+makeT(S_DOMAIN_DOT, tk.NUM, S_DOMAIN);
+makeT(S_DOMAIN_DOT, tk.LOCALHOST, S_DOMAIN);
 
-S_EMAIL_DOMAIN_DOT
-.t(TLD, S_EMAIL)
-.t(DOMAIN, S_EMAIL_DOMAIN)
-.t(NUM, S_EMAIL_DOMAIN)
-.t(LOCALHOST, S_EMAIL_DOMAIN);
+makeT(S_EMAIL_DOMAIN_DOT, tk.TLD, S_EMAIL);
+makeT(S_EMAIL_DOMAIN_DOT, tk.DOMAIN, S_EMAIL_DOMAIN);
+makeT(S_EMAIL_DOMAIN_DOT, tk.NUM, S_EMAIL_DOMAIN);
+makeT(S_EMAIL_DOMAIN_DOT, tk.LOCALHOST, S_EMAIL_DOMAIN);
 
 // S_TLD accepts! But the URL could be longer, try to find a match greedily
 // The `run` function should be able to "rollback" to the accepting state
-S_TLD.t(DOT, S_DOMAIN_DOT);
-S_EMAIL.t(DOT, S_EMAIL_DOMAIN_DOT);
+makeT(S_TLD, tk.DOT, S_DOMAIN_DOT);
+makeT(S_EMAIL, tk.DOT, S_EMAIL_DOMAIN_DOT);
 
 // Become real URLs after `SLASH` or `COLON NUM SLASH`
 // Here PSS and non-PSS converge
-S_TLD
-.t(COLON, S_TLD_COLON)
-.t(SLASH, S_URL);
-S_TLD_COLON.t(NUM, S_TLD_PORT);
-S_TLD_PORT.t(SLASH, S_URL);
-S_EMAIL.t(COLON, S_EMAIL_COLON);
-S_EMAIL_COLON.t(NUM, S_EMAIL_PORT);
+makeT(S_TLD, tk.COLON, S_TLD_COLON);
+makeT(S_TLD, tk.SLASH, S_URL);
+makeT(S_TLD_COLON, tk.NUM, S_TLD_PORT);
+makeT(S_TLD_PORT, tk.SLASH, S_URL);
+makeT(S_EMAIL, tk.COLON, S_EMAIL_COLON);
+makeT(S_EMAIL_COLON, tk.NUM, S_EMAIL_PORT);
 
 // Types of characters the URL can definitely end in
-let qsAccepting = [
-	DOMAIN,
-	AT,
-	LOCALHOST,
-	NUM,
-	PLUS,
-	POUND,
-	PROTOCOL,
-	SLASH,
-	TLD,
-	UNDERSCORE,
-	SYM,
-	AMPERSAND
+const qsAccepting = [
+	tk.DOMAIN,
+	tk.AT,
+	tk.LOCALHOST,
+	tk.NUM,
+	tk.PLUS,
+	tk.POUND,
+	tk.PROTOCOL,
+	tk.SLASH,
+	tk.TLD,
+	tk.UNDERSCORE,
+	tk.SYM,
+	tk.AMPERSAND
 ];
 
 // Types of tokens that can follow a URL and be part of the query string
 // but cannot be the very last characters
 // Characters that cannot appear in the URL at all should be excluded
-let qsNonAccepting = [
-	COLON,
-	DOT,
-	QUERY,
-	PUNCTUATION,
-	CLOSEBRACE,
-	CLOSEBRACKET,
-	CLOSEANGLEBRACKET,
-	CLOSEPAREN,
-	OPENBRACE,
-	OPENBRACKET,
-	OPENANGLEBRACKET,
-	OPENPAREN
+const qsNonAccepting = [
+	tk.COLON,
+	tk.DOT,
+	tk.QUERY,
+	tk.PUNCTUATION,
+	tk.CLOSEBRACE,
+	tk.CLOSEBRACKET,
+	tk.CLOSEANGLEBRACKET,
+	tk.CLOSEPAREN,
+	tk.OPENBRACE,
+	tk.OPENBRACKET,
+	tk.OPENANGLEBRACKET,
+	tk.OPENPAREN
 ];
 
 // These states are responsible primarily for determining whether or not to
 // include the final round bracket.
 
 // URL, followed by an opening bracket
-S_URL
-.t(OPENBRACE, S_URL_OPENBRACE)
-.t(OPENBRACKET, S_URL_OPENBRACKET)
-.t(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
-.t(OPENPAREN, S_URL_OPENPAREN);
+makeT(S_URL, tk.OPENBRACE, S_URL_OPENBRACE);
+makeT(S_URL, tk.OPENBRACKET, S_URL_OPENBRACKET);
+makeT(S_URL, tk.OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET);
+makeT(S_URL, tk.OPENPAREN, S_URL_OPENPAREN);
 
 // URL with extra symbols at the end, followed by an opening bracket
-S_URL_NON_ACCEPTING
-.t(OPENBRACE, S_URL_OPENBRACE)
-.t(OPENBRACKET, S_URL_OPENBRACKET)
-.t(OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET)
-.t(OPENPAREN, S_URL_OPENPAREN);
+makeT(S_URL_NON_ACCEPTING, tk.OPENBRACE, S_URL_OPENBRACE);
+makeT(S_URL_NON_ACCEPTING, tk.OPENBRACKET, S_URL_OPENBRACKET);
+makeT(S_URL_NON_ACCEPTING, tk.OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET);
+makeT(S_URL_NON_ACCEPTING, tk.OPENPAREN, S_URL_OPENPAREN);
 
 // Closing bracket component. This character WILL be included in the URL
-S_URL_OPENBRACE.t(CLOSEBRACE, S_URL);
-S_URL_OPENBRACKET.t(CLOSEBRACKET, S_URL);
-S_URL_OPENANGLEBRACKET.t(CLOSEANGLEBRACKET, S_URL);
-S_URL_OPENPAREN.t(CLOSEPAREN, S_URL);
-S_URL_OPENBRACE_Q.t(CLOSEBRACE, S_URL);
-S_URL_OPENBRACKET_Q.t(CLOSEBRACKET, S_URL);
-S_URL_OPENANGLEBRACKET_Q.t(CLOSEANGLEBRACKET, S_URL);
-S_URL_OPENPAREN_Q.t(CLOSEPAREN, S_URL);
-S_URL_OPENBRACE_SYMS.t(CLOSEBRACE, S_URL);
-S_URL_OPENBRACKET_SYMS.t(CLOSEBRACKET, S_URL);
-S_URL_OPENANGLEBRACKET_SYMS.t(CLOSEANGLEBRACKET, S_URL);
-S_URL_OPENPAREN_SYMS.t(CLOSEPAREN, S_URL);
+makeT(S_URL_OPENBRACE, tk.CLOSEBRACE, S_URL);
+makeT(S_URL_OPENBRACKET, tk.CLOSEBRACKET, S_URL);
+makeT(S_URL_OPENANGLEBRACKET, tk.CLOSEANGLEBRACKET, S_URL);
+makeT(S_URL_OPENPAREN, tk.CLOSEPAREN, S_URL);
+makeT(S_URL_OPENBRACE_Q, tk.CLOSEBRACE, S_URL);
+makeT(S_URL_OPENBRACKET_Q, tk.CLOSEBRACKET, S_URL);
+makeT(S_URL_OPENANGLEBRACKET_Q, tk.CLOSEANGLEBRACKET, S_URL);
+makeT(S_URL_OPENPAREN_Q, tk.CLOSEPAREN, S_URL);
+makeT(S_URL_OPENBRACE_SYMS, tk.CLOSEBRACE, S_URL);
+makeT(S_URL_OPENBRACKET_SYMS, tk.CLOSEBRACKET, S_URL);
+makeT(S_URL_OPENANGLEBRACKET_SYMS, tk.CLOSEANGLEBRACKET, S_URL);
+makeT(S_URL_OPENPAREN_SYMS, tk.CLOSEPAREN, S_URL);
 
 // URL that beings with an opening bracket, followed by a symbols.
 // Note that the final state can still be `S_URL_OPENBRACE_Q` (if the URL only
 // has a single opening bracket for some reason).
-S_URL_OPENBRACE.ts(qsAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET.ts(qsAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET.ts(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN.ts(qsAccepting, S_URL_OPENPAREN_Q);
-S_URL_OPENBRACE.ts(qsNonAccepting, S_URL_OPENBRACE_SYMS);
-S_URL_OPENBRACKET.ts(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
-S_URL_OPENANGLEBRACKET.ts(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
-S_URL_OPENPAREN.ts(qsNonAccepting, S_URL_OPENPAREN_SYMS);
+makeMultiT(S_URL_OPENBRACE, qsAccepting, S_URL_OPENBRACE_Q);
+makeMultiT(S_URL_OPENBRACKET, qsAccepting, S_URL_OPENBRACKET_Q);
+makeMultiT(S_URL_OPENANGLEBRACKET, qsAccepting, S_URL_OPENANGLEBRACKET_Q);
+makeMultiT(S_URL_OPENPAREN, qsAccepting, S_URL_OPENPAREN_Q);
+makeMultiT(S_URL_OPENBRACE, qsNonAccepting, S_URL_OPENBRACE_SYMS);
+makeMultiT(S_URL_OPENBRACKET, qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+makeMultiT(S_URL_OPENANGLEBRACKET, qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
+makeMultiT(S_URL_OPENPAREN, qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // URL that begins with an opening bracket, followed by some symbols
-S_URL_OPENBRACE_Q.ts(qsAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET_Q.ts(qsAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET_Q.ts(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN_Q.ts(qsAccepting, S_URL_OPENPAREN_Q);
-S_URL_OPENBRACE_Q.ts(qsNonAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET_Q.ts(qsNonAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET_Q.ts(qsNonAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN_Q.ts(qsNonAccepting, S_URL_OPENPAREN_Q);
+makeMultiT(S_URL_OPENBRACE_Q, qsAccepting, S_URL_OPENBRACE_Q);
+makeMultiT(S_URL_OPENBRACKET_Q, qsAccepting, S_URL_OPENBRACKET_Q);
+makeMultiT(S_URL_OPENANGLEBRACKET_Q, qsAccepting, S_URL_OPENANGLEBRACKET_Q);
+makeMultiT(S_URL_OPENPAREN_Q, qsAccepting, S_URL_OPENPAREN_Q);
+makeMultiT(S_URL_OPENBRACE_Q, qsNonAccepting, S_URL_OPENBRACE_Q);
+makeMultiT(S_URL_OPENBRACKET_Q, qsNonAccepting, S_URL_OPENBRACKET_Q);
+makeMultiT(S_URL_OPENANGLEBRACKET_Q, qsNonAccepting, S_URL_OPENANGLEBRACKET_Q);
+makeMultiT(S_URL_OPENPAREN_Q, qsNonAccepting, S_URL_OPENPAREN_Q);
 
-S_URL_OPENBRACE_SYMS.ts(qsAccepting, S_URL_OPENBRACE_Q);
-S_URL_OPENBRACKET_SYMS.ts(qsAccepting, S_URL_OPENBRACKET_Q);
-S_URL_OPENANGLEBRACKET_SYMS.ts(qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-S_URL_OPENPAREN_SYMS.ts(qsAccepting, S_URL_OPENPAREN_Q);
-S_URL_OPENBRACE_SYMS.ts(qsNonAccepting, S_URL_OPENBRACE_SYMS);
-S_URL_OPENBRACKET_SYMS.ts(qsNonAccepting, S_URL_OPENBRACKET_SYMS);
-S_URL_OPENANGLEBRACKET_SYMS.ts(qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
-S_URL_OPENPAREN_SYMS.ts(qsNonAccepting, S_URL_OPENPAREN_SYMS);
+makeMultiT(S_URL_OPENBRACE_SYMS, qsAccepting, S_URL_OPENBRACE_Q);
+makeMultiT(S_URL_OPENBRACKET_SYMS, qsAccepting, S_URL_OPENBRACKET_Q);
+makeMultiT(S_URL_OPENANGLEBRACKET_SYMS, qsAccepting, S_URL_OPENANGLEBRACKET_Q);
+makeMultiT(S_URL_OPENPAREN_SYMS, qsAccepting, S_URL_OPENPAREN_Q);
+makeMultiT(S_URL_OPENBRACE_SYMS, qsNonAccepting, S_URL_OPENBRACE_SYMS);
+makeMultiT(S_URL_OPENBRACKET_SYMS, qsNonAccepting, S_URL_OPENBRACKET_SYMS);
+makeMultiT(S_URL_OPENANGLEBRACKET_SYMS, qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
+makeMultiT(S_URL_OPENPAREN_SYMS, qsNonAccepting, S_URL_OPENPAREN_SYMS);
 
 // Account for the query string
-S_URL.ts(qsAccepting, S_URL);
-S_URL_NON_ACCEPTING.ts(qsAccepting, S_URL);
+makeMultiT(S_URL, qsAccepting, S_URL);
+makeMultiT(S_URL_NON_ACCEPTING, qsAccepting, S_URL);
 
-S_URL.ts(qsNonAccepting, S_URL_NON_ACCEPTING);
-S_URL_NON_ACCEPTING.ts(qsNonAccepting, S_URL_NON_ACCEPTING);
+makeMultiT(S_URL, qsNonAccepting, S_URL_NON_ACCEPTING);
+makeMultiT(S_URL_NON_ACCEPTING, qsNonAccepting, S_URL_NON_ACCEPTING);
 
 // Email address-specific state definitions
 // Note: We are not allowing '/' in email addresses since this would interfere
@@ -262,58 +224,53 @@ S_URL_NON_ACCEPTING.ts(qsNonAccepting, S_URL_NON_ACCEPTING);
 
 // For addresses with the mailto prefix
 // 'mailto:' followed by anything sane is a valid email
-S_MAILTO
-.t(TLD, S_MAILTO_EMAIL)
-.t(DOMAIN, S_MAILTO_EMAIL)
-.t(NUM, S_MAILTO_EMAIL)
-.t(LOCALHOST, S_MAILTO_EMAIL);
+makeT(S_MAILTO, tk.TLD, S_MAILTO_EMAIL);
+makeT(S_MAILTO, tk.DOMAIN, S_MAILTO_EMAIL);
+makeT(S_MAILTO, tk.NUM, S_MAILTO_EMAIL);
+makeT(S_MAILTO, tk.LOCALHOST, S_MAILTO_EMAIL);
 
 // Greedily get more potential valid email values
-S_MAILTO_EMAIL
-.ts(qsAccepting, S_MAILTO_EMAIL)
-.ts(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
-S_MAILTO_EMAIL_NON_ACCEPTING
-.ts(qsAccepting, S_MAILTO_EMAIL)
-.ts(qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
+makeMultiT(S_MAILTO_EMAIL, qsAccepting, S_MAILTO_EMAIL);
+makeMultiT(S_MAILTO_EMAIL, qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
+makeMultiT(S_MAILTO_EMAIL_NON_ACCEPTING, qsAccepting, S_MAILTO_EMAIL);
+makeMultiT(S_MAILTO_EMAIL_NON_ACCEPTING, qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
 
 // For addresses without the mailto prefix
 // Tokens allowed in the localpart of the email
-let localpartAccepting = [
-	DOMAIN,
-	NUM,
-	PLUS,
-	POUND,
-	QUERY,
-	UNDERSCORE,
-	SYM,
-	AMPERSAND,
-	TLD
+const localpartAccepting = [
+	tk.DOMAIN,
+	tk.NUM,
+	tk.PLUS,
+	tk.POUND,
+	tk.QUERY,
+	tk.UNDERSCORE,
+	tk.SYM,
+	tk.AMPERSAND,
+	tk.TLD
 ];
 
 // Some of the tokens in `localpartAccepting` are already accounted for here and
 // will not be overwritten (don't worry)
-S_DOMAIN
-.ts(localpartAccepting, S_LOCALPART)
-.t(AT, S_LOCALPART_AT);
-S_TLD
-.ts(localpartAccepting, S_LOCALPART)
-.t(AT, S_LOCALPART_AT);
-S_DOMAIN_DOT.ts(localpartAccepting, S_LOCALPART);
+makeMultiT(S_DOMAIN, localpartAccepting, S_LOCALPART);
+makeT(S_DOMAIN, tk.AT, S_LOCALPART_AT);
+makeMultiT(S_TLD, localpartAccepting, S_LOCALPART);
+makeT(S_TLD, tk.AT, S_LOCALPART_AT);
+makeMultiT(S_DOMAIN_DOT, localpartAccepting, S_LOCALPART);
 
-// Okay we're on a localpart. Now what?
+// Now in localpart of address
 // TODO: IP addresses and what if the email starts with numbers?
-S_LOCALPART
-.ts(localpartAccepting, S_LOCALPART)
-.t(AT, S_LOCALPART_AT) // close to an email address now
-.t(DOT, S_LOCALPART_DOT);
-S_LOCALPART_DOT.ts(localpartAccepting, S_LOCALPART);
-S_LOCALPART_AT
-.t(TLD, S_EMAIL_DOMAIN)
-.t(DOMAIN, S_EMAIL_DOMAIN)
-.t(LOCALHOST, S_EMAIL);
+
+makeMultiT(S_LOCALPART, localpartAccepting, S_LOCALPART);
+makeT(S_LOCALPART, tk.AT, S_LOCALPART_AT); // close to an email address now
+makeT(S_LOCALPART, tk.DOT, S_LOCALPART_DOT);
+makeMultiT(S_LOCALPART_DOT, localpartAccepting, S_LOCALPART);
+makeT(S_LOCALPART_AT, tk.TLD, S_EMAIL_DOMAIN);
+makeT(S_LOCALPART_AT, tk.DOMAIN, S_EMAIL_DOMAIN);
+makeT(S_LOCALPART_AT, tk.LOCALHOST, S_EMAIL);
+
 // States following `@` defined above
 
-let run = function (tokens) {
+const run = (tokens) => {
 	let len = tokens.length;
 	let cursor = 0;
 	let multis = [];
@@ -327,14 +284,14 @@ let run = function (tokens) {
 		let latestAccepting = null;
 		let sinceAccepts = -1;
 
-		while (cursor < len && !(secondState = state.next(tokens[cursor]))) {
+		while (cursor < len && !(secondState = t(state, tokens[cursor]))) {
 			// Starting tokens with nowhere to jump to.
 			// Consider these to be just plain text
 			textTokens.push(tokens[cursor++]);
 		}
 
 		while (cursor < len && (
-			nextState = secondState || state.next(tokens[cursor]))
+			nextState = secondState || t(state, tokens[cursor]))
 		) {
 
 			// Get the next state
@@ -342,7 +299,7 @@ let run = function (tokens) {
 			state = nextState;
 
 			// Keep track of the latest accepting state
-			if (state.accepts()) {
+			if (accepts(state)) {
 				sinceAccepts = 0;
 				latestAccepting = state;
 			} else if (sinceAccepts >= 0) {
@@ -367,7 +324,7 @@ let run = function (tokens) {
 
 			// First close off the textTokens (if available)
 			if (textTokens.length > 0) {
-				multis.push(new TEXT(textTokens));
+				multis.push(new mtk.TEXT(textTokens));
 				textTokens = [];
 			}
 
@@ -383,15 +340,10 @@ let run = function (tokens) {
 
 	// Finally close off the textTokens (if available)
 	if (textTokens.length > 0) {
-		multis.push(new TEXT(textTokens));
+		multis.push(new mtk.TEXT(textTokens));
 	}
 
 	return multis;
 };
 
-export {
-	State,
-	MULTI_TOKENS as TOKENS,
-	run,
-	S_START as start
-};
+export { mtk as TOKENS, S_START as start, run };

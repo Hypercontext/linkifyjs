@@ -1,59 +1,59 @@
 const tokens = require(`${__base}linkify/core/tokens`);
-const TEXT_TOKENS = tokens.text;
-const MULTI_TOKENS = tokens.multi;
+const tk = tokens.text;
+const mkt = tokens.multi;
 
-describe('linkify/core/tokens/MULTI_TOKENS', () => {
+describe('linkify/core/tokens/multi', () => {
 
 	describe('URL', () => {
 		var urlTextTokens1, urlTextTokens2, urlTextTokens3, url1, url2, url3;
 
 		before(() => {
 			urlTextTokens1 = [ // 'Ftps://www.github.com/SoapBox/linkify'
-				new TEXT_TOKENS.PROTOCOL('Ftps:'),
-				new TEXT_TOKENS.SLASH(),
-				new TEXT_TOKENS.SLASH(),
-				new TEXT_TOKENS.DOMAIN('www'),
-				new TEXT_TOKENS.DOT(),
-				new TEXT_TOKENS.DOMAIN('github'),
-				new TEXT_TOKENS.DOT(),
-				new TEXT_TOKENS.TLD('com'),
-				new TEXT_TOKENS.SLASH(),
-				new TEXT_TOKENS.DOMAIN('SoapBox'),
-				new TEXT_TOKENS.SLASH(),
-				new TEXT_TOKENS.DOMAIN('linkify'),
+				{ t: tk.PROTOCOL, v: 'Ftps:' },
+				{ t: tk.SLASH, v: '/' },
+				{ t: tk.SLASH, v: '/' },
+				{ t: tk.DOMAIN, v: 'www' },
+				{ t: tk.DOT, v: '.' },
+				{ t: tk.DOMAIN, v: 'github' },
+				{ t: tk.DOT, v: '.' },
+				{ t: tk.TLD, v: 'com' },
+				{ t: tk.SLASH, v: '/' },
+				{ t: tk.DOMAIN, v: 'SoapBox' },
+				{ t: tk.SLASH, v: '/' },
+				{ t: tk.DOMAIN, v: 'linkify' },
 			],
 
 			urlTextTokens2 = [ // '//Amazon.ca/Sales'
-				new TEXT_TOKENS.SLASH(),
-				new TEXT_TOKENS.SLASH(),
-				new TEXT_TOKENS.DOMAIN('Amazon'),
-				new TEXT_TOKENS.DOT(),
-				new TEXT_TOKENS.TLD('ca'),
-				new TEXT_TOKENS.SLASH(),
-				new TEXT_TOKENS.DOMAIN('Sales')
+				{ t: tk.SLASH, v: '/' },
+				{ t: tk.SLASH, v: '/' },
+				{ t: tk.DOMAIN, v: 'Amazon' },
+				{ t: tk.DOT, v: '.' },
+				{ t: tk.TLD, v: 'ca' },
+				{ t: tk.SLASH, v: '/' },
+				{ t: tk.DOMAIN, v: 'Sales' },
 			],
 
 			urlTextTokens3 = [ // 'co.co?o=%2D&p=@gc#wat'
-				new TEXT_TOKENS.TLD('co'),
-				new TEXT_TOKENS.DOT(),
-				new TEXT_TOKENS.TLD('co'),
-				new TEXT_TOKENS.SYM('?'),
-				new TEXT_TOKENS.DOMAIN('o'),
-				new TEXT_TOKENS.SYM('='),
-				new TEXT_TOKENS.SYM('%'),
-				new TEXT_TOKENS.DOMAIN('2D'),
-				new TEXT_TOKENS.SYM('&'),
-				new TEXT_TOKENS.DOMAIN('p'),
-				new TEXT_TOKENS.SYM('='),
-				new TEXT_TOKENS.AT(),
-				new TEXT_TOKENS.DOMAIN('gc'),
-				new TEXT_TOKENS.POUND(),
-				new TEXT_TOKENS.DOMAIN('wat'),
+				{ t: tk.TLD, v: 'co' },
+				{ t: tk.DOT, v: '' },
+				{ t: tk.TLD, v: 'co' },
+				{ t: tk.SYM, v: '?' },
+				{ t: tk.DOMAIN, v: 'o' },
+				{ t: tk.SYM, v: '=' },
+				{ t: tk.SYM, v: '%' },
+				{ t: tk.DOMAIN, v: '2D' },
+				{ t: tk.SYM, v: '&' },
+				{ t: tk.DOMAIN, v: 'p' },
+				{ t: tk.SYM, v: '=' },
+				{ t: tk.AT, v: '@' },
+				{ t: tk.DOMAIN, v: 'gc' },
+				{ t: tk.POUND, v: '#' },
+				{ t: tk.DOMAIN, v: 'wat' },
 			];
 
-			url1 = new MULTI_TOKENS.URL(urlTextTokens1);
-			url2 = new MULTI_TOKENS.URL(urlTextTokens2);
-			url3 = new MULTI_TOKENS.URL(urlTextTokens3);
+			url1 = new mkt.URL(urlTextTokens1);
+			url2 = new mkt.URL(urlTextTokens2);
+			url3 = new mkt.URL(urlTextTokens3);
 		});
 
 		describe('#isLink', () => {
@@ -127,13 +127,13 @@ describe('linkify/core/tokens/MULTI_TOKENS', () => {
 
 		before(() => {
 			emailTextTokens = [ // test@example.com
-				new TEXT_TOKENS.DOMAIN('test'),
-				new TEXT_TOKENS.AT(),
-				new TEXT_TOKENS.DOMAIN('example'),
-				new TEXT_TOKENS.DOT(),
-				new TEXT_TOKENS.TLD('com')
+				{ t: tk.DOMAIN, v: 'test' },
+				{ t: tk.AT, v: '@' },
+				{ t: tk.DOMAIN, v: 'example' },
+				{ t: tk.DOT, v: '.' },
+				{ t: tk.TLD, v: 'com' },
 			];
-			email = new MULTI_TOKENS.EMAIL(emailTextTokens);
+			email = new mkt.EMAIL(emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -161,14 +161,14 @@ describe('linkify/core/tokens/MULTI_TOKENS', () => {
 
 		before(() => {
 			emailTextTokens = [ // test@example.com
-				new TEXT_TOKENS.MAILTO(),
-				new TEXT_TOKENS.DOMAIN('test'),
-				new TEXT_TOKENS.AT(),
-				new TEXT_TOKENS.DOMAIN('example'),
-				new TEXT_TOKENS.DOT(),
-				new TEXT_TOKENS.TLD('com')
+				{ t: tk.MAILTO, v: 'mailto:' },
+				{ t: tk.DOMAIN, v: 'test' },
+				{ t: tk.AT, v: '@' },
+				{ t: tk.DOMAIN, v: 'example' },
+				{ t: tk.DOT, v: '.' },
+				{ t: tk.TLD, v: 'com' },
 			];
-			email = new MULTI_TOKENS.MAILTOEMAIL(emailTextTokens);
+			email = new mkt.MAILTOEMAIL(emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -195,8 +195,8 @@ describe('linkify/core/tokens/MULTI_TOKENS', () => {
 		var nlTokens, nl;
 
 		before(() => {
-			nlTokens = [new TEXT_TOKENS.NL()];
-			nl = new MULTI_TOKENS.NL(nlTokens);
+			nlTokens = [{t: tk.NL, v: '\n' }];
+			nl = new mkt.NL(nlTokens);
 		});
 
 		describe('#isLink', () => {
@@ -217,13 +217,13 @@ describe('linkify/core/tokens/MULTI_TOKENS', () => {
 
 		before(() => {
 			textTokens = [ // 'Hello, World!'
-				new TEXT_TOKENS.DOMAIN('Hello'),
-				new TEXT_TOKENS.SYM(','),
-				new TEXT_TOKENS.WS(' '),
-				new TEXT_TOKENS.DOMAIN('World'),
-				new TEXT_TOKENS.SYM('!')
+				{ t: tk.DOMAIN, v: 'Hello' },
+				{ t: tk.SYM, v: ',' },
+				{ t: tk.WS, v: ' ' },
+				{ t: tk.DOMAIN, v: 'World' },
+				{ t: tk.SYM, v: '!' },
 			];
-			text = new MULTI_TOKENS.TEXT(textTokens);
+			text = new mkt.TEXT(textTokens);
 		});
 
 		describe('#isLink', () => {
