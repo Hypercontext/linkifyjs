@@ -198,7 +198,8 @@ function escapeAttr(attr) {
 function attrsToStrings(attrs) {
 	let attrStrs = [];
 	for (let i = 0; i < attrs.length; i++) {
-		let [name, value] = attrs[i];
+		const name = attrs[i][0];
+		const value = attrs[i][1];
 		attrStrs.push(`${name}="${escapeAttr(value)}"`);
 	}
 	return attrStrs;

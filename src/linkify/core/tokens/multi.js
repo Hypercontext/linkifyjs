@@ -204,4 +204,4 @@ export const URL = inherits(MultiToken, createTokenClass(), {
 	}
 });
 
-export { MultiToken as Base }
+export { MultiToken as Base };

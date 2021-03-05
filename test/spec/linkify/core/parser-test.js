@@ -192,14 +192,8 @@ describe('linkify/core/parser#run()', () => {
 			var values = test[2];
 			var result = parser.run(scanner.run(str));
 
-			expect(result.map(function (token) {
-				return token.toString();
-			})).to.eql(values);
-
-			expect(result.map(function (token) {
-				return token.constructor;
-			})).to.eql(types);
-
+			expect(result.map(token => token.toString())).to.eql(values);
+			expect(result.map(token => token.constructor)).to.eql(types);
 		});
 	}
 

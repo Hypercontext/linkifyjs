@@ -65,7 +65,7 @@ let S_LOCALPART_DOT					= makeState(); // Local part of the email address plus '
 let S_NL							= makeAcceptingState(mtk.NL); // single new line
 
 // Make path from start to protocol (with '//')
-makeT(S_START, tk.TNL, S_NL);
+makeT(S_START, tk.NL, S_NL);
 makeT(S_START, tk.PROTOCOL, S_PROTOCOL);
 makeT(S_START, tk.MAILTO, S_MAILTO);
 makeT(S_START, tk.SLASH, S_PROTOCOL_SLASH);
@@ -271,6 +271,7 @@ makeT(S_LOCALPART_AT, tk.LOCALHOST, S_EMAIL);
 // States following `@` defined above
 
 const run = (tokens) => {
+	debugger
 	let len = tokens.length;
 	let cursor = 0;
 	let multis = [];
@@ -284,14 +285,14 @@ const run = (tokens) => {
 		let latestAccepting = null;
 		let sinceAccepts = -1;
 
-		while (cursor < len && !(secondState = t(state, tokens[cursor]))) {
+		while (cursor < len && !(secondState = t(state, tokens[cursor].t))) {
 			// Starting tokens with nowhere to jump to.
 			// Consider these to be just plain text
 			textTokens.push(tokens[cursor++]);
 		}
 
 		while (cursor < len && (
-			nextState = secondState || t(state, tokens[cursor]))
+			nextState = secondState || t(state, tokens[cursor].t))
 		) {
 
 			// Get the next state
@@ -333,7 +334,7 @@ const run = (tokens) => {
 			multiLength -= sinceAccepts;
 
 			// Create a new multitoken
-			let MULTI = latestAccepting.emit();
+			let MULTI = latestAccepting.t;
 			multis.push(new MULTI(tokens.slice(cursor - multiLength, cursor)));
 		}
 	}

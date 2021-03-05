@@ -2,19 +2,31 @@
  * Finite State Machine generation utilities
  */
 
-/**
+ /**
  * Define a basic state machine state. j is the list of character transitions,
  * jr is the list of regex-match transitions, jd is the default state to
  * transition to t is the accepting token type, if any. If this is the terminal
  * state, then it does not emit a token.
  */
-export const makeState = () => ({ j: [], jr: [], jd: null, t: null });
+function State(token) {
+	this.j = {}; // IMPLEMENTATION 1
+	// this.j = []; // IMPLEMENTATION 2
+	this.jr = [];
+	this.jd = null;
+	this.t = token;
+}
+
+/**
+ * Utility function to create state without using new keyword (reduced file size
+ * when minified)
+ */
+export const makeState = () => new State();
 
 /**
  * Similar to previous except it is an accepting state that emits a token
  * @param {Token} token
  */
-export const makeAcceptingState = (token) => ({ j: [], jr: [], jd: null, t: token });
+export const makeAcceptingState = (token) => new State(token);
 
 /**
  * Create a transition from startState to nextState via the given character
@@ -23,7 +35,21 @@ export const makeAcceptingState = (token) => ({ j: [], jr: [], jd: null, t: toke
  * @param {State} nextState to this next state
  */
 export const makeT = (startState, input, nextState) => {
-	startState.j.push([input, nextState]);
+	// IMPLEMENTATION 1: Add to object (fast)
+	if (!startState.j[input]) { startState.j[input] = nextState; }
+
+	// IMPLEMENTATION 2: Add to array (slower)
+	// startState.j.push([input, nextState]);
+};
+
+/**
+ *
+ * @param {State} startState stransition from this starting state
+ * @param {RegExp} regex Regular expression to match on input
+ * @param {State} nextState transition to this next state if there's are regex match
+ */
+export const makeRegexT = (startState, regex, nextState) => {
+	startState.jr.push([regex, nextState]);
 };
 
 /**
@@ -33,13 +59,24 @@ export const makeT = (startState, input, nextState) => {
  * @returns {?State} the next state, if any
  */
 export const t = (state, input) => {
+	// IMPLEMENTATION 1: Object key lookup (faster)
+	const nextState  = state.j[input];
+	if (nextState) { return nextState; }
+
+	// IMPLEMENTATION 2: List lookup (slower)
 	// Loop through all the state transitions and see if there's a match
-	for (let i = 0; i < state.j.length; i++) {
-		const [val, nextState] = state.j[i];
-		if (input === val) { return nextState; }
+	// for (let i = 0; i < state.j.length; i++) {
+	//	const val = state.j[i][0];
+	//	const nextState = state.j[i][1];
+	// 	if (input === val) { return nextState; }
+	// }
+
+	for (let i = 0; i < state.jr.length; i++) {
+		const regex = state.j[i][0];
+		const nextState = state.j[i][1];
+		if (regex.test(input)) {return nextState;}
 	}
 	// Nowhere left to jump! Return default, if any
-	// TODO: Regex transitions for i18n?
 	return state.jd;
 };
 
@@ -52,7 +89,7 @@ export const t = (state, input) => {
  */
 export const makeMultiT = (startState, chars, nextState) => {
 	for (let i = 0; i < chars.length; i++) {
-		startState.j.push([chars[i], nextState]);
+		makeT(startState, chars[i], nextState);
 	}
 };
 
@@ -64,7 +101,11 @@ export const makeMultiT = (startState, chars, nextState) => {
  * @param {Array} transitions
  */
 export const makeBatchT = (startState, transitions) => {
-	startState.j.push.apply(startState.j, transitions);
+	for (let i = 0; i < transitions.length; i++) {
+		const input = transitions[i][0];
+		const nextState = transitions[i][1];
+		makeT(startState, input, nextState);
+	}
 };
 
 /**

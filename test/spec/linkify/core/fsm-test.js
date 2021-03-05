@@ -1,5 +1,5 @@
 const tk = require(`${__base}linkify/core/tokens/text`);
-const { t, makeT, accepts, ...fsm } = require(`${__base}linkify/core/fsm`);
+const { t, makeT, makeRegexT, accepts, ...fsm } = require(`${__base}linkify/core/fsm`);
 
 describe('linkify/core/fsm', () => {
 	var S_START, S_DOT, S_NUM;
@@ -7,32 +7,30 @@ describe('linkify/core/fsm', () => {
 	before(() => {
 		S_START = fsm.makeState();
 		S_DOT = fsm.makeAcceptingState(tk.DOT);
-		S_NUM = fwsm.makeAcceptingState(tk.NUM);
+		S_NUM = fsm.makeAcceptingState(tk.NUM);
 	});
 
 	describe('#t()', () => {
 		it('Has no jumps and return null', () => {
-			expect(S_START.j.length).to.eql(0);
 			expect(t(S_START, '.')).to.not.be.ok;
 		});
 
-		it('Should return an new state for the ":" character', () => {
+		it('Should return an new state for the "." and numeric characters', () => {
 			makeT(S_START, '.', S_DOT);
-			makeT(S_START, /[0-9]/, S_NUM);
+			makeRegexT(S_START, /[0-9]/, S_NUM);
 
 			var results = [
 				t(S_START, '.'),
 				t(S_START, '7'),
 			];
 
-			expect(S_START.j.length).to.eql(2);
+			expect(S_START.j).not.to.be.empty;
 
-			results.map(function (result) {
+			results.map((result) => {
 				expect(result).to.be.ok;
-				expect(result).to.have.property('j')
-				expect(result).to.have.property('jr')
-				expect(result).to.have.property('jd')
-				expect(result).to.have.property('t')
+				expect(result).to.have.property('j');
+				expect(result).to.have.property('jd');
+				expect(result).to.have.property('t');
 			});
 
 			expect(results[0]).to.be.eql(S_DOT);
@@ -40,20 +38,20 @@ describe('linkify/core/fsm', () => {
 		});
 
 		it('Can return itself (has recursion)', () => {
-			makeT(S_NUM, /[0-9]/, S_NUM);
+			makeRegexT(S_NUM, /[0-9]/, S_NUM);
 			expect(t(S_NUM, '8')).to.be.eql(S_NUM);
 			expect(t(t(S_NUM, '0'), '4')).to.be.eql(S_NUM);
 		});
 	});
 
-	describe('#emit()', () => {
+	describe('#accepts()', () => {
 		it('Should return a falsey value if initalized with no token', () => {
-			expect((!S_START.emit())).to.be.ok;
+			expect(accepts(S_START)).not.to.be.ok;
 		});
 
 		it('Should return the token it was initialized with', () => {
-			var state = new CharacterState(tk.QUERY);
-			expect(state.emit()).to.be.eql(tk.QUERY);
+			var state = fsm.makeAcceptingState(tk.QUERY);
+			expect(accepts(state)).to.be.ok;
 		});
 	});
 
