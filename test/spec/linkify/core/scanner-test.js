@@ -49,8 +49,18 @@ const tests = [
 	['foo\u00a0bar', [t.TLD, t.WS, t.TLD], ['foo', '\u00a0', 'bar']], // nbsp
 	[
 		'Direniş İzleme Grubu\'nun',
-		[t.DOMAIN, t.SYM, t.WS, t.SYM, t.DOMAIN, t.WS, t.DOMAIN, t.PUNCTUATION, t.DOMAIN],
-		['Direni', 'ş', ' ', 'İ', 'zleme', ' ', 'Grubu', '\'', 'nun']
+		[t.DOMAIN, t.WS, t.DOMAIN, t.WS, t.DOMAIN, t.PUNCTUATION, t.DOMAIN],
+		['Direniş', ' ', 'İzleme', ' ', 'Grubu', '\'', 'nun']
+	],
+	[
+		'google.com　　　テスト', // spaces are ideographic space
+		[t.TLD, t.DOT, t.TLD, t.WS, t.DOMAIN],
+		['google', '.', 'com', '　　　', 'テスト']
+	],
+	[
+		'www.🍕💩.ws',
+		[t.DOMAIN, t.DOT, t.DOMAIN, t.DOT, t.TLD],
+		['www', '.', '🍕💩', '.', 'ws']
 	]
 ];
 

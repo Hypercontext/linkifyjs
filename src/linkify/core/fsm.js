@@ -72,8 +72,8 @@ export const t = (state, input) => {
 	// }
 
 	for (let i = 0; i < state.jr.length; i++) {
-		const regex = state.j[i][0];
-		const nextState = state.j[i][1];
+		const regex = state.jr[i][0];
+		const nextState = state.jr[i][1];
 		if (regex.test(input)) {return nextState;}
 	}
 	// Nowhere left to jump! Return default, if any
@@ -119,34 +119,28 @@ export const makeBatchT = (startState, transitions) => {
  * intelligently-designed DFA).
  * @param {State} state
  * @param {String} str
- * @param {Token} endToken
- * @param {Token} defaultToken
+ * @param {Token} endStateFactory
+ * @param {Token} defaultStateFactory
  */
-export const makeChainT = (state, str, endToken, defaultToken) => {
+export const makeChainT = (state, str, endState, defaultStateFactory) => {
 	let i = 0, len = str.length, nextState;
 
 	// Find the next state without a jump to the next character
-	while (i < len && (nextState = t(state, str[i]))) {
+	while (i < len && (nextState = state.j[str[i]])) {
 		state = nextState;
 		i++;
 	}
 
 	if (i >= len) { return []; } // no new tokens were added
 
-	const newStates = [];
 	while (i < len - 1) {
-		nextState = makeAcceptingState(defaultToken);
-		newStates.push(nextState);
+		nextState = defaultStateFactory();
 		makeT(state, str[i], nextState);
 		state = nextState;
 		i++;
 	}
 
-	nextState = makeAcceptingState(endToken);
-	newStates.push(nextState);
-	makeT(state, str[len - 1], nextState);
-
-	return newStates;
+	makeT(state, str[len - 1], endState);
 };
 
 /**
