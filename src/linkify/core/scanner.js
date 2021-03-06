@@ -186,39 +186,49 @@ export function run(str) {
 	// is used because lowercasing the entire string causes the length and
 	// character position to vary in some non-English strings with V8-based
 	// runtimes.
-	let lowerStr = str.replace(/[A-Z]/g, (c) => c.toLowerCase());
-	let len = str.length;
-	let tokens = []; // return value
+	const iterable = Array.from(str.replace(/[A-Z]/g, (c) => c.toLowerCase()));
+	const charCount = iterable.length; // <= len if there are emojis, etc
+	const tokens = []; // return value
 
-	var cursor = 0;
+	// cursor through the string itself, accounting for characters that have
+	// width with length 2 such as emojis
+	let cursor = 0;
+
+	// Cursor through the array-representation of the string
+	let charCursor = 0;
 
 	// Tokenize the string
-	while (cursor < len) {
+	while (charCursor < charCount) {
 		let state = S_START;
 		let nextState = null;
 		let tokenLength = 0;
 		let latestAccepting = null;
 		let sinceAccepts = -1;
+		let charsSinceAccepts = -1;
 
-		while (cursor < len && (nextState = t(state, lowerStr[cursor]))) {
+		while (charCursor < charCount && (nextState = t(state, iterable[charCursor]))) {
 			state = nextState;
 
 			// Keep track of the latest accepting state
 			if (accepts(state)) {
 				sinceAccepts = 0;
+				charsSinceAccepts = 0;
 				latestAccepting = state;
 			} else if (sinceAccepts >= 0) {
-				sinceAccepts++;
+				sinceAccepts += iterable[charCursor].length;
+				charsSinceAccepts++;
 			}
 
-			tokenLength++;
-			cursor++;
+			tokenLength += iterable[charCursor].length;
+			cursor += iterable[charCursor].length;
+			charCursor++;
 		}
 
 		if (sinceAccepts < 0) { continue; } // Should never happen
 
 		// Roll back to the latest accepting state
 		cursor -= sinceAccepts;
+		charCursor -= charsSinceAccepts;
 		tokenLength -= sinceAccepts;
 
 		// No more jumps, just make a new token from the last accepting one
