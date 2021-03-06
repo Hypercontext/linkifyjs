@@ -21,14 +21,10 @@ import * as tk from './tokens/text';
 import tlds from './tlds';
 
 const DIGIT = /\d/;
+// Note that these two Unicode ones expand into a really big
 const LETTER = /\p{L}/u; // Any Unicode character with letter data type
 const EMOJI = /\p{Emoji}/u; // Any Unicode emoji character
 const SPACE = /\s/;
-// const NUMBERS = '0123456789'.split('');
-// const ALPHANUM = '0123456789abcdefghijklmnopqrstuvwxyz'.split('');
-// const WHITESPACE = [' ', '\f', '\r', '\t', '\v', '\u00a0', '\u1680', '\u180e']; // excluding line breaks
-
-const domainStates = []; // states that jump to DOMAIN on /[a-z0-9]/
 
 // Frequently used states
 const S_START			= makeState();
@@ -102,17 +98,10 @@ const S_PROTOCOL_FILE = makeDomainState();
 const S_PROTOCOL_FTP = makeDomainState();
 const S_PROTOCOL_HTTP = makeDomainState();
 const S_MAILTO = makeDomainState();
-
 makeChainT(S_START, 'file', S_PROTOCOL_FILE, makeDomainState);
 makeChainT(S_START, 'ftp', S_PROTOCOL_FTP, makeDomainState);
 makeChainT(S_START, 'http', S_PROTOCOL_HTTP, makeDomainState);
 makeChainT(S_START, 'mailto', S_MAILTO, makeDomainState);
-
-// Add the states to the array of generic states
-// domainStates.push.apply(domainStates, partialProtocolFileStates);
-// domainStates.push.apply(domainStates, partialProtocolFtpStates);
-// domainStates.push.apply(domainStates, partialProtocolHttpStates);
-// domainStates.push.apply(domainStates, partialProtocolMailtoStates);
 
 // Protocol states
 const S_PROTOCOL_SECURE = makeDomainState();
@@ -120,14 +109,10 @@ const S_FULL_PROTOCOL = makeAcceptingState(tk.PROTOCOL); // Full protocol ends w
 const S_FULL_MAILTO = makeAcceptingState(tk.MAILTO); // Mailto ends with COLON
 
 // Secure protocols (end with 's')
-
 makeT(S_PROTOCOL_FTP, 's', S_PROTOCOL_SECURE);
 makeT(S_PROTOCOL_FTP, ':', S_FULL_PROTOCOL);
-
 makeT(S_PROTOCOL_HTTP, 's', S_PROTOCOL_SECURE);
 makeT(S_PROTOCOL_HTTP, ':', S_FULL_PROTOCOL);
-
-// domainStates.push(S_PROTOCOL_SECURE);
 
 // Become protocol tokens after a COLON
 makeT(S_PROTOCOL_FILE, ':', S_FULL_PROTOCOL);
@@ -136,7 +121,6 @@ makeT(S_MAILTO, ':', S_FULL_MAILTO);
 
 // Localhost
 makeChainT(S_START, 'localhost', makeNearDomainState(tk.LOCALHOST), makeDomainState);
-// domainStates.push.apply(domainStates, partialLocalhostStates);
 
 // Everything else
 // DOMAINs make more DOMAINs
@@ -151,20 +135,10 @@ makeT(S_NUM, '-', S_DOMAIN_HYPHEN);
 
 // Default domain transitions
 makeT(S_DOMAIN, '-', S_DOMAIN_HYPHEN);
+makeT(S_DOMAIN_HYPHEN, '-', S_DOMAIN_HYPHEN);
 makeRegexT(S_DOMAIN, DIGIT, S_DOMAIN);
 makeRegexT(S_DOMAIN, LETTER, S_DOMAIN);
 makeRegexT(S_DOMAIN, EMOJI, S_DOMAIN);
-
-// FIXME: Make it so that these states are already set up with the default transitions when they're created for speed 🏎!!!
-
-// All the generated states should have a jump to DOMAIN
-// for (let i = 0; i < domainStates.length; i++) {
-// 	makeT(domainStates[i], '-', S_DOMAIN_HYPHEN);
-// 	makeRegexT(domainStates[i], LETTER, S_DOMAIN);
-// 	makeRegexT(domainStates[i], DIGIT, S_DOMAIN);
-// }
-
-makeT(S_DOMAIN_HYPHEN, '-', S_DOMAIN_HYPHEN);
 makeRegexT(S_DOMAIN_HYPHEN, DIGIT, S_DOMAIN);
 makeRegexT(S_DOMAIN_HYPHEN, LETTER, S_DOMAIN);
 makeRegexT(S_DOMAIN_HYPHEN, EMOJI, S_DOMAIN);

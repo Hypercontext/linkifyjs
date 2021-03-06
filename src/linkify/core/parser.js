@@ -271,7 +271,6 @@ makeT(S_LOCALPART_AT, tk.LOCALHOST, S_EMAIL);
 // States following `@` defined above
 
 const run = (tokens) => {
-	debugger
 	let len = tokens.length;
 	let cursor = 0;
 	let multis = [];
