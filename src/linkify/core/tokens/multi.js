@@ -1,4 +1,5 @@
 import { PROTOCOL, SLASH } from './text';
+import { defaults } from '../../utils/options';
 
 /******************************************************************************
 	Multi-Tokens
@@ -82,7 +83,7 @@ MultiToken.prototype = {
 		@param {String} [protocol] `'http'` by default
 		@return {Object}
 	*/
-	toObject(protocol = 'http') {
+	toObject(protocol = defaults.defaultProtocol) {
 		return {
 			type: this.t,
 			value: this.toString(),
@@ -159,7 +160,7 @@ export const URL = createTokenClass('url', {
 		@param {String} protocol
 		@return {String}
 	*/
-	toHref(protocol = 'http') {
+	toHref(protocol = defaults.defaultProtocol) {
 		const tokens = this.v;
 		let hasProtocol = false;
 		let hasSlashSlash = false;

@@ -1,90 +1,69 @@
 /**
 	Mention parser plugin for linkify
 */
-import * as linkify from '../linkify'
+import { registerPlugin } from '../linkify';
 
-const TT = linkify.scanner.TOKENS; // Text tokens
-const {TOKENS: MT, State} = linkify.parser; // Multi tokens, state
-const MultiToken = MT.Base;
-const S_START = linkify.parser.start;
+export const mention = ({ scanner, parser, utils }) => {
+	const { DOMAIN, LOCALHOST, TLD, NUM, SLASH, UNDERSCORE, DOT, AT } = scanner.tokens;
+	const START_STATE = parser.start;
 
-const TT_DOMAIN = TT.DOMAIN;
-const TT_LOCALHOST = TT.LOCALHOST;
-const TT_NUM = TT.NUM;
-const TT_SLASH = TT.SLASH;
-const TT_TLD = TT.TLD;
-const TT_UNDERSCORE = TT.UNDERSCORE;
-const TT_DOT = TT.DOT;
-const TT_AT = TT.AT;
+	const Mention = utils.createTokenClass('mention', {
+		isLink: true,
+		toHref() {
+			return '/' + this.toString().substr(1);
+		}
+	});
 
-function MENTION(value) {
-	this.v = value;
-}
+	// @
+	const AT_STATE = START_STATE.tt(AT); // @
 
-linkify.inherits(MultiToken, MENTION, {
-	type: 'mention',
-	isLink: true,
-	toHref() {
-		return '/' + this.toString().substr(1);
-	}
-});
+	// @_,
+	const AT_SYMS_STATE = AT_STATE.tt(UNDERSCORE);
 
-const S_AT = S_START.jump(TT.AT); // @
-const S_AT_SYMS = new State();
-const S_MENTION = new State(MENTION);
-const S_MENTION_DIVIDER = new State();
-const S_MENTION_DIVIDER_SYMS = new State();
+	//  @_*
+	AT_SYMS_STATE.tt(UNDERSCORE, AT_SYMS_STATE);
+	AT_SYMS_STATE.tt(DOT, AT_SYMS_STATE);
 
-// @_,
-S_AT.t(TT_UNDERSCORE, S_AT_SYMS);
+	// Valid mention (not made up entirely of symbols)
+	const MENTION_STATE = AT_STATE.tt(DOMAIN, Mention);
+	AT_STATE.tt(TLD, MENTION_STATE);
+	AT_STATE.tt(LOCALHOST, MENTION_STATE);
+	AT_STATE.tt(NUM, MENTION_STATE);
 
-//  @_*
-S_AT_SYMS
-.t(TT_UNDERSCORE, S_AT_SYMS)
-.t(TT_DOT, S_AT_SYMS);
+	// @[_.]* + valid mention
+	AT_SYMS_STATE.tt(DOMAIN, MENTION_STATE);
+	AT_SYMS_STATE.tt(LOCALHOST, MENTION_STATE);
+	AT_SYMS_STATE.tt(TLD, MENTION_STATE);
+	AT_SYMS_STATE.tt(NUM, MENTION_STATE);
 
-// Valid mention (not made up entirely of symbols)
-S_AT
-.t(TT_DOMAIN, S_MENTION)
-.t(TT_LOCALHOST, S_MENTION)
-.t(TT_TLD, S_MENTION)
-.t(TT_NUM, S_MENTION);
+	// More valid mentions
+	MENTION_STATE.tt(DOMAIN, MENTION_STATE);
+	MENTION_STATE.tt(LOCALHOST, MENTION_STATE);
+	MENTION_STATE.tt(TLD, MENTION_STATE);
+	MENTION_STATE.tt(NUM, MENTION_STATE);
+	MENTION_STATE.tt(UNDERSCORE, MENTION_STATE);
 
-S_AT_SYMS
-.t(TT_DOMAIN, S_MENTION)
-.t(TT_LOCALHOST, S_MENTION)
-.t(TT_TLD, S_MENTION)
-.t(TT_NUM, S_MENTION);
+	// Mention with a divider
+	const MENTION_DIVIDER_STATE = MENTION_STATE.tt(SLASH);
+	MENTION_STATE.tt(SLASH, MENTION_DIVIDER_STATE);
+	MENTION_STATE.tt(DOT, MENTION_DIVIDER_STATE);
+	MENTION_STATE.tt(AT, MENTION_DIVIDER_STATE);
 
-// More valid mentions
-S_MENTION
-.t(TT_DOMAIN, S_MENTION)
-.t(TT_LOCALHOST, S_MENTION)
-.t(TT_TLD, S_MENTION)
-.t(TT_NUM, S_MENTION)
-.t(TT_UNDERSCORE, S_MENTION);
+	// Mention _ trailing stash plus syms
+	const MENTION_DIVIDER_SYMS_STATE = MENTION_DIVIDER_STATE.tt(UNDERSCORE);
+	MENTION_DIVIDER_SYMS_STATE.tt(UNDERSCORE, MENTION_DIVIDER_SYMS_STATE);
 
-// Mention with a divider
-S_MENTION
-.t(TT_SLASH, S_MENTION_DIVIDER)
-.t(TT_DOT, S_MENTION_DIVIDER)
-.t(TT_AT, S_MENTION_DIVIDER);
+	// Once we get a word token, mentions can start up again
+	MENTION_DIVIDER_STATE.tt(DOMAIN, MENTION_STATE);
+	MENTION_DIVIDER_STATE.tt(LOCALHOST, MENTION_STATE);
+	MENTION_DIVIDER_STATE.tt(TLD, MENTION_STATE);
+	MENTION_DIVIDER_STATE.tt(NUM, MENTION_STATE);
+	MENTION_DIVIDER_SYMS_STATE.tt(DOMAIN, MENTION_STATE);
+	MENTION_DIVIDER_SYMS_STATE.tt(LOCALHOST, MENTION_STATE);
+	MENTION_DIVIDER_SYMS_STATE.tt(TLD, MENTION_STATE);
+	MENTION_DIVIDER_SYMS_STATE.tt(NUM, MENTION_STATE);
+};
 
-// Mention _ trailing stash plus syms
-S_MENTION_DIVIDER.t(TT_UNDERSCORE, S_MENTION_DIVIDER_SYMS);
-S_MENTION_DIVIDER_SYMS.t(TT_UNDERSCORE, S_MENTION_DIVIDER_SYMS);
+registerPlugin('mention', mention);
 
-// Once we get a word token, mentions can start up again
-S_MENTION_DIVIDER
-.t(TT_DOMAIN, S_MENTION)
-.t(TT_LOCALHOST, S_MENTION)
-.t(TT_TLD, S_MENTION)
-.t(TT_NUM, S_MENTION);
-
-S_MENTION_DIVIDER_SYMS
-.t(TT_DOMAIN, S_MENTION)
-.t(TT_LOCALHOST, S_MENTION)
-.t(TT_TLD, S_MENTION)
-.t(TT_NUM, S_MENTION);
-
-export default () => {} // noop for compatibility with v2
+export default () => {}; // noop for compatibility with v2

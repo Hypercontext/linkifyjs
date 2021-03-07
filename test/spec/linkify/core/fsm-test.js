@@ -1,7 +1,7 @@
-const { makeAcceptingState } = require("../../../../src/linkify/core/fsm");
+const { makeAcceptingState } = require('../../../../src/linkify/core/fsm');
 
 const tk = require(`${__base}linkify/core/tokens/text`);
-const { t, makeT, makeRegexT, accepts, ...fsm } = require(`${__base}linkify/core/fsm`);
+const { takeT, makeT, makeRegexT, accepts, ...fsm } = require(`${__base}linkify/core/fsm`);
 
 describe('linkify/core/fsm', () => {
 	var S_START, S_DOT, S_NUM;
@@ -14,7 +14,7 @@ describe('linkify/core/fsm', () => {
 
 	describe('#t()', () => {
 		it('Has no jumps and return null', () => {
-			expect(t(S_START, '.')).to.not.be.ok;
+			expect(takeT(S_START, '.')).to.not.be.ok;
 		});
 
 		it('Should return an new state for the "." and numeric characters', () => {
@@ -22,8 +22,8 @@ describe('linkify/core/fsm', () => {
 			makeRegexT(S_START, /[0-9]/, S_NUM);
 
 			var results = [
-				t(S_START, '.'),
-				t(S_START, '7'),
+				takeT(S_START, '.'),
+				takeT(S_START, '7'),
 			];
 
 			expect(S_START.j).not.to.be.empty;
@@ -41,19 +41,19 @@ describe('linkify/core/fsm', () => {
 
 		it('Can return itself (has recursion)', () => {
 			makeRegexT(S_NUM, /[0-9]/, S_NUM);
-			expect(t(S_NUM, '8')).to.be.eql(S_NUM);
-			expect(t(t(S_NUM, '0'), '4')).to.be.eql(S_NUM);
+			expect(takeT(S_NUM, '8')).to.be.eql(S_NUM);
+			expect(takeT(takeT(S_NUM, '0'), '4')).to.be.eql(S_NUM);
 		});
 	});
 
 	describe('#accepts()', () => {
 		it('Should return a falsey value if initalized with no token', () => {
-			expect(accepts(S_START)).not.to.be.ok;
+			expect(S_START.accepts()).not.to.be.ok;
 		});
 
 		it('Should return the token it was initialized with', () => {
 			var state = fsm.makeAcceptingState(tk.QUERY);
-			expect(accepts(state)).to.be.ok;
+			expect(state.accepts()).to.be.ok;
 		});
 	});
 
@@ -74,15 +74,15 @@ describe('linkify/core/fsm', () => {
 			var state = S_START;
 			fsm.makeChainT(S_START, 'community',  makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.DOMAIN));
 
-			expect((state = t(state, 'c')).t).to.be.eql(tk.DOMAIN);
-			expect((state = t(state, 'o')).t).to.be.eql(tk.TLD);
-			expect((state = t(state, 'm')).t).to.be.eql(tk.TLD);
-			expect((state = t(state, 'm')).t).to.be.eql(tk.DOMAIN);
-			expect((state = t(state, 'u')).t).to.be.eql(tk.DOMAIN);
-			expect((state = t(state, 'n')).t).to.be.eql(tk.DOMAIN);
-			expect((state = t(state, 'i')).t).to.be.eql(tk.DOMAIN);
-			expect((state = t(state, 't')).t).to.be.eql(tk.DOMAIN);
-			expect((state = t(state, 'y')).t).to.be.eql(tk.TLD);
+			expect((state = takeT(state, 'c')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 'o')).t).to.be.eql(tk.TLD);
+			expect((state = takeT(state, 'm')).t).to.be.eql(tk.TLD);
+			expect((state = takeT(state, 'm')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 'u')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 'n')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 'i')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 't')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 'y')).t).to.be.eql(tk.TLD);
 		});
 	});
 });

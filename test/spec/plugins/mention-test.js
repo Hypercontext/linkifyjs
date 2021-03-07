@@ -1,4 +1,5 @@
 const linkify = require(`${__base}linkify`);
+const { mention } = require(`${__base}plugins/mention`);
 
 describe('plugins/mention', () => {
 	it('Cannot parse mentions before applying the plugin', () => {
@@ -10,7 +11,7 @@ describe('plugins/mention', () => {
 	});
 
 	describe('after plugin is applied', () => {
-		before(() => { require(`${__base}plugins/mention`) });
+		beforeEach(() => { linkify.registerPlugin('mention', mention); });
 
 		it ('Can parse mentions after applying the plugin', () => {
 			expect(linkify.find('There is a @mention @YOLO2016 and @1234 and @%^&*( should not work')).to.deep.equal([{
@@ -156,4 +157,6 @@ describe('plugins/mention', () => {
 			}]);
 		});
 	});
+
+	afterEach(() => { linkify.reset(); });
 });

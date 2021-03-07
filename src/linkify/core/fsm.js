@@ -31,13 +31,35 @@ State.prototype = {
 	accepts() {
 		return !!this.t;
 	},
+
+	/**
+	 * Short for "take transition", this is a method for building/working with
+	 * state machines.
+	 *
+	 * If a state already exists for the given input, returns it.
+	 *
+	 * If a token is specified, that state will emit that token when reached by
+	 * the linkify engine.
+	 *
+	 * If no state exists, it will be initialized with some default transitions
+	 * that resemble existing default transitions.
+	 *
+	 * If a state is given for the second argument, that state will be
+	 * transitioned to on the given input regardless of what that input
+	 * previously did.
+	 *
+	 * @param {string} input character or token to transition on
+	 * @param {Token|State} tokenOrState transition to a matching state
+	 * @returns State taken after the given input
+	 */
 	tt(input, tokenOrState) {
-		if (tokenOrState instanceof State) {
-			// Just define a transition
+		if (tokenOrState && tokenOrState.j) {
+			// State, default a basic transition
 			this.j[input] = tokenOrState;
 			return tokenOrState;
 		}
 
+		// See if there's a direct state transition (not regex or default)
 		const token = tokenOrState;
 		let nextState = this.j[input];
 		if (nextState) {
@@ -46,7 +68,7 @@ State.prototype = {
 		}
 
 		// Create a new state for this input
-		nextState = new State();
+		nextState = makeState();
 
 		// Take the transition using the usual default mechanisms
 		const templateState = takeT(this, input);

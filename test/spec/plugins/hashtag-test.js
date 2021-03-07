@@ -1,8 +1,7 @@
 const linkify = require(`${__base}linkify`);
+const { hashtag } = require(`${__base}plugins/hashtag`);
 
-describe('linkify/hashtag', () => {
-	afterEach(() => { linkify.reset(); });
-
+describe('plugins/hashtag', () => {
 	it('cannot parse hashtags before applying the plugin', () => {
 		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
 		.to.be.eql([]);
@@ -12,7 +11,7 @@ describe('linkify/hashtag', () => {
 	});
 
 	describe('after plugin is applied', () => {
-		before(() => { require(`${__base}plugins/hashtag`); });
+		beforeEach(() => { linkify.registerPlugin('hashtag', hashtag); });
 
 		it ('can parse hashtags after applying the plugin', () => {
 			expect(linkify.find('There is a #hashtag #YOLO-2015 #__swag__ and #1234 and #%^&*( #_ #__ should not work'))

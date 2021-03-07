@@ -1,25 +1,19 @@
-import * as linkify from '../linkify'
+import { registerPlugin } from '../linkify';
+
 /**
 	Ticket number detector
 	TODO: Add cross-repo style tickets? e.g., SoapBox/linkifyjs#42
 	Is that even feasible?
 */
-let TT = linkify.scanner.TOKENS; // Base Multi token class
-let MultiToken = linkify.parser.TOKENS.Base;
-let S_START = linkify.parser.start;
+export const ticket = ({ scanner, parser, utils }) => {
+	const { POUND, NUM } = scanner.tokens;
+	const START_STATE = parser.start;
+	const Ticket = utils.createTokenClass('ticket', { isLink: true });
 
-function TICKET(value) {
-	this.v = value;
-}
+	const HASH_STATE = START_STATE.tt(POUND);
+	HASH_STATE.tt(NUM, Ticket);
+};
 
-linkify.inherits(MultiToken, TICKET, {
-	type: 'ticket',
-	isLink: true
-});
+registerPlugin('ticket', ticket);
 
-const S_HASH = S_START.jump(TT.POUND);
-const S_TICKET = new linkify.parser.State(TICKET);
-
-S_HASH.t(TT.NUM, S_TICKET);
-
-export default () => {} // noop for compatibility with v2
+export default () => {}; // noop for compatibility with v2
