@@ -1,21 +1,23 @@
 import { terser } from 'rollup-plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 
 const plugins = [
 	resolve(),
+	commonjs(),
 	babel({ babelHelpers: 'bundled' })
 ];
 
 function linkifyInterface(name, opts = {}) {
 	const iifeOpts = { name };
-	if ('globalName' in opts) iifeOpts.name = opts.globalName;
+	if ('globalName' in opts) { iifeOpts.name = opts.globalName; }
 
 	const globals =  {
 		[`${__dirname}/src/linkify`]: 'linkify',
 		'react': 'React',
 		'jquery': 'jQuery'
-	}
+	};
 
 	return {
 		input: `src/linkify-${name}.js`,
@@ -26,11 +28,11 @@ function linkifyInterface(name, opts = {}) {
 			{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] }
 		],
 		plugins
-	}
+	};
 }
 
 function linkifyPlugin(name) {
-	const globals =  { [`${__dirname}/src/linkify`]: 'linkify' }
+	const globals =  { [`${__dirname}/src/linkify`]: 'linkify' };
 
 	return {
 		input: `src/plugins/${name}.js`,
@@ -41,7 +43,7 @@ function linkifyPlugin(name) {
 			{ file: `dist/linkify-plugin-${name}.min.js`, format: 'iife', globals, name: false, plugins: [terser()] }
 		],
 		plugins
-	}
+	};
 }
 
 export default [
@@ -67,6 +69,42 @@ export default [
 		],
 		plugins
 	},
+	{
+		input: 'src/polyfill.js',
+		output: [
+			{
+				file: 'lib/linkify-polyfill.js',
+				format: 'cjs',
+				exports: 'auto'
+			},
+			{
+				file: 'dist/linkify-polyfill.js',
+				name: 'linkifyPolyfill',
+				format: 'iife'
+			},
+			{
+				file: 'dist/linkify-polyfill.min.js',
+				name: 'linkifyPolyfill',
+				format: 'iife',
+				plugins: [terser()]
+			}
+		],
+		plugins
+	},
+	/*
+	{
+		input: 'src/linkify/core/generated/state-machine.js',
+		output: [
+			{
+				file: 'dist/state-machine.min.js',
+				name: 'linkifyScannerStart',
+				format: 'iife',
+				plugins: [terser()]
+			}
+		],
+		plugins
+	},
+	*/
 
 	// Interfaces
 	linkifyInterface('string', { globalName: 'linkifyStr' }),
