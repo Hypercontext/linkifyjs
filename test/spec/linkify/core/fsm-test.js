@@ -1,3 +1,5 @@
+const { makeAcceptingState } = require("../../../../src/linkify/core/fsm");
+
 const tk = require(`${__base}linkify/core/tokens/text`);
 const { t, makeT, makeRegexT, accepts, ...fsm } = require(`${__base}linkify/core/fsm`);
 
@@ -57,33 +59,20 @@ describe('linkify/core/fsm', () => {
 
 	describe('#makeChainT()', () => {
 		it('Makes states for the domain "co"', () => {
-			var result = fsm.makeChainT(S_START, 'co', tk.TLD, tk.DOMAIN);
+			fsm.makeChainT(S_START, 'co', makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.DOMAIN));
 
-			expect(result).to.be.an.instanceof(Array);
-			expect(result.length).to.eql(2);
-			expect(result[0].t).to.eql(tk.DOMAIN);
-			expect(result[1].t).to.eql(tk.TLD);
+			expect(S_START.j.c.t).to.eql(tk.DOMAIN);
+			expect(S_START.j.c.j.o.t).to.eql(tk.TLD);
 		});
 
 		it('Makes states for the domain "com"', () => {
-			var result = fsm.makeChainT(S_START, 'com', tk.TLD, tk.DOMAIN);
-			expect(result).to.be.an.instanceof(Array);
-			expect(result.length).to.eql(1);
-			expect(result[0].t).to.eql(tk.TLD);
-		});
-
-		it('Adding "com" again should not make any new states', () => {
-			var result = fsm.makeChainT(S_START, 'com', tk.TLD, tk.DOMAIN);
-			expect(result).to.be.an.instanceof(Array);
-			expect(result.length).to.eql(0);
+			fsm.makeChainT(S_START, 'com', makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.DOMAIN));
+			expect(S_START.j.c.j.o.j.m.t).to.eql(tk.TLD);
 		});
 
 		it('Makes states for the domain "community"', () => {
 			var state = S_START;
-			var result = fsm.makeChainT(S_START, 'community', tk.TLD, tk.DOMAIN);
-
-			expect(result).to.be.an.instanceof(Array);
-			expect(result.length).to.eql(6);
+			fsm.makeChainT(S_START, 'community',  makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.DOMAIN));
 
 			expect((state = t(state, 'c')).t).to.be.eql(tk.DOMAIN);
 			expect((state = t(state, 'o')).t).to.be.eql(tk.TLD);

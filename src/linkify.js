@@ -1,12 +1,65 @@
-import {inherits} from './linkify/utils/class';
 import * as options from './linkify/utils/options';
 import * as scanner from './linkify/core/scanner';
 import * as parser from './linkify/core/parser';
 
-if (!Array.isArray) {
-	Array.isArray = function(arg) {
-		return Object.prototype.toString.call(arg) === '[object Array]';
-	};
+const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
+
+// Side-effect initialization state
+export const INIT = {
+	scanner: null,
+	parser: null,
+	pluginQueue: [],
+	initialized: false,
+};
+
+/**
+ * De-register all plugins. Used for testing; not required in practice
+ */
+export function reset() {
+	INIT.scanner = null;
+	INIT.parser = null;
+	INIT.pluginQueue = [];
+	INIT.initialized = false;
+}
+
+/**
+ * Register a linkify extension plugin
+ * @param {string} name of plugin to register
+ * @param {Function} plugin function that accepts mutable linkify state
+ */
+export function registerPlugin(name, plugin) {
+	for (let i = 0; i < INIT.pluginQueue.length; i++) {
+		if (name === INIT.pluginQueue[i][0]) {
+			warn(`linkifyjs: plugin "${name}" already registered - will be overwritten`);
+			INIT.pluginQueue[i] = [name, plugin];
+			return;
+		}
+	}
+	INIT.pluginQueue.push([name, plugin]);
+	if (INIT.initialized) {
+		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init()`);
+	}
+}
+
+/**
+ * Initialize the linkify state machine. Called automatically the first time
+ * linkify is called on a string, but may be called manually as well.
+ */
+export function init() {
+	// Initialize state machines
+	INIT.scanner = { start: scanner.init(), tokens: scanner.tokens };
+	INIT.parser = { start: parser.init(), tokens: parser.tokens };
+	const utils = { createTokenClass: parser.tokens.createTokenClass };
+
+	// Initialize plugins
+	for (let i = 0; i < INIT.pluginQueue.length; i++) {
+		INIT.pluginQueue[i][1]({
+			scanner: INIT.scanner,
+			parser: INIT.parser,
+			utils
+		});
+	}
+	INIT.initialized = true;
 }
 
 /**
@@ -15,14 +68,15 @@ if (!Array.isArray) {
 	@param {String} str
 	@return {Array} tokens
 */
-let tokenize = function (str) {
-	return parser.run(scanner.run(str));
-};
+export function tokenize(str) {
+	if (!INIT.initialized) { init(); }
+	return parser.run(INIT.parser.start, scanner.run(INIT.scanner.start, str));
+}
 
 /**
 	Returns a list of linkable items in the given string.
 */
-let find = function (str, type = null) {
+export function find(str, type = null) {
 	let tokens = tokenize(str);
 	let filtered = [];
 
@@ -34,7 +88,7 @@ let find = function (str, type = null) {
 	}
 
 	return filtered;
-};
+}
 
 /**
 	Is the given string valid linkable text of some sort
@@ -49,13 +103,13 @@ let find = function (str, type = null) {
 
 	Will return `true` if str is a valid email.
 */
-let test = function (str, type = null) {
-	let tokens = tokenize(str);
+export function test(str, type = null) {
+	const tokens = tokenize(str);
 	return tokens.length === 1 && tokens[0].isLink && (
-		!type || tokens[0].type === type
+		!type || tokens[0].t === type
 	);
-};
+}
 
 // Scanner and parser provide states and tokens for the lexicographic stage
 // (will be used to add additional link types)
-export {find, inherits, options, parser, scanner, test, tokenize};
+export { options };

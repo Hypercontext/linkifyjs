@@ -180,9 +180,23 @@ var tests = [
 		'Email with mailsomething dot com domain in foo@mailsomething.com',
 		[TEXT, EMAIL],
 		['Email with mailsomething dot com domain in ', 'foo@mailsomething.com']
+	], [
+		'http://über.de',
+		[URL],
+		['http://über.de']
+	], [
+		'www.öko.de',
+		[URL],
+		['www.öko.de']
+	], [
+		'www.🍕💩.ws',
+		[URL],
+		['www.🍕💩.ws']
 	]
 ];
 
+let scannerStart = scanner.init();
+let start = parser.init();
 describe('linkify/core/parser#run()', () => {
 
 	function makeTest(test) {
@@ -190,7 +204,7 @@ describe('linkify/core/parser#run()', () => {
 			var str = test[0];
 			var types = test[1];
 			var values = test[2];
-			var result = parser.run(scanner.run(str));
+			var result = parser.run(start, scanner.run(scannerStart, str));
 
 			expect(result.map(token => token.toString())).to.eql(values);
 			expect(result.map(token => token.constructor)).to.eql(types);

@@ -1,7 +1,8 @@
-delete require.cache[require.resolve(`${__base}linkify`)];
 const linkify = require(`${__base}linkify`);
 
 describe('linkify/hashtag', () => {
+	afterEach(() => { linkify.reset(); });
+
 	it('cannot parse hashtags before applying the plugin', () => {
 		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
 		.to.be.eql([]);
@@ -11,10 +12,10 @@ describe('linkify/hashtag', () => {
 	});
 
 	describe('after plugin is applied', () => {
-		before(() => { require(`${__base}plugins/hashtag`) });
+		before(() => { require(`${__base}plugins/hashtag`); });
 
 		it ('can parse hashtags after applying the plugin', () => {
-			expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))
+			expect(linkify.find('There is a #hashtag #YOLO-2015 #__swag__ and #1234 and #%^&*( #_ #__ should not work'))
 			.to.be.eql([{
 				type: 'hashtag',
 				value: '#hashtag',
@@ -23,6 +24,10 @@ describe('linkify/hashtag', () => {
 				type: 'hashtag',
 				value: '#YOLO-2015',
 				href: '#YOLO-2015'
+			}, {
+				type: 'hashtag',
+				value: '#__swag__',
+				href: '#__swag__'
 			}]);
 
 			expect(linkify.test('#wat', 'hashtag')).to.be.ok;

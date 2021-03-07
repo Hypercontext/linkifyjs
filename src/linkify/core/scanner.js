@@ -9,152 +9,159 @@
 import {
 	makeState,
 	makeAcceptingState,
-	t,
+	takeT,
 	makeT,
 	makeRegexT,
 	makeMultiT,
 	makeBatchT,
-	makeChainT,
-	accepts
+	makeChainT
 } from './fsm';
 import * as tk from './tokens/text';
 import tlds from './tlds';
 
-const DIGIT = /\d/;
-// Note that these two Unicode ones expand into a really big
-const LETTER = /\p{L}/u; // Any Unicode character with letter data type
-const EMOJI = /\p{Emoji}/u; // Any Unicode emoji character
-const SPACE = /\s/;
+// Note that these two Unicode ones expand into a really big one with Babel
+export const LETTER = /\p{L}/u; // Any Unicode character with letter data type
+export const EMOJI = /\p{Emoji}/u; // Any Unicode emoji character
+export const DIGIT = /\d/;
+export const SPACE = /\s/;
 
-// Frequently used states
-const S_START			= makeState();
-const S_NUM				= makeAcceptingState(tk.NUM);
-const S_DOMAIN			= makeAcceptingState(tk.DOMAIN);
-const S_DOMAIN_HYPHEN	= makeState(); // domain followed by 1 or more hyphen characters
-const S_WS				= makeAcceptingState(tk.WS);
+/**
+ * Initialize the scanner character-based state machine for the given start state
+ * @param {State} start
+ */
+export function init() {
+	// Frequently used states
+	const S_START = makeState();
+	const S_NUM				= makeAcceptingState(tk.NUM);
+	const S_DOMAIN			= makeAcceptingState(tk.DOMAIN);
+	const S_DOMAIN_HYPHEN	= makeState(); // domain followed by 1 or more hyphen characters
+	const S_WS				= makeAcceptingState(tk.WS);
 
-const DOMAIN_REGEX_TRANSITIONS = [
-	[DIGIT, S_DOMAIN],
-	[LETTER, S_DOMAIN],
-	[EMOJI, S_DOMAIN]
-];
+	const DOMAIN_REGEX_TRANSITIONS = [
+		[DIGIT, S_DOMAIN],
+		[LETTER, S_DOMAIN],
+		[EMOJI, S_DOMAIN]
+	];
 
-// Create a state which emits a domain token
-const makeDomainState = () => {
-	const state = makeAcceptingState(tk.DOMAIN);
-	state.j = {'-': S_DOMAIN_HYPHEN };
-	state.jr = [...DOMAIN_REGEX_TRANSITIONS];
-	return state;
-};
+	// Create a state which emits a domain token
+	const makeDomainState = () => {
+		const state = makeAcceptingState(tk.DOMAIN);
+		state.j = {'-': S_DOMAIN_HYPHEN };
+		state.jr = [...DOMAIN_REGEX_TRANSITIONS];
+		return state;
+	};
 
-// Create a state which does not emit a domain state but the usual alphanumeric
-// transitions are domains
-const makeNearDomainState = (token) => {
-	const state = makeDomainState();
-	state.t = token;
-	return state;
-};
+	// Create a state which does not emit a domain state but the usual alphanumeric
+	// transitions are domains
+	const makeNearDomainState = (token) => {
+		const state = makeDomainState();
+		state.t = token;
+		return state;
+	};
 
-// States for special URL symbols that accept immediately after start
-makeBatchT(S_START, [
-	['@', makeAcceptingState(tk.AT)],
-	['.', makeAcceptingState(tk.DOT)],
-	['+', makeAcceptingState(tk.PLUS)],
-	['#', makeAcceptingState(tk.POUND)],
-	['?', makeAcceptingState(tk.QUERY)],
-	['/', makeAcceptingState(tk.SLASH)],
-	['_', makeAcceptingState(tk.UNDERSCORE)],
-	[':', makeAcceptingState(tk.COLON)],
-	['{', makeAcceptingState(tk.OPENBRACE)],
-	['[', makeAcceptingState(tk.OPENBRACKET)],
-	['<', makeAcceptingState(tk.OPENANGLEBRACKET)],
-	['(', makeAcceptingState(tk.OPENPAREN)],
-	['}', makeAcceptingState(tk.CLOSEBRACE)],
-	[']', makeAcceptingState(tk.CLOSEBRACKET)],
-	['>', makeAcceptingState(tk.CLOSEANGLEBRACKET)],
-	[')', makeAcceptingState(tk.CLOSEPAREN)],
-	['&', makeAcceptingState(tk.AMPERSAND)]
-]);
+	// States for special URL symbols that accept immediately after start
+	makeBatchT(S_START, [
+		['@', makeAcceptingState(tk.AT)],
+		['.', makeAcceptingState(tk.DOT)],
+		['+', makeAcceptingState(tk.PLUS)],
+		['#', makeAcceptingState(tk.POUND)],
+		['?', makeAcceptingState(tk.QUERY)],
+		['/', makeAcceptingState(tk.SLASH)],
+		['_', makeAcceptingState(tk.UNDERSCORE)],
+		[':', makeAcceptingState(tk.COLON)],
+		['{', makeAcceptingState(tk.OPENBRACE)],
+		['[', makeAcceptingState(tk.OPENBRACKET)],
+		['<', makeAcceptingState(tk.OPENANGLEBRACKET)],
+		['(', makeAcceptingState(tk.OPENPAREN)],
+		['}', makeAcceptingState(tk.CLOSEBRACE)],
+		[']', makeAcceptingState(tk.CLOSEBRACKET)],
+		['>', makeAcceptingState(tk.CLOSEANGLEBRACKET)],
+		[')', makeAcceptingState(tk.CLOSEPAREN)],
+		['&', makeAcceptingState(tk.AMPERSAND)]
+	]);
 
-makeMultiT(S_START, [',', ';', '!', '"', '\''], makeAcceptingState(tk.PUNCTUATION));
+	makeMultiT(S_START, [',', ';', '!', '"', '\''], makeAcceptingState(tk.PUNCTUATION));
 
-// Whitespace jumps
-// Tokens of only non-newline whitespace are arbitrarily long
-makeT(S_START, '\n', makeAcceptingState(tk.NL));
-makeRegexT(S_START, SPACE, S_WS);
+	// Whitespace jumps
+	// Tokens of only non-newline whitespace are arbitrarily long
+	makeT(S_START, '\n', makeAcceptingState(tk.NL));
+	makeRegexT(S_START, SPACE, S_WS);
 
-// If any whitespace except newline, more whitespace!
-makeT(S_WS, '\n', makeState()); // non-accepting state
-makeRegexT(S_WS, SPACE, S_WS);
+	// If any whitespace except newline, more whitespace!
+	makeT(S_WS, '\n', makeState()); // non-accepting state
+	makeRegexT(S_WS, SPACE, S_WS);
 
-// Generates states for top-level domains
-// Note that this is most accurate when tlds are in alphabetical order
-for (let i = 0; i < tlds.length; i++) {
-	makeChainT(S_START, tlds[i], makeNearDomainState(tk.TLD), makeDomainState);
+	// Generates states for top-level domains
+	// Note that this is most accurate when tlds are in alphabetical order
+	for (let i = 0; i < tlds.length; i++) {
+		makeChainT(S_START, tlds[i], makeNearDomainState(tk.TLD), makeDomainState);
+	}
+
+	// Collect the states generated by different protocls
+	const S_PROTOCOL_FILE = makeDomainState();
+	const S_PROTOCOL_FTP = makeDomainState();
+	const S_PROTOCOL_HTTP = makeDomainState();
+	const S_MAILTO = makeDomainState();
+	makeChainT(S_START, 'file', S_PROTOCOL_FILE, makeDomainState);
+	makeChainT(S_START, 'ftp', S_PROTOCOL_FTP, makeDomainState);
+	makeChainT(S_START, 'http', S_PROTOCOL_HTTP, makeDomainState);
+	makeChainT(S_START, 'mailto', S_MAILTO, makeDomainState);
+
+	// Protocol states
+	const S_PROTOCOL_SECURE = makeDomainState();
+	const S_FULL_PROTOCOL = makeAcceptingState(tk.PROTOCOL); // Full protocol ends with COLON
+	const S_FULL_MAILTO = makeAcceptingState(tk.MAILTO); // Mailto ends with COLON
+
+	// Secure protocols (end with 's')
+	makeT(S_PROTOCOL_FTP, 's', S_PROTOCOL_SECURE);
+	makeT(S_PROTOCOL_FTP, ':', S_FULL_PROTOCOL);
+	makeT(S_PROTOCOL_HTTP, 's', S_PROTOCOL_SECURE);
+	makeT(S_PROTOCOL_HTTP, ':', S_FULL_PROTOCOL);
+
+	// Become protocol tokens after a COLON
+	makeT(S_PROTOCOL_FILE, ':', S_FULL_PROTOCOL);
+	makeT(S_PROTOCOL_SECURE, ':', S_FULL_PROTOCOL);
+	makeT(S_MAILTO, ':', S_FULL_MAILTO);
+
+	// Localhost
+	makeChainT(S_START, 'localhost', makeNearDomainState(tk.LOCALHOST), makeDomainState);
+
+	// Everything else
+	// DOMAINs make more DOMAINs
+	// Number and character transitions
+	makeRegexT(S_START, DIGIT, S_NUM);
+	makeRegexT(S_START, LETTER, S_DOMAIN);
+	makeRegexT(S_START, EMOJI, S_DOMAIN);
+	makeRegexT(S_NUM, DIGIT, S_NUM);
+	makeRegexT(S_NUM, LETTER, S_DOMAIN); // number becomes DOMAIN
+	makeRegexT(S_NUM, EMOJI, S_DOMAIN); // number becomes DOMAIN
+	makeT(S_NUM, '-', S_DOMAIN_HYPHEN);
+
+	// Default domain transitions
+	makeT(S_DOMAIN, '-', S_DOMAIN_HYPHEN);
+	makeT(S_DOMAIN_HYPHEN, '-', S_DOMAIN_HYPHEN);
+	makeRegexT(S_DOMAIN, DIGIT, S_DOMAIN);
+	makeRegexT(S_DOMAIN, LETTER, S_DOMAIN);
+	makeRegexT(S_DOMAIN, EMOJI, S_DOMAIN);
+	makeRegexT(S_DOMAIN_HYPHEN, DIGIT, S_DOMAIN);
+	makeRegexT(S_DOMAIN_HYPHEN, LETTER, S_DOMAIN);
+	makeRegexT(S_DOMAIN_HYPHEN, EMOJI, S_DOMAIN);
+
+	// Set default transition for start state (some symbol)
+	S_START.jd = makeAcceptingState(tk.SYM);
+	return S_START;
 }
-
-// Collect the states generated by different protocls
-const S_PROTOCOL_FILE = makeDomainState();
-const S_PROTOCOL_FTP = makeDomainState();
-const S_PROTOCOL_HTTP = makeDomainState();
-const S_MAILTO = makeDomainState();
-makeChainT(S_START, 'file', S_PROTOCOL_FILE, makeDomainState);
-makeChainT(S_START, 'ftp', S_PROTOCOL_FTP, makeDomainState);
-makeChainT(S_START, 'http', S_PROTOCOL_HTTP, makeDomainState);
-makeChainT(S_START, 'mailto', S_MAILTO, makeDomainState);
-
-// Protocol states
-const S_PROTOCOL_SECURE = makeDomainState();
-const S_FULL_PROTOCOL = makeAcceptingState(tk.PROTOCOL); // Full protocol ends with COLON
-const S_FULL_MAILTO = makeAcceptingState(tk.MAILTO); // Mailto ends with COLON
-
-// Secure protocols (end with 's')
-makeT(S_PROTOCOL_FTP, 's', S_PROTOCOL_SECURE);
-makeT(S_PROTOCOL_FTP, ':', S_FULL_PROTOCOL);
-makeT(S_PROTOCOL_HTTP, 's', S_PROTOCOL_SECURE);
-makeT(S_PROTOCOL_HTTP, ':', S_FULL_PROTOCOL);
-
-// Become protocol tokens after a COLON
-makeT(S_PROTOCOL_FILE, ':', S_FULL_PROTOCOL);
-makeT(S_PROTOCOL_SECURE, ':', S_FULL_PROTOCOL);
-makeT(S_MAILTO, ':', S_FULL_MAILTO);
-
-// Localhost
-makeChainT(S_START, 'localhost', makeNearDomainState(tk.LOCALHOST), makeDomainState);
-
-// Everything else
-// DOMAINs make more DOMAINs
-// Number and character transitions
-makeRegexT(S_START, DIGIT, S_NUM);
-makeRegexT(S_START, LETTER, S_DOMAIN);
-makeRegexT(S_START, EMOJI, S_DOMAIN);
-makeRegexT(S_NUM, DIGIT, S_NUM);
-makeRegexT(S_NUM, LETTER, S_DOMAIN); // number becomes DOMAIN
-makeRegexT(S_NUM, EMOJI, S_DOMAIN); // number becomes DOMAIN
-makeT(S_NUM, '-', S_DOMAIN_HYPHEN);
-
-// Default domain transitions
-makeT(S_DOMAIN, '-', S_DOMAIN_HYPHEN);
-makeT(S_DOMAIN_HYPHEN, '-', S_DOMAIN_HYPHEN);
-makeRegexT(S_DOMAIN, DIGIT, S_DOMAIN);
-makeRegexT(S_DOMAIN, LETTER, S_DOMAIN);
-makeRegexT(S_DOMAIN, EMOJI, S_DOMAIN);
-makeRegexT(S_DOMAIN_HYPHEN, DIGIT, S_DOMAIN);
-makeRegexT(S_DOMAIN_HYPHEN, LETTER, S_DOMAIN);
-makeRegexT(S_DOMAIN_HYPHEN, EMOJI, S_DOMAIN);
-
-// Set default transition for start state (some symbol)
-S_START.jd = makeAcceptingState(tk.SYM);
 
 /**
 	Given a string, returns an array of TOKEN instances representing the
 	composition of that string.
 
 	@method run
+	@param {State} start The starting state
 	@param {String} str Input string to scan
 	@return {Array} Array of TOKEN instances
 */
-export function run(str) {
+export function run(start, str) {
 	// State machine is not case sensitive, so input is tokenized in lowercased
 	// form (still returns the regular case though) Uses selective `toLowerCase`
 	// is used because lowercasing the entire string causes the length and
@@ -173,18 +180,18 @@ export function run(str) {
 
 	// Tokenize the string
 	while (charCursor < charCount) {
-		let state = S_START;
+		let state = start;
 		let nextState = null;
 		let tokenLength = 0;
 		let latestAccepting = null;
 		let sinceAccepts = -1;
 		let charsSinceAccepts = -1;
 
-		while (charCursor < charCount && (nextState = t(state, iterable[charCursor]))) {
+		while (charCursor < charCount && (nextState = takeT(state, iterable[charCursor]))) {
 			state = nextState;
 
 			// Keep track of the latest accepting state
-			if (accepts(state)) {
+			if (state.accepts()) {
 				sinceAccepts = 0;
 				charsSinceAccepts = 0;
 				latestAccepting = state;
@@ -206,7 +213,7 @@ export function run(str) {
 		tokenLength -= sinceAccepts;
 
 		// No more jumps, just make a new token from the last accepting one
-		// FIXME: Don't output v, instead output range where values ocurr
+		// TODO: If possible, don't output v, instead output range where values ocur
 		tokens.push({
 			t: latestAccepting.t, // token type/name
 			v: str.substr(cursor - tokenLength, tokenLength) // string value
@@ -216,4 +223,4 @@ export function run(str) {
 	return tokens;
 }
 
-export const start = S_START;
+export { tk as tokens };

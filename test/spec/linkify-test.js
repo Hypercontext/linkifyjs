@@ -27,7 +27,7 @@ describe('linkify', () => {
 			* [1] is the expected return value
 			* [2] (optional) the type of link to look for
 		*/
-		var tests = [
+		const tests = [
 			['Herp derp', false],
 			['Herp derp', false, 'email'],
 			['Herp derp', false, 'asdf'],
@@ -50,8 +50,8 @@ describe('linkify', () => {
 			expect(linkify.test.length).to.be.eql(1); // type is optional
 		});
 
-		var testName;
-		for (var test of tests) {
+		let testName;
+		for (const test of tests) {
 			testName = 'Correctly tests the string "' + test[0] + '"';
 			testName += ' as `' + (test[1] ? 'true' : 'false') + '`';
 			if (test[2]) {
@@ -68,18 +68,6 @@ describe('linkify', () => {
 	describe('options', () => {
 		it('is an object', () => {
 			expect(linkify.options).to.be.a('object');
-		});
-	});
-
-	describe('parser', () => {
-		it('is an object', () => {
-			expect(linkify.parser).to.be.a('object');
-		});
-	});
-
-	describe('scanner', () => {
-		it('is an object', () => {
-			expect(linkify.scanner).to.be.a('object');
 		});
 	});
 });

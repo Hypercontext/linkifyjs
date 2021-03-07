@@ -7,8 +7,6 @@ import * as linkify from './linkify';
 const {tokenize, options} = linkify;
 const {Options} = options;
 
-let TEXT_TOKEN = linkify.parser.TOKENS.TEXT;
-
 const HTML_NODE = 1, TXT_NODE = 3;
 
 /**
@@ -119,7 +117,7 @@ function linkifyElementHelper(element, opts, doc) {
 			str = childElement.nodeValue;
 			tokens = tokenize(str);
 
-			if (tokens.length === 0 || tokens.length === 1 && tokens[0] instanceof TEXT_TOKEN) {
+			if (tokens.length === 0 || tokens.length === 1 && tokens[0].t === 'text') {
 				// No node replacement required
 				break;
 			}

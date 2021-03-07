@@ -47,22 +47,31 @@ const tests = [
 	['500px-', [t.DOMAIN, t.SYM], ['500px', '-']],
 	['123-456', [t.DOMAIN], ['123-456']],
 	['foo\u00a0bar', [t.TLD, t.WS, t.TLD], ['foo', '\u00a0', 'bar']], // nbsp
+	['çïrâ.ca', [t.DOMAIN, t.DOT, t.TLD], ['çïrâ', '.', 'ca']],
+	['www.🍕💩.ws', [t.DOMAIN, t.DOT, t.DOMAIN, t.DOT, t.TLD], ['www', '.', '🍕💩', '.', 'ws']],
+	[
+		'za̡͊͠͝lgό.gay', // May support diacritics in the future if someone complains
+		[t.TLD, t.SYM, t.SYM, t.SYM, t.SYM, t.DOMAIN, t.DOT, t.TLD],
+		['za', '͠', '̡', '͊', '͝', 'lgό','.','gay']
+	],
 	[
 		'Direniş İzleme Grubu\'nun',
 		[t.DOMAIN, t.WS, t.DOMAIN, t.WS, t.DOMAIN, t.PUNCTUATION, t.DOMAIN],
 		['Direniş', ' ', 'İzleme', ' ', 'Grubu', '\'', 'nun']
 	],
 	[
-		'google.com　　　テスト', // spaces are ideographic space
-		[t.TLD, t.DOT, t.TLD, t.WS, t.DOMAIN],
-		['google', '.', 'com', '　　　', 'テスト']
+		'example.com　　　テスト', // spaces are ideographic space
+		[t.DOMAIN, t.DOT, t.TLD, t.WS, t.DOMAIN],
+		['example', '.', 'com', '　　　', 'テスト']
 	],
 	[
-		'www.🍕💩.ws',
-		[t.DOMAIN, t.DOT, t.DOMAIN, t.DOT, t.TLD],
-		['www', '.', '🍕💩', '.', 'ws']
+		'#АБВ_бв #한글 #سلام',
+		[t.POUND, t.DOMAIN, t.UNDERSCORE, t.DOMAIN, t.WS, t.POUND, t.DOMAIN, t.WS, t.POUND, t.DOMAIN],
+		['#', 'АБВ', '_', 'бв', ' ', '#', '한글', ' ', '#', 'سلام']
 	]
 ];
+
+let start = scanner.init();
 
 describe('linkify/core/scanner#run()', () => {
 	function makeTest(test) {
@@ -70,7 +79,7 @@ describe('linkify/core/scanner#run()', () => {
 			var str = test[0];
 			var types = test[1];
 			var values = test[2];
-			var result = scanner.run(str);
+			var result = scanner.run(start, str);
 
 			expect(result.map((token) => token.t)).to.eql(types);
 			expect(result.map((token) => token.v)).to.eql(values);
@@ -78,5 +87,4 @@ describe('linkify/core/scanner#run()', () => {
 	}
 
 	tests.map(makeTest, this);
-
 });

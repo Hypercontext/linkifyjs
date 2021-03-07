@@ -35,7 +35,7 @@ describe('linkify/core/tokens/multi', () => {
 
 			urlTextTokens3 = [ // 'co.co?o=%2D&p=@gc#wat'
 				{ t: tk.TLD, v: 'co' },
-				{ t: tk.DOT, v: '' },
+				{ t: tk.DOT, v: '.' },
 				{ t: tk.TLD, v: 'co' },
 				{ t: tk.SYM, v: '?' },
 				{ t: tk.DOMAIN, v: 'o' },
@@ -74,11 +74,11 @@ describe('linkify/core/tokens/multi', () => {
 
 		describe('#toHref()', () => {
 			it('Keeps the protocol the same as the original URL (and lowercases it)', () => {
-				expect(url1.toHref()).to.be.eql('ftps://www.github.com/SoapBox/linkify');
+				expect(url1.toHref()).to.be.eql('Ftps://www.github.com/SoapBox/linkify');
 			});
 
 			it('Lowercases the domain name only and leaves off the protocol if the URL begins with "//"', () => {
-				expect(url2.toHref()).to.be.eql('//amazon.ca/Sales');
+				expect(url2.toHref()).to.be.eql('//Amazon.ca/Sales');
 			});
 
 			it('Adds a default protocol, if required', () => {
@@ -93,13 +93,13 @@ describe('linkify/core/tokens/multi', () => {
 				expect(url1.toObject('file')).to.be.eql({
 					type: 'url',
 					value: 'Ftps://www.github.com/SoapBox/linkify',
-					href: 'ftps://www.github.com/SoapBox/linkify'
+					href: 'Ftps://www.github.com/SoapBox/linkify'
 				});
 
 				expect(url2.toObject()).to.be.eql({
 					type: 'url',
 					value: '//Amazon.ca/Sales',
-					href: '//amazon.ca/Sales'
+					href: '//Amazon.ca/Sales'
 				});
 
 				expect(url3.toObject('https')).to.be.eql({

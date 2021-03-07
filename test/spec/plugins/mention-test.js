@@ -1,4 +1,3 @@
-delete require.cache[require.resolve(`${__base}linkify`)];
 const linkify = require(`${__base}linkify`);
 
 describe('plugins/mention', () => {

@@ -1,33 +1,18 @@
-import { DOMAIN, PROTOCOL, TLD, SLASH } from './text';
+import { PROTOCOL, SLASH } from './text';
 
 /******************************************************************************
 	Multi-Tokens
 	Tokens composed of arrays of TextTokens
 ******************************************************************************/
 
-function createTokenClass() {
-	return function (value) {
-		if (value) {
-			this.v = value;
-		}
-	};
-}
-
 function inherits(parent, child, props={}) {
-	let extended = Object.create(parent.prototype);
-	for (var p in props) {
+	const extended = Object.create(parent.prototype);
+	for (const p in props) {
 		extended[p] = props[p];
 	}
 	extended.constructor = child;
 	child.prototype = extended;
 	return child;
-}
-
-
-// Is the given token a valid domain token?
-// Should nums be included here?
-function isDomain(token) {
-	return token.t === DOMAIN || token.t === TLD;
 }
 
 /**
@@ -41,7 +26,11 @@ function isDomain(token) {
 	@class MultiToken
 	@abstract
 */
-export const MultiToken = createTokenClass();
+export function MultiToken(type, value) {
+	this.t = type;
+	this.v = value;
+	this.isLink = false;
+}
 
 MultiToken.prototype = {
 	/**
@@ -102,23 +91,37 @@ MultiToken.prototype = {
 	}
 };
 
+// Base token
+export { MultiToken as BASE };
+
+/**
+ * Create a new token that can be emitted by the parser state machine
+ * @param {string} type readable type of the token
+ * @param {object} props properties to assign or override, including isLink = true or false
+ * @returns {class} new token class
+ */
+export function createTokenClass(type, props) {
+	function Token(value) {
+		this.t = type;
+		this.v = value;
+	}
+	inherits(MultiToken, Token, props);
+	return Token;
+}
+
 /**
 	Represents an arbitrarily mailto email address with the prefix included
 	@class MAILTO
 	@extends MultiToken
 */
-export const MAILTOEMAIL = inherits(MultiToken, createTokenClass(), {
-	t: 'email',
-	isLink: true
-});
+export const MAILTOEMAIL = createTokenClass('email', { isLink: true });
 
 /**
 	Represents a list of tokens making up a valid email address
 	@class EMAIL
 	@extends MultiToken
 */
-export const EMAIL = inherits(MultiToken, createTokenClass(), {
-	t: 'email',
+export const EMAIL = createTokenClass('email', {
 	isLink: true,
 	toHref() {
 		return 'mailto:' + this.toString();
@@ -130,22 +133,21 @@ export const EMAIL = inherits(MultiToken, createTokenClass(), {
 	@class TEXT
 	@extends MultiToken
 */
-export const TEXT = inherits(MultiToken, createTokenClass(), {t: 'text'});
+export const TEXT = createTokenClass('text');
 
 /**
 	Multi-linebreak token - represents a line break
 	@class NL
 	@extends MultiToken
 */
-export const NL = inherits(MultiToken, createTokenClass(), {t: 'nl'});
+export const NL = createTokenClass('nl');
 
 /**
-	Represents a list of tokens making up a valid URL
+	Represents a list of text tokens making up a valid URL
 	@class URL
 	@extends MultiToken
 */
-export const URL = inherits(MultiToken, createTokenClass(), {
-	t: 'url',
+export const URL = createTokenClass('url', {
 	isLink: true,
 
 	/**
@@ -158,9 +160,9 @@ export const URL = inherits(MultiToken, createTokenClass(), {
 		@return {String}
 	*/
 	toHref(protocol = 'http') {
+		const tokens = this.v;
 		let hasProtocol = false;
 		let hasSlashSlash = false;
-		let tokens = this.v;
 		let result = [];
 		let i = 0;
 
@@ -168,26 +170,20 @@ export const URL = inherits(MultiToken, createTokenClass(), {
 		// Lowercase protocol
 		while (tokens[i].t === PROTOCOL) {
 			hasProtocol = true;
-			result.push(tokens[i].toString().toLowerCase());
+			result.push(tokens[i].v);
 			i++;
 		}
 
 		// Skip slash-slash
 		while (tokens[i].t === SLASH) {
 			hasSlashSlash = true;
-			result.push(tokens[i].toString());
+			result.push(tokens[i].v);
 			i++;
 		}
 
-		// Lowercase all other characters in the domain
-		while (isDomain(tokens[i])) {
-			result.push(tokens[i].toString().toLowerCase());
-			i++;
-		}
-
-		// Leave all other characters as they were written
+		// Continue pushing characters
 		for (; i < tokens.length; i++) {
-			result.push(tokens[i].toString());
+			result.push(tokens[i].v);
 		}
 
 		result = result.join('');
@@ -203,5 +199,3 @@ export const URL = inherits(MultiToken, createTokenClass(), {
 		return this.v[0].t === PROTOCOL;
 	}
 });
-
-export { MultiToken as Base };

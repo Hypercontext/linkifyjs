@@ -17,6 +17,55 @@ function State(token) {
 }
 
 /**
+ * Take the transition from this state to the next one on the given input.
+ * If this state does not exist deterministically, will create it.
+ *
+ * @param {string} input character or token to transition on
+ * @param {string|class} [token] token or multi-token to emit when reaching
+ * this state
+ */
+State.prototype = {
+	/**
+	 * @param {State} state
+	 */
+	accepts() {
+		return !!this.t;
+	},
+	tt(input, tokenOrState) {
+		if (tokenOrState instanceof State) {
+			// Just define a transition
+			this.j[input] = tokenOrState;
+			return tokenOrState;
+		}
+
+		const token = tokenOrState;
+		let nextState = this.j[input];
+		if (nextState) {
+			if (token) { nextState.t = tokenOrState; } // overrwites previous token
+			return token;
+		}
+
+		// Create a new state for this input
+		nextState = new State();
+
+		// Take the transition using the usual default mechanisms
+		const templateState = takeT(this, input);
+		if (templateState) {
+			// Some default state transition, make a prime state based on this one
+			Object.assign(nextState.j, templateState.j);
+			nextState.jr.append(templateState.jr);
+			nextState.jr = templateState.jd;
+			nextState.t = token || templateState.t;
+		} else {
+			nextState.t = token;
+		}
+
+		this.j[input] = nextState;
+		return nextState;
+	}
+};
+
+/**
  * Utility function to create state without using new keyword (reduced file size
  * when minified)
  */
@@ -58,7 +107,7 @@ export const makeRegexT = (startState, regex, nextState) => {
  * @param {Token} input character or other concrete token type to transition
  * @returns {?State} the next state, if any
  */
-export const t = (state, input) => {
+export const takeT = (state, input) => {
 	// IMPLEMENTATION 1: Object key lookup (faster)
 	const nextState  = state.j[input];
 	if (nextState) { return nextState; }
@@ -142,9 +191,3 @@ export const makeChainT = (state, str, endState, defaultStateFactory) => {
 
 	makeT(state, str[len - 1], endState);
 };
-
-/**
- * Whether this is an accepting state
- * @param {State} state
- */
-export const accepts = (state) => !!state.t;
