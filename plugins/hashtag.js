@@ -1,1 +1,2 @@
-module.exports = require('../lib/plugins/hashtag').default;
+require('../lib/plugins/hashtag');
+module.exports = () => {}; // noop for compatibility with v2

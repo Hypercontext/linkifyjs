@@ -1,1 +1,2 @@
-module.exports = require('../lib/plugins/ticket').default;
+require('../lib/plugins/ticket');
+module.exports = () => {}; // noop for compatibility with v2

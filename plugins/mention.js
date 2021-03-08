@@ -1,1 +1,2 @@
-module.exports = require('../lib/plugins/mention').default;
+require('../lib/plugins/mention');
+module.exports = () => {}; // noop for compatibility with v2
