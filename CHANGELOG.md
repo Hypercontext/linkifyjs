@@ -13,9 +13,10 @@
     target: (href, type) => type === 'url' && '_blank'
   })
   ```
-* AMD module interface is no longer provided. Use a bundler instead.
+* AMD module interface is no longer provided. Use a ESM bundler instead.
 * Plugins imported after linkify is called on a string for the first time will not longer work. Import all plugins _before_ calling a linkify core or interface function.
 * Custom plugin API is not compatible with previous API in Linkify v2
+* Dropped support for Internet Explorer versions 9 and 10. IE11 is still supported
 
 ### All Changes
 * Full Internationalized Domain (IDN) and Emoji domain support 🇺🇳🌍✈️🎉💃! Detect URLs, #hashtags and @mentions in any language
