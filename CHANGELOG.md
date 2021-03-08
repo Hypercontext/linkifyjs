@@ -3,15 +3,9 @@
 ## v3.0.0
 
 ### BREAKING CHANGES
-* Add default `rel="nofollow"` attribute to discovered URLs. Opt out by setting the `rel` option to `null`:
-  ```js
-  linkifyElement(document.getElementById('content'), { rel: null })
-  ```
 * Remove default `class="linkified"` from all discovered links. Opt back in by setting the `className` option:
   ```jsx
-  <Linkify options={{ className: 'linkified' }}>
-    {content}
-  </Linkify>
+  linkifyStr(str, { className: 'linkified' }})
   ```
 * Remove default `target="_blank"` attribute for discovered URLs. Opt back in by setting the `target` option:
   ```js
@@ -19,12 +13,14 @@
     target: (href, type) => type === 'url' && '_blank'
   })
   ```
+* AMD module interface is no longer provided. Use a bundler instead.
 * Plugins imported after linkify is called on a string for the first time will not longer work. Import all plugins _before_ calling a linkify core or interface function.
 * Custom plugin API is not compatible with previous API in Linkify v2
 
 ### All Changes
 * Full Internationalized Domain (IDN) and Emoji domain support 🇺🇳🌍✈️🎉💃! Detect URLs, #hashtags and @mentions in any language
 * ~10x faster startup; ~4x faster startup + first run
+* Add new `rel` option at top level as an alternate way of including it in `attributes`
 * New and improved plugin API
 * Plugins no longer need to be called on linkify after import
   ```js
