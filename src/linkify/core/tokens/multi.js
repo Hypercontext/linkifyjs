@@ -25,6 +25,8 @@ function inherits(parent, child, props={}) {
 	creations.
 
 	@class MultiToken
+	@param {string} type
+	@param {Array<{t: string, v: string}>} value
 	@abstract
 */
 export function MultiToken(type, value) {
@@ -32,12 +34,11 @@ export function MultiToken(type, value) {
 	this.v = value;
 	this.isLink = false;
 }
-
 MultiToken.prototype = {
 	/**
 		String representing the type for this token
 		@property t
-		@default 'TOKEN'
+		@default 'token'
 	*/
 	t: 'token',
 
@@ -51,7 +52,7 @@ MultiToken.prototype = {
 	/**
 		Return the string this token represents.
 		@method toString
-		@return {String}
+		@return {string}
 	*/
 	toString() {
 		let result = [];
@@ -66,7 +67,7 @@ MultiToken.prototype = {
 		Returns the `.toString` value by default.
 
 		@method toHref
-		@return {String}
+		@return {string}
 	*/
 	toHref() {
 		return this.toString();
@@ -80,8 +81,8 @@ MultiToken.prototype = {
 			attribute
 
 		@method toObject
-		@param {String} [protocol] `'http'` by default
-		@return {Object}
+		@param {string} [protocol] `'http'` by default
+		@return {{type: string, value: string, href: string}}
 	*/
 	toObject(protocol = defaults.defaultProtocol) {
 		return {
@@ -93,13 +94,13 @@ MultiToken.prototype = {
 };
 
 // Base token
-export { MultiToken as BASE };
+export { MultiToken as Base };
 
 /**
  * Create a new token that can be emitted by the parser state machine
  * @param {string} type readable type of the token
  * @param {object} props properties to assign or override, including isLink = true or false
- * @returns {class} new token class
+ * @returns {(value: string) => MultiToken} new token class
  */
 export function createTokenClass(type, props) {
 	function Token(value) {
@@ -112,17 +113,17 @@ export function createTokenClass(type, props) {
 
 /**
 	Represents an arbitrarily mailto email address with the prefix included
-	@class MAILTO
+	@class MailtoEmail
 	@extends MultiToken
 */
-export const MAILTOEMAIL = createTokenClass('email', { isLink: true });
+export const MailtoEmail = createTokenClass('email', { isLink: true });
 
 /**
 	Represents a list of tokens making up a valid email address
-	@class EMAIL
+	@class Email
 	@extends MultiToken
 */
-export const EMAIL = createTokenClass('email', {
+export const Email = createTokenClass('email', {
 	isLink: true,
 	toHref() {
 		return 'mailto:' + this.toString();
@@ -131,24 +132,24 @@ export const EMAIL = createTokenClass('email', {
 
 /**
 	Represents some plain text
-	@class TEXT
+	@class Text
 	@extends MultiToken
 */
-export const TEXT = createTokenClass('text');
+export const Text = createTokenClass('text');
 
 /**
 	Multi-linebreak token - represents a line break
-	@class NL
+	@class Nl
 	@extends MultiToken
 */
-export const NL = createTokenClass('nl');
+export const Nl = createTokenClass('nl');
 
 /**
 	Represents a list of text tokens making up a valid URL
-	@class URL
+	@class Url
 	@extends MultiToken
 */
-export const URL = createTokenClass('url', {
+export const Url = createTokenClass('url', {
 	isLink: true,
 
 	/**
@@ -157,8 +158,8 @@ export const URL = createTokenClass('url', {
 		URL.
 
 		@method href
-		@param {String} protocol
-		@return {String}
+		@param {string} protocol
+		@return {string}
 	*/
 	toHref(protocol = defaults.defaultProtocol) {
 		const tokens = this.v;

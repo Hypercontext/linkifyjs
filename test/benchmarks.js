@@ -1,11 +1,11 @@
 var ITERATIONS = 500;
 
-function bench1() {
+function bench1(linkify) {
 	// eslint-disable-next-line no-debugger
 	debugger; // prevents V8 optimization
 	delete require.cache[require.resolve('../lib/linkify')];
-	var linkify = require('../lib/linkify');
-	linkify.find('');
+	linkify = require('../lib/linkify');
+	linkify.init();
 	// delete require.cache[require.resolve('moment')];
 	// var moment = require('moment');
 }
@@ -249,8 +249,10 @@ mailto:bar`);
 
 
 [bench1, bench2].forEach((bench) => {
+	debugger;
 	// var usageInitial = process.memoryUsage();
 	var linkify = require('../lib/linkify');
+	linkify.init();
 	// var usageLinkify = process.memoryUsage();
 
 	console.log('Doing ' + ITERATIONS + ' iterations...');

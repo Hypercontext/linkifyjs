@@ -19,8 +19,11 @@ module.exports = {
 
 	extra: fs.readFileSync(__dirname + '/extra.html', 'utf8').trim(), // for jQuery plugin tests
 	altOptions: {
+		className: 'linkified',
+		rel: 'nofollow',
+		target: '_blank',
 		attributes: {
-			rel: 'nofollow'
+			type: 'text/html'
 		},
 		events: {
 			click: function () {

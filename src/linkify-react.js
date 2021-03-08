@@ -8,14 +8,14 @@ const {Options} = options;
 // (which may include strings)
 function stringToElements(str, opts) {
 
-	let tokens = linkify.tokenize(str);
-	let elements = [];
-	var linkId = 0;
+	const tokens = linkify.tokenize(str);
+	const elements = [];
+	let linkId = 0;
 
-	for (var i = 0; i < tokens.length; i++) {
-		let token = tokens[i];
+	for (let i = 0; i < tokens.length; i++) {
+		const token = tokens[i];
 
-		if (token.type === 'nl' && opts.nl2br) {
+		if (token.t === 'nl' && opts.nl2br) {
 			elements.push(React.createElement('br', {key: `linkified-${++linkId}`}));
 			continue;
 		} else if (!token.isLink || !opts.check(token)) {
@@ -24,27 +24,21 @@ function stringToElements(str, opts) {
 			continue;
 		}
 
-		let {
+		const {
 			formatted,
 			formattedHref,
 			tagName,
 			className,
 			target,
+			rel,
 			attributes
 		} = opts.resolve(token);
 
-		let props = {
-			key: `linkified-${++linkId}`,
-			href: formattedHref,
-		};
+		const props = { key: `linkified-${++linkId}`, href: formattedHref };
 
-		if (className) {
-			props.className = className;
-		}
-
-		if (target) {
-			props.target = target;
-		}
+		if (className) { props.className = className; }
+		if (target) { props.target = target; }
+		if (rel) { props.rel = rel; }
 
 		// Build up additional attributes
 		// Support for events via attributes hash
@@ -67,7 +61,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 		return element;
 	}
 
-	let children = [];
+	const children = [];
 
 	React.Children.forEach(element.props.children, (child) => {
 		if (typeof child === 'string') {
@@ -76,7 +70,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 			children.push(...stringToElements(child, opts));
 		} else if (React.isValidElement(child)) {
 			if (typeof child.type === 'string'
-				&& options.contains(opts.ignoreTags, child.type.toUpperCase())
+				&& opts.ignoreTags.indexOf(child.type.toUpperCase()) >= 0
 			) {
 				// Don't linkify this element
 				children.push(child);
@@ -90,27 +84,30 @@ function linkifyReactElement(element, opts, elementId = 0) {
 	});
 
 	// Set a default unique key, copy over remaining props
-	let newProps = {key: `linkified-element-${elementId}`};
-	for (var prop in element.props) {
+	const newProps = { key: `linkified-element-${elementId}` };
+	for (const prop in element.props) {
 		newProps[prop] = element.props[prop];
 	}
 
 	return React.cloneElement(element, newProps, children);
 }
 
+/**
+ * @class Linkify
+ */
 class Linkify extends React.Component {
 	render() {
 		// Copy over all non-linkify-specific props
-		let newProps = {key: 'linkified-element-0'};
-		for (var prop in this.props) {
+		const newProps = { key: 'linkified-element-0' };
+		for (const prop in this.props) {
 			if (prop !== 'options' && prop !== 'tagName') {
 				newProps[prop] = this.props[prop];
 			}
 		}
 
-		let opts = new Options(this.props.options);
-		let tagName = this.props.tagName || 'span';
-		let element = React.createElement(tagName, newProps);
+		const opts = new Options(this.props.options);
+		const tagName = this.props.tagName || 'span';
+		const element = React.createElement(tagName, newProps);
 
 		return linkifyReactElement(element, opts, 0);
 	}

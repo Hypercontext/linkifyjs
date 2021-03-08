@@ -1,11 +1,10 @@
-import * as options from './linkify/utils/options';
 import * as scanner from './linkify/core/scanner';
 import * as parser from './linkify/core/parser';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
 
 // Side-effect initialization state
-export const INIT = {
+const INIT = {
 	scanner: null,
 	parser: null,
 	pluginQueue: [],
@@ -13,7 +12,9 @@ export const INIT = {
 };
 
 /**
- * De-register all plugins. Used for testing; not required in practice
+ * De-register all plugins and reset the internal state-machine. Used for
+ * testing; not required in practice.
+ * @private
  */
 export function reset() {
 	INIT.scanner = null;
@@ -64,9 +65,8 @@ export function init() {
 
 /**
 	Converts a string into tokens that represent linkable and non-linkable bits
-	@method tokenize
-	@param {String} str
-	@return {Array} tokens
+	@param {string} str
+	@return {Array<MultiToken>} tokens
 */
 export function tokenize(str) {
 	if (!INIT.initialized) { init(); }
@@ -75,14 +75,17 @@ export function tokenize(str) {
 
 /**
 	Returns a list of linkable items in the given string.
+	@param {string} str string to find links in
+	@param {string} type (optional) only find links of a specific type, e.g.,
+	'url' or 'email'
 */
 export function find(str, type = null) {
-	let tokens = tokenize(str);
-	let filtered = [];
+	const tokens = tokenize(str);
+	const filtered = [];
 
-	for (var i = 0; i < tokens.length; i++) {
-		let token = tokens[i];
-		if (token.isLink && (!type || token.type === type)) {
+	for (let i = 0; i < tokens.length; i++) {
+		const token = tokens[i];
+		if (token.isLink && (!type || token.t === type)) {
 			filtered.push(token.toObject());
 		}
 	}
@@ -91,18 +94,21 @@ export function find(str, type = null) {
 }
 
 /**
-	Is the given string valid linkable text of some sort
-	Note that this does not trim the text for you.
-
-	Optionally pass in a second `type` param, which is the type of link to test
-	for.
-
-	For example,
-
-		test(str, 'email');
-
-	Will return `true` if str is a valid email.
-*/
+ * Is the given string valid linkable text of some sort. Note that this does not
+ * trim the text for you.
+ *
+ * Optionally pass in a second `type` param, which is the type of link to test
+ * for.
+ *
+ * For example,
+ *
+ *     linkify.test(str, 'email');
+ *
+ * Returns `true` if str is a valid email.
+ * @param {string} str string to test for links
+ * @param {string} [type] optional specific link type to look for
+ * @returns boolean true/false
+ */
 export function test(str, type = null) {
 	const tokens = tokenize(str);
 	return tokens.length === 1 && tokens[0].isLink && (
@@ -110,6 +116,4 @@ export function test(str, type = null) {
 	);
 }
 
-// Scanner and parser provide states and tokens for the lexicographic stage
-// (will be used to add additional link types)
-export { options };
+export * as options from './linkify/utils/options';

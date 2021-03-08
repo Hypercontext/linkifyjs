@@ -59,7 +59,7 @@ describe('linkify-jquery', function () {
 
 	it('Works with the DOM Data API', () => {
 		expect($('header').first().html()).to.be.eql(
-			'Have a link to:<br><a href="https://github.com" class="linkified" target="_blank">github.com</a>!'
+			'Have a link to:<br><a href="https://github.com">github.com</a>!'
 		);
 		expect($('#linkify-test-div').html()).to.be.eql(
 			'Another <i href="mailto:test@gmail.com" class="test-class" ' +

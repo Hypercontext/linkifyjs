@@ -27,7 +27,7 @@ export const SPACE = /\s/;
 
 /**
  * Initialize the scanner character-based state machine for the given start state
- * @param {State} start
+ * @return {State} scanner starting state
  */
 export function init() {
 	// Frequently used states
@@ -157,9 +157,9 @@ export function init() {
 	composition of that string.
 
 	@method run
-	@param {State} start The starting state
-	@param {String} str Input string to scan
-	@return {Array} Array of TOKEN instances
+	@param {State} start scanner starting state
+	@param {string} str input string to scan
+	@return {Array<{t: string, v: string}>} list of tokens, each with a type and value
 */
 export function run(start, str) {
 	// State machine is not case sensitive, so input is tokenized in lowercased

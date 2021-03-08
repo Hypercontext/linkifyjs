@@ -1,43 +1,39 @@
-var defaults = {
+export const defaults = {
 	defaultProtocol: 'http',
 	events: null,
 	format: noop,
 	formatHref: noop,
 	nl2br: false,
 	tagName: 'a',
-	target: typeToTarget,
+	target: null,
+	rel: null,
 	validate: true,
-	ignoreTags: [],
+	truncate: 0,
+	className: null,
 	attributes: null,
-	className: 'linkified', // Deprecated value - no default class will be provided in the future
-	truncate: 0
+	ignoreTags: []
 };
 
-export { defaults, Options, contains };
-
-function Options(opts) {
+export function Options(opts) {
 	opts = opts || {};
 
-	this.defaultProtocol = opts.hasOwnProperty('defaultProtocol') ? opts.defaultProtocol : defaults.defaultProtocol;
-	this.events = opts.hasOwnProperty('events') ? opts.events : defaults.events;
-	this.format = opts.hasOwnProperty('format') ? opts.format : defaults.format;
-	this.formatHref = opts.hasOwnProperty('formatHref') ? opts.formatHref : defaults.formatHref;
-	this.nl2br = opts.hasOwnProperty('nl2br') ? opts.nl2br : defaults.nl2br;
-	this.tagName = opts.hasOwnProperty('tagName') ? opts.tagName : defaults.tagName;
-	this.target = opts.hasOwnProperty('target') ? opts.target : defaults.target;
-	this.validate = opts.hasOwnProperty('validate') ? opts.validate : defaults.validate;
-	this.truncate = opts.hasOwnProperty('truncate') ? opts.truncate : defaults.truncate;
-	this.ignoreTags = [];
-
-	// linkAttributes and linkClass is deprecated
-	this.attributes = opts.attributes || opts.linkAttributes || defaults.attributes;
-	this.className = opts.hasOwnProperty('className')
-		? opts.className
-		: (opts.linkClass || defaults.className);
+	this.defaultProtocol	= 'defaultProtocol' in opts ? opts.defaultProtocol : defaults.defaultProtocol;
+	this.events				= 'events' in opts ? opts.events : defaults.events;
+	this.format				= 'format' in opts ? opts.format : defaults.format;
+	this.formatHref			= 'formatHref' in opts ? opts.formatHref : defaults.formatHref;
+	this.nl2br				= 'nl2br' in opts ? opts.nl2br : defaults.nl2br;
+	this.tagName			= 'tagName' in opts ? opts.tagName : defaults.tagName;
+	this.target				= 'target' in opts ? opts.target : defaults.target;
+	this.rel				= 'rel' in opts ? opts.rel : defaults.rel;
+	this.validate			= 'validate' in opts ? opts.validate : defaults.validate;
+	this.truncate			= 'truncate' in opts ? opts.truncate : defaults.truncate;
+	this.className 			= 'className' in opts ? opts.className : defaults.className;
+	this.attributes 		= opts.attributes || defaults.attributes;
+	this.ignoreTags			= [];
 
 	// Make all tags names upper case
-	let ignoredTags = opts.hasOwnProperty('ignoreTags') ? opts.ignoreTags : defaults.ignoreTags;
-	for (var i = 0; i < ignoredTags.length; i++) {
+	const ignoredTags = 'ignoreTags' in opts ? opts.ignoreTags : defaults.ignoreTags;
+	for (let i = 0; i < ignoredTags.length; i++) {
 		this.ignoreTags.push(ignoredTags[i].toUpperCase());
 	}
 }
@@ -47,13 +43,14 @@ Options.prototype = {
 	 * Given the token, return all options for how it should be displayed
 	 */
 	resolve(token) {
-		let href = token.toHref(this.defaultProtocol);
+		const href = token.toHref(this.defaultProtocol);
 		return {
 			formatted: this.get('format', token.toString(), token),
 			formattedHref: this.get('formatHref', href, token),
 			tagName: this.get('tagName', href, token),
 			className: this.get('className', href, token),
 			target: this.get('target', href, token),
+			rel: this.get('rel', href, token),
 			events: this.getObject('events', href, token),
 			attributes: this.getObject('attributes', href, token),
 			truncate: this.get('truncate', href, token),
@@ -73,44 +70,32 @@ Options.prototype = {
 	/**
 	 * Resolve an option's value based on the value of the option and the given
 	 * params.
-	 * @param {String} key Name of option to use
+	 * @param {string} key Name of option to use
 	 * @param operator will be passed to the target option if it's method
 	 * @param {MultiToken} token The token from linkify.tokenize
 	 */
 	get(key, operator, token) {
-		let optionValue, option = this[key];
+		const option = this[key];
 		if (!option) { return option; }
 
+		let optionValue;
 		switch (typeof option) {
-		case 'function': return option(operator, token.type);
+		case 'function':
+			return option(operator, token.t);
 		case 'object':
-			optionValue = option.hasOwnProperty(token.type) ? option[token.type] : defaults[key];
-			return typeof optionValue === 'function' ? optionValue(operator, token.type) : optionValue;
+			optionValue = token.t in option ? option[token.t] : defaults[key];
+			return typeof optionValue === 'function' ? optionValue(operator, token.t) : optionValue;
 		}
 
 		return option;
 	},
 
 	getObject(key, operator, token) {
-		let option = this[key];
-		return typeof option === 'function' ? option(operator, token.type) : option;
+		const option = this[key];
+		return typeof option === 'function' ? option(operator, token.t) : option;
 	}
 };
 
-/**
- * Quick indexOf replacement for checking the ignoreTags option
- */
-function contains(arr, value) {
-	for (var i = 0; i < arr.length; i++) {
-		if (arr[i] === value) { return true; }
-	}
-	return false;
-}
-
 function noop(val) {
 	return val;
-}
-
-function typeToTarget(href, type) {
-	return type === 'url' ? '_blank' : null;
 }

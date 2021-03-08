@@ -23,6 +23,10 @@ import {
 import * as tk from './tokens/text';
 import * as mtk from './tokens/multi';
 
+/**
+ * Generate the parser multi token-based state machine
+ * @returns {State} the starting state
+ */
 export function init() {
 	// The universal starting state.
 	let S_START = makeState();
@@ -35,34 +39,34 @@ export function init() {
 	let S_PROTOCOL_SLASH_SLASH			= makeState();  // e.g., '//', 'http://'
 	let S_DOMAIN						= makeState(); // parsed string ends with a potential domain name (A)
 	let S_DOMAIN_DOT					= makeState(); // (A) domain followed by DOT
-	let S_TLD							= makeAcceptingState(mtk.URL); // (A) Simplest possible URL with no query string
+	let S_TLD							= makeAcceptingState(mtk.Url); // (A) Simplest possible URL with no query string
 	let S_TLD_COLON						= makeState(); // (A) URL followed by colon (potential port number here)
-	let S_TLD_PORT						= makeAcceptingState(mtk.URL); // TLD followed by a port number
-	let S_URL							= makeAcceptingState(mtk.URL); // Long URL with optional port and maybe query string
+	let S_TLD_PORT						= makeAcceptingState(mtk.Url); // TLD followed by a port number
+	let S_URL							= makeAcceptingState(mtk.Url); // Long URL with optional port and maybe query string
 	let S_URL_NON_ACCEPTING				= makeState(); // URL followed by some symbols (will not be part of the final URL)
 	let S_URL_OPENBRACE					= makeState(); // URL followed by {
 	let S_URL_OPENBRACKET				= makeState(); // URL followed by [
 	let S_URL_OPENANGLEBRACKET			= makeState(); // URL followed by <
 	let S_URL_OPENPAREN					= makeState(); // URL followed by (
-	let S_URL_OPENBRACE_Q				= makeAcceptingState(mtk.URL); // URL followed by { and some symbols that the URL can end it
-	let S_URL_OPENBRACKET_Q				= makeAcceptingState(mtk.URL); // URL followed by [ and some symbols that the URL can end it
-	let S_URL_OPENANGLEBRACKET_Q		= makeAcceptingState(mtk.URL); // URL followed by < and some symbols that the URL can end it
-	let S_URL_OPENPAREN_Q				= makeAcceptingState(mtk.URL); // URL followed by ( and some symbols that the URL can end it
+	let S_URL_OPENBRACE_Q				= makeAcceptingState(mtk.Url); // URL followed by { and some symbols that the URL can end it
+	let S_URL_OPENBRACKET_Q				= makeAcceptingState(mtk.Url); // URL followed by [ and some symbols that the URL can end it
+	let S_URL_OPENANGLEBRACKET_Q		= makeAcceptingState(mtk.Url); // URL followed by < and some symbols that the URL can end it
+	let S_URL_OPENPAREN_Q				= makeAcceptingState(mtk.Url); // URL followed by ( and some symbols that the URL can end it
 	let S_URL_OPENBRACE_SYMS			= makeState(); // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
 	let S_URL_OPENBRACKET_SYMS			= makeState(); // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
 	let S_URL_OPENANGLEBRACKET_SYMS		= makeState(); // S_URL_OPENANGLEBRACKET_Q followed by some symbols it cannot end it
 	let S_URL_OPENPAREN_SYMS			= makeState(); // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
 	let S_EMAIL_DOMAIN					= makeState(); // parsed string starts with local email info + @ with a potential domain name (C)
 	let S_EMAIL_DOMAIN_DOT				= makeState(); // (C) domain followed by DOT
-	let S_EMAIL							= makeAcceptingState(mtk.EMAIL); // (C) Possible email address (could have more tlds)
+	let S_EMAIL							= makeAcceptingState(mtk.Email); // (C) Possible email address (could have more tlds)
 	let S_EMAIL_COLON					= makeState(); // (C) URL followed by colon (potential port number here)
-	let S_EMAIL_PORT					= makeAcceptingState(mtk.EMAIL); // (C) Email address with a port
-	let S_MAILTO_EMAIL					= makeAcceptingState(mtk.MAILTOEMAIL); // Email that begins with the mailto prefix (D)
+	let S_EMAIL_PORT					= makeAcceptingState(mtk.Email); // (C) Email address with a port
+	let S_MAILTO_EMAIL					= makeAcceptingState(mtk.MailtoEmail); // Email that begins with the mailto prefix (D)
 	let S_MAILTO_EMAIL_NON_ACCEPTING	= makeState(); // (D) Followed by some non-query string chars
 	let S_LOCALPART						= makeState(); // Local part of the email address
 	let S_LOCALPART_AT					= makeState(); // Local part of the email address plus @
 	let S_LOCALPART_DOT					= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
-	let S_NL							= makeAcceptingState(mtk.NL); // single new line
+	let S_NL							= makeAcceptingState(mtk.Nl); // single new line
 
 	// Make path from start to protocol (with '//')
 	makeT(S_START, tk.NL, S_NL);
@@ -270,9 +274,18 @@ export function init() {
 
 	// States following `@` defined above
 
-	return S_START
+	return S_START;
 }
 
+/**
+ * Run the parser state machine on a list of scanned string-based tokens to
+ * create a list of multi tokens, each of which represents a URL, email address,
+ * plain text, etc.
+ *
+ * @param {State} start parser start state
+ * @param {Array<{t: string, v: string}>} tokens list of scanned tokens
+ * @returns {Array<MultiToken>}
+ */
 export function run(start, tokens) {
 	let len = tokens.length;
 	let cursor = 0;
@@ -327,7 +340,7 @@ export function run(start, tokens) {
 
 			// First close off the textTokens (if available)
 			if (textTokens.length > 0) {
-				multis.push(new mtk.TEXT(textTokens));
+				multis.push(new mtk.Text(textTokens));
 				textTokens = [];
 			}
 
@@ -336,14 +349,14 @@ export function run(start, tokens) {
 			multiLength -= sinceAccepts;
 
 			// Create a new multitoken
-			let MULTI = latestAccepting.t;
-			multis.push(new MULTI(tokens.slice(cursor - multiLength, cursor)));
+			let Multi = latestAccepting.t;
+			multis.push(new Multi(tokens.slice(cursor - multiLength, cursor)));
 		}
 	}
 
 	// Finally close off the textTokens (if available)
 	if (textTokens.length > 0) {
-		multis.push(new mtk.TEXT(textTokens));
+		multis.push(new mtk.Text(textTokens));
 	}
 
 	return multis;

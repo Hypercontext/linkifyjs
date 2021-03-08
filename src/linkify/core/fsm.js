@@ -2,13 +2,14 @@
  * Finite State Machine generation utilities
  */
 
- /**
+/**
  * Define a basic state machine state. j is the list of character transitions,
  * jr is the list of regex-match transitions, jd is the default state to
  * transition to t is the accepting token type, if any. If this is the terminal
  * state, then it does not emit a token.
+ * @param {string|class} token to emit
  */
-function State(token) {
+export function State(token) {
 	this.j = {}; // IMPLEMENTATION 1
 	// this.j = []; // IMPLEMENTATION 2
 	this.jr = [];
@@ -63,8 +64,8 @@ State.prototype = {
 		const token = tokenOrState;
 		let nextState = this.j[input];
 		if (nextState) {
-			if (token) { nextState.t = tokenOrState; } // overrwites previous token
-			return token;
+			if (token) { nextState.t = token; } // overrwites previous token
+			return nextState;
 		}
 
 		// Create a new state for this input
@@ -189,7 +190,7 @@ export const makeBatchT = (startState, transitions) => {
  * This turns the state machine into a Trie-like data structure (rather than a
  * intelligently-designed DFA).
  * @param {State} state
- * @param {String} str
+ * @param {string} str
  * @param {Token} endStateFactory
  * @param {Token} defaultStateFactory
  */

@@ -21,27 +21,6 @@ String.prototype.truncate = function (limit) {
 };
 
 describe('linkify-string', () => {
-	const options = { // test options
-		tagName: 'span',
-		target: '_parent',
-		nl2br: true,
-		className: 'my-linkify-class',
-		defaultProtocol: 'https',
-		attributes: {
-			rel: 'nofollow',
-			onclick: 'javascript:alert("Hello");'
-		},
-		format: function (val) {
-			return val.truncate(40);
-		},
-		formatHref: function (href, type) {
-			if (type === 'email') {
-				href += '?subject=Hello%20from%20Linkify';
-			}
-			return href;
-		}
-	};
-
 	// For each element in this array
 	// [0] - Original text
 	// [1] - Linkified with default options
@@ -53,14 +32,39 @@ describe('linkify-string', () => {
 			'Test with no links',
 		], [
 			'The URL is google.com and the email is test@example.com',
-			'The URL is <a href="http://google.com" class="linkified" target="_blank">google.com</a> and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>',
+			'The URL is <a href="http://google.com">google.com</a> and the email is <a href="mailto:test@example.com">test@example.com</a>',
 			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">google.com</span> and the email is <span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">test@example.com</span>',
 		], [
 			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test.wut.yo@gmail.co.uk!\n',
-			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="linkified" target="_blank">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.wut.yo@gmail.co.uk" class="linkified">test.wut.yo@gmail.co.uk</a>!\n',
+			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.wut.yo@gmail.co.uk">test.wut.yo@gmail.co.uk</a>!\n',
 			'Super long maps URL <span href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">https://www.google.ca/maps/@43.472082,-8…</span>, a #hash-tag, and an email: <span href="mailto:test.wut.yo@gmail.co.uk?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="javascript:alert(&quot;Hello&quot;);">test.wut.yo@gmail.co.uk</span>!<br>\n',
 		]
 	];
+
+	let options;
+
+	before(() => {
+		options = { // test options
+			tagName: 'span',
+			target: '_parent',
+			nl2br: true,
+			className: 'my-linkify-class',
+			defaultProtocol: 'https',
+			rel: 'nofollow',
+			attributes: {
+				onclick: 'javascript:alert("Hello");'
+			},
+			format: function (val) {
+				return val.truncate(40);
+			},
+			formatHref: function (href, type) {
+				if (type === 'email') {
+					href += '?subject=Hello%20from%20Linkify';
+				}
+				return href;
+			}
+		};
+	});
 
 	it('Works with default options', () => {
 		tests.map(function (test) {
@@ -102,16 +106,16 @@ describe('linkify-string', () => {
 				'1.Test with no links'
 			], [
 				'2.The URL is google.com and the email is test@example.com',
-				'2.The URL is google.com and the email is <a href="mailto:test@example.com" class="linkified">test@example.com</a>'
+				'2.The URL is google.com and the email is <a href="mailto:test@example.com">test@example.com</a>'
 			], [
 				'3.The URL is www.google.com',
-				'3.The URL is <a href="http://www.google.com" class="linkified" target="_blank">www.google.com</a>'
+				'3.The URL is <a href="http://www.google.com">www.google.com</a>'
 			], [
 				'4.The URL is http://google.com',
-				'4.The URL is <a href="http://google.com" class="linkified" target="_blank">http://google.com</a>'
+				'4.The URL is <a href="http://google.com">http://google.com</a>'
 			], [
 				'5.The URL is ftp://google.com',
-				'5.The URL is <a href="ftp://google.com" class="linkified" target="_blank">ftp://google.com</a>'
+				'5.The URL is <a href="ftp://google.com">ftp://google.com</a>'
 			], [
 				'6.Test with no links.It is sloppy avoiding spaces after the dot',
 				'6.Test with no links.It is sloppy avoiding spaces after the dot'

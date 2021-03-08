@@ -1,11 +1,8 @@
 /**
 	Convert strings of text into linkable HTML text
 */
-
-import * as linkify from './linkify';
-
-const {tokenize, options} = linkify;
-const {Options} = options;
+import { options, tokenize } from './linkify';
+const { Options } = options;
 
 function escapeText(text) {
 	return text
@@ -29,6 +26,15 @@ function attributesToString(attributes) {
 	return result.join(' ');
 }
 
+/**
+ * Convert a plan text string to an HTML string with links. Expects that the
+ * given strings does not contain any HTML entities. Use the linkify-html
+ * interface if you need to parse HTML entities.
+ *
+ * @param {string} str string to linkify
+ * @param {object} [opts] overridable options
+ * @returns {string}
+ */
 function linkifyStr(str, opts = {}) {
 	opts = new Options(opts);
 
@@ -38,7 +44,7 @@ function linkifyStr(str, opts = {}) {
 	for (let i = 0; i < tokens.length; i++) {
 		let token = tokens[i];
 
-		if (token.type === 'nl' && opts.nl2br) {
+		if (token.t === 'nl' && opts.nl2br) {
 			result.push('<br>\n');
 			continue;
 		} else if (!token.isLink || !opts.check(token)) {
@@ -46,55 +52,37 @@ function linkifyStr(str, opts = {}) {
 			continue;
 		}
 
-		let {
+		const {
 			formatted,
 			formattedHref,
 			tagName,
 			className,
 			target,
+			rel,
 			attributes,
 		} = opts.resolve(token);
 
-		let link = `<${tagName} href="${escapeAttr(formattedHref)}"`;
+		const link = [`<${tagName} href="${escapeAttr(formattedHref)}"`];
 
-		if (className) {
-			link += ` class="${escapeAttr(className)}"`;
-		}
+		if (className) { link.push(` class="${escapeAttr(className)}"`); }
+		if (target) { link.push(` target="${escapeAttr(target)}"`); }
+		if (rel) { link.push(` rel="${escapeAttr(rel)}"`); }
+		if (attributes) { link.push(` ${attributesToString(attributes)}`); }
 
-		if (target) {
-			link += ` target="${escapeAttr(target)}"`;
-		}
-
-		if (attributes) {
-			link += ` ${attributesToString(attributes)}`;
-		}
-
-		link += `>${escapeText(formatted)}</${tagName}>`;
-		result.push(link);
+		link.push(`>${escapeText(formatted)}</${tagName}>`);
+		result.push(link.join(''));
 	}
 
 	return result.join('');
 }
 
 if (!String.prototype.linkify) {
-	try {
-		Object.defineProperty(String.prototype, 'linkify', {
-			set: function() {},
-			get: function() {
-				return function linkify(opts) {
-					return linkifyStr(this, opts);
-				};
-			}
-		});
-	} catch (e) {
-		// IE 8 doesn't like Object.defineProperty on non-DOM objects
-		if (!String.prototype.linkify) {
-			String.prototype.linkify = function (opts) {
-				return linkifyStr(this, opts);
-			};
+	Object.defineProperty(String.prototype, 'linkify', {
+		writable: false,
+		value: function linkify(options) {
+			return linkifyStr(this, options);
 		}
-	}
-
+	});
 }
 
 export default linkifyStr;

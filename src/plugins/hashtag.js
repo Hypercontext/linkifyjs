@@ -35,5 +35,3 @@ export const hashtag = ({ scanner, parser, utils }) => {
 };
 
 registerPlugin('hashtag', hashtag);
-
-export default () => {}; // noop for compatibility with v2

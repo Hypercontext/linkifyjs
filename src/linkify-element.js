@@ -1,18 +1,16 @@
 /**
 	Linkify a HTML DOM node
 */
+import { tokenize, options } from './linkify';
 
-import * as linkify from './linkify';
-
-const {tokenize, options} = linkify;
-const {Options} = options;
-
+const { Options } = options;
 const HTML_NODE = 1, TXT_NODE = 3;
 
 /**
-	Given a parent element and child node that the parent contains, replaces
-	that child with the given array of new children
-*/
+ * @param {HTMLElement} parent
+ * @param {Text | HTMLElement} oldChild
+ * @param {Array<Text | HTMLElement>} newChildren
+ */
 function replaceChildWithChildren(parent, oldChild, newChildren) {
 	let lastNewChild = newChildren[newChildren.length - 1];
 	parent.replaceChild(lastNewChild, oldChild);
@@ -23,18 +21,16 @@ function replaceChildWithChildren(parent, oldChild, newChildren) {
 }
 
 /**
-	Given an array of MultiTokens, return an array of Nodes that are either
-	(a) Plain Text nodes (node type 3)
-	(b) Anchor tag nodes (usually, unless tag name is overridden in the options)
-
-	Takes the same options as linkifyElement and an optional doc element
-	(this should be passed in by linkifyElement)
-*/
+ * @param {Array<MultiToken>} tokens
+ * @param {Object} opts
+ * @param {Document} doc A
+ * @returns {Array<Text | HTMLElement>}
+ */
 function tokensToNodes(tokens, opts, doc) {
-	let result = [];
+	const result = [];
 
 	for (const token of tokens) {
-		if (token.type === 'nl' && opts.nl2br) {
+		if (token.t === 'nl' && opts.nl2br) {
 			result.push(doc.createElement('br'));
 			continue;
 		} else if (!token.isLink || !opts.check(token)) {
@@ -42,37 +38,34 @@ function tokensToNodes(tokens, opts, doc) {
 			continue;
 		}
 
-		let {
+		const {
 			formatted,
 			formattedHref,
 			tagName,
 			className,
 			target,
+			rel,
 			events,
 			attributes,
 		} = opts.resolve(token);
 
 		// Build the link
-		let link = doc.createElement(tagName);
+		const link = doc.createElement(tagName);
 		link.setAttribute('href', formattedHref);
 
-		if (className) {
-			link.setAttribute('class', className);
-		}
-
-		if (target) {
-			link.setAttribute('target', target);
-		}
+		if (className) { link.setAttribute('class', className); }
+		if (target) { link.setAttribute('target', target); }
+		if (rel) { link.setAttribute('rel', rel); }
 
 		// Build up additional attributes
 		if (attributes) {
-			for (var attr in attributes) {
+			for (const attr in attributes) {
 				link.setAttribute(attr, attributes[attr]);
 			}
 		}
 
 		if (events) {
-			for (var event in events) {
+			for (const event in events) {
 				if (link.addEventListener) {
 					link.addEventListener(event, events[event]);
 				} else if (link.attachEvent)  {
@@ -88,7 +81,13 @@ function tokensToNodes(tokens, opts, doc) {
 	return result;
 }
 
-// Requires document.createElement
+/**
+ * Requires document.createElement
+ * @param {HTMLElement} element
+ * @param {Object} opts
+ * @param {Document} doc
+ * @returns {HTMLElement}
+ */
 function linkifyElementHelper(element, opts, doc) {
 
 	// Can the element be linkified?
@@ -96,10 +95,10 @@ function linkifyElementHelper(element, opts, doc) {
 		throw new Error(`Cannot linkify ${element} - Invalid DOM Node type`);
 	}
 
-	let ignoreTags = opts.ignoreTags;
+	const { ignoreTags } = opts;
 
 	// Is this element already a link?
-	if (element.tagName === 'A' || options.contains(ignoreTags, element.tagName)) {
+	if (element.tagName === 'A' || ignoreTags.indexOf(element.tagName) >= 0) {
 		// No need to linkify
 		return element;
 	}
@@ -140,8 +139,16 @@ function linkifyElementHelper(element, opts, doc) {
 	return element;
 }
 
-function linkifyElement(element, opts, doc = false) {
-
+/**
+ * Recursively traverse the given DOM node, find all links in the text and
+ * convert them to anchor tags.
+ *
+ * @param {HTMLElement} element A DOM node to linkify
+ * @param {Object} opts linkify options
+ * @param {Document} [doc] window.document implementation, if differs from global
+ * @returns {HTMLElement}
+ */
+function linkifyElement(element, opts, doc = null) {
 	try {
 		doc = doc || document || window && window.document || global && global.document;
 	} catch (e) { /* do nothing for now */ }

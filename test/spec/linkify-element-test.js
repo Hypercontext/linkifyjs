@@ -33,7 +33,7 @@ describe('linkify-element', () => {
 
 		const dom = new JSDOM('<html><head><title>Linkify Test</title></head><body></body></html>');
 		doc = dom.window.document;
-		return onDoc(dom.window.document);
+		onDoc(dom.window.document);
 	});
 
 	beforeEach(() => {

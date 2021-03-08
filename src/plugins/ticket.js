@@ -15,5 +15,3 @@ export const ticket = ({ scanner, parser, utils }) => {
 };
 
 registerPlugin('ticket', ticket);
-
-export default () => {}; // noop for compatibility with v2

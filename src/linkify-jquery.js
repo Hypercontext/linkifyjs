@@ -2,9 +2,19 @@ import jQuery from 'jquery';
 import linkifyElement from './linkify-element';
 
 // Applies the plugin to jQuery
+/**
+ *
+ * @param {jQuery} $ the global jQuery object
+ * @param {Document} doc browser document implementation
+ * @returns
+ */
 export default function apply($, doc = false) {
 
 	$.fn = $.fn || {};
+	if (typeof $.fn.linkify === 'function') {
+		// Already applied
+		return;
+	}
 
 	try {
 		doc = doc || document || (window && window.document) || global && global.document;
@@ -18,11 +28,6 @@ export default function apply($, doc = false) {
 		);
 	}
 
-	if (typeof $.fn.linkify === 'function') {
-		// Already applied
-		return;
-	}
-
 	function jqLinkify(opts) {
 		opts = linkifyElement.normalize(opts);
 		return this.each(function () {
@@ -32,13 +37,13 @@ export default function apply($, doc = false) {
 
 	$.fn.linkify = jqLinkify;
 
-	$(doc).ready(function () {
+	$(function () {
 		$('[data-linkify]').each(function () {
-			let $this = $(this);
-			let data = $this.data();
-			let target = data.linkify;
-			let nl2br = data.linkifyNlbr;
-
+			const $this = $(this);
+			const data = $this.data();
+			const target = data.linkify;
+			const nl2br = data.linkifyNl2br;
+;
 			let options = {
 				nl2br: !!nl2br && nl2br !== 0 && nl2br !== 'false'
 			};
@@ -71,6 +76,10 @@ export default function apply($, doc = false) {
 				options.target = data.linkifyTarget;
 			}
 
+			if ('linkifyRel' in data) {
+				options.rel = data.linkifyRel;
+			}
+
 			if ('linkifyValidate' in data) {
 				options.validate = data.linkifyValidate;
 			}
@@ -81,13 +90,11 @@ export default function apply($, doc = false) {
 
 			if ('linkifyClassName' in data) {
 				options.className = data.linkifyClassName;
-			} else if ('linkifyLinkclass' in data) { // linkClass is deprecated
-				options.className = data.linkifyLinkclass;
 			}
 
 			options = linkifyElement.normalize(options);
 
-			let $target = target === 'this' ? $this : $this.find(target);
+			const $target = target === 'this' ? $this : $this.find(target);
 			$target.linkify(options);
 		});
 	});

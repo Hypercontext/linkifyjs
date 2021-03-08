@@ -63,16 +63,16 @@ QUnit.module('linkify.find');
 QUnit.test('linkify.find correctly finds a URL', function (assert) {
 	var result = w.linkify.find('The url is github.com');
 	assert.equal(result.length, 1);
-	assert.equal(result[0].type, 'url');
-	assert.equal(result[0].value, 'github.com');
+	assert.equal(result[0].t, 'url');
+	assert.equal(result[0].v, 'github.com');
 	assert.equal(result[0].href, 'http://github.com');
 });
 
 QUnit.test('linkify.find correctly finds an email address', function (assert) {
 	var result = w.linkify.find('The url is github.com and the email is test@example.com', 'email');
 	assert.equal(result.length, 1);
-	assert.equal(result[0].type, 'email');
-	assert.equal(result[0].value, 'test@example.com');
+	assert.equal(result[0].t, 'email');
+	assert.equal(result[0].v, 'test@example.com');
 	assert.equal(result[0].href, 'mailto:test@example.com');
 });
 

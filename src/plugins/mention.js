@@ -65,5 +65,3 @@ export const mention = ({ scanner, parser, utils }) => {
 };
 
 registerPlugin('mention', mention);
-
-export default () => {}; // noop for compatibility with v2

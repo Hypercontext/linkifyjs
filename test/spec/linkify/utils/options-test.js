@@ -8,11 +8,7 @@ describe('linkify/utils/options', () => {
 		});
 
 		it('contains some keys', () => {
-			var count = 0;
-			for (var opt in options.defaults) {
-				count++;
-			}
-			expect(count).to.be.above(0);
+			expect(Object.keys(options.defaults).length).to.be.above(0);
 		});
 
 		it('defines the value for unspecified Options', () => {
@@ -25,19 +21,8 @@ describe('linkify/utils/options', () => {
 
 	});
 
-	describe('contains', () => {
-		it('returns true when an array contains the given value', () => {
-			expect(options.contains([1, 2, 3], 2)).to.be.ok;
-		});
-		it('returns false when an array contains the given value', () => {
-			expect(options.contains([1, 2, 3], 4)).to.not.be.ok;
-		});
-	});
-
 	describe('Options', () => {
-		var opts;
-		var urlToken;
-		var emailToken;
+		let opts, urlToken, emailToken;
 
 		beforeEach(() => {
 			opts = new Options({
@@ -55,13 +40,14 @@ describe('linkify/utils/options', () => {
 					url: (url) => /^http(s)?:\/\//.test(url) // only urls with protocols
 				},
 				ignoreTags: ['script', 'style'],
-				attributes: () => ({rel: 'nofollow'}),
+				rel: 'nofollow',
+				attributes: () => ({ type: 'text/html' }),
 				className: 'custom-class-name',
 				truncate: 40
 			});
 
 			urlToken = {
-				type: 'url',
+				t: 'url',
 				isLink: true,
 				toString: () => 'github.com',
 				toHref: (protocol) => `${protocol}://github.com`,
@@ -69,7 +55,7 @@ describe('linkify/utils/options', () => {
 			};
 
 			emailToken = {
-				type: 'email',
+				t: 'email',
 				isLink: true,
 				toString: () => 'test@example.com',
 				toHref: () => 'mailto:test@example.com'
@@ -83,9 +69,10 @@ describe('linkify/utils/options', () => {
 					formattedHref: 'https://github.com/?from=linkify',
 					tagName: 'a',
 					className: 'custom-class-name',
-					target: '_blank',
+					target: null,
 					events: opts.events,
-					attributes: {rel: 'nofollow'},
+					rel: 'nofollow',
+					attributes: { type: 'text/html' },
 					truncate: 40
 				});
 			});
@@ -98,7 +85,8 @@ describe('linkify/utils/options', () => {
 					className: 'custom-class-name',
 					target: null,
 					events: opts.events,
-					attributes: {rel: 'nofollow'},
+					rel: 'nofollow',
+					attributes: { type: 'text/html' },
 					truncate: 40
 				});
 			});
@@ -119,10 +107,7 @@ describe('linkify/utils/options', () => {
 		var opts;
 
 		beforeEach(() => {
-			opts = new Options({
-				target: null,
-				className: null
-			});
+			opts = new Options({ target: null, className: null });
 		});
 
 		describe('target', () => {

@@ -3,7 +3,6 @@ const tk = tokens.text;
 const mkt = tokens.multi;
 
 describe('linkify/core/tokens/multi', () => {
-
 	describe('URL', () => {
 		var urlTextTokens1, urlTextTokens2, urlTextTokens3, url1, url2, url3;
 
@@ -51,9 +50,9 @@ describe('linkify/core/tokens/multi', () => {
 				{ t: tk.DOMAIN, v: 'wat' },
 			];
 
-			url1 = new mkt.URL(urlTextTokens1);
-			url2 = new mkt.URL(urlTextTokens2);
-			url3 = new mkt.URL(urlTextTokens3);
+			url1 = new mkt.Url(urlTextTokens1);
+			url2 = new mkt.Url(urlTextTokens2);
+			url3 = new mkt.Url(urlTextTokens3);
 		});
 
 		describe('#isLink', () => {
@@ -133,7 +132,7 @@ describe('linkify/core/tokens/multi', () => {
 				{ t: tk.DOT, v: '.' },
 				{ t: tk.TLD, v: 'com' },
 			];
-			email = new mkt.EMAIL(emailTextTokens);
+			email = new mkt.Email(emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -168,7 +167,7 @@ describe('linkify/core/tokens/multi', () => {
 				{ t: tk.DOT, v: '.' },
 				{ t: tk.TLD, v: 'com' },
 			];
-			email = new mkt.MAILTOEMAIL(emailTextTokens);
+			email = new mkt.MailtoEmail(emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -196,7 +195,7 @@ describe('linkify/core/tokens/multi', () => {
 
 		before(() => {
 			nlTokens = [{t: tk.NL, v: '\n' }];
-			nl = new mkt.NL(nlTokens);
+			nl = new mkt.Nl(nlTokens);
 		});
 
 		describe('#isLink', () => {
@@ -223,7 +222,7 @@ describe('linkify/core/tokens/multi', () => {
 				{ t: tk.DOMAIN, v: 'World' },
 				{ t: tk.SYM, v: '!' },
 			];
-			text = new mkt.TEXT(textTokens);
+			text = new mkt.Text(textTokens);
 		});
 
 		describe('#isLink', () => {
@@ -238,5 +237,4 @@ describe('linkify/core/tokens/multi', () => {
 			});
 		});
 	});
-
 });
