@@ -1,4 +1,4 @@
-import { tokenize } from 'simple-html-tokenizer';
+import { tokenize } from '@nfrasser/simple-html-tokenizer';
 import * as linkify from './linkify';
 
 const { Options } = linkify.options;
