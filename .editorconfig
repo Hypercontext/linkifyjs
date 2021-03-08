@@ -14,3 +14,7 @@ insert_final_newline = true
 [*.yml]
 indent_style = space
 tab_width = 2
+
+[*.md]
+indent_style = space
+tab_width = 2

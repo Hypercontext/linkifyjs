@@ -8,7 +8,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text gulp test",
+    "build": "rollup -c rollup.config.js",
+    "test": "nyc --reporter=html --reporter=text mocha test/index.js",
     "test:ci": "gulp test-ci",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
