@@ -16,11 +16,15 @@ test
 vendor
 
 # Files
-.babelrc
+*.md
+*.yml
+.tags*
+.babelrc*
+.eslintrc*
 .editorconfig
-.eslintrc
-.travis.yml
 bower.json
 gulpfile.js
 testem.json
 run-tests.sh
+rollup.config.js
+tasks
