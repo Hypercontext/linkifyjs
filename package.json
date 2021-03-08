@@ -9,6 +9,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
+    "lint": "eslint src/**/*.js test/**/*.js",
     "test": "nyc --reporter=html --reporter=text mocha test/index.js",
     "test:ci": "gulp test-ci",
     "coverage": "nyc report --reporter=text-lcov | coveralls"

@@ -43,7 +43,7 @@ export default function apply($, doc = false) {
 			const data = $this.data();
 			const target = data.linkify;
 			const nl2br = data.linkifyNl2br;
-;
+
 			let options = {
 				nl2br: !!nl2br && nl2br !== 0 && nl2br !== 'false'
 			};

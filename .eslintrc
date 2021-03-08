@@ -1,7 +1,7 @@
 {
     "extends": [
         "eslint:recommended",
-		"plugin:mocha/recommended"
+        "plugin:mocha/recommended"
     ],
     "parser": "@babel/eslint-parser",
     "env": {
@@ -10,7 +10,7 @@
         "jquery": true,
         "es6": true,
         "amd": true,
-		"mocha": true
+        "mocha": true
     },
     "rules": {
         "curly": 2,
@@ -18,15 +18,15 @@
         "no-eq-null": 2,
         "quotes": [2, "single", "avoid-escape"],
         "semi": 2,
-		"no-unused-vars": [ "error", { "varsIgnorePattern": "should|expect" }],
-		"mocha/no-mocha-arrows": 0
+        "no-unused-vars": [ "error", { "varsIgnorePattern": "should|expect" }],
+        "mocha/no-mocha-arrows": 0
     },
     "plugins": [
         "mocha",
-		"@babel"
+        "@babel"
     ],
     "globals": {
         "__base": false,
-		"expect": false
+        "expect": false
     }
 }

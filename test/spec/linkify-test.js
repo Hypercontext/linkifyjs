@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-setup-in-describe */
 const linkify = require(`${__base}linkify`);
 
 describe('linkify', () => {
