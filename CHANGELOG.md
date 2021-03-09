@@ -5,7 +5,7 @@
 ### BREAKING CHANGES
 * Remove default `class="linkified"` from all discovered links. Opt back in by setting the `className` option:
   ```jsx
-  linkifyStr(str, { className: 'linkified' }})
+  linkifyStr(str, { className: 'linkified' })
   ```
 * Remove default `target="_blank"` attribute for discovered URLs. Opt back in by setting the `target` option:
   ```js
