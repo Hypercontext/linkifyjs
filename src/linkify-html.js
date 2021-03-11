@@ -6,6 +6,7 @@ const StartTag = 'StartTag';
 const EndTag = 'EndTag';
 const Chars = 'Chars';
 const Comment = 'Comment';
+const Doctype = 'Doctype';
 
 /**
  * @param {string} str html string to link
@@ -72,6 +73,14 @@ export default function linkifyHtml(str, opts = {}) {
 		case Comment:
 			linkified.push(`<!--${escapeText(token.chars)}-->`);
 			break;
+		case Doctype: {
+			let doctype = `<!DOCTYPE ${token.name}`;
+			if (token.publicIdentifier) { doctype += ` PUBLIC "${token.publicIdentifier}"`; }
+			if (token.systemIdentifier) { doctype += ` "${token.systemIdentifier}"`; }
+			doctype += '>';
+			linkified.push(doctype);
+			break;
+		}
 		}
 	}
 

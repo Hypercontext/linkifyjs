@@ -1,4 +1,5 @@
 const linkifyHtml = require(`${__base}linkify-html`).default;
+const { expect } = require('chai');
 const htmlOptions = require('./html/options');
 
 describe('linkify-html', () => {
@@ -143,4 +144,24 @@ describe('linkify-html', () => {
 		linkified = linkifyHtml('http://google.com', { target: null });
 		expect(linkified).to.be.eql('<a href="http://google.com">http://google.com</a>');
 	});
+
+	it('Handles HTML with doctype', () => {
+		const input = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:rn="http://schemas.rightnow.com/crm/document">
+		<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		</head>
+		<body style="FONT-FAMILY: Segoe UI, Verdana, sans-serif">
+
+		<div>
+		<div id="checksum" align="right">
+		<span style="font-size: 1pt">
+		[---002:000651:00385---]
+		</span>
+		</div>
+		</div>
+		</body>
+		</html>`;
+		expect(linkifyHtml(input)).to.eql(input); // no change
+	})
 });
