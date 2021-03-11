@@ -310,7 +310,8 @@ S_LOCALPART_DOT.on(localpartAccepting, S_LOCALPART);
 S_LOCALPART_AT
 .on(TLD, S_EMAIL_DOMAIN)
 .on(DOMAIN, S_EMAIL_DOMAIN)
-.on(LOCALHOST, S_EMAIL);
+.on(LOCALHOST, S_EMAIL)
+.on(NUM, S_EMAIL_DOMAIN);
 // States following `@` defined above
 
 let run = function (tokens) {
