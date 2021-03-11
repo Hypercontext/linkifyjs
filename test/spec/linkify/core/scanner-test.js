@@ -73,9 +73,11 @@ const tests = [
 	]
 ];
 
-let start = scanner.init();
 
 describe('linkify/core/scanner#run()', () => {
+	let start;
+	before(() => { start = scanner.init(); });
+
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', () => {
 			var str = test[0];
@@ -98,5 +100,26 @@ describe('linkify/core/scanner#run()', () => {
 			{ t: t.TLD, v: 'World', s: 7, e: 12 },
 			{ t: t.PUNCTUATION, v: '!', s: 12, e: 13 },
 		]);
+	});
+
+	describe('Custom protocols', () => {
+		before(() => { start = scanner.init(['twitter', 'fb', 'steam']); });
+
+		it('Correctly tokenizes a full custom protocols', () => {
+			expect(scanner.run(start, 'steam://hello')).to.eql([
+				{ t: t.PROTOCOL, v: 'steam:', s: 0, e: 6 },
+				{ t: t.SLASH, v: '/', s: 6, e: 7 },
+				{ t: t.SLASH, v: '/', s: 7, e: 8 },
+				{ t: t.DOMAIN, v: 'hello', s: 8, e: 13 }
+			]);
+		});
+
+		it('Classifies partial custom protocols as domains', () => {
+			expect(scanner.run(start, 'twitter sux')).to.eql([
+				{ t: t.DOMAIN, v: 'twitter', s: 0, e: 7 },
+				{ t: t.WS, v: ' ', s: 7, e: 8 },
+				{ t: t.DOMAIN, v: 'sux', s: 8, e: 11 }
+			]);
+		});
 	});
 });

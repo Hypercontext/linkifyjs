@@ -168,5 +168,5 @@ describe('linkify-html', () => {
 	it('Hadnles mixed-language content', () => {
 		const input = '這禮拜是我們新的循環 (3/23-4/19), 我將於這週日給 Jeffrey 補課，並且我們會在這期間選另外一個可以上課的日期。';
 		expect(linkifyHtml(input)).to.be.ok;
-	})
+	});
 });

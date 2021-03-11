@@ -29,7 +29,7 @@ export const SPACE = /\s/;
  * Initialize the scanner character-based state machine for the given start state
  * @return {State} scanner starting state
  */
-export function init() {
+export function init(customProtocols = []) {
 	// Frequently used states
 	const S_START = makeState();
 	const S_NUM				= makeAcceptingState(tk.NUM);
@@ -122,6 +122,13 @@ export function init() {
 	makeT(S_PROTOCOL_FILE, ':', S_FULL_PROTOCOL);
 	makeT(S_PROTOCOL_SECURE, ':', S_FULL_PROTOCOL);
 	makeT(S_MAILTO, ':', S_FULL_MAILTO);
+
+	// Register custom protocols
+	const S_CUSTOM_PROTOCOL = makeDomainState();
+	for (let i = 0; i < customProtocols.length; i++) {
+		makeChainT(S_START, customProtocols[i], S_CUSTOM_PROTOCOL, makeDomainState);
+	}
+	makeT(S_CUSTOM_PROTOCOL, ':', S_FULL_PROTOCOL);
 
 	// Localhost
 	makeChainT(S_START, 'localhost', makeNearDomainState(tk.LOCALHOST), makeDomainState);

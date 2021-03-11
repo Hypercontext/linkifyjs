@@ -8,6 +8,7 @@ const INIT = {
 	scanner: null,
 	parser: null,
 	pluginQueue: [],
+	customProtocols: [],
 	initialized: false,
 };
 
@@ -20,6 +21,7 @@ export function reset() {
 	INIT.scanner = null;
 	INIT.parser = null;
 	INIT.pluginQueue = [];
+	INIT.customProtocols = [];
 	INIT.initialized = false;
 }
 
@@ -38,8 +40,23 @@ export function registerPlugin(name, plugin) {
 	}
 	INIT.pluginQueue.push([name, plugin]);
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init()`);
+		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init(). To avoid this warning, please register all plugins before invoking linkify the first time.`);
 	}
+}
+
+/**
+ * Detect URLs with the following additional protocol. Anything following
+ * "protocol:" will be considered a link.
+ * @param {string} protocol
+ */
+export function registerCustomProtocol(protocol) {
+	if (INIT.initialized) {
+		warn(`linkifyjs: already initialized - will not register custom protocol "${protocol}" until you manually call linkify.init(). To avoid this warning, please register all custom protocols before invoking linkify the first time.`);
+	}
+	if (!/^[a-z]+$/.test(protocol)) {
+		throw Error('linkifyjs - protocols containing characters other than a - z are not supported');
+	}
+	INIT.customProtocols.push(protocol);
 }
 
 /**
@@ -48,7 +65,7 @@ export function registerPlugin(name, plugin) {
  */
 export function init() {
 	// Initialize state machines
-	INIT.scanner = { start: scanner.init(), tokens: scanner.tokens };
+	INIT.scanner = { start: scanner.init(INIT.customProtocols), tokens: scanner.tokens };
 	INIT.parser = { start: parser.init(), tokens: parser.tokens };
 	const utils = { createTokenClass: parser.tokens.createTokenClass };
 
