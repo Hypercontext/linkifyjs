@@ -270,6 +270,7 @@ export function init() {
 	makeMultiT(S_LOCALPART_DOT, localpartAccepting, S_LOCALPART);
 	makeT(S_LOCALPART_AT, tk.TLD, S_EMAIL_DOMAIN);
 	makeT(S_LOCALPART_AT, tk.DOMAIN, S_EMAIL_DOMAIN);
+	makeT(S_LOCALPART_AT, tk.NUM, S_EMAIL_DOMAIN);
 	makeT(S_LOCALPART_AT, tk.LOCALHOST, S_EMAIL);
 
 	// States following `@` defined above

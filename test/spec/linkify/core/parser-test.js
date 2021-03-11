@@ -1,6 +1,4 @@
-const { expect } = require("chai");
-const { timers } = require("jquery");
-
+const { expect } = require('chai');
 const scanner = require(`${__base}linkify/core/scanner`);
 const parser = require(`${__base}linkify/core/parser`);
 const { Text, Url, Email, MailtoEmail } = require(`${__base}linkify/core/tokens/multi`);
@@ -118,6 +116,10 @@ const tests = [
 		'Mailto is greedy mailto:localhost?subject=Hello%20World.',
 		[Text, MailtoEmail, Text],
 		['Mailto is greedy ', 'mailto:localhost?subject=Hello%20World', '.']
+	], [
+		'Emails like: test@42.domain.com and test@42.abc.11.domain.com should be matched in its entirety.',
+		[Text, Email, Text, Email, Text],
+		['Emails like: ', 'test@42.domain.com', ' and ', 'test@42.abc.11.domain.com', ' should be matched in its entirety.']
 	], [
 		'Bu haritanın verileri Direniş İzleme Grubu\'nun yaptığı Türkiye İşçi Eylemleri haritası ile birleşebilir esasen. https://graphcommons.com/graphs/00af1cd8-5a67-40b1-86e5-32beae436f7c?show=Comments',
 		[Text, Url],
