@@ -1,14 +1,13 @@
 import * as React from 'react';
-import * as linkify from './linkify';
+import { tokenize, options } from './linkify';
 
-const {options} = linkify;
-const {Options} = options;
+const { Options } = options;
 
 // Given a string, converts to an array of valid React components
 // (which may include strings)
 function stringToElements(str, opts) {
 
-	const tokens = linkify.tokenize(str);
+	const tokens = tokenize(str);
 	const elements = [];
 	let linkId = 0;
 
@@ -95,7 +94,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 /**
  * @class Linkify
  */
-class Linkify extends React.Component {
+export default class Linkify extends React.Component {
 	render() {
 		// Copy over all non-linkify-specific props
 		const newProps = { key: 'linkified-element-0' };
@@ -113,4 +112,3 @@ class Linkify extends React.Component {
 	}
 }
 
-export default Linkify;
