@@ -35,8 +35,8 @@ export function init() {
 	// are treated slighly differently from those that don't.
 	let S_PROTOCOL						= makeState(); // e.g., 'http:'
 	let S_MAILTO						= makeState(); // 'mailto:'
-	let S_PROTOCOL_SLASH				= makeState(); // e.g., '/', 'http:/''
-	let S_PROTOCOL_SLASH_SLASH			= makeState();  // e.g., '//', 'http://'
+	let S_PROTOCOL_SLASH				= makeState(); // e.g., 'http:/''
+	let S_PROTOCOL_SLASH_SLASH			= makeState(); // e.g.,'http://'
 	let S_DOMAIN						= makeState(); // parsed string ends with a potential domain name (A)
 	let S_DOMAIN_DOT					= makeState(); // (A) domain followed by DOT
 	let S_TLD							= makeAcceptingState(mtk.Url); // (A) Simplest possible URL with no query string
@@ -72,7 +72,6 @@ export function init() {
 	makeT(S_START, tk.NL, S_NL);
 	makeT(S_START, tk.PROTOCOL, S_PROTOCOL);
 	makeT(S_START, tk.MAILTO, S_MAILTO);
-	makeT(S_START, tk.SLASH, S_PROTOCOL_SLASH);
 
 	makeT(S_PROTOCOL, tk.SLASH, S_PROTOCOL_SLASH);
 	makeT(S_PROTOCOL_SLASH, tk.SLASH, S_PROTOCOL_SLASH_SLASH);

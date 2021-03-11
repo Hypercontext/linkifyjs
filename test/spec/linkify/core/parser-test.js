@@ -91,7 +91,7 @@ const tests = [
 	], [
 		'A Url with only numbers is 123.456.ca another is //7.8.com/?wat=1 is valid',
 		[Text, Url, Text, Url, Text],
-		['A Url with only numbers is ', '123.456.ca', ' another is ', '//7.8.com/?wat=1', ' is valid']
+		['A Url with only numbers is ', '123.456.ca', ' another is //', '7.8.com/?wat=1', ' is valid']
 	], [
 		'Url Numbers 6.wat.78.where.eu and u.0.e.9.kp',
 		[Text, Url, Text, Url],
