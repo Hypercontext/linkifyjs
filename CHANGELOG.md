@@ -23,6 +23,7 @@
 * ~10x faster startup; ~4x faster startup + first run
 * Add new `rel` option at top level as an alternate way of including it in `attributes`
 * New and improved plugin API
+* `linkify.find()` now returns start and end indexes of where in the string a link was found
 * Plugins no longer need to be called on linkify after import
   ```js
   // Before
