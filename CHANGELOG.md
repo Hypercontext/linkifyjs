@@ -21,9 +21,10 @@
 ### All Changes
 * Full Internationalized Domain (IDN) and Emoji domain support 🇺🇳🌍✈️🎉💃! Detect URLs, #hashtags and @mentions in any language
 * ~10x faster startup; ~4x faster startup + first run
+* Custom protocols with `linkify.registerCustomProtocol('protocol')`
 * Add new `rel` option at top level as an alternate way of including it in `attributes`
 * New and improved plugin API
-* `linkify.find()` now returns start and end indexes of where in the string a link was found
+* `linkify.find()` output includes start and end indexes of where in the string a link was found
 * Plugins no longer need to be called on linkify after import
   ```js
   // Before
