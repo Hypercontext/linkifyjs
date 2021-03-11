@@ -283,10 +283,11 @@ export function init() {
  * plain text, etc.
  *
  * @param {State} start parser start state
- * @param {Array<{t: string, v: string}>} tokens list of scanned tokens
+ * @param {string} input the original input used to generate the given tokens
+ * @param {Array<{t: string, v: string, s: number, e: number}>} tokens list of scanned tokens
  * @returns {Array<MultiToken>}
  */
-export function run(start, tokens) {
+export function run(start, input, tokens) {
 	let len = tokens.length;
 	let cursor = 0;
 	let multis = [];
@@ -335,12 +336,10 @@ export function run(start, tokens) {
 			}
 
 		} else {
-
 			// Accepting state!
-
 			// First close off the textTokens (if available)
 			if (textTokens.length > 0) {
-				multis.push(new mtk.Text(textTokens));
+				multis.push(parserCreateMultiToken(mtk.Text, input, textTokens));
 				textTokens = [];
 			}
 
@@ -349,17 +348,33 @@ export function run(start, tokens) {
 			multiLength -= sinceAccepts;
 
 			// Create a new multitoken
-			let Multi = latestAccepting.t;
-			multis.push(new Multi(tokens.slice(cursor - multiLength, cursor)));
+			const Multi = latestAccepting.t;
+			const subtokens = tokens.slice(cursor - multiLength, cursor);
+			multis.push(parserCreateMultiToken(Multi, input, subtokens));
 		}
 	}
 
 	// Finally close off the textTokens (if available)
 	if (textTokens.length > 0) {
-		multis.push(new mtk.Text(textTokens));
+		multis.push(parserCreateMultiToken(mtk.Text, input, textTokens));
 	}
 
 	return multis;
 }
 
 export { mtk as tokens };
+
+/**
+ * Utility function for instantiating a new multitoken with all the relevant
+ * fields during parsing.
+ * @param {Class<MultiToken>} Multi class to instantiate
+ * @param {string} input original input string
+ * @param {Array<{t: string, v: string, s: number, e: number}>} tokens consecutive tokens scanned from input string
+ * @returns {MultiToken}
+ */
+function parserCreateMultiToken(Multi, input, tokens) {
+	const startIdx = tokens[0].s;
+	const endIdx = tokens[tokens.length - 1].e;
+	const value = input.substr(startIdx, endIdx - startIdx);
+	return new Multi(value, tokens);
+}

@@ -1,3 +1,5 @@
+const { expect } = require("chai");
+
 const scanner = require(`${__base}linkify/core/scanner`);
 const t = require(`${__base}linkify/core/tokens`).text;
 
@@ -87,4 +89,14 @@ describe('linkify/core/scanner#run()', () => {
 	}
 
 	tests.map(makeTest, this);
+
+	it('Correctly sets start and end indexes', () => {
+		expect(scanner.run(start, 'Hello, World!')).to.eql([
+			{ t: t.DOMAIN, v: 'Hello', s: 0, e: 5 },
+			{ t: t.PUNCTUATION, v: ',', s: 5, e: 6 },
+			{ t: t.WS, v: ' ', s: 6, e: 7 },
+			{ t: t.TLD, v: 'World', s: 7, e: 12 },
+			{ t: t.PUNCTUATION, v: '!', s: 12, e: 13 },
+		]);
+	});
 });

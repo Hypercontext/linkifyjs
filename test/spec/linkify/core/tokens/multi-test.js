@@ -1,58 +1,26 @@
 const tokens = require(`${__base}linkify/core/tokens`);
+const scanner = require(`${__base}/linkify/core/scanner`);
 const tk = tokens.text;
 const mkt = tokens.multi;
 
 describe('linkify/core/tokens/multi', () => {
+	let scannerStart;
+	before(() => { scannerStart = scanner.init(); });
+
 	describe('URL', () => {
-		var urlTextTokens1, urlTextTokens2, urlTextTokens3, url1, url2, url3;
+		let input1 = 'Ftps://www.github.com/SoapBox/linkify';
+		let input2 = '//Amazon.ca/Sales';
+		let input3 = 'co.co?o=%2D&p=@gc#wat';
+		let url1, url2, url3;
 
 		before(() => {
-			urlTextTokens1 = [ // 'Ftps://www.github.com/SoapBox/linkify'
-				{ t: tk.PROTOCOL, v: 'Ftps:' },
-				{ t: tk.SLASH, v: '/' },
-				{ t: tk.SLASH, v: '/' },
-				{ t: tk.DOMAIN, v: 'www' },
-				{ t: tk.DOT, v: '.' },
-				{ t: tk.DOMAIN, v: 'github' },
-				{ t: tk.DOT, v: '.' },
-				{ t: tk.TLD, v: 'com' },
-				{ t: tk.SLASH, v: '/' },
-				{ t: tk.DOMAIN, v: 'SoapBox' },
-				{ t: tk.SLASH, v: '/' },
-				{ t: tk.DOMAIN, v: 'linkify' },
-			],
+			const urlTextTokens1 = scanner.run(scannerStart, input1);
+			const urlTextTokens2 = scanner.run(scannerStart, input2);
+			const urlTextTokens3 = scanner.run(scannerStart, input3);
 
-			urlTextTokens2 = [ // '//Amazon.ca/Sales'
-				{ t: tk.SLASH, v: '/' },
-				{ t: tk.SLASH, v: '/' },
-				{ t: tk.DOMAIN, v: 'Amazon' },
-				{ t: tk.DOT, v: '.' },
-				{ t: tk.TLD, v: 'ca' },
-				{ t: tk.SLASH, v: '/' },
-				{ t: tk.DOMAIN, v: 'Sales' },
-			],
-
-			urlTextTokens3 = [ // 'co.co?o=%2D&p=@gc#wat'
-				{ t: tk.TLD, v: 'co' },
-				{ t: tk.DOT, v: '.' },
-				{ t: tk.TLD, v: 'co' },
-				{ t: tk.SYM, v: '?' },
-				{ t: tk.DOMAIN, v: 'o' },
-				{ t: tk.SYM, v: '=' },
-				{ t: tk.SYM, v: '%' },
-				{ t: tk.DOMAIN, v: '2D' },
-				{ t: tk.SYM, v: '&' },
-				{ t: tk.DOMAIN, v: 'p' },
-				{ t: tk.SYM, v: '=' },
-				{ t: tk.AT, v: '@' },
-				{ t: tk.DOMAIN, v: 'gc' },
-				{ t: tk.POUND, v: '#' },
-				{ t: tk.DOMAIN, v: 'wat' },
-			];
-
-			url1 = new mkt.Url(urlTextTokens1);
-			url2 = new mkt.Url(urlTextTokens2);
-			url3 = new mkt.Url(urlTextTokens3);
+			url1 = new mkt.Url(input1, urlTextTokens1);
+			url2 = new mkt.Url(input2, urlTextTokens2);
+			url3 = new mkt.Url(input3, urlTextTokens3);
 		});
 
 		describe('#isLink', () => {
@@ -91,20 +59,29 @@ describe('linkify/core/tokens/multi', () => {
 
 				expect(url1.toObject('file')).to.be.eql({
 					type: 'url',
-					value: 'Ftps://www.github.com/SoapBox/linkify',
-					href: 'Ftps://www.github.com/SoapBox/linkify'
+					value: input1,
+					href: input1,
+					isLink: true,
+					start: 0,
+					end: input1.length
 				});
 
 				expect(url2.toObject()).to.be.eql({
 					type: 'url',
-					value: '//Amazon.ca/Sales',
-					href: '//Amazon.ca/Sales'
+					value: input2,
+					href: input2,
+					isLink: true,
+					start: 0,
+					end: input2.length
 				});
 
 				expect(url3.toObject('https')).to.be.eql({
 					type: 'url',
-					value: 'co.co?o=%2D&p=@gc#wat',
-					href: 'https://co.co?o=%2D&p=@gc#wat'
+					value: input3,
+					href: 'https://co.co?o=%2D&p=@gc#wat',
+					isLink: true,
+					start: 0,
+					end: input3.length
 				});
 			});
 		});
@@ -122,17 +99,12 @@ describe('linkify/core/tokens/multi', () => {
 	});
 
 	describe('EMAIL', () => {
-		var emailTextTokens, email;
+		let input = 'test@example.com';
+		let email;
 
 		before(() => {
-			emailTextTokens = [ // test@example.com
-				{ t: tk.DOMAIN, v: 'test' },
-				{ t: tk.AT, v: '@' },
-				{ t: tk.DOMAIN, v: 'example' },
-				{ t: tk.DOT, v: '.' },
-				{ t: tk.TLD, v: 'com' },
-			];
-			email = new mkt.Email(emailTextTokens);
+			const emailTextTokens = scanner.run(scannerStart, input);
+			email = new mkt.Email(input, emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -156,18 +128,12 @@ describe('linkify/core/tokens/multi', () => {
 	});
 
 	describe('MAILTOEMAIL', () => {
-		var emailTextTokens, email;
+		let input = 'mailto:test@example.com';
+		let email;
 
 		before(() => {
-			emailTextTokens = [ // test@example.com
-				{ t: tk.MAILTO, v: 'mailto:' },
-				{ t: tk.DOMAIN, v: 'test' },
-				{ t: tk.AT, v: '@' },
-				{ t: tk.DOMAIN, v: 'example' },
-				{ t: tk.DOT, v: '.' },
-				{ t: tk.TLD, v: 'com' },
-			];
-			email = new mkt.MailtoEmail(emailTextTokens);
+			const emailTextTokens = scanner.run(scannerStart, input);
+			email = new mkt.MailtoEmail(input, emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -194,8 +160,8 @@ describe('linkify/core/tokens/multi', () => {
 		var nlTokens, nl;
 
 		before(() => {
-			nlTokens = [{t: tk.NL, v: '\n' }];
-			nl = new mkt.Nl(nlTokens);
+			nlTokens = [{t: tk.NL, v: '\n', s: 0, e: 1}];
+			nl = new mkt.Nl('\n', nlTokens);
 		});
 
 		describe('#isLink', () => {
@@ -212,17 +178,11 @@ describe('linkify/core/tokens/multi', () => {
 	});
 
 	describe('TEXT', () => {
-		var textTokens, text;
+		let text, input = 'Hello, World!';
 
 		before(() => {
-			textTokens = [ // 'Hello, World!'
-				{ t: tk.DOMAIN, v: 'Hello' },
-				{ t: tk.SYM, v: ',' },
-				{ t: tk.WS, v: ' ' },
-				{ t: tk.DOMAIN, v: 'World' },
-				{ t: tk.SYM, v: '!' },
-			];
-			text = new mkt.Text(textTokens);
+			const textTokens = scanner.run(scannerStart, input);
+			text = new mkt.Text(input, textTokens);
 		});
 
 		describe('#isLink', () => {

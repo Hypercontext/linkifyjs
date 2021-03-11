@@ -1,3 +1,6 @@
+const { expect } = require("chai");
+const { timers } = require("jquery");
+
 const scanner = require(`${__base}linkify/core/scanner`);
 const parser = require(`${__base}linkify/core/parser`);
 const { Text, Url, Email, MailtoEmail } = require(`${__base}linkify/core/tokens/multi`);
@@ -199,8 +202,9 @@ describe('linkify/core/parser#run()', () => {
 			var str = test[0];
 			var types = test[1];
 			var values = test[2];
-			var result = parser.run(start, scanner.run(scannerStart, str));
+			var result = parser.run(start, str, scanner.run(scannerStart, str));
 
+			expect(result.map(token => token.v)).to.eql(values);
 			expect(result.map(token => token.toString())).to.eql(values);
 			expect(result.map(token => token.constructor)).to.eql(types);
 		});
@@ -208,4 +212,13 @@ describe('linkify/core/parser#run()', () => {
 
 	tests.map(makeTest, this);
 
+	it('Correctly sets start and end indexes', () => {
+		const input = 'Hello github.com!';
+		const result = parser.run(start, input, scanner.run(scannerStart, input)).map(t => t.toObject());
+		expect(result).to.eql([
+			{ type: 'text', value: 'Hello ', href: 'Hello ', isLink: false, start: 0, end: 6 },
+			{ type: 'url', value: 'github.com', href: 'http://github.com', isLink: true, start: 6, end: 16 },
+			{ type: 'text', value: '!', href: '!', isLink: false, start: 16, end: 17 }
+		]);
+	});
 });

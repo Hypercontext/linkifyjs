@@ -159,7 +159,7 @@ export function init() {
 	@method run
 	@param {State} start scanner starting state
 	@param {string} str input string to scan
-	@return {Array<{t: string, v: string}>} list of tokens, each with a type and value
+	@return {Array<{t: string, v: string, s: number, l: number}>} list of tokens, each with a type and value
 */
 export function run(start, str) {
 	// State machine is not case sensitive, so input is tokenized in lowercased
@@ -216,7 +216,9 @@ export function run(start, str) {
 		// TODO: If possible, don't output v, instead output range where values ocur
 		tokens.push({
 			t: latestAccepting.t, // token type/name
-			v: str.substr(cursor - tokenLength, tokenLength) // string value
+			v: str.substr(cursor - tokenLength, tokenLength), // string value
+			s: cursor - tokenLength, // start index
+			e: cursor // end index (excluding)
 		});
 	}
 

@@ -5,7 +5,8 @@ function bench1(linkify) {
 	debugger; // prevents V8 optimization
 	delete require.cache[require.resolve('../lib/linkify')];
 	linkify = require('../lib/linkify');
-	linkify.init();
+	// linkify.init();
+	linkify.find('');
 	// delete require.cache[require.resolve('moment')];
 	// var moment = require('moment');
 }

@@ -18,17 +18,26 @@ describe('plugins/ticket', () => {
 			expect(linkify.find('Check out issue #42')).to.be.eql([{
 				type: 'ticket',
 				value: '#42',
-				href: '#42'
+				href: '#42',
+				isLink: true,
+				start: 16,
+				end: 19
 			}]);
 
 			expect(linkify.find('Check out issue #9999999 and also #0')).to.be.eql([{
 				type: 'ticket',
 				value: '#9999999',
-				href: '#9999999'
+				href: '#9999999',
+				isLink: true,
+				start: 16,
+				end: 24
 			}, {
 				type: 'ticket',
 				value: '#0',
-				href: '#0'
+				href: '#0',
+				isLink: true,
+				start: 34,
+				end: 36
 			}]);
 		});
 	});

@@ -70,7 +70,7 @@ export function init() {
 */
 export function tokenize(str) {
 	if (!INIT.initialized) { init(); }
-	return parser.run(INIT.parser.start, scanner.run(INIT.scanner.start, str));
+	return parser.run(INIT.parser.start, str, scanner.run(INIT.scanner.start, str));
 }
 
 /**

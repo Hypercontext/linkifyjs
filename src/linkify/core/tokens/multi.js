@@ -26,12 +26,14 @@ function inherits(parent, child, props={}) {
 
 	@class MultiToken
 	@param {string} type
-	@param {Array<{t: string, v: string}>} value
+	@param {string} value
+	@param {Array<{t: string, v: string, s: number, e: number}>} tokens
 	@abstract
 */
-export function MultiToken(type, value) {
+export function MultiToken(type, value, tokens) {
 	this.t = type;
 	this.v = value;
+	this.tk = tokens;
 	this.isLink = false;
 }
 MultiToken.prototype = {
@@ -55,11 +57,7 @@ MultiToken.prototype = {
 		@return {string}
 	*/
 	toString() {
-		let result = [];
-		for (let i = 0; i < this.v.length; i++) {
-			result.push(this.v[i].v);
-		}
-		return result.join('');
+		return this.v;
 	},
 
 	/**
@@ -71,6 +69,23 @@ MultiToken.prototype = {
 	*/
 	toHref() {
 		return this.toString();
+	},
+
+	/**
+	 * The start index of this token in the original input string
+	 * @returns {number}
+	 */
+	startIndex() {
+		return this.tk[0].s;
+	},
+
+	/**
+	 * The end index of this token in the original input string (up to this
+	 * index but not including it)
+	 * @returns {number}
+	 */
+	endIndex() {
+		return this.tk[this.tk.length - 1].e;
 	},
 
 	/**
@@ -87,8 +102,11 @@ MultiToken.prototype = {
 	toObject(protocol = defaults.defaultProtocol) {
 		return {
 			type: this.t,
-			value: this.toString(),
-			href: this.toHref(protocol)
+			value: this.v,
+			isLink: this.isLink,
+			href: this.toHref(protocol),
+			start: this.startIndex(),
+			end: this.endIndex()
 		};
 	}
 };
@@ -100,12 +118,13 @@ export { MultiToken as Base };
  * Create a new token that can be emitted by the parser state machine
  * @param {string} type readable type of the token
  * @param {object} props properties to assign or override, including isLink = true or false
- * @returns {(value: string) => MultiToken} new token class
+ * @returns {(value: string, tokens: {t: string, v: string, s: number, e: number}) => MultiToken} new token class
  */
 export function createTokenClass(type, props) {
-	function Token(value) {
+	function Token(value, tokens) {
 		this.t = type;
 		this.v = value;
+		this.tk = tokens;
 	}
 	inherits(MultiToken, Token, props);
 	return Token;
@@ -162,7 +181,7 @@ export const Url = createTokenClass('url', {
 		@return {string}
 	*/
 	toHref(protocol = defaults.defaultProtocol) {
-		const tokens = this.v;
+		const tokens = this.tk;
 		let hasProtocol = false;
 		let hasSlashSlash = false;
 		let result = [];
@@ -198,6 +217,6 @@ export const Url = createTokenClass('url', {
 	},
 
 	hasProtocol() {
-		return this.v[0].t === PROTOCOL;
+		return this.tk[0].t === PROTOCOL;
 	}
 });

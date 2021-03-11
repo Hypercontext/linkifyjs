@@ -18,15 +18,24 @@ describe('plugins/hashtag', () => {
 			.to.be.eql([{
 				type: 'hashtag',
 				value: '#hashtag',
-				href: '#hashtag'
+				href: '#hashtag',
+				isLink: true,
+				start: 11,
+				end: 19
 			}, {
 				type: 'hashtag',
 				value: '#YOLO-2015',
-				href: '#YOLO-2015'
+				href: '#YOLO-2015',
+				isLink: true,
+				start: 20,
+				end: 30
 			}, {
 				type: 'hashtag',
 				value: '#__swag__',
-				href: '#__swag__'
+				href: '#__swag__',
+				isLink: true,
+				start: 31,
+				end: 40
 			}]);
 
 			expect(linkify.test('#wat', 'hashtag')).to.be.ok;

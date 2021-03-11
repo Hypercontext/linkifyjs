@@ -17,15 +17,24 @@ describe('plugins/mention', () => {
 			expect(linkify.find('There is a @mention @YOLO2016 and @1234 and @%^&*( should not work')).to.deep.equal([{
 				type: 'mention',
 				value: '@mention',
-				href: '/mention'
+				href: '/mention',
+				isLink: true,
+				start: 11,
+				end: 19
 			}, {
 				type: 'mention',
 				value: '@YOLO2016',
-				href: '/YOLO2016'
+				href: '/YOLO2016',
+				isLink: true,
+				start: 20,
+				end: 29
 			}, {
 				type: 'mention',
 				value: '@1234',
-				href: '/1234'
+				href: '/1234',
+				isLink: true,
+				start: 34,
+				end: 39
 			}]);
 
 			expect(linkify.test('@wat', 'mention')).to.be.ok;
@@ -36,7 +45,10 @@ describe('plugins/mention', () => {
 			expect(linkify.find('Hey @nfrasser')).to.deep.equal([{
 				type: 'mention',
 				value: '@nfrasser',
-				href: '/nfrasser'
+				href: '/nfrasser',
+				isLink: true,
+				start: 4,
+				end: 13
 			}]);
 		});
 
@@ -44,7 +56,10 @@ describe('plugins/mention', () => {
 			expect(linkify.find('Mention for @__lI3t__')).to.deep.equal([{
 				type: 'mention',
 				value: '@__lI3t__',
-				href: '/__lI3t__'
+				href: '/__lI3t__',
+				isLink: true,
+				start: 12,
+				end: 21
 			}]);
 		});
 
@@ -52,7 +67,10 @@ describe('plugins/mention', () => {
 			expect(linkify.find('Paging @sir_mc-lovin')).to.deep.equal([{
 				type: 'mention',
 				value: '@sir_mc-lovin',
-				href: '/sir_mc-lovin'
+				href: '/sir_mc-lovin',
+				isLink: true,
+				start: 7,
+				end: 20
 			}]);
 		});
 
@@ -60,19 +78,28 @@ describe('plugins/mention', () => {
 			expect(linkify.find('Hey @developers@soapbox')).to.deep.equal([{
 				type: 'mention',
 				value: '@developers@soapbox',
-				href: '/developers@soapbox'
+				href: '/developers@soapbox',
+				isLink: true,
+				start: 4,
+				end: 23
 			}]);
 
 			expect(linkify.find('Hey @developers@soapbox.example.com')).to.deep.equal([{
 				type: 'mention',
 				value: '@developers@soapbox.example.com',
-				href: '/developers@soapbox.example.com'
+				href: '/developers@soapbox.example.com',
+				isLink: true,
+				start: 4,
+				end: 35
 			}]);
 
 			expect(linkify.find('Hey @developers@soapbox you can mail me at someone@soapbox')).to.deep.equal([{
 				type: 'mention',
 				value: '@developers@soapbox',
-				href: '/developers@soapbox'
+				href: '/developers@soapbox',
+				isLink: true,
+				start: 4,
+				end: 23
 			}]);
 
 		});
@@ -81,7 +108,10 @@ describe('plugins/mention', () => {
 			expect(linkify.find('Hey @500px/web please review this')).to.deep.equal([{
 				type: 'mention',
 				value: '@500px/web',
-				href: '/500px/web'
+				href: '/500px/web',
+				isLink: true,
+				start: 4,
+				end: 14
 			}]);
 		});
 
@@ -89,11 +119,17 @@ describe('plugins/mention', () => {
 			expect(linkify.find('We should get ///@soapbox/_developers/@soapbox/cs//// to review these')).to.deep.equal([{
 				type: 'mention',
 				value: '@soapbox/_developers',
-				href: '/soapbox/_developers'
+				href: '/soapbox/_developers',
+				isLink: true,
+				start: 17,
+				end: 37
 			}, {
 				type: 'mention',
 				value: '@soapbox/cs',
-				href: '/soapbox/cs'
+				href: '/soapbox/cs',
+				isLink: true,
+				start: 38,
+				end: 49
 			}]);
 		});
 
@@ -101,7 +137,10 @@ describe('plugins/mention', () => {
 			expect(linkify.find('Hey @john.doe please review this')).to.deep.equal([{
 				type: 'mention',
 				value: '@john.doe',
-				href: '/john.doe'
+				href: '/john.doe',
+				isLink: true,
+				start: 4,
+				end: 13
 			}]);
 		});
 
@@ -109,11 +148,17 @@ describe('plugins/mention', () => {
 			expect(linkify.find('We should get ...@soapbox._developers.@soapbox.cs.... to be awesome')).to.deep.equal([{
 				type: 'mention',
 				value: '@soapbox._developers',
-				href: '/soapbox._developers'
+				href: '/soapbox._developers',
+				isLink: true,
+				start: 17,
+				end: 37
 			}, {
 				type: 'mention',
 				value: '@soapbox.cs',
-				href: '/soapbox.cs'
+				href: '/soapbox.cs',
+				isLink: true,
+				start: 38,
+				end: 49
 			}]);
 		});
 
@@ -129,19 +174,31 @@ describe('plugins/mention', () => {
 			expect(linkify.find('These people are awesome: @graham, @brennan, and @chris! Also @nick.')).to.deep.equal([{
 				type: 'mention',
 				value: '@graham',
-				href: '/graham'
+				href: '/graham',
+				isLink: true,
+				start: 26,
+				end: 33
 			}, {
 				type: 'mention',
 				value: '@brennan',
-				href: '/brennan'
+				href: '/brennan',
+				isLink: true,
+				start: 35,
+				end: 43
 			}, {
 				type: 'mention',
 				value: '@chris',
-				href: '/chris'
+				href: '/chris',
+				isLink: true,
+				start: 49,
+				end: 55
 			}, {
 				type: 'mention',
 				value: '@nick',
-				href: '/nick'
+				href: '/nick',
+				isLink: true,
+				start: 62,
+				end: 67
 			}]);
 		});
 
@@ -149,11 +206,17 @@ describe('plugins/mention', () => {
 			expect(linkify.find('Hey @123 and @456_78910__')).to.deep.equal([{
 				type: 'mention',
 				value: '@123',
-				href: '/123'
+				href: '/123',
+				isLink: true,
+				start: 4,
+				end: 8
 			}, {
 				type: 'mention',
 				value: '@456_78910__',
-				href: '/456_78910__'
+				href: '/456_78910__',
+				isLink: true,
+				start: 13,
+				end: 25
 			}]);
 		});
 	});
