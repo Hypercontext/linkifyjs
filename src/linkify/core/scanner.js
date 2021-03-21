@@ -12,7 +12,6 @@ import {
 	takeT,
 	makeT,
 	makeRegexT,
-	makeMultiT,
 	makeBatchT,
 	makeChainT
 } from './fsm';
@@ -61,14 +60,7 @@ export function init(customProtocols = []) {
 
 	// States for special URL symbols that accept immediately after start
 	makeBatchT(S_START, [
-		['@', makeAcceptingState(tk.AT)],
-		['.', makeAcceptingState(tk.DOT)],
-		['+', makeAcceptingState(tk.PLUS)],
-		['#', makeAcceptingState(tk.POUND)],
-		['?', makeAcceptingState(tk.QUERY)],
-		['/', makeAcceptingState(tk.SLASH)],
-		['_', makeAcceptingState(tk.UNDERSCORE)],
-		[':', makeAcceptingState(tk.COLON)],
+		["'", makeAcceptingState(tk.APOSTROPHE)],
 		['{', makeAcceptingState(tk.OPENBRACE)],
 		['[', makeAcceptingState(tk.OPENBRACKET)],
 		['<', makeAcceptingState(tk.OPENANGLEBRACKET)],
@@ -78,11 +70,29 @@ export function init(customProtocols = []) {
 		['>', makeAcceptingState(tk.CLOSEANGLEBRACKET)],
 		[')', makeAcceptingState(tk.CLOSEPAREN)],
 		['&', makeAcceptingState(tk.AMPERSAND)],
-		["'", makeAcceptingState(tk.APOSTROPHE)],
+		['*', makeAcceptingState(tk.ASTERISK)],
+		['@', makeAcceptingState(tk.AT)],
+		['`', makeAcceptingState(tk.BACKTICK)],
+		['^', makeAcceptingState(tk.CARET)],
+		[':', makeAcceptingState(tk.COLON)],
+		[',', makeAcceptingState(tk.COMMA)],
+		['$', makeAcceptingState(tk.DOLLAR)],
+		['.', makeAcceptingState(tk.DOT)],
+		['=', makeAcceptingState(tk.EQUALS)],
+		['!', makeAcceptingState(tk.EXCLAMATION)],
+		['-', makeAcceptingState(tk.HYPHEN)],
+		['%', makeAcceptingState(tk.PERCENT)],
+		['|', makeAcceptingState(tk.PIPE)],
+		['+', makeAcceptingState(tk.PLUS)],
+		['#', makeAcceptingState(tk.POUND)],
+		['?', makeAcceptingState(tk.QUERY)],
 		['"', makeAcceptingState(tk.QUOTE)],
+		['/', makeAcceptingState(tk.SLASH)],
+		[';', makeAcceptingState(tk.SEMI)],
+		['~', makeAcceptingState(tk.TILDE)],
+		['_', makeAcceptingState(tk.UNDERSCORE)],
+		['\\', makeAcceptingState(tk.BACKSLASH)]
 	]);
-
-	makeMultiT(S_START, [',', ';', '!'], makeAcceptingState(tk.PUNCTUATION));
 
 	// Whitespace jumps
 	// Tokens of only non-newline whitespace are arbitrarily long

@@ -1,4 +1,4 @@
-const { expect } = require("chai");
+const { expect } = require('chai');
 
 const scanner = require(`${__base}linkify/core/scanner`);
 const t = require(`${__base}linkify/core/tokens`).text;
@@ -12,15 +12,25 @@ const tests = [
 	['@', [t.AT], ['@']],
 	[':', [t.COLON], [':']],
 	['.', [t.DOT], ['.']],
-	['-', [t.SYM], ['-']],
+	['-', [t.HYPHEN], ['-']],
 	['\n', [t.NL], ['\n']],
 	['+', [t.PLUS], ['+']],
 	['#', [t.POUND], ['#']],
 	['/', [t.SLASH], ['/']],
 	['&', [t.AMPERSAND], ['&']],
+	['*', [t.ASTERISK], ['*']],
+	['\\', [t.BACKSLASH], ['\\']],
+	['%', [t.PERCENT], ['%']],
+	['`', [t.BACKTICK], ['`']],
+	['^', [t.CARET], ['^']],
+	['|', [t.PIPE], ['|']],
+	['~', [t.TILDE], ['~']],
+	['$', [t.DOLLAR], ['$']],
+	['=', [t.EQUALS], ['=']],
+	['-', [t.HYPHEN], ['-']],
 	['&?<>(', [t.AMPERSAND, t.QUERY, t.OPENANGLEBRACKET, t.CLOSEANGLEBRACKET, t.OPENPAREN], ['&', '?', '<', '>', '(']],
 	['([{}])', [t.OPENPAREN, t.OPENBRACKET, t.OPENBRACE, t.CLOSEBRACE, t.CLOSEBRACKET, t.CLOSEPAREN], ['(', '[', '{', '}', ']', ')']],
-	['!,;\'', [t.PUNCTUATION, t.PUNCTUATION, t.PUNCTUATION, t.APOSTROPHE], ['!', ',', ';', '\'']],
+	['!,;\'', [t.EXCLAMATION, t.COMMA, t.SEMI, t.APOSTROPHE], ['!', ',', ';', '\'']],
 	['hello', [t.DOMAIN], ['hello']],
 	['Hello123', [t.DOMAIN], ['Hello123']],
 	['hello123world', [t.DOMAIN], ['hello123world']],
@@ -45,8 +55,8 @@ const tests = [
 	['localhosts', [t.DOMAIN], ['localhosts']],
 	['500px', [t.DOMAIN], ['500px']],
 	['500-px', [t.DOMAIN], ['500-px']],
-	['-500px', [t.SYM, t.DOMAIN], ['-', '500px']],
-	['500px-', [t.DOMAIN, t.SYM], ['500px', '-']],
+	['-500px', [t.HYPHEN, t.DOMAIN], ['-', '500px']],
+	['500px-', [t.DOMAIN, t.HYPHEN], ['500px', '-']],
 	['123-456', [t.DOMAIN], ['123-456']],
 	['foo\u00a0bar', [t.TLD, t.WS, t.TLD], ['foo', '\u00a0', 'bar']], // nbsp
 	['çïrâ.ca', [t.DOMAIN, t.DOT, t.TLD], ['çïrâ', '.', 'ca']],
@@ -95,10 +105,10 @@ describe('linkify/core/scanner#run()', () => {
 	it('Correctly sets start and end indexes', () => {
 		expect(scanner.run(start, 'Hello, World!')).to.eql([
 			{ t: t.DOMAIN, v: 'Hello', s: 0, e: 5 },
-			{ t: t.PUNCTUATION, v: ',', s: 5, e: 6 },
+			{ t: t.COMMA, v: ',', s: 5, e: 6 },
 			{ t: t.WS, v: ' ', s: 6, e: 7 },
 			{ t: t.TLD, v: 'World', s: 7, e: 12 },
-			{ t: t.PUNCTUATION, v: '!', s: 12, e: 13 },
+			{ t: t.EXCLAMATION, v: '!', s: 12, e: 13 },
 		]);
 	});
 

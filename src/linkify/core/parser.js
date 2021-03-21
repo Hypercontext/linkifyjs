@@ -122,38 +122,50 @@ export function init() {
 
 	// Types of characters the URL can definitely end in
 	const qsAccepting = [
-		tk.DOMAIN,
+		tk.AMPERSAND,
+		tk.ASTERISK,
 		tk.AT,
+		tk.BACKSLASH,
+		tk.BACKTICK,
+		tk.CARET,
+		tk.DOLLAR,
+		tk.DOMAIN,
+		tk.EQUALS,
+		tk.HYPHEN,
 		tk.LOCALHOST,
 		tk.NUM,
+		tk.PERCENT,
+		tk.PIPE,
 		tk.PLUS,
 		tk.POUND,
 		tk.PROTOCOL,
 		tk.SLASH,
-		tk.TLD,
-		tk.UNDERSCORE,
 		tk.SYM,
-		tk.AMPERSAND
+		tk.TILDE,
+		tk.TLD,
+		tk.UNDERSCORE
 	];
 
 	// Types of tokens that can follow a URL and be part of the query string
 	// but cannot be the very last characters
 	// Characters that cannot appear in the URL at all should be excluded
 	const qsNonAccepting = [
-		tk.COLON,
-		tk.DOT,
-		tk.QUERY,
-		tk.PUNCTUATION,
 		tk.APOSTROPHE,
-		tk.QUOTE,
+		tk.CLOSEANGLEBRACKET,
 		tk.CLOSEBRACE,
 		tk.CLOSEBRACKET,
-		tk.CLOSEANGLEBRACKET,
 		tk.CLOSEPAREN,
+		tk.COLON,
+		tk.COMMA,
+		tk.DOT,
+		tk.EXCLAMATION,
+		tk.OPENANGLEBRACKET,
 		tk.OPENBRACE,
 		tk.OPENBRACKET,
-		tk.OPENANGLEBRACKET,
-		tk.OPENPAREN
+		tk.OPENPAREN,
+		tk.QUERY,
+		tk.QUOTE,
+		tk.SEMI
 	];
 
 	// These states are responsible primarily for determining whether or not to
@@ -243,16 +255,29 @@ export function init() {
 	// For addresses without the mailto prefix
 	// Tokens allowed in the localpart of the email
 	const localpartAccepting = [
+		tk.AMPERSAND,
+		tk.APOSTROPHE,
+		tk.ASTERISK,
+		tk.BACKSLASH,
+		tk.BACKTICK,
+		tk.CARET,
+		tk.CLOSEBRACE,
+		tk.DOLLAR,
 		tk.DOMAIN,
+		tk.EQUALS,
+		tk.HYPHEN,
 		tk.NUM,
+		tk.OPENBRACE,
+		tk.PERCENT,
+		tk.PIPE,
 		tk.PLUS,
 		tk.POUND,
 		tk.QUERY,
-		tk.UNDERSCORE,
+		tk.SLASH,
 		tk.SYM,
-		tk.AMPERSAND,
-		tk.APOSTROPHE,
-		tk.TLD
+		tk.TILDE,
+		tk.TLD,
+		tk.UNDERSCORE
 	];
 
 	// Some of the tokens in `localpartAccepting` are already accounted for here and
