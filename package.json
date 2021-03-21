@@ -12,7 +12,7 @@
     "clean": "rm -rf lib dist",
     "lint": "eslint src/**/*.js test/**/*.js",
     "test": "nyc --reporter=html --reporter=text mocha test/index.js",
-    "test:ci": "bash run-tests.sh",
+    "test:ci": "karma start test/ci.conf.js --single-run",
     "prepare": "run-s clean build",
     "pretest": "copyfiles -f \"node_modules/react?(-dom)/@(umd|dist)/*.min.js\" vendor",
     "coverage": "nyc report --reporter=text-lcov | coveralls"

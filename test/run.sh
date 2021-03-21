@@ -12,8 +12,8 @@ if [[ $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v14.* && $(echo $JQUER
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
 	npm test
-	npx karma start test/ci.conf.js --single-run
-	npx nyc report --reporter=text-lcov | npx coveralls
+	npm run test:ci
+	npm run coverage
 else
 	# Run basic tests
 	echo "Running basic tests..."

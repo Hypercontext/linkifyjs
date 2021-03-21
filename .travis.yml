@@ -30,5 +30,4 @@ before_script:
   - 'if [ "$REACT_VERSION" ]; then npm install --force react-dom@~$REACT_VERSION react@~$REACT_VERSION; fi'
 script:
   - npm run lint
-  - npm run test:ci
-after_success: npm run coverage
+  - bash test/run.sh
