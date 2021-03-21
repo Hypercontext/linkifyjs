@@ -77,10 +77,12 @@ export function init(customProtocols = []) {
 		[']', makeAcceptingState(tk.CLOSEBRACKET)],
 		['>', makeAcceptingState(tk.CLOSEANGLEBRACKET)],
 		[')', makeAcceptingState(tk.CLOSEPAREN)],
-		['&', makeAcceptingState(tk.AMPERSAND)]
+		['&', makeAcceptingState(tk.AMPERSAND)],
+		["'", makeAcceptingState(tk.APOSTROPHE)],
+		['"', makeAcceptingState(tk.QUOTE)],
 	]);
 
-	makeMultiT(S_START, [',', ';', '!', '"', '\''], makeAcceptingState(tk.PUNCTUATION));
+	makeMultiT(S_START, [',', ';', '!'], makeAcceptingState(tk.PUNCTUATION));
 
 	// Whitespace jumps
 	// Tokens of only non-newline whitespace are arbitrarily long

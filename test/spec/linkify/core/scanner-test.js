@@ -20,7 +20,7 @@ const tests = [
 	['&', [t.AMPERSAND], ['&']],
 	['&?<>(', [t.AMPERSAND, t.QUERY, t.OPENANGLEBRACKET, t.CLOSEANGLEBRACKET, t.OPENPAREN], ['&', '?', '<', '>', '(']],
 	['([{}])', [t.OPENPAREN, t.OPENBRACKET, t.OPENBRACE, t.CLOSEBRACE, t.CLOSEBRACKET, t.CLOSEPAREN], ['(', '[', '{', '}', ']', ')']],
-	['!,;\'', [t.PUNCTUATION, t.PUNCTUATION, t.PUNCTUATION, t.PUNCTUATION], ['!', ',', ';', '\'']],
+	['!,;\'', [t.PUNCTUATION, t.PUNCTUATION, t.PUNCTUATION, t.APOSTROPHE], ['!', ',', ';', '\'']],
 	['hello', [t.DOMAIN], ['hello']],
 	['Hello123', [t.DOMAIN], ['Hello123']],
 	['hello123world', [t.DOMAIN], ['hello123world']],
@@ -58,7 +58,7 @@ const tests = [
 	],
 	[
 		'Direniş İzleme Grubu\'nun',
-		[t.DOMAIN, t.WS, t.DOMAIN, t.WS, t.DOMAIN, t.PUNCTUATION, t.DOMAIN],
+		[t.DOMAIN, t.WS, t.DOMAIN, t.WS, t.DOMAIN, t.APOSTROPHE, t.DOMAIN],
 		['Direniş', ' ', 'İzleme', ' ', 'Grubu', '\'', 'nun']
 	],
 	[

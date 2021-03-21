@@ -192,6 +192,10 @@ const tests = [
 		'www.🍕💩.ws',
 		[Url],
 		['www.🍕💩.ws']
+	], [
+		'o\'malley@example.com.au', // Email with apostrophe
+		[Email],
+		['o\'malley@example.com.au']
 	]
 ];
 

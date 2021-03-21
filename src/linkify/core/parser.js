@@ -144,6 +144,8 @@ export function init() {
 		tk.DOT,
 		tk.QUERY,
 		tk.PUNCTUATION,
+		tk.APOSTROPHE,
+		tk.QUOTE,
 		tk.CLOSEBRACE,
 		tk.CLOSEBRACKET,
 		tk.CLOSEANGLEBRACKET,
@@ -249,6 +251,7 @@ export function init() {
 		tk.UNDERSCORE,
 		tk.SYM,
 		tk.AMPERSAND,
+		tk.APOSTROPHE,
 		tk.TLD
 	];
 

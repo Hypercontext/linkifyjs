@@ -19,6 +19,10 @@ export const DOT = 'DOT'; // '.'
 // or end with. Does not include certain English punctuation like parentheses.
 export const PUNCTUATION = 'PUNCTUATION';
 
+// Single/double quotes
+export const APOSTROPHE = 'APOSTROPHE'; // '
+export const QUOTE = 'QUOTE'; // "
+
 // New line (unix style)
 export const NL = 'NL'; // '\n'
 
