@@ -1,3 +1,9 @@
+const fs = require('fs');
+
+// React path may vary depending on version
+const reactPath = fs.existsSync('node_modules/react/dist/react.min.js') ? 'dist/react' : 'umd/react.production';
+const reactDomPath = fs.existsSync('node_modules/react-dom/dist/react-dom.min.js') ? 'dist/react-dom' : 'umd/react-dom.production';
+
 module.exports = {
 
 	// base path that will be used to resolve all patterns (eg. files, exclude)
@@ -9,15 +15,13 @@ module.exports = {
 
 	// list of files / patterns to load in the browser
 	files: [
-		{pattern: 'node_modules/babel-polyfill/dist/polyfill.js', watched: false, included: false, served: true},
 		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
-		{pattern: 'vendor/react.min.js', watched: false, included: false, served: true},
-		{pattern: 'vendor/react-dom.min.js', watched: false, included: false, served: true},
+		{pattern: `node_modules/react/${reactPath}.min.js`, watched: false },
+		{pattern: `node_modules/react-dom/${reactDomPath}.min.js`, watched: false },
 		'dist/linkify-polyfill.min.js',
 		'dist/linkify.min.js',
 		// 'dist/linkify.js', // Uncompressed
-		'test/qunit/ie8.js',
-		{pattern: 'dist/linkify-react.min.js', included: false, served: true},
+		'dist/linkify-react.min.js',
 		// {pattern: 'dist/linkify-reactjs', included: false, served: true}, // Uncompressed
 		'dist/*.min.js',
 		// 'dist/*.js', // Uncompressed
@@ -25,19 +29,11 @@ module.exports = {
 		'test/qunit/main.js'
 	],
 
-	// list of files to exclude
-	exclude: [
-		'dist/*.amd.min.js',
-		// 'dist/*.amd.js', // Uncompressed
-		// 'dist/*.min.js', // Uncompressed
-	],
-
 	// QUnit configuration
 	client: {
-		clearContext: true,
+		clearContext: false,
 		qunit: {
-			showUI: false,
-			autostart: false
+			showUI: true
 		}
 	},
 

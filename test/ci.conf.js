@@ -1,6 +1,5 @@
 // Karma CI configuration
 const base = require('./conf');
-const extend = require('lodash/extend');
 
 module.exports = function (config) {
 
@@ -19,6 +18,30 @@ module.exports = function (config) {
 			browserName: 'safari',
 			version: '9'
 		},
+		/**
+		// Too fragile
+		sl_ios_safari: {
+			base: 'SauceLabs',
+			deviceName: 'iPhone Simulator',
+			platformVersion: '11.3',
+			platformName: 'iOS',
+			browserName: 'Safari',
+			deviceOrientation: 'portrait',
+			appiumVersion: '1.9.1'
+		},
+		*/
+		/*
+		// Not working due to incorrect localhost hostname
+		sl_android: {
+			base: 'SauceLabs',
+			deviceName: 'Android GoogleAPI Emulator',
+			platformName: 'Android',
+			platformVersion: '8.1',
+			browserName: 'Chrome',
+			deviceOrientation: 'portrait',
+			appiumVersion: '1.20.2'
+		},
+		*/
 		sl_edge: {
 			base: 'SauceLabs',
 			browserName: 'MicrosoftEdge',
@@ -29,33 +52,21 @@ module.exports = function (config) {
 			browserName: 'internet explorer',
 			platform: 'Windows 8.1',
 			version: '11'
-		},
-		sl_ie_9: {
-			base: 'SauceLabs',
-			browserName: 'internet explorer',
-			platform: 'Windows 7',
-			version: '9'
 		}
 	};
 
-	config.set(extend(base, {
+	config.set({
+		...base,
 
 		// level of logging
 		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
 		sauceLabs: {
 			testName: 'Linkify Browser Tests'
 		},
-		browserDisconnectTimeout: 30000,
-		browserNoActivityTimeout: 30000,
-		browserDisconnectTolerance: 3,
 		customLaunchers: customLaunchers,
 		browsers: Object.keys(customLaunchers),
-		autoWatch: false,
 		singleRun: true,
 		logLevel: config.LOG_WARN,
-		reporters: [
-			'dots',
-			'saucelabs'
-		],
-	}));
+		reporters: ['dots', 'saucelabs'],
+	});
 };

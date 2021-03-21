@@ -1,20 +1,24 @@
 /* global QUnit */
 /* global w */
-/* global isIE8 */
 
 /**
 	Linkify basic global tests
 */
 QUnit.assert.oneOf = function (value, possibleExpected, message) {
 	message = message || 'Expected ' + value + ' to be contained in ' + possibleExpected + '.';
-	var test = false;
+	var result = false;
 	for (var i = 0; i < possibleExpected.length; i++) {
 		if (value === possibleExpected[i]) {
-			test = true;
+			result = true;
 			break;
 		}
 	}
-	this.push(test, value, possibleExpected[i-1], message);
+	this.pushResult({
+		result: result,
+		actual: value,
+		expected: possibleExpected[i-1],
+		message: message
+	});
 };
 
 QUnit.module('linkify');
@@ -113,11 +117,17 @@ QUnit.test('finds valid hashtags', function (assert) {
 	assert.deepEqual(result, [{
 		type: 'hashtag',
 		value: '#urls',
-		href: '#urls'
+		href: '#urls',
+		isLink: true,
+		start: 0,
+		end: 5
 	}, {
 		type: 'hashtag',
 		value: '#awesome2015',
-		href: '#awesome2015'
+		href: '#awesome2015',
+		isLink: true,
+		start: 10,
+		end: 22
 	}]);
 });
 
@@ -129,11 +139,17 @@ QUnit.test('finds valid mentions', function (assert) {
 	assert.deepEqual(result, [{
 		type: 'mention',
 		value: '@foo',
-		href: '/foo'
+		href: '/foo',
+		isLink: true,
+		start: 4,
+		end: 8
 	}, {
 		type: 'mention',
 		value: '@bar',
-		href: '/bar'
+		href: '/bar',
+		isLink: true,
+		start: 22,
+		end: 26
 	}]);
 });
 
@@ -144,7 +160,10 @@ QUnit.test('finds valid tickets', function (assert) {
 	assert.deepEqual(result, [{
 		type: 'ticket',
 		value: '#42',
-		href: '#42'
+		href: '#42',
+		isLink: true,
+		start: 17,
+		end: 20
 	}]);
 });
 
@@ -271,38 +290,36 @@ QUnit.test('works with overriden options', function (assert) {
 });
 
 
-if (!isIE8()) {
-	// React does not officially support IE8
-	// https://facebook.github.io/react/docs/working-with-the-browser.html#browser-support
+// React does not officially support IE8
+// https://facebook.github.io/react/docs/working-with-the-browser.html#browser-support
 
-	QUnit.module('linkify-react');
+QUnit.module('linkify-react');
 
-	QUnit.test('class exists', function (assert) {
-		assert.ok('Linkify' in w);
-		assert.equal(typeof w.Linkify, 'function');
-	});
+QUnit.test('class exists', function (assert) {
+	assert.ok('Linkify' in w);
+	assert.equal(typeof w.Linkify, 'function');
+});
 
-	QUnit.test('can be used to create valid components', function (assert) {
-		var linkified = w.React.createElement(w.Linkify, null, 'github.com');
-		assert.ok(w.React.isValidElement(linkified));
-	});
+QUnit.test('can be used to create valid components', function (assert) {
+	var linkified = w.React.createElement(w.Linkify, null, 'github.com');
+	assert.ok(w.React.isValidElement(linkified));
+});
 
-	QUnit.test('renders into a DOM element', function (assert) {
-		var linkified = w.React.createElement(
-			w.Linkify,
-			{tagName: 'em'},
-			'A few links are github.com and google.com and ',
-			w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
-		);
-		var container = document.createElement('div');
-		document.body.appendChild(container);
+QUnit.test('renders into a DOM element', function (assert) {
+	var linkified = w.React.createElement(
+		w.Linkify,
+		{tagName: 'em'},
+		'A few links are github.com and google.com and ',
+		w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
+	);
+	var container = document.createElement('div');
+	document.body.appendChild(container);
 
-		w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
+	w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
 
-		assert.ok(container.innerHTML.indexOf('<em') > 0);
-		assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
-		assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
-		assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);
-		assert.ok(container.innerHTML.indexOf('href="https://amazon.ca"') > 0);
-	});
-}
+	assert.ok(container.innerHTML.indexOf('<em') > 0);
+	assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
+	assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
+	assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);
+	assert.ok(container.innerHTML.indexOf('href="https://amazon.ca"') > 0);
+});
