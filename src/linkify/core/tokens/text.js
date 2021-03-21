@@ -22,7 +22,7 @@ export const PUNCTUATION = 'PUNCTUATION';
 // New line (unix style)
 export const NL = 'NL'; // '\n'
 
-// Any sequence of digies 0-9
+// Any sequence of digits 0-9
 export const NUM = 'NUM';
 
 // Various symbols

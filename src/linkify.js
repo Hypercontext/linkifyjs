@@ -53,8 +53,8 @@ export function registerCustomProtocol(protocol) {
 	if (INIT.initialized) {
 		warn(`linkifyjs: already initialized - will not register custom protocol "${protocol}" until you manually call linkify.init(). To avoid this warning, please register all custom protocols before invoking linkify the first time.`);
 	}
-	if (!/^[a-z]+$/.test(protocol)) {
-		throw Error('linkifyjs - protocols containing characters other than a - z are not supported');
+	if (!/^[a-z-]+$/.test(protocol)) {
+		throw Error('linkifyjs: protocols containing characters other than a-z or - (hyphen) are not supported');
 	}
 	INIT.customProtocols.push(protocol);
 }
