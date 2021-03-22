@@ -11,6 +11,7 @@ node_v=$(node --version)
 if [[ $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v14.* && $(echo $JQUERY_VERSION) == 1.* ]]; then
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
+	npm run build
 	npm test
 	npm run test:ci
 else
