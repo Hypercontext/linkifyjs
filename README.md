@@ -184,7 +184,7 @@ Use _one_ of the following polyfills
 
 ## Node.js Support
 
-Linkify is tested on Node.js 8 and up. Older versions are unofficially supported.
+Linkify is tested on Node.js 10 and up. Older versions are unofficially supported.
 
 ## Downloads
 
