@@ -13,7 +13,6 @@ if [[ $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v14.* && $(echo $JQUER
 	echo "Running complete test suite..."
 	npm test
 	npm run test:ci
-	npm run coverage
 else
 	# Run basic tests
 	echo "Running basic tests..."

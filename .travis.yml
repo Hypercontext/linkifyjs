@@ -31,3 +31,4 @@ before_script:
 script:
   - npm run lint
   - bash test/run.sh
+after_success: npm run coverage
