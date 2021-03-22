@@ -14,7 +14,6 @@
     "test": "nyc --reporter=html --reporter=text mocha test/index.js",
     "test:ci": "karma start test/ci.conf.js --single-run",
     "prepack": "run-s clean build",
-    "pretest": "copyfiles -f \"node_modules/react?(-dom)/@(umd|dist)/*.min.js\" vendor",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "Soapbox Innovations (@SoapBoxHQ)",
@@ -43,7 +42,6 @@
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "chai": "^4.3.4",
-    "copyfiles": "^2.4.1",
     "core-js": "^3.9.1",
     "coveralls": "^3.1.0",
     "eslint": "^7.22.0",
