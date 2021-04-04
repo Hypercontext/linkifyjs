@@ -18,6 +18,8 @@ vendor
 # Files
 *.md
 *.yml
+*.tar.gz
+*.tgz
 .tags*
 .babelrc*
 .eslintrc*
@@ -25,6 +27,5 @@ vendor
 bower.json
 gulpfile.js
 testem.json
-run-tests.sh
-rollup.config.js
+*.config.js*
 tasks

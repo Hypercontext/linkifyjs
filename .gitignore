@@ -43,6 +43,8 @@ build
 dist
 lib
 vendor
+*.tar.gz
+*.tgz
 
 # IntelliJ
 .idea

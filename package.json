@@ -1,47 +1,38 @@
 {
-  "name": "linkifyjs",
-  "version": "3.0.0-beta.3",
+  "name": "linkify",
+  "version": "3.0.0",
   "description": "Intelligent link recognition, made easy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Soapbox/linkifyjs.git"
+    "url": "git+https://github.com/Soapbox/linkifyjs.git"
   },
   "main": "index.js",
   "scripts": {
-    "build": "rollup -c rollup.config.js",
-    "clean": "rm -rf lib dist",
+    "clean": "rm -rf dist",
+    "build": "npm run build --workspaces",
+    "copy": "copyfiles -f packages/*/dist/*.js dist",
+    "dist": "run-s clean build copy",
     "lint": "eslint src/**/*.js test/**/*.js",
     "test": "nyc --reporter=html --reporter=text mocha test/index.js",
     "test:ci": "karma start test/ci.conf.js --single-run",
-    "prepack": "run-s clean build",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "Soapbox Innovations (@SoapBoxHQ)",
   "license": "MIT",
-  "keywords": [
-    "jquery",
-    "link",
-    "autolink",
-    "text",
-    "url",
-    "email",
-    "hashtag",
-    "hashtags",
-    "mention",
-    "mentions"
-  ],
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/eslint-parser": "^7.13.10",
     "@babel/eslint-plugin": "^7.13.10",
-    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
     "@babel/preset-env": "^7.13.10",
     "@babel/register": "^7.13.8",
+    "@istanbuljs/nyc-config-babel": "^3.0.0",
     "@nfrasser/simple-html-tokenizer": "^0.5.11-1",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
+    "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.3.4",
+    "copyfiles": "^2.4.1",
     "core-js": "^3.9.1",
     "coveralls": "^3.1.0",
     "eslint": "^7.22.0",
@@ -66,12 +57,11 @@
     "rollup": "^2.42.1",
     "rollup-plugin-terser": "^7.0.2"
   },
-  "peerDependencies": {
-    "jquery": ">= 1.11.0",
-    "react": ">= 0.14.0",
-    "react-dom": ">= 0.14.0"
-  },
+  "private": true,
   "engines": {
     "node": ">=8"
-  }
+  },
+  "workspaces": [
+    "./packages/*"
+  ]
 }

@@ -1,0 +1,29 @@
+{
+  "name": "linkify-polyfill",
+  "version": "3.0.0",
+  "description": "Old browser polyfill for linkifyjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo \"Nothing to build for linkify-polyfill\"",
+    "clean": "rm -rf lib dist *.tgz",
+    "prepack": "run-s clean build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soapbox/linkifyjs.git",
+    "directory": "packages/linkify-polyfill"
+  },
+  "keywords": [
+    "link",
+    "autolink",
+    "url",
+    "email"
+  ],
+  "author": "Soapbox Innovations (@SoapBoxHQ)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Soapbox/linkifyjs/issues"
+  },
+  "homepage": "https://github.com/Soapbox/linkifyjs#readme"
+}

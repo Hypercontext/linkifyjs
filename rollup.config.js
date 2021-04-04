@@ -3,72 +3,78 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 
-const plugins = [
+export const plugins = [
 	resolve(),
 	commonjs(),
 	babel({ babelHelpers: 'bundled' })
 ];
 
-function linkifyInterface(name, opts = {}) {
+// For interfaces in their dedicated packages
+export function linkifyInterface(name, opts = {}) {
 	const iifeOpts = { name };
+	const globals = { linkifyjs: 'linkify' };
+	const external = ['linkifyjs'];
 	if ('globalName' in opts) { iifeOpts.name = opts.globalName; }
-
-	const globals =  {
-		[`${__dirname}/src/linkify`]: 'linkify',
-		'react': 'React',
-		'jquery': 'jQuery'
-	};
+	if ('globals' in opts) { Object.assign(globals, opts.globals); }
+	if ('external' in opts) { external.push(...opts.external); }
 
 	return {
 		input: `src/linkify-${name}.js`,
-		external: ['./linkify', `${__dirname}/src/linkify`, 'react', 'jquery'],
+		external,
 		output: [
-			{ file: `lib/linkify-${name}.js`, format: 'cjs', exports: 'auto' },
+			{ file: 'index.js', format: 'cjs', exports: 'auto' },
 			{ file: `dist/linkify-${name}.js`, format: 'iife', globals, ...iifeOpts },
-			{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] }
+			{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
 		],
 		plugins
 	};
 }
 
-function linkifyPlugin(name) {
-	const globals =  { [`${__dirname}/src/linkify`]: 'linkify' };
+
+// Interfaces embedded in the main linkifyjs package, not yet fully migrated
+// over to their own packages. This should be removed in v3.1 or v4
+export function linkifyClassicInterface(name, opts = {}) {
+	const iifeOpts = { name };
+	const globals = { linkifyjs: 'linkify' };
+	if ('globalName' in opts) { iifeOpts.name = opts.globalName; }
+
+	const output = [
+		{ file: `dist/linkify-${name}.js`, format: 'iife', globals, ...iifeOpts },
+		{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
+	];
+	if (opts.commonjs) {
+		output.push({ file: `lib/plugins/${name}.js`, format: 'cjs', exports: 'auto' });
+	}
 
 	return {
-		input: `src/plugins/${name}.js`,
-		external: ['../linkify', `${__dirname}/src/linkify`],
-		output: [
-			{ file: `lib/plugins/${name}.js`, format: 'cjs', exports: 'auto' },
-			{ file: `dist/linkify-plugin-${name}.js`, format: 'iife', globals, name: false },
-			{ file: `dist/linkify-plugin-${name}.min.js`, format: 'iife', globals, name: false, plugins: [terser()] }
-		],
+		input: `../linkifyjs/src/linkify-${name}.js`,
+		external: ['linkifyjs'], // add other dependent packages here
+		output,
+		plugins
+	};
+}
+
+// Includes plugins from main linkifyjs package because those have not yet been
+// fully migrated to their own packages to maintain backward compatibility with
+// v2. Will change in v4
+export function linkifyPlugin(name, opts = {}) {
+	const globals =  { linkifyjs: 'linkify' };
+	const output = [
+		{ file: `dist/linkify-plugin-${name}.js`, format: 'iife', globals, name: false },
+		{ file: `dist/linkify-plugin-${name}.min.js`, format: 'iife', globals, name: false, plugins: [terser()] }
+	];
+	if (opts.commonjs) {
+		output.push({ file: `lib/plugins/${name}.js`, format: 'cjs', exports: 'auto' })
+	}
+	return {
+		input: `../linkifyjs/src/plugins/${name}.js`,
+		external: ['linkifyjs'],
+		output,
 		plugins
 	};
 }
 
 export default [
-	{
-		input: 'src/linkify.js',
-		output: [
-			{
-				file: 'lib/linkify.js',
-				format: 'cjs',
-				exports: 'auto'
-			},
-			{
-				file: 'dist/linkify.js',
-				name: 'linkify',
-				format: 'iife'
-			},
-			{
-				file: 'dist/linkify.min.js',
-				name: 'linkify',
-				format: 'iife',
-				plugins: [terser()]
-			}
-		],
-		plugins
-	},
 	{
 		input: 'src/polyfill.js',
 		output: [
@@ -105,16 +111,4 @@ export default [
 		plugins
 	},
 	*/
-
-	// Interfaces
-	linkifyInterface('string', { globalName: 'linkifyStr' }),
-	linkifyInterface('html', { globalName: 'linkifyHtml' }),
-	linkifyInterface('element', { globalName: 'linkifyElement' }),
-	linkifyInterface('react', { globalName: 'Linkify' }),
-	linkifyInterface('jquery', { globalName: false }),
-
-	// Plugins
-	linkifyPlugin('hashtag'),
-	linkifyPlugin('mention'),
-	linkifyPlugin('ticket')
 ];

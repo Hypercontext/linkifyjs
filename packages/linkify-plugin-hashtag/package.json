@@ -1,0 +1,32 @@
+{
+  "name": "linkify-plugin-hashtag",
+  "version": "3.0.0",
+  "description": "Hashtag plugin for linkifyjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "clean": "rm -rf lib dist *.tgz",
+    "prepack": "run-s clean build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soapbox/linkifyjs.git",
+    "directory": "packages/linkify-plugin-hashtag"
+  },
+  "keywords": [
+    "link",
+    "autolink",
+    "url",
+    "email"
+  ],
+  "author": "Soapbox Innovations (@SoapBoxHQ)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Soapbox/linkifyjs/issues"
+  },
+  "homepage": "https://github.com/Soapbox/linkifyjs#readme",
+  "peerDependencies": {
+    "linkifyjs": "^3.0.0"
+  }
+}

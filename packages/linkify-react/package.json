@@ -1,0 +1,34 @@
+{
+  "name": "linkify-react",
+  "version": "3.0.0",
+  "description": "React element interface for linkifyjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "clean": "rm -rf lib dist *.tgz",
+    "prepack": "run-s clean build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soapbox/linkifyjs.git",
+    "directory": "packages/linkify-react"
+  },
+  "keywords": [
+    "link",
+    "autolink",
+    "url",
+    "email",
+    "react"
+  ],
+  "author": "Soapbox Innovations (@SoapBoxHQ)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Soapbox/linkifyjs/issues"
+  },
+  "homepage": "https://github.com/Soapbox/linkifyjs#readme",
+  "peerDependencies": {
+    "linkifyjs": "^3.0.0",
+    "react": ">= 0.14.0"
+  }
+}

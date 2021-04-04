@@ -1,0 +1,36 @@
+{
+  "name": "linkify-jquery",
+  "version": "3.0.0",
+  "description": "jQuery interface for linkifyjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "clean": "rm -rf lib dist *.tgz",
+    "prepack": "run-s clean build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soapbox/linkifyjs.git",
+    "directory": "packages/linkify-jquery"
+  },
+  "keywords": [
+    "link",
+    "autolink",
+    "url",
+    "email"
+  ],
+  "author": "Soapbox Innovations (@SoapBoxHQ)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Soapbox/linkifyjs/issues"
+  },
+  "homepage": "https://github.com/Soapbox/linkifyjs#readme",
+  "peerDependencies": {
+    "jquery": ">= 1.11.0",
+    "linkifyjs": "^3.0.0"
+  },
+  "devDependencies": {
+    "linkify-element": "^3.0.0"
+  }
+}
