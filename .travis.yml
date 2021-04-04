@@ -27,6 +27,7 @@ install:
 before_script:
   - 'if [ "$JQUERY_VERSION" ]; then npm install --force jquery@~$JQUERY_VERSION; fi'
   - 'if [ "$REACT_VERSION" ]; then npm install --force react-dom@~$REACT_VERSION react@~$REACT_VERSION; fi'
+  - cd node_modules; ln -f -s ../packages/* .; cd ..
 script:
   - npm run lint
   - bash test/run.sh
