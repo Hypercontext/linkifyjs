@@ -9,6 +9,8 @@ const originalRequire = Module.prototype.require;
 Module.prototype.require = function (mod, ...args) {
 	if (mod === 'linkifyjs') {
 		mod = 'linkifyjs/src/linkify';
+	} else if (mod === 'linkify-element') {
+		mod = 'linkify-element/src/linkify-element';
 	} else if (/^linkifyjs\/lib/.test(mod)) {
 		mod.replace(/^linkifyjs\/lib/, 'linkifyjs/src');
 	}
