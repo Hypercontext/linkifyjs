@@ -67,8 +67,6 @@ Add [linkify](https://github.com/nfrasser/linkify-shim/raw/master/linkify.min.js
 <script src="linkify-element.min.js"></script>
 ```
 
-**Note:** A [polyfill](#browser-support) is required for Internet Explorer 11.
-
 #### Find all links and convert them to anchor tags
 
 ```js
@@ -161,26 +159,7 @@ ReactDOM.render(
 
 ## Browser Support
 
-Linkify works on all modern browsers. Linkify supports Internet Explorer 11 with
-a polyfill.
-
-Use _one_ of the following polyfills
-
-* provided `linkifyjs/polyfill` submodule (`dist/linkify-polyfill.js`) - see example below
-* [`core-js`](https://github.com/zloirock/core-js) (only the following two submodules are required:)
-  * `core-js/modules/es.array.from.js`
-  * `core-js/modules/es.string.iterator.js`
-* [`es5-shim`](https://github.com/es-shims/es5-shim) (`sham` also required)
-
-```html
-<script src="jquery.js"></script>
-
-<!--[if IE 11]>
-<script src="linkify-polyfill.js"></script>
-<![endif]-->
-<script src="linkify.js"></script>
-<script src="linkify-jquery.js"></script>
-```
+Linkify works on all modern browsers and Internet Explorer 11.
 
 ## Node.js Support
 

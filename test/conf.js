@@ -18,7 +18,6 @@ module.exports = {
 		{pattern: 'node_modules/jquery/dist/jquery.js', watched: false},
 		{pattern: `node_modules/react/${reactPath}.min.js`, watched: false },
 		{pattern: `node_modules/react-dom/${reactDomPath}.min.js`, watched: false },
-		'dist/linkify-polyfill.min.js',
 		'dist/linkify.min.js',
 		// 'dist/linkify.js', // Uncompressed
 		'dist/linkify-react.min.js',
