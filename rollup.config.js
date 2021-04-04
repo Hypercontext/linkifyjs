@@ -75,28 +75,6 @@ export function linkifyPlugin(name, opts = {}) {
 }
 
 export default [
-	{
-		input: 'src/polyfill.js',
-		output: [
-			{
-				file: 'lib/linkify-polyfill.js',
-				format: 'cjs',
-				exports: 'auto'
-			},
-			{
-				file: 'dist/linkify-polyfill.js',
-				name: 'linkifyPolyfill',
-				format: 'iife'
-			},
-			{
-				file: 'dist/linkify-polyfill.min.js',
-				name: 'linkifyPolyfill',
-				format: 'iife',
-				plugins: [terser()]
-			}
-		],
-		plugins
-	},
 	/*
 	{
 		input: 'src/linkify/core/generated/state-machine.js',

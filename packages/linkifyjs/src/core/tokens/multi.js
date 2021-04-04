@@ -30,12 +30,8 @@ function inherits(parent, child, props={}) {
 	@param {Array<{t: string, v: string, s: number, e: number}>} tokens
 	@abstract
 */
-export function MultiToken(type, value, tokens) {
-	this.t = type;
-	this.v = value;
-	this.tk = tokens;
-	this.isLink = false;
-}
+export function MultiToken() {}
+
 MultiToken.prototype = {
 	/**
 		String representing the type for this token

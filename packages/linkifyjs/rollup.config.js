@@ -11,15 +11,6 @@ export default [
 		],
 		plugins
 	},
-	{
-		input: 'src/polyfill.js',
-		output: {
-			file: 'lib/polyfill.js',
-			format: 'cjs',
-			exports: 'auto'
-		},
-		plugins
-	},
 
 	// Interfaces
 	linkifyClassicInterface('string', { globalName: 'linkifyStr', commonjs: true }),

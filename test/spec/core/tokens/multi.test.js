@@ -1,5 +1,6 @@
 const tokens = require('linkifyjs/src/core/tokens');
 const scanner = require('linkifyjs/src/core/scanner');
+const { expect } = require('chai');
 const tk = tokens.text;
 const mkt = tokens.multi;
 
@@ -7,7 +8,13 @@ describe('linkifyjs/core/tokens/multi', () => {
 	let scannerStart;
 	before(() => { scannerStart = scanner.init(); });
 
-	describe('URL', () => {
+	describe('Multitoken', () => {
+		it('Constructor runs', () => {
+			expect(new tokens.multi.Base()).to.be.ok;
+		});
+	});
+
+	describe('Url', () => {
 		let input1 = 'Ftps://www.github.com/SoapBox/linkify';
 		let input2 = '//Amazon.ca/Sales';
 		let input3 = 'co.co?o=%2D&p=@gc#wat';
@@ -98,7 +105,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 	});
 
-	describe('EMAIL', () => {
+	describe('Email', () => {
 		let input = 'test@example.com';
 		let email;
 
@@ -127,7 +134,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 	});
 
-	describe('MAILTOEMAIL', () => {
+	describe('MailtoEmail', () => {
 		let input = 'mailto:test@example.com';
 		let email;
 
@@ -156,7 +163,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 	});
 
-	describe('NL', () => {
+	describe('Nl', () => {
 		var nlTokens, nl;
 
 		before(() => {
@@ -177,7 +184,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 		});
 	});
 
-	describe('TEXT', () => {
+	describe('Text', () => {
 		let text, input = 'Hello, World!';
 
 		before(() => {

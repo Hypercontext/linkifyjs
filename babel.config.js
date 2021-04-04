@@ -18,11 +18,9 @@ module.exports = (api) => {
 		]
 	];
 
-	const sourceType = 'module'
-
 	return {
 		presets,
 		sourceType: 'module',
 		babelrcRoots: ['.', 'packages/*']
 	};
-}
+};
