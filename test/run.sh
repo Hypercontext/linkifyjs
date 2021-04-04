@@ -12,7 +12,7 @@ if [[ $(echo $SAUCE_USERNAME) != "" && $(echo $node_v) == v14.* && $(echo $JQUER
 	# Run basic and SauceLabs tests
 	echo "Running complete test suite..."
 	npm test
-	npm run dist
+	npm run dist:ci
 	npm run test:ci
 else
 	# Run basic tests
