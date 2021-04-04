@@ -12,7 +12,7 @@
     "build": "npm run build --workspaces",
     "copy": "copyfiles -f packages/*/dist/*.js dist",
     "dist": "run-s clean build copy",
-    "lint": "eslint src/**/*.js test/**/*.js",
+    "lint": "eslint *.js packages/**/*.js test/**/*.js",
     "test": "nyc --reporter=html --reporter=text mocha test/index.js",
     "test:ci": "karma start test/ci.conf.js --single-run",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
