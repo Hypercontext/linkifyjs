@@ -2,7 +2,7 @@ const tokens = require('linkifyjs/src/core/tokens');
 const scanner = require('linkifyjs/src/core/scanner');
 const { expect } = require('chai');
 const tk = tokens.text;
-const mkt = tokens.multi;
+const mtk = tokens.multi;
 
 describe('linkifyjs/core/tokens/multi', () => {
 	let scannerStart;
@@ -25,9 +25,9 @@ describe('linkifyjs/core/tokens/multi', () => {
 			const urlTextTokens2 = scanner.run(scannerStart, input2);
 			const urlTextTokens3 = scanner.run(scannerStart, input3);
 
-			url1 = new mkt.Url(input1, urlTextTokens1);
-			url2 = new mkt.Url(input2, urlTextTokens2);
-			url3 = new mkt.Url(input3, urlTextTokens3);
+			url1 = new mtk.Url(input1, urlTextTokens1);
+			url2 = new mtk.Url(input2, urlTextTokens2);
+			url3 = new mtk.Url(input3, urlTextTokens3);
 		});
 
 		describe('#isLink', () => {
@@ -111,7 +111,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 		before(() => {
 			const emailTextTokens = scanner.run(scannerStart, input);
-			email = new mkt.Email(input, emailTextTokens);
+			email = new mtk.Email(input, emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -140,7 +140,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 		before(() => {
 			const emailTextTokens = scanner.run(scannerStart, input);
-			email = new mkt.MailtoEmail(input, emailTextTokens);
+			email = new mtk.MailtoEmail(input, emailTextTokens);
 		});
 
 		describe('#isLink', () => {
@@ -168,7 +168,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 		before(() => {
 			nlTokens = [{t: tk.NL, v: '\n', s: 0, e: 1}];
-			nl = new mkt.Nl('\n', nlTokens);
+			nl = new mtk.Nl('\n', nlTokens);
 		});
 
 		describe('#isLink', () => {
@@ -189,7 +189,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 		before(() => {
 			const textTokens = scanner.run(scannerStart, input);
-			text = new mkt.Text(input, textTokens);
+			text = new mtk.Text(input, textTokens);
 		});
 
 		describe('#isLink', () => {

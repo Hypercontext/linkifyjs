@@ -18,7 +18,8 @@
     "link",
     "autolink",
     "url",
-    "email"
+    "email",
+    "browser"
   ],
   "author": "Soapbox Innovations (@SoapBoxHQ)",
   "license": "MIT",
