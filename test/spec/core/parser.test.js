@@ -189,9 +189,9 @@ const tests = [
 		[Url],
 		['www.öko.de']
 	], [
-		'www.🍕💩.ws',
-		[Url],
-		['www.🍕💩.ws']
+		'www.🍕💩.ws i❤️.ws',
+		[Url, Text, Url],
+		['www.🍕💩.ws', ' ', 'i❤️.ws']
 	], [
 		'o\'malley@example.com.au', // Email with apostrophe
 		[Email],

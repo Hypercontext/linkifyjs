@@ -21,6 +21,7 @@ import tlds from './tlds';
 // Note that these two Unicode ones expand into a really big one with Babel
 export const LETTER = /\p{L}/u; // Any Unicode character with letter data type
 export const EMOJI = /\p{Emoji}/u; // Any Unicode emoji character
+export const EMOJI_VARIATION = /\uFE0F/; // Variation selector, follows heart and others
 export const DIGIT = /\d/;
 export const SPACE = /\s/;
 
@@ -39,7 +40,8 @@ export function init(customProtocols = []) {
 	const DOMAIN_REGEX_TRANSITIONS = [
 		[DIGIT, S_DOMAIN],
 		[LETTER, S_DOMAIN],
-		[EMOJI, S_DOMAIN]
+		[EMOJI, S_DOMAIN],
+		[EMOJI_VARIATION, S_DOMAIN]
 	];
 
 	// Create a state which emits a domain token
@@ -151,9 +153,11 @@ export function init(customProtocols = []) {
 	makeRegexT(S_START, DIGIT, S_NUM);
 	makeRegexT(S_START, LETTER, S_DOMAIN);
 	makeRegexT(S_START, EMOJI, S_DOMAIN);
+	makeRegexT(S_START, EMOJI_VARIATION, S_DOMAIN);
 	makeRegexT(S_NUM, DIGIT, S_NUM);
 	makeRegexT(S_NUM, LETTER, S_DOMAIN); // number becomes DOMAIN
 	makeRegexT(S_NUM, EMOJI, S_DOMAIN); // number becomes DOMAIN
+	makeRegexT(S_NUM, EMOJI_VARIATION, S_DOMAIN); // number becomes DOMAIN
 	makeT(S_NUM, '-', S_DOMAIN_HYPHEN);
 
 	// Default domain transitions
@@ -162,9 +166,11 @@ export function init(customProtocols = []) {
 	makeRegexT(S_DOMAIN, DIGIT, S_DOMAIN);
 	makeRegexT(S_DOMAIN, LETTER, S_DOMAIN);
 	makeRegexT(S_DOMAIN, EMOJI, S_DOMAIN);
+	makeRegexT(S_DOMAIN, EMOJI_VARIATION, S_DOMAIN);
 	makeRegexT(S_DOMAIN_HYPHEN, DIGIT, S_DOMAIN);
 	makeRegexT(S_DOMAIN_HYPHEN, LETTER, S_DOMAIN);
 	makeRegexT(S_DOMAIN_HYPHEN, EMOJI, S_DOMAIN);
+	makeRegexT(S_DOMAIN_HYPHEN, EMOJI_VARIATION, S_DOMAIN);
 
 	// Set default transition for start state (some symbol)
 	S_START.jd = makeAcceptingState(tk.SYM);
