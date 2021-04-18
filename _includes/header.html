@@ -1,42 +1,7 @@
-{% include new-release-banner.html %}
-
 <header class="site-header">
-  <h1 id="page-title" class="page-title">
+  <h1 id="page-title">
     <a href="{{ site.baseurl }}/">Linkify<br>
     <small>a JS plugin by SoapBox</small>
     </a>
   </h1>
 </header>
-
-<nav id="navbar" class="nav navbar navbar-default navbar-fixed-top top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#linkify-navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="{{ site.baseurl }}/" class="navbar-brand">
-        <span class="navbrand-linkify">Linkify</span>
-        <small>a JS plugin by SoapBox</small>
-      </a>
-    </div>
-    <div class="collapse navbar-collapse navbar-right" id="linkify-navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="{{ site.baseurl }}/">Demo</a></li>
-        <li><a href="{{ site.baseurl }}/docs">Documentation</a></li>
-        <li><a href="https://github.com/SoapBox/linkifyjs/">Code on GitHub</a></li>
-      </ul>
-    </div>
-
-  </div>
-</nav>
-
-<section id="page-header"{%if page.headeroffset %} class="offset"{% endif %}>
-  {% if page.header %}
-    {{ page.header }}
-  {% else %}
-    <h2 class="page-tagline">{{ page.title }}</h2>
-  {% endif %}
-</section>

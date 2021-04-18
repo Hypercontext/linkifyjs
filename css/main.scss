@@ -3,103 +3,76 @@
 ---
 @charset "utf-8";
 
-@import url("//fonts.googleapis.com/css?family=Oswald:400,300|Roboto:300,300italic,500,500italic");
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Nunito Sans Regular'), local('NunitoSans-Regular'), url(https://fonts.gstatic.com/s/nunitosans/v6/pe0qMImSLYBIv1o4X1M8cce9I9tAcVwo.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Nunito Sans SemiBold'), local('NunitoSans-SemiBold'), url(https://fonts.gstatic.com/s/nunitosans/v6/pe03MImSLYBIv1o4X1M8cc9iB85tU1ECVZl_.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Poppins Regular'), local('Poppins-Regular'), url(https://fonts.gstatic.com/s/poppins/v13/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Poppins Bold'), local('Poppins-Bold'), url(https://fonts.gstatic.com/s/poppins/v13/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 // Our variables
-$font-family-base:          'Roboto', sans-serif;
-$headings-font-family:      'Oswald', sans-serif;
-$font-family-monospace:     Monaco, Consolas, "Courier New", monospace;
-
-$spacing-unit:              30px;
-
-$line-height-base:          1.75;
-$font-size-base:            16px;
-
-$navbar-height:             75px;
+$font-family-sans-serif: 'Nunito Sans', sans-serif;
+$headings-font-family: Poppins, Arial, sans-serif;
+$font-family-monospace: Monaco, Consolas, "Courier New", monospace;
+$headings-font-weight: 700;
 
 // Brand colours
-$brand-primary:             #3b88c8;
-$brand-soapbox:             $brand-primary; // #3b88c8
-$brand-success:             #3ab49b;
-$brand-warning:             #fbaf3f;
-$brand-danger:              #ff564f;
-$brand-info:                #d67bb2;
-
+$blue: #2584e2;
+$pink: #d67bb2;
+$red: #ec5979;
+$yellow: #fbaf3f;
+$green: #70e8b1;
 
 // Import partials from `sass_dir` (defaults to `_sass`)
-@import "bootstrap/assets/stylesheets/bootstrap";
+@import "bootstrap/scss/bootstrap";
 @import "extendstrap";
-@import "base", "layout", "syntax-highlighting";
+@import "base";
+@import "syntax-highlighting";
 
 body {
   font-size: 16px;
   font-weight: 300;
-  background-repeat: no-repeat;
-  background-position: center 175px;
-  background-attachment: fixed;
-  background-color: lighten($gray-lighter, 3%);
-
-  @include img-retina(
-    "{{ site.baseurl }}/img/logo.png",
-    "{{ site.baseurl }}/img/logo@2x.png",
-    650px, 400px
-  );
-
-  &.with-announcement-banner {
-    background-position: center 215px;
-  }
 }
 
-#new-release-announcement {
-  max-width: 590px;
-  margin-left: auto;
-  margin-right: auto;
-  p {
-    margin: 15px auto;
-    line-height: 1.4;
-  }
-  img {
-    display: block;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.btn-primary, .btn-primary:hover {
+  color: white;
 }
 
-#new-release-announcement-title {
-  margin: 15px 0;
+.icon {
+  width: 2em;
 }
 
-#new-release-banner {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1031;
-  line-height: 36px;
-  white-space: nowrap;
-  border-width: 2px 0;
-  border-radius: 0;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-
-  a {
-    color: inherit;
-    font-weight: bold;
-  }
-
-  .close {
-    line-height: inherit;
-    padding-right: 20px;
-  }
-
-  .with-announcement-banner & {
-    display: block;
-  }
+#linkify-demo-result {
+  min-height: 5em;
+  white-space: pre-wrap;
 }
 
 // Pages
-@import "home";
+// @import "home";
 @import "docs";

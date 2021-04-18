@@ -1,79 +1,78 @@
 ---
 layout: default
 headeroffset: y
-header: >
-  <h2 class="page-tagline">
-    Intelligent link recognition, made easy<br>
-  </h2>
-  <h3 class="text-center">
-    <a href="https://github.com/SoapBox/linkifyjs/releases/download/v2.1.0/linkifyjs.zip" class="btn btn-xl btn-success version-download" download="linkifyjs.zip">Download</a>
-    <a href="docs" class="btn btn-xl btn-primary">Read the Docs</a>
-  </h3>
-  <div class="blurb text-center">
-    <p class="lead">Install <code>linkifyjs</code> with <a href="https://www.npmjs.com/package/linkifyjs" target="_blank">NPM</a> or <a href="http://bower.io/" target="_blank">Bower</a></p>
-  </div>
-  <p class="text-center small"><span class="version">v2.1.0</span> &middot; <a href="https://github.com/SoapBox/linkifyjs/blob/master/CHANGELOG.md">release notes</a> &middot; <a href="https://github.com/SoapBox/linkifyjs/">view code on GitHub</a></p>
+scripts:
+  - demo.js
 ---
+<section>
+  <p class="blurb text-center">
+    <a href="https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip" class="btn btn-lg btn-primary rounded-pill version-download" download="linkifyjs.zip">Download Zip</a>
+    &nbsp;
+    <a href="docs" class="btn btn-lg btn-secondary rounded-pill">Read the Docs</a>
+  </p>
+  <p class="lead text-center">Install with <a href="https://docs.npmjs.com/about-npm">NPM</a>:&nbsp; <code>npm install linkifyjs</code></p>
+  <p class="text-center small">v{{ site.version }} &middot; <a href="https://github.com/SoapBox/linkifyjs/blob/master/CHANGELOG.md">view release notes</a> &middot; <a href="https://github.com/SoapBox/linkifyjs">browse code on GitHub</a></p>
+</section>
 
-<div id="home" class="home row">
+<section>
+  <p class="lead">{{ site.description }}</p>
+</section>
 
-  <div class="col-xs-12">
-    <p class="lead blurb">
-      Linkify is a JavaScript plugin for finding links in plain-text and
-      converting them to HTML &lt;a&gt; tags.
-    </p>
-    <p class="lead blurb">
-      It works with all valid web URLs and email addresses.
-    </p>
-    {% include new-release-announcement.html %}
-  </div>
-
-  <div class="col-xs-12">
+<section class="row g-0 my-4">
+  <div class="col-12 text-center">
     <h2>Demo</h2>
-    <h3>1. Linkify some HTML</h3>
+    <p>Enter some links into the "Before" box below. The result will appear in the "After" box in real-time.</p>
   </div>
+  <div class="col-6 text-center"><h3>Before</h3></div>
+  <div class="col-6 text-center"><h3>After</h3></div>
+  <div class="col-6">
+    <textarea id="linkify-demo-textarea" class="form-control rounded-0 rounded-start h-100">
+Linkify works with all kinds of #links. Here are some examples:
 
-  <div class="col-sm-9">
-    <div class="well demo-well" data-linkify-demo-target="demo-1-linkifier" >
-      <p class="h1">Why Leaders Need Trust and How To Earn It</p>
-      <p class="entry-meta"> by Will Campbell (Website: http://soapboxhq.com/blog/author/willcampbell)</p>
-      <p><time class="updated" datetime="2015-11-18" itemprop="datePublished">November 18, 2015</time></p>
-      <p>It’s something we all intuitively know: Good leaders are trusted by their employees. A happy, engaged, productive workforce is built on trust, and trust in the person leading the charge is a vital part of this.</p>
-      <p>Yet <strong>trust isn’t working for many organizations</strong>. A whopping 60 percent of employees don’t trust their workplace (http://interactionassociates.com/insights/research/building-workplace-trust-201415). And this distrust is holding back productivity (http://www.inc.com/penny-herscher/5-ways-trust-impacts-your-productivity-in-the-office.html) and <a href="http://soapboxhq.com/blog/why-trust-is-the-core-of-employee-engagement" target="_blank">wounding employee engagement</a>.</p>
-      <p><strong>Leaders need to start building trust</strong>. In this post you’ll learn more about why trust should be a priority, what Carlos Ghosn can teach us, and get <strong>five tips on how to earn trust</strong>.</p>
-      <p>Read more at <strong>http://soapboxhq.com/blog/why-leaders-need-trust-and-how-to-earn-it</strong>. If you have any questions, reach out at info@soapboxhq.com</p>
-    </div>
-  </div>
+- URLs with protocols: https://github.com
+- URLs without protocols: github.com
+- Emoji URLs like http://i❤️.ws
+- Email addresses (hello@example.com)
+- Mentions such as @Soapbox or @tc39
+- Hashtags such as #PhotoOfTheDay or #일상
 
-  <div class="col-sm-3">
-    <button id="demo-1-linkifier" class="btn btn-block btn-lg btn-primary linkifier">Loading...</button>
+Linkify is made with ❤️ by @Soapbox and @nfrasser
+    </textarea>
   </div>
+  <div class="col-6">
+    <div id="linkify-demo-result" class="bg-light form-control border-start-0 rounded-0 rounded-end"></div>
+  </div>
+  <div class="col-12 text-center">
+    <p><em>Try putting your own links above to see if Linkify will find them.</em></p>
+  </div>
+  <div class="col-12">
+    <details>
+      <summary class="text-center">Demo source code</summary>
+      <pre class="bg-light form-control border">
+import linkifyStr from 'linkify-string'
 
-  <div class="col-xs-12">
-    <h3>2. See if this plugin works for your text</h3>
+      </pre>
+    </details>
   </div>
+</section>
 
-  <div class="col-sm-9">
-    <textarea id="demo-3-input" class="form-control" rows="3"></textarea>
+<section class="my-4">
+  <h2 class="text-center">Features</h2>
+  <div class="d-flex align-items-center">
+    <ul class="mx-auto">
+      <li>Detect URLs and email addresses</li>
+      <li>#hashtag, @mention and #-ticket plugins</li>
+      <li>React and jQuery support</li>
+      <li>Multi-language and emoji support</li>
+      <li>Custom link plugins</li>
+      <li>Fast, accurate and small footprint (~15kB gzipped)</li>
+      <li>99% test coverage</li>
+      <li>Compatible with all modern browsers</li>
+    </ul>
   </div>
-  <div class="col-sm-3">
-    <button id="demo-3-linkifier" class="btn btn-block btn-lg btn-primary" data-linkify-demo-input="#demo-3-input" data-linkify-demo-output="#demo-3-output">
-      Linkify
-    </button>
-  </div>
+</section>
 
-  <div class="col-xs-12">
-    <h4>Output</h4>
-    <div id="demo-3-output" class="well demo-well">
-      <em class="text-muted">
-        Press "Linkify" to view the result
-      </em>
-    </div>
-  </div>
-
-  <div class="col-xs-12 text-center">
-    <h3>Want to learn more?</h3>
-    <a href="docs" class="btn btn-xl btn-success">Read the Docs</a>
-  </div>
-
-</div>
+<section class="text-center my-4">
+  <h2>Learn how to use Linkify in your project</h2>
+  <a href="docs" class="btn btn-lg btn-secondary rounded-pill">Read the Docs</a>
+</section>
