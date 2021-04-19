@@ -3,8 +3,6 @@ layout: doc
 title: Documentation
 ---
 
-{% include new-release-announcement.html %}
-
 #### Jump to
 
 * [Installation/Getting Started](#installationgetting-started)
@@ -19,7 +17,7 @@ title: Documentation
 
 # Installation/Getting Started
 
-[Download](https://github.com/SoapBox/linkifyjs/releases/download/{{ site.version }}/linkifyjs.zip) the latest release or install via [NPM](https://www.npmjs.com/)
+[Download](https://github.com/SoapBox/linkifyjs/releases/download/v2.1.9/linkifyjs.zip) the latest release or install via [NPM](https://www.npmjs.com/)
 
 ```
 npm install --no-optional linkifyjs
