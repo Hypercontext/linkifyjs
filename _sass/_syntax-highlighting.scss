@@ -2,7 +2,8 @@
  * Syntax highlighting styles
  */
 .highlight {
-    background: #fff;
+    background: $lighter;
+    background: var(--bs-lighter);
 
     .c     { color: #998; font-style: italic } // Comment
     .err   { color: #a61717; background-color: #e3d2d2 } // Error
@@ -39,7 +40,7 @@
     .ne    { color: #900; font-weight: bold } // Name.Exception
     .nf    { color: #900; font-weight: bold } // Name.Function
     .nn    { color: #555 } // Name.Namespace
-    .nt    { color: #000080 } // Name.Tag
+    .nt    { color: $blue } // Name.Tag
     .nv    { color: #008080 } // Name.Variable
     .ow    { font-weight: bold } // Operator.Word
     .w     { color: #bbb } // Text.Whitespace
@@ -63,4 +64,15 @@
     .vg    { color: #008080 } // Name.Variable.Global
     .vi    { color: #008080 } // Name.Variable.Instance
     .il    { color: #099 } // Literal.Number.Integer.Long
+}
+
+div.highlight {
+    @extend .card;
+    @extend .bg-lighter;
+    margin-bottom: 1em;
+    padding: 0.75em;
+}
+
+pre.highlight {
+    margin-bottom: 0;
 }

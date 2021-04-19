@@ -1,5 +1,7 @@
 ---
 ---
+beforeEl = document.getElementById('linkify-demo-before')
+afterEl = document.getElementById('linkify-demo-after')
 
 options =
   rel: 'nofollow noreferrer nopenner'
@@ -9,9 +11,6 @@ options =
     mention: (val) ->
       "https://github.com/#{val.substr(1)}"
 
-beforeEl = document.getElementById('linkify-demo-textarea')
-outputEl = document.getElementById('linkify-demo-result')
-
-outputEl.innerHTML = linkifyStr(beforeEl.value, options)
+afterEl.innerHTML = linkifyStr(beforeEl.value, options)
 beforeEl.addEventListener 'input', ->
-  outputEl.innerHTML = linkifyStr(beforeEl.value, options)
+  afterEl.innerHTML = linkifyStr(beforeEl.value, options)

@@ -1,5 +1,4 @@
 ---
-# Only the main Sass file needs front matter (the dashes are enough)
 ---
 @charset "utf-8";
 
@@ -58,6 +57,21 @@ $green: #70e8b1;
 body {
   font-size: 16px;
   font-weight: 300;
+  color: $dark;
+  color: var(--bs-dark);
+  background-color: $light;
+  background-color: var(--bs-light);
+}
+
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.btn, .btn:hover {
+  text-decoration: none;
 }
 
 .btn-primary, .btn-primary:hover {
@@ -68,11 +82,15 @@ body {
   width: 2em;
 }
 
-#linkify-demo-result {
-  min-height: 5em;
-  white-space: pre-wrap;
+.site-header {
+  text-align: center;
+  padding: 2em;
+}
+
+#page-title {
+  line-height: 1;
 }
 
 // Pages
-// @import "home";
+@import "home";
 @import "docs";

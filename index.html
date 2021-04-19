@@ -1,24 +1,29 @@
 ---
 layout: default
 headeroffset: y
+showbysoapbox: true
 scripts:
+  - home.js
   - demo.js
 ---
+<section id="linkify-home-logo" class="mb-4">
+  {% include linkify-logo.svg %}
+</section>
 <section>
   <p class="blurb text-center">
     <a href="https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip" class="btn btn-lg btn-primary rounded-pill version-download" download="linkifyjs.zip">Download Zip</a>
     &nbsp;
     <a href="docs" class="btn btn-lg btn-secondary rounded-pill">Read the Docs</a>
   </p>
-  <p class="lead text-center">Install with <a href="https://docs.npmjs.com/about-npm">NPM</a>:&nbsp; <code>npm install linkifyjs</code></p>
+  <p class="lead text-center">Install with <a href="https://docs.npmjs.com/about-npm">NPM</a>:&nbsp; <code class="badge bg-lighter text-danger">npm install linkifyjs</code></p>
   <p class="text-center small">v{{ site.version }} &middot; <a href="https://github.com/SoapBox/linkifyjs/blob/master/CHANGELOG.md">view release notes</a> &middot; <a href="https://github.com/SoapBox/linkifyjs">browse code on GitHub</a></p>
 </section>
 
-<section>
-  <p class="lead">{{ site.description }}</p>
+<section class="my-5">
+  <p class="lead mx-auto linkify-home-blurb">{{ site.description }}</p>
 </section>
 
-<section class="row g-0 my-4">
+<section class="row g-0 my-5">
   <div class="col-12 text-center">
     <h2>Demo</h2>
     <p>Enter some links into the "Before" box below. The result will appear in the "After" box in real-time.</p>
@@ -26,37 +31,31 @@ scripts:
   <div class="col-6 text-center"><h3>Before</h3></div>
   <div class="col-6 text-center"><h3>After</h3></div>
   <div class="col-6">
-    <textarea id="linkify-demo-textarea" class="form-control rounded-0 rounded-start h-100">
-Linkify works with all kinds of #links. Here are some examples:
+    <textarea id="linkify-demo-before" class="form-control rounded-0 rounded-start h-100">Linkify works with all kinds of links. Here are some examples:
 
 - URLs with protocols: https://github.com
-- URLs without protocols: github.com
-- Emoji URLs like http://i❤️.ws
+- URLs without protocols: www.twitter.com
+- Emoji domains like 👻💥.ws
 - Email addresses (hello@example.com)
-- Mentions such as @Soapbox or @tc39
-- Hashtags such as #PhotoOfTheDay or #일상
+- "At"-Mentions like @Soapbox or @tc39
+- Hashtags #PhotoOfTheDay or #일상
 
-Linkify is made with ❤️ by @Soapbox and @nfrasser
-    </textarea>
+Custom link formats are also possible!
+
+Linkify is made with ❤️ by @Soapbox and @nfrasser</textarea>
   </div>
   <div class="col-6">
-    <div id="linkify-demo-result" class="bg-light form-control border-start-0 rounded-0 rounded-end"></div>
-  </div>
-  <div class="col-12 text-center">
-    <p><em>Try putting your own links above to see if Linkify will find them.</em></p>
+    <div id="linkify-demo-after" class="bg-light text-dark form-control border-start-0 rounded-0 rounded-end"></div>
   </div>
   <div class="col-12">
     <details>
-      <summary class="text-center">Demo source code</summary>
-      <pre class="bg-light form-control border">
-import linkifyStr from 'linkify-string'
-
-      </pre>
+      <summary class="text-center">Source code</summary>
+      <script src="https://gist.github.com/nfrasser/4390a468edb456133638c41d4594f2ba.js"></script>
     </details>
   </div>
 </section>
 
-<section class="my-4">
+<section class="my-5">
   <h2 class="text-center">Features</h2>
   <div class="d-flex align-items-center">
     <ul class="mx-auto">
@@ -72,7 +71,7 @@ import linkifyStr from 'linkify-string'
   </div>
 </section>
 
-<section class="text-center my-4">
-  <h2>Learn how to use Linkify in your project</h2>
-  <a href="docs" class="btn btn-lg btn-secondary rounded-pill">Read the Docs</a>
+<section class="text-center my-5">
+  <h2 class="mb-4">Learn how to use Linkify in your project</h2>
+  <p><a href="docs" class="btn btn-lg btn-secondary rounded-pill">Read the Documentation</a></p>
 </section>

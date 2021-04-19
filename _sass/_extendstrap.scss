@@ -1,0 +1,42 @@
+$lighter: lighten($light, 3);
+$darker: darken($dark, 2);
+
+:root {
+    --bs-lighter: #{$lighter};
+    --bs-darker: #{$darker};
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bs-light: #{$dark};
+        --bs-dark: #{$light};
+        --bs-lighter: #{$darker};
+        --bs-darker: #{$lighter};
+    }
+}
+
+.bg-light {
+    background-color: var(--bs-light) !important;
+}
+
+.bg-dark {
+    background-color: var(--bs-dark) !important;
+}
+
+.text-light {
+    color: var(--bs-light) !important;
+}
+
+.text-dark {
+    color: var(--bs-dark) !important;
+}
+
+.bg-lighter {
+    background-color: $lighter !important;
+    background-color: var(--bs-lighter) !important;
+}
+
+.bg-dark {
+    background-color: $darker !important;
+    background-color: var(--bs-darker) !important;
+}

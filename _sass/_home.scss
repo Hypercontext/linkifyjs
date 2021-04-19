@@ -1,0 +1,38 @@
+#linkify-home-logo {
+    svg {
+        display: block;
+        max-width: 30em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.linkify-home-blurb {
+    text-align: center;
+    max-width: 40em;
+}
+
+#linkify-demo-after {
+    min-height: 5em;
+    white-space: pre-wrap;
+}
+
+.linkify-logo-stroke {
+    stroke-dasharray: 2000;
+    animation: draw 2s ease-in;
+    stroke: $dark;
+    stroke: var(--bs-dark);
+
+    &--blue {
+        stroke: $blue;
+    }
+}
+
+@keyframes draw {
+    from {
+        stroke-dashoffset: 2000;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
