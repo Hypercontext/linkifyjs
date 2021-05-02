@@ -1,7 +1,10 @@
 ---
 layout: doc
 title: linkify-string · Documentation
+toc: true
 ---
+
+# Linkify String Interface
 
 `linkify-string` is an interface for replacing links with anchor tags within
 JavaScript strings.
@@ -11,16 +14,8 @@ Note that this function will ***not*** parse HTML strings properly - use
 linkify with a DOM, use [`linkify-jquery`](linkify-html.html) or
 [`linkify-element`](linkify-element.html)
 
-#### Jump to
 
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Usage](#usage)
-* [Usage with HTML](#usage-with-html)
-
-### Installation
+## Installation
 
 ### Node.js/Browserify
 

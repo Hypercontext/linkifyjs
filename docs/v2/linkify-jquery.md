@@ -1,20 +1,14 @@
 ---
 layout: doc
 title: linkify-jquery · Documentation
+toc: true
 ---
+
+# Linkify jQuery Interface
 
 `linkify-jquery` is an provides the Linkify jQuery plugin. This functionality is
 also available in vanilla JavaScript via
 [linkify-element](linkify-element.html).
-
-#### Jump to
-
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Usage](#usage)
-* [DOM Data API](#dom-data-api)
 
 ## Installation
 

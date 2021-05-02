@@ -1,23 +1,15 @@
 ---
 layout: doc
 title: linkify-react · Documentation
+toc: true
 ---
+
+# Linkify React Component Interface
 
 `linkify-react` provides a React component that walks through its children and
 replaces strings containing URLs with strings and `<a>` elements.
 
-#### Jump to
-
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Usage](#usage)
-  * [Properties](#properties)
-  * [Events](#events)
-
-### Installation
-
+## Installation
 
 ### Node.js/Browserify
 

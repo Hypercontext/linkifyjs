@@ -20,9 +20,14 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
 
+toc:
+  min_level: 2 # default: 1
+  max_level: 4 # default: 6
+
 plugins:
   - jekyll-coffeescript
   - jekyll-sitemap
+  - jekyll-toc
 
 exclude:
   - node_modules

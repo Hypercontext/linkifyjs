@@ -1,20 +1,15 @@
 ---
 layout: doc
 title: linkify-html · Documentation
+toc: true
 ---
+
+# Linkify HTML String Interface
 
 `linkify-html` is an interface for replacing links with anchor tags within
 JavaScript strings containing HTML.
 
-#### Jump to
-
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Usage](#usage)
-
-### Installation
+## Installation
 
 ### Node.js/Browserify
 

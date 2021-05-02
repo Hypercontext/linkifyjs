@@ -1,9 +1,12 @@
 ---
 layout: doc
-title: mention plugin · Documentation
+title: \@Mention plugin · Documentation
+toc: true
 ---
 
-Adds basic support for Github style @mentions.
+# Linkify @Mention Plugin
+
+Adds basic support for Twitter- and GitHub- style "at"-mentions.
 
 See the [Plugins page](plugins.html#general-installation) for installation instructions.
 

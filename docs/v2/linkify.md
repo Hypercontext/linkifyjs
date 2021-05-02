@@ -1,18 +1,10 @@
 ---
 layout: doc
 title: Core linkify · Documentation
+toc: true
 ---
 
-#### Jump to…
-
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser Globals](#browser-globals)
-* [Methods](#methods)
-  * [linkify.find](#linkifyfind-str--type)
-  * [linkify.test](#linkifytest-str--type)
-  * [linkify.tokenize](#linkifytokenize-str)
+# Core Linkify
 
 ## Installation
 

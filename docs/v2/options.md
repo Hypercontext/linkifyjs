@@ -1,7 +1,10 @@
 ---
 layout: doc
 title: Options · Documentation
+toc: true
 ---
+
+# Options
 
 Linkify is applied with the following default options. Below is a description of
 each.
@@ -38,23 +41,7 @@ there.
   guarantee that you are linkify's only consumer, don't override the defaults.
 </div>
 
-#### Jump to
-
-* [attributes](#attributes)
-* [className](#classname)
-* [defaultProtocol](#defaultprotocol)
-* [events](#events)
-* [format](#format)
-* [formatHref](#formathref)
-* [ignoreTags](#ignoretags)
-* [nl2br](#nl2br)
-* [tagName](#tagname)
-* [target](#target)
-* [validate](#validate)
-* [linkClass](#linkclass)
-* [linkAttributes](#linkattributes)
-
-## Usage
+## General Usage
 
 ```js
 linkifyStr(str, options); // or `str.linkify(options)`
@@ -64,7 +51,7 @@ $(selector).linkify(options);
 React.createElement(Linkify, {options: options}, str);
 ```
 
-### attributes
+## attributes
 
 * **Type**: `Object | Function (String href, String type)`
 * **Default**: `null`
@@ -83,7 +70,7 @@ Also accepts a function that takes the unformatted href, the link type (e.g.,
 });
 ```
 
-### className
+## className
 
 * **Type**: `String | Function (String href, String type) | Object`
 * **Default**: `'linkified'` (may be removed in future releases)
@@ -130,7 +117,7 @@ Returns
 <a href="http://github.com" class="new-link--url">github.com</a>
 ```
 
-### defaultProtocol
+## defaultProtocol
 
 * **Type**: `String`
 * **Default**: `'http'`
@@ -140,7 +127,7 @@ Returns
 Protocol that should be used in `href` attributes for URLs without a protocol
 (e.g., `github.com`).
 
-### events
+## events
 
 _\*element, jquery interfaces only\*_
 
@@ -173,7 +160,7 @@ standard React events.**
 See the [React Event docs](https://facebook.github.io/react/docs/events.html)
 and the [linkify-react event docs](linkify-react.html#events)
 
-### format
+## format
 
 * **Type**: `Function (String value, String type) | Object`
 * **Default**: `null`
@@ -204,7 +191,7 @@ etc.) and each value is the formatting function to use for that type.
 });
 ```
 
-### formatHref
+## formatHref
 
 * **Type**: `Function (String href, String type) | Object`
 * **Default**: `null`
@@ -242,7 +229,7 @@ etc.) and each value is the formatting function to use for that type.
 });
 ```
 
-### ignoreTags
+## ignoreTags
 
 _\*element, html, and jquery interfaces only\*_
 
@@ -272,7 +259,7 @@ but do <span><a href="http://b.ca" class="linkified" target="_blank">b.ca</a></s
 
 Notice that there is no hyperlink at "a.com" inside the `script` tag.
 
-### nl2br
+## nl2br
 
 * **Type**: `Boolean`
 * **Default**: `false`
@@ -280,7 +267,7 @@ Notice that there is no hyperlink at "a.com" inside the `script` tag.
 
 If true, `\n` line breaks will automatically be converted to `<br>` tags.
 
-### tagName
+## tagName
 
 * **Type**: `String | Function (String href, String type) | Object`
 * **Default**: `a`
@@ -314,7 +301,7 @@ Returns
 <span href="http://github.com">github.com</span>
 ```
 
-### target
+## target
 
 * **Type**: `String | Function (String href, String type) | Object`
 * **Default**: `'_blank'` for URLs, `null` for everything else
@@ -342,7 +329,7 @@ to use for that type.
 });
 ```
 
-### validate
+## validate
 
 * **Type**: `Boolean | Function (String value, String type) | Object`
 * **Default**: `null`
@@ -368,10 +355,10 @@ validation option to use for that type
 });
 ```
 
-### linkClass
+## linkClass
 
 **Deprecated**. Use [`className`](#classname) instead.
 
-### linkAttributes
+## linkAttributes
 
 **Deprecated**. Use [`attributes`](#attributes) instead.

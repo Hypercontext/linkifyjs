@@ -1,19 +1,8 @@
 ---
 layout: doc
 title: Documentation
+toc: true
 ---
-
-#### Jump to
-
-* [Installation/Getting Started](#installationgetting-started)
-  * [Quick Start](#quick-start)
-    * [Find all links and convert them to anchor tags](#find-all-links-and-convert-them-to-anchor-tags)
-    * [Find all links in the given string](#find-all-links-in-the-given-string)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Internet Explorer](#internet-explorer)
-
 
 # Installation/Getting Started
 
@@ -165,7 +154,7 @@ var htmlStr = linkifyStr('Check out soapboxhq.com it is great!');
 $('p').linkify();
 ```
 
-# Internet Explorer
+## Internet Explorer
 
 Linkify natively supports Internet Explorer 9 and above. Internet Explorer 8 is unofficially supported with a polyfill.
 

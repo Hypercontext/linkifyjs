@@ -1,9 +1,12 @@
 ---
 layout: doc
-title: ticket plugin · Documentation
+title: \#-Ticket plugin · Documentation
+toc: true
 ---
 
-Adds basic support for Github-style tickets/issues.
+# Linkify #-Ticket Plugin
+
+Adds basic support for GitHub-style tickets/issues.
 
 See the [Plugins page](plugins.html#general-installation) for installation instructions.
 

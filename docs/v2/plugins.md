@@ -1,7 +1,10 @@
 ---
 layout: doc
 title: Plugins · Documentation
+toc: true
 ---
+
+# Plugins
 
 Plugins provide no new interfaces but add additional detection functionality to
 Linkify. A custom plugin API is currently in the works.

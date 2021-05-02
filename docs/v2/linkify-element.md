@@ -1,19 +1,14 @@
 ---
 layout: doc
 title: linkify-element · Documentation
+toc: true
 ---
+
+# Linkify DOM Element Interface
 
 `linkify-element` is an interface for replacing links within native DOM elements
 with anchor tags. Note that `linkify-element` is included with `linkify-jquery`,
 so you do not have to install it if you are using `linkify-jquery`.
-
-#### Jump to
-
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Usage](#usage)
 
 ## Installation
 

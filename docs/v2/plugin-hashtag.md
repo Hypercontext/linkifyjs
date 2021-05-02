@@ -1,7 +1,10 @@
 ---
 layout: doc
-title: hashtag plugin · Documentation
+title: \#Hashtag plugin · Documentation
+toc: true
 ---
+
+# Linkify #Hashtag Plugin
 
 Adds basic support for Twitter-style hashtags.
 
