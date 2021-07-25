@@ -39,7 +39,10 @@
 $font-family-sans-serif: 'Nunito Sans', sans-serif;
 $headings-font-family: Poppins, Arial, sans-serif;
 $font-family-monospace: Monaco, Consolas, "Courier New", monospace;
+$font-weight-bold: 600;
+$font-weight-bolder: 600;
 $headings-font-weight: 700;
+
 
 // Brand colours
 $blue: #2584e2;
@@ -84,7 +87,8 @@ a {
 
 .site-header {
   text-align: center;
-  padding: 2em;
+  padding-top: 2em;
+  padding-bottom: 2em;
 }
 
 #page-title {
