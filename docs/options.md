@@ -1,39 +1,45 @@
 ---
-layout: doc
+layout: docv3
 title: Options · Documentation
 toc: true
 ---
 
 # Options
 
-Linkify is applied with the following default options. Below is a description of
+Use Linkify options to customize the resulting output. All Linkify interfaces
+accept an options object. Usage depends on the the interface, as follows:
+
+```js
+const options = { /* ... */ }
+linkifyStr(str, options); // or `str.linkify(options)`
+linkifyHtml(str, options);
+linkifyElement(document.getElementById('id'), options);
+$('...').linkify(options);
+React.createElement(Linkify, { options: options }, str);
+```
+
+Linkify uses the following default options. Below is a description of
 each.
 
 ```js
 linkify.options.defaults = {
   attributes: null,
-  className: 'linkified',
+  className: null,
   defaultProtocol: 'http',
   events: null,
-  format: function (value, type) {
-    return value;
-  },
-  formatHref: function (href, type) {
-    return href;
-  },
+  format: (value, type) => value,
+  formatHref: (href, type) => href,
   ignoreTags: [],
   nl2br: false,
+  rel: null,
   tagName: 'a',
-  target: {
-    url: '_blank'
-  },
+  target: null,
+  truncate: 0,
   validate: true
 };
 ```
 
-**Note:** The default `.linkified` class will be removed in a future release
-
-These defaults are stored at `linkify.options.defaults` can be set globally from
+These defaults are stored at `linkify.options.defaults` may be set globally from
 there.
 
 <div class="alert alert-warning">
@@ -41,23 +47,14 @@ there.
   guarantee that you are linkify's only consumer, don't override the defaults.
 </div>
 
-## General Usage
+## `attributes`
 
-```js
-linkifyStr(str, options); // or `str.linkify(options)`
-linkifyHtml(str, options);
-linkifyElement(document.getElementById('id'), options);
-$(selector).linkify(options);
-React.createElement(Linkify, {options: options}, str);
-```
-
-## attributes
-
-* **Type**: `Object | Function (String href, String type)`
+* **Type**: `Object | (href: string, type: string) => Object`
 * **Default**: `null`
 
-Object of attributes to add to each new link. **Note:** the [`class`](#classname)
-and [`target`](#target) attributes have dedicated options.
+Object of attributes to add to each new link. **Note:** the
+[`class`](#classname), [`target`](#target) and [`rel`](#rel) attributes have
+dedicated options.
 
 Also accepts a function that takes the unformatted href, the link type (e.g.,
 `'url'`, `'email'`, etc.) and returns the object.
@@ -65,15 +62,15 @@ Also accepts a function that takes the unformatted href, the link type (e.g.,
 ```js
 'github.com'.linkify({
   attributes: {
-    rel: 'nofollow'
+    title: 'External Link'
   }
 });
 ```
 
-## className
+## `className`
 
-* **Type**: `String | Function (String href, String type) | Object`
-* **Default**: `'linkified'` (may be removed in future releases)
+* **Type**: `string | Object | (href: string, type: string) => string`
+* **Default**: `null`
 * **Data API**: `data-linkify-class-name`
 
 `class` attribute to use for newly created links.
@@ -84,8 +81,6 @@ Accepts a function that takes the unformatted href value and link type (e.g.,
 Accepts an object where each key is the link type and each value is the string
 or function to use for that type.
 
-**Note:** The default `linkified` class name is deprecated and will be removed
-in a future release.
 
 ```js
 'github.com'.linkify({
@@ -95,17 +90,14 @@ in a future release.
 // or
 
 'github.com'.linkify({
-  className: function (href, type) {
-    return 'new-link--' + type
-  }
+  className: (href, type) => 'new-link--' + type
 });
 
 // or
 'github.com'.linkify({
   className: {
     url: 'new-link--url',
-    email: function (href) {
-      return 'new-link--email';
+    email: (href) => 'new-link--email'
     }
   }
 });
@@ -117,9 +109,9 @@ Returns
 <a href="http://github.com" class="new-link--url">github.com</a>
 ```
 
-## defaultProtocol
+## `defaultProtocol`
 
-* **Type**: `String`
+* **Type**: `string`
 * **Default**: `'http'`
 * **Values**: `'http'`, `'https'`, `'ftp'`, `'ftps'`, etc.
 * **Data API**: `data-linkify-default-protocol`
@@ -127,29 +119,25 @@ Returns
 Protocol that should be used in `href` attributes for URLs without a protocol
 (e.g., `github.com`).
 
-## events
+## `events`
 
 _\*element, jquery interfaces only\*_
 
-* **Type**: `Object | Function (String href, String type) | Object`
+* **Type**: `Object | (href: string, type: string) => Object`
 * **Default**: `null`
 
-Add event listeners to newly created link elements. Takes a hash where each key
-is an [standard event](https://developer.mozilla.org/en-US/docs/Web/Events) name
-and the value is an event handler.
+Add event listeners to newly created link elements. Takes an object where each
+key is a [standard event](https://developer.mozilla.org/en-US/docs/Web/Events)
+name and the value is an event handler.
 
 Also accepts a function that takes the unformatted href and the link type (e.g.,
-`'url'`, `'email'`, etc.) and returns the hash.
+`'url'`, `'email'`, etc.) and returns the required events object.
 
 ```js
 $('p').linkify({
   events: {
-    click: function (e) {
-      alert('Link clicked!');
-    },
-    mouseover: function (e) {
-      alert('Link hovered!');
-    }
+    click: (e) => alert('Link clicked!'),
+    mouseover: (e) => alert('Link hovered!')
   }
 });
 ```
@@ -158,21 +146,22 @@ $('p').linkify({
 standard React events.**
 
 See the [React Event docs](https://facebook.github.io/react/docs/events.html)
-and the [linkify-react event docs](linkify-react.html#events)
+and the [linkify-react event docs](linkify-react.html#events) for details.
 
-## format
+## `format`
 
-* **Type**: `Function (String value, String type) | Object`
+* **Type**: `Object | (value: string, type: string) => string`
 * **Default**: `null`
 
-Format the text displayed by a linkified entity. e.g., truncate a long URL.
+Format the text displayed by a linkified entity. e.g., truncate a long URL (a
+dedicated [`truncate` option](#truncate) also exists).
 
 Accepts an object where each key is the link type (e.g., `'url'`, `'email'`,
 etc.) and each value is the formatting function to use for that type.
 
 ```js
 'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
-  format: function (value, type) {
+  format: (value, type) => {
     if (type === 'url' && value.length > 50) {
       value = value.slice(0, 50) + '…';
     }
@@ -184,23 +173,21 @@ etc.) and each value is the formatting function to use for that type.
 
 'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
   format: {
-    url: function (value) {
-      return value.length > 50 ? value.slice(0, 50) + '…' : value
-    }
+    url: (value) => value.length > 50 ? value.slice(0, 50) + '…' : value
   }
 });
 ```
 
-## formatHref
+## `formatHref`
 
-* **Type**: `Function (String href, String type) | Object`
+* **Type**: `Object | (href: string, type: string) => string`
 * **Default**: `null`
 
 Similar to [format](#format), except the result of this function will be used as
 the `href` attribute of the new link.
 
-This is useful when finding hashtags, where you don't necessarily want the
-default to be a link to a named anchor.
+This is useful for hashtags or other plugins, where you don't want the default
+to be a link to a named anchor (the default behaviour).
 
 Accepts an object where each key is the link type (e.g., `'url'`, `'email'`,
 etc.) and each value is the formatting function to use for that type.
@@ -219,25 +206,21 @@ etc.) and each value is the formatting function to use for that type.
 
 'Hey @nfrasser, check out issue #23'.linkify({
   formatHref: {
-    mention: function (href) {
-      return 'https://github.com' + href;
-    },
-    ticket: function (href) {
-      return 'https://github.com/SoapBox/linkifyjs/issues/' + href.substring(1);
-    }
+    mention: (href) => 'https://github.com' + href,
+    ticket: (href) => 'https://github.com/SoapBox/linkifyjs/issues/' + href.substring(1)
   }
 });
 ```
 
-## ignoreTags
+## `ignoreTags`
 
 _\*element, html, and jquery interfaces only\*_
 
-* **Type**: `Array`
+* **Type**: `Array<string>`
 * **Default**: `[]`
 
-Prevent linkify from trying to parse links in the specified tags. This is useful
-when running linkify on arbitrary HTML.
+Prevent linkify from trying to parse links in the specified tags. Use this when
+running linkify on arbitrary HTML.
 
 ```js
 linkifyHtml(
@@ -254,26 +237,48 @@ Returns
 
 ```html
 Please ignore <script>var a = {}; a.com = "Hi";</script>
-but do <span><a href="http://b.ca" class="linkified" target="_blank">b.ca</a></span>
+but do <span><a href="http://b.ca">b.ca</a></span>
 ```
 
-Notice that there is no hyperlink at "a.com" inside the `script` tag.
+Without `ignoreTags`, linkify would have incorrectly made a link at "a.com"
+inside the `script` tag.
 
-## nl2br
+## `nl2br`
 
-* **Type**: `Boolean`
+* **Type**: `boolean`
 * **Default**: `false`
 * **Data API**: `data-linkify-nl2br`
 
-If true, `\n` line breaks will automatically be converted to `<br>` tags.
+If true, `\n` line breaks are automatically converted to `<br>` tags.
 
-## tagName
+## `rel`
 
-* **Type**: `String | Function (String href, String type) | Object`
+* **Type**: `string | Object | (href: string, type: string) => string`
+* **Default**: null
+* **Data API**: `data-linkify-rel`
+
+Set the [`rel`attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel)
+for each discovered link.
+
+Accepts a function that takes the unformatted href, the link type (e.g.,
+`'url'`, `'email'`, etc.) and returns the rel string.
+
+Accepts an object where each key is the link type and each value is the rel
+string to use for that type.
+
+```js
+'github.com'.linkify({
+  rel: 'noopener'
+});
+```
+
+## `tagName`
+
+* **Type**: `string | Object | (href: string, type: string) => string`
 * **Default**: `a`
 * **Data API**: `data-linkify-tagname`
 
-The tag name to use for each link. For cases where you can't use anchor tags.
+The HTML tag to use for each link. For cases where you can't use anchor tags.
 
 Accepts a function that takes the unformatted href, the link type (e.g.,
 `'url'`, `'email'`, etc.) and returns the tag name.
@@ -301,9 +306,9 @@ Returns
 <span href="http://github.com">github.com</span>
 ```
 
-## target
+## `target`
 
-* **Type**: `String | Function (String href, String type) | Object`
+* **Type**: `string | Object | (href: string, type: string) => string`
 * **Default**: `'_blank'` for URLs, `null` for everything else
 * **Data API**: `data-linkify-target`
 
@@ -329,12 +334,38 @@ to use for that type.
 });
 ```
 
-## validate
+## `truncate`
 
-* **Type**: `Boolean | Function (String value, String type) | Object`
+* **Type**: `number | Object | (href: string, type: string) => number`
+* **Default**: `'_blank'` for URLs, `null` for everything else
+* **Data API**: `data-linkify-truncate`
+
+Formatting helper that drops characters in discovered URLs that so that the
+displayed link text is no longer than the specified length. If any characters
+are dropped, also appends an ellipsis (`…`) to the result.
+
+Applies to the result of the [`format` option](#format), if also specified.
+
+```js
+'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
+  truncate: 42
+});
+```
+
+Returns
+
+```
+'<a href="http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string">http://github.com/SoapBox/linkifyjs/search…</a>'
+```
+
+
+## `validate`
+
+* **Type**: `boolean | Object | (value: string, type: string) => string`
 * **Default**: `null`
 
-If option resolves to false, the given value will not show up as a link.
+Filter out certain links to prevent linkify from highlighting them based on any
+desired criteria.
 
 Accepts a function that takes a discovered link and the link type (e.g.,
 `'url'`, `'email'`, etc.) and returns true if the link should be converted into
@@ -344,21 +375,11 @@ Accepts an object where each key is the link type and each value is the the
 validation option to use for that type
 
 ```js
-// Don't linkify links that don't begin in a protocol
-// e.g., "http://google.com" will be linkified, but "google.com" will not.
-'www.google.com'.linkify({
+// Skip links that don't begin in a protocol
+// e.g., "http://github.com" will be linkified, but "github.com" will not.
+'github.com'.linkify({
   validate: {
-    url: function (value) {
-      return /^(http|ftp)s?:\/\//.test(value);
-    }
+    url: (value) => /^https?:\/\//.test(value)
   }
 });
 ```
-
-## linkClass
-
-**Deprecated**. Use [`className`](#classname) instead.
-
-## linkAttributes
-
-**Deprecated**. Use [`attributes`](#attributes) instead.
