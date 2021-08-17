@@ -8,4 +8,9 @@ if [ "$1" == "16.x" ]; then
 fi
 
 echo "Installing jquery ${JQUERY_VERSION} and react ${REACT_VERSION}"
-exec npm install --force jquery@~$JQUERY_VERSION react-dom@~$REACT_VERSION react@~$REACT_VERSION
+npm install --force jquery@~$JQUERY_VERSION react-dom@~$REACT_VERSION react@~$REACT_VERSION
+
+echo "Linking Node.js modules"
+cd node_modules
+ln -f -s ../packages/* .
+cd ..

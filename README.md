@@ -1,11 +1,9 @@
 # Linkify
 
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
-[![Build Status](https://travis-ci.org/SoapBox/linkifyjs.svg)](https://travis-ci.org/SoapBox/linkifyjs)
-[![Sauce Test Status](https://saucelabs.com/buildstatus/nfrasser)](https://saucelabs.com/u/nfrasser)
-[![Coverage Status](https://coveralls.io/repos/SoapBox/linkifyjs/badge.svg?branch=master)](https://coveralls.io/r/SoapBox/linkifyjs?branch=master)
-
-[![Sauce Test Status](https://app.saucelabs.com/browser-matrix/nfrasser.svg)](https://app.saucelabs.com/u/nfrasser)
+[![CI](https://github.com/Soapbox/linkifyjs/actions/workflows/ci.yml/badge.svg)](https://github.com/Soapbox/linkifyjs/actions/workflows/ci.yml)
+[![BrowserStack Status](https://automate.browserstack.com/badge.svg?badge_key=MEY1aklrOVlacVR3UFlQSXJ1cnd2Q3E4ckF3SWYwU1QwUTdhYlB2WHgxST0tLWcxUlhVckFiQUN3YkYrZHJQRHUyZ0E9PQ==--b974ce8f45b084b7e3a8eea67d8307971a829ab8)](https://automate.browserstack.com/public-build/MEY1aklrOVlacVR3UFlQSXJ1cnd2Q3E4ckF3SWYwU1QwUTdhYlB2WHgxST0tLWcxUlhVckFiQUN3YkYrZHJQRHUyZ0E9PQ==--b974ce8f45b084b7e3a8eea67d8307971a829ab8)
+[![Coverage Status](https://coveralls.io/repos/github/Soapbox/linkifyjs/badge.svg?branch=master)](https://coveralls.io/github/Soapbox/linkifyjs?branch=master)
 
 Linkify is a small yet comprehensive JavaScript plugin for finding URLs in plain-text and converting them to HTML links. It works with all valid URLs and email addresses.
 

@@ -45,9 +45,9 @@ module.exports = function (config) {
 		bs_android_8: {
 			base: 'BrowserStack',
 			os: 'android',
-			os_version: '8.0',
+			os_version: '9.0',
 			browser: 'android',
-			device: 'Google Pixel',
+			device: 'Google Pixel 3',
 		},
 		bs_android_11: {
 			base: 'BrowserStack',
@@ -79,6 +79,7 @@ module.exports = function (config) {
 		logLevel: config.LOG_WARN,
 
 		browserStack: {
+			project: 'linkifyjs',
 			username: process.env.BROWSERSTACK_USERNAME,
 			accessKey: process.env.BROWSERSTACK_ACCESS_KEY
 		},
