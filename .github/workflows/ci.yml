@@ -36,6 +36,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - run: npm install
       - run: bash test/setup.sh ${{ matrix.node-version }}
       - run: bash run-tests.sh ${{ matrix.node-version }}
       - run: npm run coverage
