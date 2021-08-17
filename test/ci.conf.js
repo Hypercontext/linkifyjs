@@ -3,55 +3,71 @@ const base = require('./conf');
 
 module.exports = function (config) {
 
-	// Check out https://saucelabs.com/platforms for all browser/platform combos
-	var customLaunchers = {
-		sl_chrome: {
-			base: 'SauceLabs',
-			browserName: 'chrome'
+	// https://www.browserstack.com/docs/automate/api-reference/selenium/introduction#rest-api-browsers
+	const customLaunchers = {
+		bs_chrome_mac: {
+			base: 'BrowserStack',
+			browser: 'chrome',
+			os: 'OS X',
+			os_version: 'Big Sur'
 		},
-		sl_firefox: {
-			base: 'SauceLabs',
-			browserName: 'firefox'
+		bs_chrome_windows: {
+			base: 'BrowserStack',
+			browser: 'chrome',
+			os: 'Windows',
+			os_version: '10'
 		},
-		sl_safari: {
-			base: 'SauceLabs',
-			browserName: 'safari',
-			version: '9'
+		bs_firefox_windows: {
+			base: 'BrowserStack',
+			browser: 'firefox',
+			os: 'Windows',
+			os_version: '10'
 		},
-		/**
-		// Too fragile
-		sl_ios_safari: {
-			base: 'SauceLabs',
-			deviceName: 'iPhone Simulator',
-			platformVersion: '11.3',
-			platformName: 'iOS',
-			browserName: 'Safari',
-			deviceOrientation: 'portrait',
-			appiumVersion: '1.9.1'
+		bs_safari_sierra: {
+			base: 'BrowserStack',
+			browser: 'safari',
+			os: 'OS X',
+			os_version: 'Sierra'
 		},
-		*/
-		/*
-		// Not working due to incorrect localhost hostname
-		sl_android: {
-			base: 'SauceLabs',
-			deviceName: 'Android GoogleAPI Emulator',
-			platformName: 'Android',
-			platformVersion: '8.1',
-			browserName: 'Chrome',
-			deviceOrientation: 'portrait',
-			appiumVersion: '1.20.2'
+		bs_safari_bigsur: {
+			base: 'BrowserStack',
+			browser: 'safari',
+			os: 'OS X',
+			os_version: 'Big Sur'
 		},
-		*/
-		sl_edge: {
-			base: 'SauceLabs',
-			browserName: 'MicrosoftEdge',
-			platform: 'Windows 10'
+		bs_ios_safari: {
+			base: 'BrowserStack',
+			browser: 'iphone',
+			os: 'ios',
+			os_version: '12',
+			device: 'iPhone 8',
 		},
-		sl_ie_11: {
-			base: 'SauceLabs',
-			browserName: 'internet explorer',
-			platform: 'Windows 8.1',
-			version: '11'
+		bs_android_8: {
+			base: 'BrowserStack',
+			os: 'android',
+			os_version: '8.0',
+			browser: 'android',
+			device: 'Google Pixel',
+		},
+		bs_android_11: {
+			base: 'BrowserStack',
+			os: 'android',
+			os_version: '11.0',
+			browser: 'android',
+			device: 'Google Pixel 5',
+		},
+		bs_edge: {
+			base: 'BrowserStack',
+			browser: 'edge',
+			os: 'Windows',
+			os_version: '10'
+		},
+		bs_ie_11: {
+			base: 'BrowserStack',
+			browser: 'ie',
+			browser_version: '11.0',
+			os: 'Windows',
+			os_version: '8.1'
 		}
 	};
 
@@ -60,13 +76,16 @@ module.exports = function (config) {
 
 		// level of logging
 		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-		sauceLabs: {
-			testName: 'Linkify Browser Tests'
+		logLevel: config.LOG_WARN,
+
+		browserStack: {
+			username: process.env.BROWSERSTACK_USERNAME,
+			accessKey: process.env.BROWSERSTACK_ACCESS_KEY
 		},
-		customLaunchers: customLaunchers,
+
+		customLaunchers,
 		browsers: Object.keys(customLaunchers),
 		singleRun: true,
-		logLevel: config.LOG_WARN,
-		reporters: ['dots', 'saucelabs'],
+		reporters: ['dots', 'BrowserStack'],
 	});
 };
