@@ -4,7 +4,7 @@
 
 ### BREAKING CHANGES
 * Remove default `class="linkified"` from all discovered links. Opt back in by setting the `className` option:
-  ```jsx
+  ```js
   linkifyStr(str, { className: 'linkified' })
   ```
 * Remove default `target="_blank"` attribute for discovered URLs. Opt back in by setting the `target` option:
@@ -12,6 +12,10 @@
   linkifyHtml(str, {
     target: (href, type) => type === 'url' && '_blank'
   })
+  ```
+* React component: Remove outer `<span>` tag wrapper in favour of tag-less `React.Fragment`. To opt back-in, set `tagName='span'`:
+  ```jsx
+  <Linkify tagName='span'>{content}</Linkify>
   ```
 * AMD module interface is no longer provided. Use a ESM bundler instead.
 * Plugins imported after linkify is called on a string for the first time will not longer work. Import all plugins _before_ calling a linkify core or interface function.

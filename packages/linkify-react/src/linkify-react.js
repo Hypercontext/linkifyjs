@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { tokenize, options } from 'linkifyjs';
-
-const { Options } = options;
+import { tokenize, Options } from 'linkifyjs';
 
 // Given a string, converts to an array of valid React components
 // (which may include strings)
@@ -92,23 +90,25 @@ function linkifyReactElement(element, opts, elementId = 0) {
 }
 
 /**
- * @class Linkify
+ * @function Linkify
+ * @param {Object} props
+ * @param {Object} [props.options] Linkify options
+ * @param {string | React.Element} [props.tagName] element in which to wrap all Linkified content (default React.Fragment)
  */
-export default class Linkify extends React.Component {
-	render() {
-		// Copy over all non-linkify-specific props
-		const newProps = { key: 'linkified-element-0' };
-		for (const prop in this.props) {
-			if (prop !== 'options' && prop !== 'tagName') {
-				newProps[prop] = this.props[prop];
-			}
+const Linkify = props => {
+	// Copy over all non-linkify-specific props
+	const newProps = { key: 'linkified-element-wrapper' };
+	for (const prop in props) {
+		if (prop !== 'options' && prop !== 'tagName') {
+			newProps[prop] = props[prop];
 		}
-
-		const opts = new Options(this.props.options);
-		const tagName = this.props.tagName || 'span';
-		const element = React.createElement(tagName, newProps);
-
-		return linkifyReactElement(element, opts, 0);
 	}
-}
 
+	const opts = new Options(props.options);
+	const tagName = props.tagName || React.Fragment;
+	const element = React.createElement(tagName, newProps);
+
+	return linkifyReactElement(element, opts, 0);
+};
+
+export default Linkify;
