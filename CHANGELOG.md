@@ -13,7 +13,7 @@
     target: (href, type) => type === 'url' && '_blank'
   })
   ```
-* React component: Remove outer `<span>` tag wrapper in favour of tag-less `React.Fragment`. To opt back-in, set `tagName='span'`:
+* React component: Remove outer `<span>` tag wrapper in favour of tag-less `React.Fragment` for React >16. To opt back-in, set `tagName='span'`:
   ```jsx
   <Linkify tagName='span'>{content}</Linkify>
   ```
@@ -21,6 +21,7 @@
 * Plugins imported after linkify is called on a string for the first time will not longer work. Import all plugins _before_ calling a linkify core or interface function.
 * Custom plugin API is not compatible with previous API in Linkify v2
 * Dropped support for Internet Explorer versions 9 and 10. IE11 is still supported
+* Dropped support for React versions <15
 
 ### All Changes
 * Full Internationalized Domain (IDN) and Emoji domain support 🇺🇳🌍✈️🎉💃! Detect URLs, #hashtags and @mentions in any language

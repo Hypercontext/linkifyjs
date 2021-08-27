@@ -49,7 +49,7 @@ describe('linkify-react', () => {
 		tests.map((test) => {
 			var linkified = React.createElement(Linkify, null, test[0]);
 			var result = ReactDOMServer.renderToStaticMarkup(linkified);
-			expect(result).to.be.eql(test[1]);
+			expect(result).to.be.oneOf([test[1], `<span>${test[1]}</span>`]);
 		});
 	});
 
@@ -68,7 +68,8 @@ describe('linkify-react', () => {
 		);
 		var linkified = React.createElement(Linkify, null, 'A great site is google.com AND ', strong);
 		var result = ReactDOMServer.renderToStaticMarkup(linkified);
-		expect(result).to.be.eql('A great site is <a href="http://google.com">google.com</a> AND <strong><a href="https://facebook.github.io/react/">https://facebook.github.io/react/</a></strong>');
+		var expected = 'A great site is <a href="http://google.com">google.com</a> AND <strong><a href="https://facebook.github.io/react/">https://facebook.github.io/react/</a></strong>';
+		expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
 	});
 
 	it('Excludes self-closing elements', () => {
@@ -83,7 +84,8 @@ describe('linkify-react', () => {
 		var delta = React.createElement(Delta);
 		var linkified = React.createElement(Linkify, null, 'A great site is google.com AND ', delta);
 		var result = ReactDOMServer.renderToStaticMarkup(linkified);
-		expect(result).to.be.eql('A great site is <a href="http://google.com">google.com</a> AND <strong>https://facebook.github.io/react/</strong>');
+		var expected = 'A great site is <a href="http://google.com">google.com</a> AND <strong>https://facebook.github.io/react/</strong>';
+		expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
 	});
 
 	it('Obeys ignoreTags option', () => {
@@ -95,7 +97,8 @@ describe('linkify-react', () => {
 		);
 		var linkified = React.createElement(Linkify, {options}, 'A great site is google.com AND ', em);
 		var result = ReactDOMServer.renderToStaticMarkup(linkified);
-		expect(result).to.be.eql('A great site is <a href="http://google.com">google.com</a> AND <em>https://facebook.github.io/react/</em>');
+		var expected = 'A great site is <a href="http://google.com">google.com</a> AND <em>https://facebook.github.io/react/</em>';
+		expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
 
 	});
 });

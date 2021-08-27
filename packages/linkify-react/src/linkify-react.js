@@ -90,12 +90,11 @@ function linkifyReactElement(element, opts, elementId = 0) {
 }
 
 /**
- * @function Linkify
  * @param {Object} props
  * @param {Object} [props.options] Linkify options
  * @param {string | React.Element} [props.tagName] element in which to wrap all Linkified content (default React.Fragment)
  */
-const Linkify = props => {
+const Linkify = (props) => {
 	// Copy over all non-linkify-specific props
 	const newProps = { key: 'linkified-element-wrapper' };
 	for (const prop in props) {
@@ -105,7 +104,7 @@ const Linkify = props => {
 	}
 
 	const opts = new Options(props.options);
-	const tagName = props.tagName || React.Fragment;
+	const tagName = props.tagName || React.Fragment || 'span';
 	const element = React.createElement(tagName, newProps);
 
 	return linkifyReactElement(element, opts, 0);
