@@ -1,0 +1,10 @@
+{
+	"include": ["index.js", "string.js", "html.js", "plugins/*.js"],
+	"exclude": [],
+	"compilerOptions": {
+		"allowJs": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"outDir": "."
+	}
+}

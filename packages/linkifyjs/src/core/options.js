@@ -1,3 +1,7 @@
+/**
+ * @property {string} defaultProtocol
+ * @property {{[string]: (event) => void}]} [events]
+ */
 export const defaults = {
 	defaultProtocol: 'http',
 	events: null,
@@ -14,6 +18,10 @@ export const defaults = {
 	ignoreTags: []
 };
 
+/**
+ * @class Options
+ * @param {Object} [opts] Set option properties besides the defaults
+ */
 export function Options(opts) {
 	opts = opts || {};
 

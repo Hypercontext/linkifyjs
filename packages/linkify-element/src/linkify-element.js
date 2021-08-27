@@ -1,9 +1,8 @@
 /**
 	Linkify a HTML DOM node
 */
-import { tokenize, options } from 'linkifyjs';
+import { tokenize, Options } from 'linkifyjs';
 
-const { Options } = options;
 const HTML_NODE = 1, TXT_NODE = 3;
 
 /**
@@ -21,7 +20,7 @@ function replaceChildWithChildren(parent, oldChild, newChildren) {
 }
 
 /**
- * @param {Array<MultiToken>} tokens
+ * @param {MultiToken[]} tokens
  * @param {Object} opts
  * @param {Document} doc A
  * @returns {Array<Text | HTMLElement>}
@@ -145,7 +144,7 @@ function linkifyElementHelper(element, opts, doc) {
  *
  * @param {HTMLElement} element A DOM node to linkify
  * @param {Object} opts linkify options
- * @param {Document} [doc] window.document implementation, if differs from global
+ * @param {Document} [doc] (optional) window.document implementation, if differs from global
  * @returns {HTMLElement}
  */
 export default function linkifyElement(element, opts, doc = null) {

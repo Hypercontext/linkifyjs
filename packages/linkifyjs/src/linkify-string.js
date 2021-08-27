@@ -1,8 +1,7 @@
 /**
 	Convert strings of text into linkable HTML text
 */
-import { options, tokenize } from 'linkifyjs';
-const { Options } = options;
+import { tokenize, Options } from 'linkifyjs';
 
 function escapeText(text) {
 	return text

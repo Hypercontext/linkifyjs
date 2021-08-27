@@ -312,8 +312,8 @@ export function init() {
  *
  * @param {State} start parser start state
  * @param {string} input the original input used to generate the given tokens
- * @param {Array<{t: string, v: string, s: number, e: number}>} tokens list of scanned tokens
- * @returns {Array<MultiToken>}
+ * @param {{t: string, v: string, s: number, e: number}[]} tokens list of scanned tokens
+ * @returns {MultiToken[]}
  */
 export function run(start, input, tokens) {
 	let len = tokens.length;
@@ -397,7 +397,7 @@ export { mtk as tokens };
  * fields during parsing.
  * @param {Class<MultiToken>} Multi class to instantiate
  * @param {string} input original input string
- * @param {Array<{t: string, v: string, s: number, e: number}>} tokens consecutive tokens scanned from input string
+ * @param {{t: string, v: string, s: number, e: number}[]} tokens consecutive tokens scanned from input string
  * @returns {MultiToken}
  */
 function parserCreateMultiToken(Multi, input, tokens) {

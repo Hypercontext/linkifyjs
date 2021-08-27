@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "clean": "rm -rf lib dist *.tgz",
-    "prepack": "run-s clean build",
+    "clean": "rm -rf lib dist *.tgz *.d.ts",
+    "prepack": "run-s clean build tsc",
+    "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

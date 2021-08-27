@@ -9,6 +9,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build": "npm run build --workspaces",
     "build:ci": "for dir in `ls packages` ; do cd packages/${dir} && npm run build && cd ../.. ; done",
     "copy": "copyfiles -f packages/*/dist/*.js dist",
@@ -16,9 +17,9 @@
     "dist:ci": "run-s clean build:ci copy",
     "lint": "eslint *.js packages/**/*.js test/**/*.js",
     "test": "nyc --reporter=lcov --reporter=text mocha test/index.js",
-    "test:ci": "karma start test/ci.conf.js --single-run",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "test:ci": "karma start test/ci.conf.js --single-run"
   },
+
   "author": "Soapbox Innovations (@SoapBoxHQ)",
   "license": "MIT",
   "devDependencies": {
@@ -53,7 +54,8 @@
     "react-dom": "^17.0.1",
     "request": "^2.88.2",
     "rollup": "^2.42.1",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.4.2"
   },
   "private": true,
   "engines": {

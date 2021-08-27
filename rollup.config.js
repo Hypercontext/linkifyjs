@@ -43,7 +43,7 @@ export function linkifyClassicInterface(name, opts = {}) {
 		{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
 	];
 	if (opts.commonjs) {
-		output.push({ file: `lib/plugins/${name}.js`, format: 'cjs', exports: 'auto' });
+		output.push({ file: `lib/linkify-${name}.js`, format: 'cjs', exports: 'auto' });
 	}
 
 	return {

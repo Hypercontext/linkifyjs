@@ -1,7 +1,7 @@
 import { tokenize } from '@nfrasser/simple-html-tokenizer';
 import * as linkify from 'linkifyjs';
 
-const { Options } = linkify.options;
+const { Options } = linkify;
 const StartTag = 'StartTag';
 const EndTag = 'EndTag';
 const Chars = 'Chars';

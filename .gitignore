@@ -58,3 +58,6 @@ vendor
 _site
 _sass
 js
+
+# Generated typescript declarations
+*.d.ts

@@ -184,7 +184,7 @@ export function init(customProtocols = []) {
 	@method run
 	@param {State} start scanner starting state
 	@param {string} str input string to scan
-	@return {Array<{t: string, v: string, s: number, l: number}>} list of tokens, each with a type and value
+	@return {{t: string, v: string, s: number, l: number}[]} list of tokens, each with a type and value
 */
 export function run(start, str) {
 	// State machine is not case sensitive, so input is tokenized in lowercased
@@ -259,7 +259,7 @@ export { tk as tokens };
  *
  * @function stringToArray
  * @param {string} str
- * @returns {Array<string>}
+ * @returns {string[]}
  */
  function stringToArray(str) {
 	const result = [];

@@ -81,9 +81,9 @@ export function init() {
 }
 
 /**
-	Converts a string into tokens that represent linkable and non-linkable bits
+	Parse a string into tokens that represent linkable and non-linkable sub-components
 	@param {string} str
-	@return {Array<MultiToken>} tokens
+	@return {MultiToken[]} tokens
 */
 export function tokenize(str) {
 	if (!INIT.initialized) { init(); }
@@ -91,9 +91,9 @@ export function tokenize(str) {
 }
 
 /**
-	Returns a list of linkable items in the given string.
+	Find a list of linkable items in the given string.
 	@param {string} str string to find links in
-	@param {string} type (optional) only find links of a specific type, e.g.,
+	@param {string} [type] (optional) only find links of a specific type, e.g.,
 	'url' or 'email'
 */
 export function find(str, type = null) {
@@ -134,3 +134,4 @@ export function test(str, type = null) {
 }
 
 export * as options from './core/options';
+export { Options } from './core/options';

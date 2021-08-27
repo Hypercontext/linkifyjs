@@ -25,9 +25,8 @@ function inherits(parent, child, props={}) {
 	creations.
 
 	@class MultiToken
-	@param {string} type
 	@param {string} value
-	@param {Array<{t: string, v: string, s: number, e: number}>} tokens
+	@param {{t: string, v: string, s: number, e: number}[]} tokens
 	@abstract
 */
 export function MultiToken() {}
@@ -93,7 +92,6 @@ MultiToken.prototype = {
 
 		@method toObject
 		@param {string} [protocol] `'http'` by default
-		@return {{type: string, value: string, href: string}}
 	*/
 	toObject(protocol = defaults.defaultProtocol) {
 		return {

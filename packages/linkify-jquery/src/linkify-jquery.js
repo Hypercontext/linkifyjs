@@ -4,8 +4,8 @@ import linkifyElement from 'linkify-element';
 // Applies the plugin to jQuery
 /**
  *
- * @param {jQuery} $ the global jQuery object
- * @param {Document} doc browser document implementation
+ * @param {any} $ the global jQuery object
+ * @param {Document} [doc] (optional) browser document implementation
  * @returns
  */
 export default function apply($, doc = false) {
