@@ -3,6 +3,7 @@
 ## v3.0.0
 
 ### BREAKING CHANGES
+* React, jQuery and Element interfaces moved to dedicated packages at `linkify-react`,`linkify-jquery` and `linkify-element` respectively:
 * Remove default `class="linkified"` from all discovered links. Opt back in by setting the `className` option:
   ```js
   linkifyStr(str, { className: 'linkified' })
@@ -13,23 +14,28 @@
     target: (href, type) => type === 'url' && '_blank'
   })
   ```
-* React component: Remove outer `<span>` tag wrapper in favour of tag-less `React.Fragment` for React >16. To opt back-in, set `tagName='span'`:
+* React component: Remove outer `<span>` tag wrapper in favour of tag-less `React.Fragment` for React >=16. To opt back-in, set `tagName='span'`:
   ```jsx
   <Linkify tagName='span'>{content}</Linkify>
   ```
-* AMD module interface is no longer provided. Use a ESM bundler instead.
+* AMD module interface is no longer provided. Use an ESM bundler instead.
 * Plugins imported after linkify is called on a string for the first time will not longer work. Import all plugins _before_ calling a linkify core or interface function.
 * Custom plugin API is not compatible with previous API in Linkify v2
 * Dropped support for Internet Explorer versions 9 and 10. IE11 is still supported
 * Dropped support for React versions <15
 
+### Deprecations
+* Use dedicated packages `linkify-string` and `linkify-html` instead of `linkifyjs/string` and `linkifyjs/html`. The embedded packages will be removed in v4.0
+* Use dedicated plugin packages `linkify-plugin-[PLUGIN]` instead of `linkifyjs/plugin/[PLUGIN]`. The embedded packages will be removed in v4.0
+
 ### All Changes
 * Full Internationalized Domain (IDN) and Emoji domain support 🇺🇳🌍✈️🎉💃! Detect URLs, #hashtags and @mentions in any language
-* ~10x faster startup; ~4x faster startup + first run
+* ~10x faster startup; ~4x faster combined startup + first run
 * Custom protocols with `linkify.registerCustomProtocol('protocol')`
 * Add new `rel` option at top level as an alternate way of including it in `attributes`
 * New and improved plugin API
-* `linkify.find()` output includes start and end indexes of where in the string a link was found
+* TypeScript definitions included in published packages
+* `linkify.find()` output includes start and end indexes for where in the string a link was found
 * Plugins no longer need to be called on linkify after import
   ```js
   // Before
