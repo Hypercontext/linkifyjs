@@ -7,7 +7,6 @@ description: > # this means to ignore newlines until "baseurl:"
   Linkify is a JavaScript plugin. Use Linkify to find links in plain-text and
   convert them to HTML &lt;a&gt; tags. It automatically highlights URLs,
   #hashtags, @mentions and more.
-baseurl: "/linkifyjs" # the subpath of your site, e.g. /blog/
 url: "http://soapbox.github.io" # the base hostname & protocol for your site
 twitter_username: SoapBoxHQ
 github_username:  Soapbox/linkifyjs
