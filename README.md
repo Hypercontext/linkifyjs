@@ -33,7 +33,7 @@ __Jump to__
 * Compatible with all modern browsers (Internet Explorer 11 and up)
 
 ## Demo
-[Launch demo](https://linkify.js.org/)
+[Launch demo](https://linkify.js.org/#demo)
 
 ## Installation and Usage
 
@@ -97,12 +97,18 @@ Returns the following array
   {
     type: 'url',
     value: 'github.com',
-    href: 'http://github.com'
+    isLink: true,
+    href: 'http://github.com',
+    start: 13,
+    end: 23
   },
   {
     type: 'email',
     value: 'test@example.com',
-    href: 'mailto:test@example.com'
+    isLink: true,
+    href: 'mailto:test@example.com',
+    start: 46,
+    end: 62
   }
 ]
 ```
