@@ -1,7 +1,7 @@
 linkify-plugin-mention
 ===
 
-Detect Twitter- and GitHub- style "at"-mentions (@mentions) with [Linkify](https://soapbox.github.io/linkifyjs/).
+Detect Twitter- and GitHub- style "at"-mentions (@mentions) with [Linkify](https://linkify.js.org/).
 
 ## Installation
 
@@ -25,4 +25,4 @@ import 'linkify-plugin-mention';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/plugin-mention.html).
+[Read the full documentation](https://linkify.js.org/docs/plugin-mention.html).

@@ -109,13 +109,13 @@
 removed from the release bundle.
   * Use `linkify.js` and `linkify-jquery.js` instead.
 * The deprecated `newLine` option from linkify 1.x has been completely removed.
-  * Use the [`nl2br` option](http://soapbox.github.io/linkifyjs/docs/options.html#nl2br) instead.
+  * Use the [`nl2br` option](https://linkify.js.org/docs/options.html#nl2br) instead.
 
 ### Features
 
-* [New React.js interface](http://soapbox.github.io/linkifyjs/docs/linkify-react.html)
-* [@mention plugin](http://soapbox.github.io/linkifyjs/docs/plugin-mention.html)
-* [GitHub-style ticket/issue reference plugin](http://soapbox.github.io/linkifyjs/docs/plugin-ticket.html)
+* [New React.js interface](https://linkify.js.org/docs/linkify-react.html)
+* [@mention plugin](https://linkify.js.org/docs/plugin-mention.html)
+* [GitHub-style ticket/issue reference plugin](https://linkify.js.org/docs/plugin-ticket.html)
 * Improved option definitions
   * Options that take functions with value and type arguments can now be
     specified as objects, where each key is the target link type.

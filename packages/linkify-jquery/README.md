@@ -1,7 +1,7 @@
 linkify-jquery
 ===
 
-[Linkify](https://soapbox.github.io/linkifyjs/) jQuery plugin. Also available in vanilla JavaScript via `linkify-element`.
+[Linkify](https://linkify.js.org/) jQuery plugin. Also available in vanilla JavaScript via `linkify-element`.
 
 ## Installation
 
@@ -36,4 +36,4 @@ linkifyJq($, document);
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/linkify-jquery.html).
+[Read the full documentation](https://linkify.js.org/docs/linkify-jquery.html).

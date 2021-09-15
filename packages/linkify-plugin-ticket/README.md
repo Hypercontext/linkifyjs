@@ -1,7 +1,7 @@
 linkify-plugin-ticket
 ===
 
-Detect GitHub-style tickets/issues with [Linkify](https://soapbox.github.io/linkifyjs/).
+Detect GitHub-style tickets/issues with [Linkify](https://linkify.js.org/).
 
 ## Installation
 
@@ -25,4 +25,4 @@ import 'linkify-plugin-ticket';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/plugin-ticket.html).
+[Read the full documentation](https://linkify.js.org/docs/plugin-ticket.html).

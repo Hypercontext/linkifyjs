@@ -1,7 +1,7 @@
 linkify-element
 ===
 
-[Linkify](https://soapbox.github.io/linkifyjs/) DOM Element Interface. Use `linkify-element` to replace links within native HTML elements with anchor tags.
+[Linkify](https://linkify.js.org/) DOM Element Interface. Use `linkify-element` to replace links within native HTML elements with anchor tags.
 
 Note that `linkify-element` is included with `linkify-jquery`, so you do not have to install it if you are using `linkify-jquery`.
 
@@ -24,4 +24,4 @@ import linkifyElement from 'linkify-element';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/linkify-element.html).
+[Read the full documentation](https://linkify.js.org/docs/linkify-element.html).

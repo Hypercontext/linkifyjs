@@ -1,9 +1,9 @@
 # Linkify
 
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
-[![CI](https://github.com/Soapbox/linkifyjs/actions/workflows/ci.yml/badge.svg)](https://github.com/Soapbox/linkifyjs/actions/workflows/ci.yml)
+[![CI](https://github.com/Hypercontext/linkifyjs/actions/workflows/ci.yml/badge.svg)](https://github.com/Hypercontext/linkifyjs/actions/workflows/ci.yml)
 [![BrowserStack Status](https://automate.browserstack.com/badge.svg?badge_key=MEY1aklrOVlacVR3UFlQSXJ1cnd2Q3E4ckF3SWYwU1QwUTdhYlB2WHgxST0tLWcxUlhVckFiQUN3YkYrZHJQRHUyZ0E9PQ==--b974ce8f45b084b7e3a8eea67d8307971a829ab8)](https://automate.browserstack.com/public-build/MEY1aklrOVlacVR3UFlQSXJ1cnd2Q3E4ckF3SWYwU1QwUTdhYlB2WHgxST0tLWcxUlhVckFiQUN3YkYrZHJQRHUyZ0E9PQ==--b974ce8f45b084b7e3a8eea67d8307971a829ab8)
-[![Coverage Status](https://coveralls.io/repos/github/Soapbox/linkifyjs/badge.svg?branch=main)](https://coveralls.io/github/Soapbox/linkifyjs?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/Hypercontext/linkifyjs/badge.svg?branch=main)](https://coveralls.io/github/Hypercontext/linkifyjs?branch=main)
 
 Linkify is a JavaScript plugin. Use Linkify to find links in plain-text and
 convert them to HTML &lt;a&gt; tags. It automatically highlights URLs,
@@ -33,13 +33,13 @@ __Jump to__
 * Compatible with all modern browsers (Internet Explorer 11 and up)
 
 ## Demo
-[Launch demo](http://soapbox.github.io/linkifyjs/)
+[Launch demo](https://linkify.js.org/)
 
 ## Installation and Usage
 
-[View full documentation](https://soapbox.github.io/linkifyjs/docs/).
+[View full documentation](https://linkify.js.org/docs/).
 
-Download the [latest release](https://github.com/Soapbox/linkifyjs/releases) for direct use in the browser, or install via [NPM](https://www.npmjs.com/):
+Download the [latest release](https://github.com/Hypercontext/linkifyjs/releases) for direct use in the browser, or install via [NPM](https://www.npmjs.com/):
 
 ```
 npm install linkifyjs linkify-html
@@ -64,7 +64,7 @@ const linkifyHtml = require('linkify-html');
 
 **Note:** When linkify-ing text that does not contain HTML, install and use the
 `linkify-string` package instead of `linkify-html`. [Read more about Linkify's
-interfaces](https://soapbox.github.io/linkifyjs/docs/interfaces.html).
+interfaces](https://linkify.js.org/docs/interfaces.html).
 
 ### Usage
 
@@ -82,7 +82,7 @@ Returns the following string:
 ```
 
 To modify the resulting links with a target attribute, class name and more, [use
-the available options](https://soapbox.github.io/linkifyjs/docs/options.html).
+the available options](https://linkify.js.org/docs/options.html).
 
 #### Example 2: Find all links in the given string
 
@@ -124,13 +124,13 @@ linkify.test('noreply@github.com', 'email'); // true
 
 ### Usage with React, jQuery or the browser DOM
 
-[Read the interface documentation](https://soapbox.github.io/linkifyjs/docs/interfaces.html)  to learn how to use linkify when working with a specific JavaScript environment such as React.
+[Read the interface documentation](https://linkify.js.org/docs/interfaces.html)  to learn how to use linkify when working with a specific JavaScript environment such as React.
 
 ### Plugins for @mentions, #hashtags and more
 
 By default Linkify will only detect and highlight web URLs and e-mail addresses.
 Plugins for @mentions, #hashtags and more may be installed separately. [Read the
-plugin documentation](https://soapbox.github.io/linkifyjs/docs/plugins.html).
+plugin documentation](https://linkify.js.org/docs/plugins.html).
 
 ## Browser Support
 
@@ -143,15 +143,15 @@ Linkify is tested on Node.js 10 and up. Older versions are unofficially supporte
 
 ## Downloads
 
-Download the [**latest release**](https://github.com/Soapbox/linkifyjs/releases)
+Download the [**latest release**](https://github.com/Hypercontext/linkifyjs/releases)
 
 ## API Documentation
 
-View full documentation at [soapbox.github.io/linkifyjs/docs](https://soapbox.github.io/linkifyjs/docs/)
+View full documentation at [linkify.js.org/docs](https://linkify.js.org/docs/)
 
 ## Contributing
 
-Check out [CONTRIBUTING.md](https://github.com/Soapbox/linkifyjs/blob/main/CONTRIBUTING.md).
+Check out [CONTRIBUTING.md](https://github.com/Hypercontext/linkifyjs/blob/main/CONTRIBUTING.md).
 
 ## License
 
@@ -159,4 +159,4 @@ MIT
 
 ## Authors
 
-Linkify is built with Love™ and maintained by [Soapbox Innovations](https://soapboxhq.com).
+Linkify is made with ❤️ by [Hypercontext](https://hypercontext.com/) and [@nfrasser](https://github.com/nfrasser)

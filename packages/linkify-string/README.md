@@ -1,7 +1,7 @@
 linkify-string
 ===
 
-[Linkify](https://soapbox.github.io/linkifyjs/) String Interface. Use `linkify-string` to replace links in plain-text strings with anchor tags.
+[Linkify](https://linkify.js.org/) String Interface. Use `linkify-string` to replace links in plain-text strings with anchor tags.
 
 This function will ***not*** parse strings with HTML. Use one of the following instead, depending on your application:
 
@@ -30,4 +30,4 @@ import linkifyStr from 'linkify-string';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/linkify-string.html).
+[Read the full documentation](https://linkify.js.org/docs/linkify-string.html).

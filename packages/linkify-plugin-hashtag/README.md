@@ -1,7 +1,7 @@
 linkify-plugin-hashtag
 ===
 
-Detect Twitter-style #hashtags with [Linkify](https://soapbox.github.io/linkifyjs/).
+Detect Twitter-style #hashtags with [Linkify](https://linkify.js.org/).
 
 ## Installation
 
@@ -25,4 +25,4 @@ import 'linkify-plugin-hashtag';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/plugin-hashtag.html).
+[Read the full documentation](https://linkify.js.org/docs/plugin-hashtag.html).
