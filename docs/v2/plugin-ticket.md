@@ -1,5 +1,5 @@
 ---
-layout: docv3
+layout: doc
 title: \#-Ticket plugin · Documentation
 toc: true
 ---
@@ -8,11 +8,11 @@ toc: true
 
 Adds basic support for GitHub-style tickets/issues.
 
-See the [Plugins page](plugins.html#general-installation) for installation instructions (use `ticket` instead of `[NAME]`).
+See the [Plugins page](plugins.html#general-installation) for installation instructions.
 
 ```js
-const options = {/* … */};
-const str = "Check out issues #42 and #101 for further reference";
+var options = {/* … */};
+var str = "Check out issues #42 and #101 for further reference";
 
 linkify.find(str);
 ```

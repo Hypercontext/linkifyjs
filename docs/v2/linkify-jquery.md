@@ -1,5 +1,5 @@
 ---
-layout: docv3
+layout: doc
 title: linkify-jquery · Documentation
 toc: true
 ---
@@ -12,47 +12,44 @@ also available in vanilla JavaScript via
 
 ## Installation
 
-### Node.js module
-
-Install from the command line with NPM
+### Node.js/Browserify
 
 ```
-npm install linkifyjs linkify-jquery
+npm install linkifyjs
 ```
-
-Import into your JavaScript with `require`
 
 ```js
-const $ = require('jquery');
-require('linkify-jquery')
+var $ = require('jquery');
+require('linkifyjs/jquery')($, document);
 ```
 
-or with ES modules
+or with ES6 modules
 
 ```js
 import $ from 'jquery';
-import 'linkify-jquery';
-```
-
-If a `window.document` global is not available in your environment, provide it
-manually instead as follows.
-
-With `require`:
-```js
-require('linkify-jquery')($, document);
-```
-
-or with ES modules:
-```js
-import linkifyJq from 'linkify-jquery';
+import linkifyJq from 'linkifyjs/jquery';
 linkifyJq($, document);
 ```
 
-### Browser globals
+Where the second argument is your `window.document` implementation (not required for Browserify).
 
-[Download linkify](https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip)
-and extract the contents into your website's assets directory.
-Include the following scripts in your HTML:
+### AMD
+
+Note that `linkify-jquery` requires a `jquery` module.
+
+```html
+<script src="jquery.amd.js"></script>
+<script src="linkify.amd.js"></script>
+<script src="linkify-jquery.amd.js"></script>
+```
+
+```js
+require(['jquery'], function ($) {
+  // …
+});
+```
+
+### Browser globals
 
 ```html
 <script src="jquery.js"></script>
@@ -63,7 +60,7 @@ Include the following scripts in your HTML:
 ## Usage
 
 ```js
-const options = { /* … */ };
+var options = { /* … */ };
 $(selector).linkify(options);
 ```
 
@@ -75,7 +72,7 @@ See [all available options](options.html).
 
 ## DOM Data API
 
-The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript required after import!
+The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript required!
 
 ```html
 <!-- Find and linkify all entities in this div -->

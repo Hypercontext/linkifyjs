@@ -53,5 +53,5 @@ vendor
 # Specific to plugin website branch
 .sass-cache
 _site
-_sass
-js
+packages
+.jekyll-cache

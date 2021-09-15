@@ -1,5 +1,5 @@
 ---
-layout: docv3
+layout: doc
 title: linkify-react · Documentation
 toc: true
 ---
@@ -11,29 +11,35 @@ replaces strings containing URLs with strings and `<a>` elements.
 
 ## Installation
 
-### Node.js module
+### Node.js/Browserify
 
-Install from the command line with NPM
 ```
-npm install linkifyjs linkify-react
+npm install linkifyjs
 ```
-
-Import into your JavaScript with `require`
-```js
-const Linkify = require('linkify-react');
-```
-
-or with ES modules
 
 ```js
-import Linkify from 'linkify-react';
+const Linkify = require('linkifyjs/react');
+```
+
+or with ES6 modules
+
+```js
+import Linkify from 'linkifyjs/react';
+```
+
+### AMD
+
+```html
+<script src="linkify.amd.js"></script>
+<script src="linkify-react.amd.js"></script>
+<script>
+  require(['linkify-react'], function (Linkify) {
+    // …
+  });
+</script>
 ```
 
 ### Browser globals
-
-[Download linkify](https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip)
-and extract the contents into your website's assets directory.
-Include the following scripts in your HTML:
 
 ```html
 <script src="linkify.js"></script>
@@ -42,18 +48,16 @@ Include the following scripts in your HTML:
 
 ## Usage
 
+JSX
+
 ```jsx
-// Example render() function body
-const options = {/* … */};
-const content = 'For help with GitHub.com, please email support@github.com';
-return (
-  <Linkify tagName="p" options={options}>
-    {content}
-  </Linkify>
-);
+// render()
+var options = {/* … */};
+var content = 'For help with GitHub.com, please email support@github.com';
+return <Linkify tagName="p" options={options}>{content}</Linkify>;
 ```
 
-This renders the following HTML into the outer element
+This will render the following HTML into the outer element
 
 ```js
 '<p>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></p>'
@@ -66,8 +70,8 @@ This renders the following HTML into the outer element
 
 ### Events
 
-Add event handlers to the discovered links by specifying them in the
-`options.attributes` object. Define event listeners in the same way as
+You can add events handlers to the discovered links by specifying them in the
+`options.attributes` object. Define event listeners in the same way you would
 for a regular React element:
 
 ```jsx

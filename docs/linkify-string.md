@@ -1,55 +1,44 @@
 ---
-layout: doc
+layout: docv3
 title: linkify-string · Documentation
+toc: true
 ---
 
-`linkify-string` is an interface for replacing links with anchor tags within
-JavaScript strings.
+# Linkify String Interface
 
-Note that this function will ***not*** parse HTML strings properly - use
-[`linkify-html`](linkify-html.html) instead. Alternatively, if you're using
-linkify with a DOM, use [`linkify-jquery`](linkify-html.html) or
-[`linkify-element`](linkify-element.html)
+Use `linkify-string` to replace links in plain-text strings with anchor tags.
 
-#### Jump to
+This function will ***not*** parse strings with HTML. Use one of the
+following instead, depending on your application:
 
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Usage](#usage)
-* [Usage with HTML](#usage-with-html)
+* [`linkify-html`](linkify-html.html)
+* [`linkify-element`](linkify-element.html)
+* [`linkify-jquery`](linkify-html.html)
 
-### Installation
+## Installation
 
-### Node.js/Browserify
+### Node.js module
 
+Install from the command line with NPM
 ```
-npm install linkifyjs
+npm install linkifyjs linkify-string
 ```
 
+Import into your JavaScript with `require`
 ```js
-var linkifyStr = require('linkifyjs/string');
+const linkifyStr = require('linkify-string');
 ```
-or with ES6 modules
 
+or with ES modules
 ```js
-import linkifyStr from 'linkifyjs/string';
-```
-
-### AMD
-
-```html
-<script src="linkify.amd.js"></script>
-<script src="linkify-string.amd.js"></script>
-<script>
-  require(['linkify-string'], function (linkifyStr) {
-    // …
-  });
-</script>
+import linkifyStr from 'linkify-string';
 ```
 
 ### Browser globals
+
+[Download linkify](https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip)
+and extract the contents into your website's assets directory.
+Include the following scripts in your HTML:
 
 ```html
 <script src="linkify.js"></script>
@@ -59,8 +48,8 @@ import linkifyStr from 'linkifyjs/string';
 ## Usage
 
 ```js
-var options = {/* … */};
-var str = 'For help with GitHub.com, please email support@github.com';
+const options = {/* … */};
+const str = 'For help with GitHub.com, please email support@github.com';
 linkifyStr(str, options);
 // or
 str.linkify(options);
@@ -77,8 +66,8 @@ Returns
 `linkify-string` automatically escapes HTML input.
 
 ```js
-var options = {/* … */};
-var str = '<p>For help with GitHub.com, please email support@github.com</p>';
+const options = {/* … */};
+const str = '<p>For help with GitHub.com, please email support@github.com</p>';
 linkifyStr(str, options);
 // or
 str.linkify(options);
@@ -87,17 +76,17 @@ str.linkify(options);
 Returns
 
 ```js
-'&lt;p&gt;For help with <a href="http://github.com" class="linkified" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com" class="linkified">support@github.com</a>&lt;/p&gt;'
+'&lt;p&gt;For help with <a href="http://github.com">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a>&lt;/p&gt;'
 ```
 
-See [Caveats](caveats.html#cross-site-scripting) for more about linkify and XSS.
+See [Cross-Site Scripting](xss.html) for more about linkify and XSS.
 
 Use [`linkify-html`](linkify-html.html) if you'd like to preserve all HTML
 entities.
 
 **Params**
 
-* _`String`_ **`str`** String to linkify
+* _`string`_ **`str`** String to linkify
 * _`Object`_ [**`options`**] [Options](options.html) object
 
-**Returns** _`String`_ Linkified string
+**Returns** _`string`_ Linkified string

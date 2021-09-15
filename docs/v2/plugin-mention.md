@@ -1,5 +1,5 @@
 ---
-layout: docv3
+layout: doc
 title: \@Mention plugin · Documentation
 toc: true
 ---
@@ -8,11 +8,11 @@ toc: true
 
 Adds basic support for Twitter- and GitHub- style "at"-mentions.
 
-See the [Plugins page](plugins.html#general-installation) for installation instructions (use `mention` instead of `[NAME]`).
+See the [Plugins page](plugins.html#general-installation) for installation instructions.
 
 ```js
-const options = {/* … */};
-const str = "Linkify needs @you and @someone else";
+var options = {/* … */};
+var str = "Linkify needs @you and @someone else";
 
 linkify.find(str);
 ```

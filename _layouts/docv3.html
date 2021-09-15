@@ -10,25 +10,25 @@ subtitle: Documentation
           Browse
           <div class="dropdown d-inline-block ms-1">
             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="linkify-docs-version-switcher" data-bs-toggle="dropdown" aria-expanded="false">
-              v2.x
+              v3.x
             </button>
             <ul class="dropdown-menu" aria-labelledby="linkify-docs-version-switcher">
-              <li><a class="dropdown-item" href="{{ site.baseurl }}/docs/">v3.x (latest)</a></li>
-              <li><a class="dropdown-item active" href="{{ site.baseurl }}/docs/v2/">v2.x</a></li>
+              <li><a class="dropdown-item active" href="{{ site.baseurl }}/docs/">v3.x (latest)</a></li>
+              <li><a class="dropdown-item" href="{{ site.baseurl }}/docs/v2/">v2.x</a></li>
             </ul>
           </div>
         </h4>
         <ul class="list-unstyled cart-text">
           <li><a href="."><strong>Getting Started</strong></a></li>
-          <li><a href="2.1.html">What's new in 2.1</a></li>
+          <li><a href="linkifyjs.html"><strong>Core linkify</strong></a></li>
           <li><a href="interfaces.html"><strong>Interfaces</strong></a></li>
           <li>
             <ul>
               <li><a href="linkify-string.html">Plain-text strings</a></li>
               <li><a href="linkify-html.html">HTML strings</a></li>
+              <li><a href="linkify-react.html">React component</a></li>
               <li><a href="linkify-element.html">DOM elements</a></li>
               <li><a href="linkify-jquery.html">jQuery plugin</a></li>
-              <li><a href="linkify-react.html">React component</a></li>
             </ul>
           </li>
           <li><a href="plugins.html"><strong>Plugins</strong></a></li>
@@ -39,19 +39,14 @@ subtitle: Documentation
               <li><a href="plugin-ticket.html">ticket</a></li>
             </ul>
           </li>
-          <li><a href="linkify.html"><strong>Core linkify</strong></a></li>
           <li><a href="options.html"><strong>Options</strong></a></li>
-          <li><a href="caveats.html"><strong>Caveats</strong></a></li>
-          <li><a href="terminology.html"><strong>Terminology</strong></a></li>
+          <li><a href="xss.html"><strong>Cross-Site Scripting</strong></a></li>
         </ul>
       </div>
     </div>
   </aside>
   <article id="docs-content" class="col-sm-8 col-lg-9">
-    <div class="alert alert-warning">
-      <h4 class="alert-heading">This page is outdated</h4>
-      <p class="mb-0">You are reading documentation for Linkify v2. <a href=".." class="alert-link">Browse the latest v3+ documentation.</a></p>
-    </div>
+
     <h4>Jump To</h4>
     {{ content | toc }}
   </article>

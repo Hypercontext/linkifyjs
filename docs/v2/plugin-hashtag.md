@@ -1,5 +1,5 @@
 ---
-layout: docv3
+layout: doc
 title: \#Hashtag plugin · Documentation
 toc: true
 ---
@@ -8,11 +8,11 @@ toc: true
 
 Adds basic support for Twitter-style hashtags.
 
-See the [Plugins page](plugins.html#general-installation) for installation instructions (use `hashtag` instead of `[NAME]`).
+See the [Plugins page](plugins.html#general-installation) for installation instructions.
 
 ```js
-const options = {/* … */};
-const str = "Linkify is #super #rad2021";
+var options = {/* … */};
+var str = "Linkify is #super #rad2015";
 
 linkify.find(str);
 ```
@@ -28,8 +28,8 @@ Returns the following array
   },
   {
     type: 'hashtag',
-    value: "#rad2021",
-    href: "#rad2021"
+    value: "#rad2015",
+    href: "#rad2015"
   }
 ]
 ```

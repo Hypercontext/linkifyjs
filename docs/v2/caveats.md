@@ -1,14 +1,10 @@
 ---
 layout: doc
 title: Caveats · Documentation
+toc: true
 ---
 
-#### Jump to…
-
-* [Cross-Site Scripting](#cross-site-scripting)
-* [Cases not supported (yet)](#cases-not-supported-yet)
-
-## Cross-Site Scripting
+# Cross-Site Scripting
 
 <div class="alert alert-danger">
   <strong>linkifyjs is not a validation or XSS-prevention library.</strong>
@@ -45,7 +41,7 @@ Other interfaces that work with the DOM, including `linkify-element`,
 `linkify-jquery`, and `linkify-react`, only apply to text-nodes. By design, they
 will not generate any non-anchor tags that are not already in the DOM.
 
-## Cases not supported (yet)
+# Cases not supported (yet)
 
 * Non-latin domain names
 * Non-latin top-level domains

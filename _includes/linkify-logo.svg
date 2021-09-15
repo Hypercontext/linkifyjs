@@ -1,0 +1,6 @@
+<svg width="100%" height="100%" viewBox="0 0 540 540" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;">
+    <path class="linkify-logo-stroke linkify-logo-stroke--blue" d="M319.853,305L482.132,142.721C505.548,119.305 505.548,81.284 482.132,57.868C458.716,34.452 420.695,34.452 397.279,57.868L320.147,135" fill="none" stroke-width="50"/>
+    <path class="linkify-logo-stroke" d="M220,235.147L57.868,397.279C34.452,420.695 34.452,458.716 57.868,482.132C81.284,505.548 119.305,505.548 142.721,482.132L219.853,405" fill="none" stroke-width="50"/>
+    <path class="linkify-logo-stroke linkify-logo-stroke--blue" d="M405,320.147L482.132,397.279C505.548,420.695 505.548,458.716 482.132,482.132C458.716,505.548 420.695,505.548 397.279,482.132L235.147,320" fill="none" stroke-width="50"/>
+    <path class="linkify-logo-stroke" d="M135.147,220L57.868,142.721C34.452,119.305 34.452,81.284 57.868,57.868C81.284,34.452 119.305,34.452 142.721,57.868L304.853,220" fill="none" stroke-width="50"/>
+</svg>

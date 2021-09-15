@@ -1,50 +1,38 @@
 ---
-layout: doc
+layout: docv3
 title: linkify-html · Documentation
+toc: true
 ---
 
-`linkify-html` is an interface for replacing links with anchor tags within
-JavaScript strings containing HTML.
+# Linkify HTML String Interface
 
-#### Jump to
+Use `linkify-html` to highlight links within strings that contain HTML markup.
 
-* [Installation](#installation)
-  * [Node.js/Browserify](#nodejsbrowserify)
-  * [AMD](#amd)
-  * [Browser globals](#browser-globals)
-* [Usage](#usage)
+## Installation
 
-### Installation
+### Node.js module
 
-### Node.js/Browserify
+Install from the command line with NPM
 
 ```
-npm install linkifyjs
+npm install linkifyjs linkify-html
 ```
+
+Import into your JavaScript with `require`
+```js
+const linkifyHtml = require('linkify-html');
+```
+or with ES modules
 
 ```js
-var linkifyHtml = require('linkifyjs/html');
-```
-
-or with ES6 modules
-
-```js
-import linkifyHtml from 'linkifyjs/html';
-```
-
-### AMD
-
-```html
-<script src="linkify.amd.js"></script>
-<script src="linkify-html.amd.js"></script>
-<script>
-  require(['linkify-html'], function (linkifyHtml) {
-    // …
-  });
-</script>
+import linkifyHtml from 'linkify-html';
 ```
 
 ### Browser globals
+
+[Download linkify](https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip)
+and extract the contents into your website's assets directory.
+Include the following scripts in your HTML:
 
 ```html
 <script src="linkify.js"></script>
@@ -54,8 +42,8 @@ import linkifyHtml from 'linkifyjs/html';
 ## Usage
 
 ```js
-var options = {/* … */};
-var str = '<p>For help with GitHub.com, please email support@github.com</p>';
+const options = {/* … */};
+const str = '<p>For help with GitHub.com, please email support@github.com</p>';
 linkifyHtml(str, options);
 ```
 
@@ -67,7 +55,7 @@ Returns
 
 **Params**
 
-* _`String`_ **`str`** String to linkify
+* _`string`_ **`str`** string to linkify
 * _`Object`_ [**`options`**] [Options](options.html) object
 
-**Returns** _`String`_ Linkified htmlString
+**Returns** _`string`_ Linkified HTML string

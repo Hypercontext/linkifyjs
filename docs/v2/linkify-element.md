@@ -1,5 +1,5 @@
 ---
-layout: docv3
+layout: doc
 title: linkify-element · Documentation
 toc: true
 ---
@@ -12,29 +12,36 @@ so you do not have to install it if you are using `linkify-jquery`.
 
 ## Installation
 
-### Node.js module
-
-Install from the command line with NPM
+### Node.js/Browserify
 
 ```
-npm install linkifyjs linkify-element
+npm install linkifyjs
 ```
 
-Import into your JavaScript with `require`
 ```js
-const linkifyElement = require('linkify-element');
+var linkifyElement = require('linkifyjs/element');
 ```
 
 or with ES6 modules
+
 ```js
-import linkifyElement from 'linkify-element';
+import linkifyElement from 'linkifyjs/element';
+```
+
+### AMD
+
+```html
+<script src="linkify.amd.js"></script>
+<script src="linkify-element.amd.js"></script>
+<script>
+    require(['linkify-element'], function (linkifyElement) {
+        // …
+    });
+</script>
 ```
 
 ### Browser globals
 
-[Download linkify](https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip)
-and extract the contents into your website's assets directory.
-Include the following scripts in your HTML:
 ```html
 <script src="linkify.js"></script>
 <script src="linkify-element.js"></script>
@@ -43,7 +50,7 @@ Include the following scripts in your HTML:
 ## Usage
 
 ```js
-const options = {/* … */};
+var options = {/* … */};
 linkifyElement(document.getElementById('id'), options, document);
 ```
 

@@ -1,7 +1,9 @@
-#docs-sidebar, #docs-content {
-	padding-top: 15px;
-}
-
 a code {
 	color: inherit;
+}
+
+#docs-content {
+	h1, h2, h3 {
+		margin-top: 1em;
+	}
 }
