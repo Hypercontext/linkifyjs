@@ -11,6 +11,7 @@ if [[ "$BROWSERSTACK_ACCESS_KEY" != "" && "$BROWSERSTACK_USERNAME" != "" && "$1"
 	# Run build, basic tests and SauceLabs tests
 	echo "Running complete test suite..."
 	npm test
+	npm run lint
 	npm run dist:ci
 	npm run test:ci
 	sleep 3  # Wait for threads to exit?
