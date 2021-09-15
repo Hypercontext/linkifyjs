@@ -37,3 +37,7 @@ linkifyJq($, document);
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/linkify-jquery.html).
+
+## License
+
+MIT

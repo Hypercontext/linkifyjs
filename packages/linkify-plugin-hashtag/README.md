@@ -26,3 +26,7 @@ import 'linkify-plugin-hashtag';
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/plugin-hashtag.html).
+
+## License
+
+MIT

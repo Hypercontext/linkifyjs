@@ -31,3 +31,7 @@ import linkifyStr from 'linkify-string';
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/linkify-string.html).
+
+## License
+
+MIT

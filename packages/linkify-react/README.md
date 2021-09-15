@@ -24,3 +24,7 @@ import Linkify from 'linkify-react';
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/linkify-react.html).
+
+## License
+
+MIT

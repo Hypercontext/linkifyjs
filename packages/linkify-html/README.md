@@ -24,3 +24,7 @@ import linkifyHtml from 'linkify-html';
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/linkify-html.html).
+
+## License
+
+MIT

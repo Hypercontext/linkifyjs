@@ -26,3 +26,7 @@ import 'linkify-plugin-ticket';
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/plugin-ticket.html).
+
+## License
+
+MIT

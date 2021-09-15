@@ -25,3 +25,7 @@ import linkifyElement from 'linkify-element';
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/linkify-element.html).
+
+## License
+
+MIT

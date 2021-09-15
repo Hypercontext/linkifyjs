@@ -26,3 +26,7 @@ import 'linkify-plugin-mention';
 ## Usage
 
 [Read the full documentation](https://linkify.js.org/docs/plugin-mention.html).
+
+## License
+
+MIT
