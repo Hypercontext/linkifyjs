@@ -29,3 +29,4 @@ gulpfile.js
 testem.json
 *.config.js*
 tasks
+tsconfig.json
