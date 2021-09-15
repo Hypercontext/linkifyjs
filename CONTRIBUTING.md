@@ -4,7 +4,7 @@
 
 ## How linkify works
 
-_TODO: Insert diagram here_
+<!-- TODO: Insert diagram here -->
 
 Linkify uses a two stage lexicographical analysis to detect patterns in plain text.
 

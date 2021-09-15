@@ -43,6 +43,8 @@ build
 dist
 lib
 vendor
+*.tar.gz
+*.tgz
 
 # IntelliJ
 .idea
@@ -52,6 +54,10 @@ vendor
 
 # Specific to plugin website branch
 .sass-cache
+.jekyll-cache
 _site
 _sass
 js
+
+# Generated typescript declarations
+*.d.ts

@@ -1,20 +1,24 @@
 /* global QUnit */
 /* global w */
-/* global isIE8 */
 
 /**
 	Linkify basic global tests
 */
 QUnit.assert.oneOf = function (value, possibleExpected, message) {
 	message = message || 'Expected ' + value + ' to be contained in ' + possibleExpected + '.';
-	var test = false;
+	var result = false;
 	for (var i = 0; i < possibleExpected.length; i++) {
 		if (value === possibleExpected[i]) {
-			test = true;
+			result = true;
 			break;
 		}
 	}
-	this.push(test, value, possibleExpected[i-1], message);
+	this.pushResult({
+		result: result,
+		actual: value,
+		expected: possibleExpected[i-1],
+		message: message
+	});
 };
 
 QUnit.module('linkify');
@@ -41,21 +45,6 @@ QUnit.test('contains tokenize function', function (assert) {
 QUnit.test('contains an options object', function (assert) {
 	assert.ok('options' in w.linkify);
 	assert.equal(typeof w.linkify.options, 'object');
-});
-
-QUnit.test('contains a parser object', function (assert) {
-	assert.ok('parser' in w.linkify);
-	assert.equal(typeof w.linkify.parser, 'object');
-});
-
-QUnit.test('contains a scanner object', function (assert) {
-	assert.ok('scanner' in w.linkify);
-	assert.equal(typeof w.linkify.scanner, 'object');
-});
-
-QUnit.test('contains an inherits function', function (assert) {
-	assert.ok('inherits' in w.linkify);
-	assert.equal(typeof w.linkify.inherits, 'function');
 });
 
 QUnit.module('linkify.find');
@@ -107,7 +96,7 @@ QUnit.test('contains Options class', function (assert) {
 
 QUnit.module('linkify.options.Options');
 
-QUnit.test('returns the hash of default options when given an empty object', function (assert) {
+QUnit.test('returns object of default options when given an empty object', function (assert) {
 	var result = new w.linkify.options.Options({});
 	assert.propEqual(result, w.linkify.options.defaults);
 
@@ -116,9 +105,8 @@ QUnit.test('returns the hash of default options when given an empty object', fun
 	assert.equal(result.format('test'), 'test');
 	assert.equal(typeof result.formatHref, 'function');
 	assert.equal(result.formatHref('test'), 'test');
-	assert.equal(typeof result.target, 'function');
-	assert.equal(result.target('test', 'url'), '_blank');
-	assert.equal(result.target('email'), null);
+	assert.equal(result.target, null);
+	assert.equal(result.rel, null);
 });
 
 
@@ -129,11 +117,17 @@ QUnit.test('finds valid hashtags', function (assert) {
 	assert.deepEqual(result, [{
 		type: 'hashtag',
 		value: '#urls',
-		href: '#urls'
+		href: '#urls',
+		isLink: true,
+		start: 0,
+		end: 5
 	}, {
 		type: 'hashtag',
 		value: '#awesome2015',
-		href: '#awesome2015'
+		href: '#awesome2015',
+		isLink: true,
+		start: 10,
+		end: 22
 	}]);
 });
 
@@ -145,11 +139,17 @@ QUnit.test('finds valid mentions', function (assert) {
 	assert.deepEqual(result, [{
 		type: 'mention',
 		value: '@foo',
-		href: '/foo'
+		href: '/foo',
+		isLink: true,
+		start: 4,
+		end: 8
 	}, {
 		type: 'mention',
 		value: '@bar',
-		href: '/bar'
+		href: '/bar',
+		isLink: true,
+		start: 22,
+		end: 26
 	}]);
 });
 
@@ -160,7 +160,10 @@ QUnit.test('finds valid tickets', function (assert) {
 	assert.deepEqual(result, [{
 		type: 'ticket',
 		value: '#42',
-		href: '#42'
+		href: '#42',
+		isLink: true,
+		start: 17,
+		end: 20
 	}]);
 });
 
@@ -169,20 +172,15 @@ var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this a
 
 // Possible results with regular settings (will vary by browser)
 var linkifiedHtml = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" target=_blank>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" target=_blank>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" target=_blank>github.com/SoapBox/linkifyjs</A> paragraph</P>' // IE8
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
 ];
 
 // Possible results with overriden settings
 var linkifiedHtmlAlt = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" class="linkified" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" class="linkified" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" class="linkified" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a rel="nofollow" target="_blank" class="linkified" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a rel="nofollow" target="_blank" class="linkified" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a rel="nofollow" target="_blank" class="linkified" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" target="_blank" rel="nofollow">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" target="_blank" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" target="_blank" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a class="linkified" href="ftp://awesome.com/?where=this" rel="nofollow" target="_blank">ftp://awesome.com/?where=this</a> and <a class="linkified" href="http://localhost:8080" rel="nofollow" target="_blank">localhost:8080</a>, pretty neat right? <p>Here is a nested <a class="linkified" href="http://github.com/SoapBox/linkifyjs" rel="nofollow" target="_blank">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" rel=nofollow target=_blank>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" rel=nofollow target=_blank>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" rel=nofollow target=_blank>github.com/SoapBox/linkifyjs</A> paragraph</P>', // IE8
-	'Hello here are some links to <A class=linkified href="ftp://awesome.com/?where=this" target=_blank rel=nofollow>ftp://awesome.com/?where=this</A> and <A class=linkified href="http://localhost:8080" target=_blank rel=nofollow>localhost:8080</A>, pretty neat right? \r\n<P>Here is a nested <A class=linkified href="http://github.com/SoapBox/linkifyjs" target=_blank rel=nofollow>github.com/SoapBox/linkifyjs</A> paragraph</P>' // IE8, emulated
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a rel="nofollow" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=t fhis</a> and <a rel="nofollow" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a rel="nofollow" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>'
 ];
 
 QUnit.module('linkify-jquery', {
@@ -279,7 +277,7 @@ QUnit.test('linkifyStr exists', function (assert) {
 
 QUnit.test('works with default options', function (assert) {
 	var result = w.linkifyStr('google.ca and me@gmail.com');
-	assert.equal(result, '<a href="http://google.ca" class="linkified" target="_blank">google.ca</a> and <a href="mailto:me@gmail.com" class="linkified">me@gmail.com</a>');
+	assert.equal(result, '<a href="http://google.ca">google.ca</a> and <a href="mailto:me@gmail.com">me@gmail.com</a>');
 });
 
 QUnit.test('works with overriden options', function (assert) {
@@ -288,42 +286,40 @@ QUnit.test('works with overriden options', function (assert) {
 			rel: 'nofollow'
 		}
 	});
-	assert.equal(result, '<a href="http://google.ca" class="linkified" target="_blank" rel="nofollow">google.ca</a> and <a href="mailto:me@gmail.com" class="linkified" rel="nofollow">me@gmail.com</a>');
+	assert.equal(result, '<a href="http://google.ca" rel="nofollow">google.ca</a> and <a href="mailto:me@gmail.com" rel="nofollow">me@gmail.com</a>');
 });
 
 
-if (!isIE8()) {
-	// React does not officially support IE8
-	// https://facebook.github.io/react/docs/working-with-the-browser.html#browser-support
+// React does not officially support IE8
+// https://facebook.github.io/react/docs/working-with-the-browser.html#browser-support
 
-	QUnit.module('linkify-react');
+QUnit.module('linkify-react');
 
-	QUnit.test('class exists', function (assert) {
-		assert.ok('Linkify' in w);
-		assert.equal(typeof w.Linkify, 'function');
-	});
+QUnit.test('class exists', function (assert) {
+	assert.ok('Linkify' in w);
+	assert.equal(typeof w.Linkify, 'function');
+});
 
-	QUnit.test('can be used to create valid components', function (assert) {
-		var linkified = w.React.createElement(w.Linkify, null, 'github.com');
-		assert.ok(w.React.isValidElement(linkified));
-	});
+QUnit.test('can be used to create valid components', function (assert) {
+	var linkified = w.React.createElement(w.Linkify, null, 'github.com');
+	assert.ok(w.React.isValidElement(linkified));
+});
 
-	QUnit.test('renders into a DOM element', function (assert) {
-		var linkified = w.React.createElement(
-			w.Linkify,
-			{tagName: 'em'},
-			'A few links are github.com and google.com and ',
-			w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
-		);
-		var container = document.createElement('div');
-		document.body.appendChild(container);
+QUnit.test('renders into a DOM element', function (assert) {
+	var linkified = w.React.createElement(
+		w.Linkify,
+		{tagName: 'em'},
+		'A few links are github.com and google.com and ',
+		w.React.createElement('strong', {className: 'pi'}, 'https://amazon.ca')
+	);
+	var container = document.createElement('div');
+	document.body.appendChild(container);
 
-		w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
+	w.ReactDOM.render(w.React.createElement('p', null, linkified), container);
 
-		assert.ok(container.innerHTML.indexOf('<em') > 0);
-		assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
-		assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
-		assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);
-		assert.ok(container.innerHTML.indexOf('href="https://amazon.ca"') > 0);
-	});
-}
+	assert.ok(container.innerHTML.indexOf('<em') > 0);
+	assert.ok(container.innerHTML.indexOf('class="pi"') > 0);
+	assert.ok(container.innerHTML.indexOf('href="http://github.com"') > 0);
+	assert.ok(container.innerHTML.indexOf('href="http://google.com"') > 0);
+	assert.ok(container.innerHTML.indexOf('href="https://amazon.ca"') > 0);
+});

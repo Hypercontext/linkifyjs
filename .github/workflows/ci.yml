@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Continuous Integration
 
 on:
   push:
@@ -38,4 +38,13 @@ jobs:
 
       - run: npm install
       - run: bash test/setup.sh ${{ matrix.node-version }}
-      - run: bash run-tests.sh ${{ matrix.node-version }}
+      - run: bash test/run.sh ${{ matrix.node-version }}
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@1.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
