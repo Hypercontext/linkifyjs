@@ -1,6 +1,6 @@
 # Contributing
 
-**Note:** This guide is a work in progress. Feel free to [submit an issue](https://github.com/SoapBox/jQuery-linkify/issues/new) if anything is confusing or unclear.
+**Note:** This guide is a work in progress. Feel free to [submit an issue](https://github.com/Hypercontext/linkifyjs/issues/new) if anything is confusing or unclear.
 
 ## How linkify works
 
@@ -46,7 +46,7 @@ Linkify is built and tested in the command line. Build tasks have the following 
 gulp <task>
 ```
 
-Here are the primary build tasks used for development. See [gulpfile.js](https://github.com/SoapBox/jQuery-linkify/blob/master/gulpfile.js) for the complete list.
+Here are the primary build tasks used for development. See [gulpfile.js](https://github.com/Hypercontext/linkifyjs/blob/master/gulpfile.js) for the complete list.
 
 * **`build`** transpiles ES6 to ES5 (via [Babel](http://babeljs.io/)) from `src/` into `lib/`. The lib folder will be published to [NPM](https://www.npmjs.com/). Also generates browser-ready scripts (globals and [AMD](http://requirejs.org/docs/whyamd.html)) into the `build/` folder.
 * **`dist`** copies and compresses the contents of `build/` into `dist/`. The contents of the dist folder will be published to [Bower](http://bower.io/).
@@ -75,7 +75,7 @@ These are all configured to run on gulp. Tasks `mocha` and `eslint` are the most
 
 **Caution:** The plugin development API is in its very early stages and only supports very basic plugins. Updated features, APIs, and docs are in the works.
 
-Check out the sample [Hashtag plugin](https://github.com/SoapBox/jQuery-linkify/blob/2.0/src/linkify/plugins/hashtag.js) for an idea of how plugins are made. You have access to all the previously described tokens from the `linkify` variable. And should be able to extend them as necessary.
+Check out the sample [Hashtag plugin](https://github.com/Hypercontext/linkifyjs/blob/2.0/src/linkify/plugins/hashtag.js) for an idea of how plugins are made. You have access to all the previously described tokens from the `linkify` variable. And should be able to extend them as necessary.
 
 If you decide that your plugin can be used by many people, you can add them to `src/linkify/plugins/`. Make sure you also create build templates for your plugin inside `templates/linkify/plugins/`. Follow the format of the existing files.
 

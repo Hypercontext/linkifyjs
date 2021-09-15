@@ -15,7 +15,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 	});
 
 	describe('Url', () => {
-		let input1 = 'Ftps://www.github.com/SoapBox/linkify';
+		let input1 = 'Ftps://www.github.com/Hypercontext/linkify';
 		let input2 = '//Amazon.ca/Sales';
 		let input3 = 'co.co?o=%2D&p=@gc#wat';
 		let url1, url2, url3;
@@ -40,7 +40,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 		describe('#toString()', () => {
 			it('Returns the exact URL text', () => {
-				expect(url1.toString()).to.be.eql('Ftps://www.github.com/SoapBox/linkify');
+				expect(url1.toString()).to.be.eql('Ftps://www.github.com/Hypercontext/linkify');
 				expect(url2.toString()).to.be.eql('//Amazon.ca/Sales');
 				expect(url3.toString()).to.be.eql('co.co?o=%2D&p=@gc#wat');
 			});
@@ -48,7 +48,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 		describe('#toHref()', () => {
 			it('Keeps the protocol the same as the original URL (and lowercases it)', () => {
-				expect(url1.toHref()).to.be.eql('Ftps://www.github.com/SoapBox/linkify');
+				expect(url1.toHref()).to.be.eql('Ftps://www.github.com/Hypercontext/linkify');
 			});
 
 			it('Lowercases the domain name only and leaves off the protocol if the URL begins with "//"', () => {

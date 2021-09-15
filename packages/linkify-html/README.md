@@ -1,7 +1,7 @@
 linkify-html
 ===
 
-[Linkify](https://soapbox.github.io/linkifyjs/) HTML String Interface. Use `linkify-html` to highlight links within strings that contain HTML markup.
+[Linkify](https://linkify.js.org/) HTML String Interface. Use `linkify-html` to highlight links within strings that contain HTML markup.
 
 ## Installation
 
@@ -23,4 +23,4 @@ import linkifyHtml from 'linkify-html';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/linkify-html.html).
+[Read the full documentation](https://linkify.js.org/docs/linkify-html.html).

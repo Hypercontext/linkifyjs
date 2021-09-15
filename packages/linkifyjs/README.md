@@ -1,7 +1,7 @@
 linkifyjs
 ===
 
-Core [linkify](https://soapbox.github.io/linkifyjs/) library.
+Core [linkify](https://linkify.js.org/) library.
 
 ## Installation
 
@@ -23,4 +23,4 @@ import * as linkify from 'linkifyjs';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/linkifyjs.html).
+[Read the full documentation](https://linkify.js.org/docs/linkifyjs.html).

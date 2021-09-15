@@ -168,19 +168,19 @@ QUnit.test('finds valid tickets', function (assert) {
 });
 
 // HTML rendered in body
-var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this and localhost:8080, pretty neat right? <p>Here is a nested github.com/SoapBox/linkifyjs paragraph</p>';
+var originalHtml = 'Hello here are some links to ftp://awesome.com/?where=this and localhost:8080, pretty neat right? <p>Here is a nested github.com/Hypercontext/linkifyjs paragraph</p>';
 
 // Possible results with regular settings (will vary by browser)
 var linkifiedHtml = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/Hypercontext/linkifyjs">github.com/Hypercontext/linkifyjs</a> paragraph</p>',
 ];
 
 // Possible results with overriden settings
 var linkifiedHtmlAlt = [
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a rel="nofollow" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=t fhis</a> and <a rel="nofollow" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a rel="nofollow" href="http://github.com/SoapBox/linkifyjs">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>',
-	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/SoapBox/linkifyjs" rel="nofollow">github.com/SoapBox/linkifyjs</a> paragraph</p>'
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/Hypercontext/linkifyjs" rel="nofollow">github.com/Hypercontext/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a rel="nofollow" href="ftp://awesome.com/?where=this">ftp://awesome.com/?where=t fhis</a> and <a rel="nofollow" href="http://localhost:8080">localhost:8080</a>, pretty neat right? <p>Here is a nested <a rel="nofollow" href="http://github.com/Hypercontext/linkifyjs">github.com/Hypercontext/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/Hypercontext/linkifyjs" rel="nofollow">github.com/Hypercontext/linkifyjs</a> paragraph</p>',
+	'Hello here are some links to <a href="ftp://awesome.com/?where=this" rel="nofollow">ftp://awesome.com/?where=this</a> and <a href="http://localhost:8080" rel="nofollow">localhost:8080</a>, pretty neat right? <p>Here is a nested <a href="http://github.com/Hypercontext/linkifyjs" rel="nofollow">github.com/Hypercontext/linkifyjs</a> paragraph</p>'
 ];
 
 QUnit.module('linkify-jquery', {

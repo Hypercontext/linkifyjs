@@ -1,7 +1,7 @@
 linkify-react
 ===
 
-[Linkify](https://soapbox.github.io/linkifyjs/) React component. Walks through its children and replaces strings containing URLs with strings and &lt;a&gt; elements.
+[Linkify](https://linkify.js.org/) React component. Walks through its children and replaces strings containing URLs with strings and &lt;a&gt; elements.
 
 ## Installation
 
@@ -23,4 +23,4 @@ import Linkify from 'linkify-react';
 
 ## Usage
 
-[Read the full documentation](https://soapbox.github.io/linkifyjs/docs/linkify-react.html).
+[Read the full documentation](https://linkify.js.org/docs/linkify-react.html).
