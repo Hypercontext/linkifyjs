@@ -26,6 +26,14 @@
     &--blue {
         stroke: $blue;
     }
+
+    &--yellow {
+        stroke: $yellow;
+    }
+
+    &--purple {
+        stroke: $purple;
+    }
 }
 
 @keyframes draw {

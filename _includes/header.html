@@ -1,9 +1,9 @@
 <header class="site-header container">
-  <h1 id="page-title" class="display-1 d-inline-block">
-    <a href="{{ site.baseurl }}/" class="text-decoration-none">Linkify</a>
-    {%if page.showbysoapbox %}
+  <h1 id="page-title" class="display-1">
+    <a href="{{ site.baseurl }}/" class="text-decoration-none fw-bold">Linkify</a>
+    {%if page.showbyhypercontext %}
     <br>
-    <small class="display-6 mt-0">a JS plugin by <a href="https://soapboxhq.com" class="text-decoration-none">Soapbox</a></small>
+    <small class="display-6 mt-0">a JS plugin by <a href="{{ site.websiteurl }}">{% include hypercontext-logo.svg %}</a></small>
     {% endif %}
   </h1>
   {%if layout.subtitle %}

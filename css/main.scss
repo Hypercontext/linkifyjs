@@ -45,11 +45,11 @@ $headings-font-weight: 700;
 
 
 // Brand colours
-$blue: #2584e2;
+$blue: #138cff;
 $pink: #d67bb2;
-$red: #ec5979;
-$yellow: #fbaf3f;
-$green: #70e8b1;
+$red: #ff4a77;
+$yellow: #feb901;
+$green: #24ecac;
 
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import "bootstrap/scss/bootstrap";
@@ -89,6 +89,14 @@ a {
   text-align: center;
   padding-top: 2em;
   padding-bottom: 2em;
+}
+
+.hypercontext-logo {
+  display: inline;
+
+  path {
+    fill: var(--bs-dark);
+  }
 }
 
 #page-title {

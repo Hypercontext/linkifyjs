@@ -36,7 +36,7 @@ import linkifyStr from 'linkify-string';
 
 ### Browser globals
 
-[Download linkify](https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip)
+[Download linkify](https://github.com/{{ site.github_username }}/releases/download/v{{ site.version }}/linkifyjs.zip)
 and extract the contents into your website's assets directory.
 Include the following scripts in your HTML:
 

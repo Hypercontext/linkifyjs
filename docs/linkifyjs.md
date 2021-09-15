@@ -28,7 +28,7 @@ import * as linkify from 'linkifyjs';
 
 ### Browser globals
 
-[Download linkify](https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip)
+[Download linkify](https://github.com/{{ site.github_username }}/releases/download/v{{ site.version }}/linkifyjs.zip)
 and extract the contents into your website's assets directory.
 Include the following script in your HTML:
 
@@ -124,11 +124,11 @@ before invoking linkify for the first time.
 * _`String`_ **`name`** unique name of the plugin to register
 • _`Function`_ **`plugin`** plugin implementation function
 
-[See example plugin function implementations](https://github.com/Soapbox/linkifyjs/tree/master/packages/linkifyjs/src/plugins).
+[See example plugin function implementations](https://github.com/{{ site.github_username }}/tree/master/packages/linkifyjs/src/plugins).
 
 ### linkify.test _(str [, type])_
 
-Is the given string a link? Note that linkify is not 100% spec compliant, so this function may return some false positives or false negatives. If this method does not return the expected result for a specific input, [please report an issue](https://github.com/Soapbox/linkifyjs/issues).
+Is the given string a link? Note that linkify is not 100% spec compliant, so this function may return some false positives or false negatives. If this method does not return the expected result for a specific input, [please report an issue](https://github.com/{{ site.github_username }}/issues).
 
 **Params**
 
