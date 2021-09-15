@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: Caveats · Documentation
-toc: true
 ---
 
 # Cross-Site Scripting

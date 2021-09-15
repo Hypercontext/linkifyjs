@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: Documentation
-toc: true
 ---
 
 # Installation/Getting Started

@@ -1,7 +1,6 @@
 ---
 layout: doc
-title: \#Hashtag plugin · Documentation
-toc: true
+title: '#Hashtag plugin · Documentation'
 ---
 
 # Linkify #Hashtag Plugin

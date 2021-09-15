@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: \@Mention plugin · Documentation
-toc: true
 ---
 
 # Linkify @Mention Plugin

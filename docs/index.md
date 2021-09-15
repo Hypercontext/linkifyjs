@@ -1,7 +1,6 @@
 ---
 layout: docv3
 title: Documentation
-toc: true
 ---
 
 # Installation and Getting Started

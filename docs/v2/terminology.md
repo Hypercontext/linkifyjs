@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: Terminology
-toc: true
 ---
 # Terminology
 

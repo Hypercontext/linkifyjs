@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: Plugins · Documentation
-toc: true
 ---
 
 # Plugins

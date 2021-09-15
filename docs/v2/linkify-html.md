@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: linkify-html · Documentation
-toc: true
 ---
 
 # Linkify HTML String Interface

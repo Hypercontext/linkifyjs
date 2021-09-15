@@ -1,6 +1,6 @@
 ---
 layout: docv3
-title: \#Hashtag plugin · Documentation
+title: '#Hashtag plugin · Documentation'
 toc: true
 ---
 

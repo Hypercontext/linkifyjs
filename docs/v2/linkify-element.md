@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: linkify-element · Documentation
-toc: true
 ---
 
 # Linkify DOM Element Interface

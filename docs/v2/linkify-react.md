@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: linkify-react · Documentation
-toc: true
 ---
 
 # Linkify React Component Interface

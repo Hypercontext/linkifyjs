@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: \#-Ticket plugin · Documentation
-toc: true
 ---
 
 # Linkify #-Ticket Plugin

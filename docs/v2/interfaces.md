@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: Interfaces · Documentation
-toc: true
 ---
 
 Interfaces provide string -> link conversion for a certain environment or

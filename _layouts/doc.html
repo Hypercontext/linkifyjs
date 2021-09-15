@@ -53,6 +53,7 @@ subtitle: Documentation
       <p class="mb-0">You are reading documentation for Linkify v2. <a href=".." class="alert-link">Browse the latest v3+ documentation.</a></p>
     </div>
     <h4>Jump To</h4>
-    {{ content | toc }}
+    {% include toc.html html=content h_min=2 h_max=4 %}
+    {{ content }}
   </article>
 </section>

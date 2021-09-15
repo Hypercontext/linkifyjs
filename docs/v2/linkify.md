@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: Core linkify · Documentation
-toc: true
 ---
 
 # Core Linkify

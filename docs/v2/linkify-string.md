@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: linkify-string · Documentation
-toc: true
 ---
 
 # Linkify String Interface

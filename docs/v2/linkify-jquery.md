@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: linkify-jquery · Documentation
-toc: true
 ---
 
 # Linkify jQuery Interface

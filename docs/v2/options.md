@@ -1,7 +1,6 @@
 ---
 layout: doc
 title: Options · Documentation
-toc: true
 ---
 
 # Options

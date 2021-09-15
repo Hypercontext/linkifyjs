@@ -48,6 +48,7 @@ subtitle: Documentation
   <article id="docs-content" class="col-sm-8 col-lg-9">
 
     <h4>Jump To</h4>
-    {{ content | toc }}
+    {% include toc.html html=content h_min=2 h_max=4 %}
+    {{ content }}
   </article>
 </section>
