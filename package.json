@@ -12,7 +12,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build": "npm run build --workspaces",
     "build:ci": "for dir in `ls packages` ; do cd packages/${dir} && npm run build && cd ../.. ; done",
-    "copy": "copyfiles -f packages/*/dist/*.js dist",
+    "copy": "copyfiles -f packages/*/dist/*.js LICENSE dist",
     "dist": "run-s clean build copy",
     "dist:ci": "run-s clean build:ci copy",
     "lint": "eslint *.js packages/**/*.js test/**/*.js",
