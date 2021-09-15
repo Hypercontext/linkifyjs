@@ -160,7 +160,7 @@ Accepts an object where each key is the link type (e.g., `'url'`, `'email'`,
 etc.) and each value is the formatting function to use for that type.
 
 ```js
-'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
+'http://github.com/{{ site.github_username }}/search/?q=this+is+a+really+long+query+string'.linkify({
   format: (value, type) => {
     if (type === 'url' && value.length > 50) {
       value = value.slice(0, 50) + '…';
@@ -171,7 +171,7 @@ etc.) and each value is the formatting function to use for that type.
 
 // or
 
-'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
+'http://github.com/{{ site.github_username }}/search/?q=this+is+a+really+long+query+string'.linkify({
   format: {
     url: (value) => value.length > 50 ? value.slice(0, 50) + '…' : value
   }
@@ -207,7 +207,7 @@ etc.) and each value is the formatting function to use for that type.
 'Hey @nfrasser, check out issue #23'.linkify({
   formatHref: {
     mention: (href) => 'https://github.com' + href,
-    ticket: (href) => 'https://github.com/SoapBox/linkifyjs/issues/' + href.substring(1)
+    ticket: (href) => 'https://github.com/{{ site.github_username }}/issues/' + href.substring(1)
   }
 });
 ```
@@ -347,7 +347,7 @@ are dropped, also appends an ellipsis (`…`) to the result.
 Applies to the result of the [`format` option](#format), if also specified.
 
 ```js
-'http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string'.linkify({
+'http://github.com/{{ site.github_username }}/search/?q=this+is+a+really+long+query+string'.linkify({
   truncate: 42
 });
 ```
@@ -355,7 +355,7 @@ Applies to the result of the [`format` option](#format), if also specified.
 Returns
 
 ```
-'<a href="http://github.com/SoapBox/linkifyjs/search/?q=this+is+a+really+long+query+string">http://github.com/SoapBox/linkifyjs/search…</a>'
+'<a href="http://github.com/{{ site.github_username }}/search/?q=this+is+a+really+long+query+string">http://github.com/{{ site.github_username }}/search…</a>'
 ```
 
 

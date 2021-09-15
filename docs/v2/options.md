@@ -222,7 +222,7 @@ etc.) and each value is the formatting function to use for that type.
       return 'https://github.com' + href;
     },
     ticket: function (href) {
-      return 'https://github.com/SoapBox/linkifyjs/issues/' + href.substring(1);
+      return 'https://github.com/{{ site.github_username }}/issues/' + href.substring(1);
     }
   }
 });

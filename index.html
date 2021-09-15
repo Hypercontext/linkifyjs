@@ -1,7 +1,7 @@
 ---
 layout: default
 headeroffset: y
-showbysoapbox: true
+showbyhypercontext: true
 scripts:
   - home.js
   - demo.js
@@ -11,12 +11,12 @@ scripts:
 </section>
 <section>
   <p class="blurb text-center">
-    <a href="https://github.com/SoapBox/linkifyjs/releases/download/v{{ site.version }}/linkifyjs.zip" class="btn btn-lg btn-primary rounded-pill version-download" download="linkifyjs.zip">Download Zip</a>
+    <a href="https://github.com/{{ site.github_username }}/releases/download/v{{ site.version }}/linkifyjs.zip" class="btn btn-lg btn-primary rounded-pill version-download" download="linkifyjs.zip">Download Zip</a>
     &nbsp;
     <a href="docs" class="btn btn-lg btn-secondary rounded-pill">Read the Docs</a>
   </p>
   <p class="lead text-center">Install with <a href="https://docs.npmjs.com/about-npm">NPM</a>:&nbsp; <code class="badge bg-lighter text-danger">npm install linkifyjs</code></p>
-  <p class="text-center small">v{{ site.version }} &middot; <a href="https://github.com/SoapBox/linkifyjs/blob/master/CHANGELOG.md">view release notes</a> &middot; <a href="https://github.com/SoapBox/linkifyjs">browse code on GitHub</a></p>
+  <p class="text-center small">v{{ site.version }} &middot; <a href="https://github.com/{{ site.github_username }}/blob/master/CHANGELOG.md">view release notes</a> &middot; <a href="https://github.com/{{ site.github_username }}">browse code on GitHub</a></p>
 </section>
 
 <section class="my-5">
@@ -42,7 +42,7 @@ scripts:
 
 Custom link formats are also possible!
 
-Linkify is made with ❤️ by @Soapbox and @nfrasser</textarea>
+Linkify is made with ❤️ by @Hypercontext and @nfrasser</textarea>
   </div>
   <div class="col-6">
     <div id="linkify-demo-after" class="bg-light text-dark form-control border-start-0 rounded-0 rounded-end"></div>
