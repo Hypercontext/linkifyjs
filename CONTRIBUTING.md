@@ -12,7 +12,7 @@ The first stage, called the scanner, takes the input string and generates encomp
 
 The second stage, the parser, takes this array of tokens and aggregates them into complete entities that are either become links or do not. For example, the tokens `PROTOCOL`, `SLASH`, `SLASH`, `DOMAIN`, `TLD` (appearing in that order) are grouped into a `URL` entity. These groups are called multitokens.
 
-A multi token is either a link or not a link. Basic linkify comes with these multitokens
+A multitoken is either a link or not a link. Core linkify comes with these multitokens
 
 * **`TEXT`** is plain text (that contains no linkable entities)
 * **`NL`** represents a single newline character
@@ -34,16 +34,20 @@ As usualy, try to keep it consistent with what's already there.
 
 ### Setup
 
-1. Install the latest version of [Node.js](https://nodejs.org/)
-2. Install the [gulp.js](http://gulpjs.com/) build system from the Terminal
-	* `npm install -g gulp`
+1. Install the latest LTS version of [Node.js](https://nodejs.org/) (v15 or newer)
+2. Fork and clone this repository to your machine
+3. Navigate to the clone folder via command-line
+4. Install dependencies with NPM:
+   ```sh
+   npm install
+   ```
 
 ### Building
 
 Linkify is built and tested in the command line. Build tasks have the following format.
 
 ```
-gulp <task>
+npm run build
 ```
 
 Here are the primary build tasks used for development. See [gulpfile.js](https://github.com/Hypercontext/linkifyjs/blob/master/gulpfile.js) for the complete list.
@@ -54,29 +58,22 @@ Here are the primary build tasks used for development. See [gulpfile.js](https:/
 
 ### Running tests
 
-Here are the tools used for testing linkify:
+These tools are used for testing linkify:
 
-* [Mocha](http://mochajs.org/) is our primary test case framework
-* [ESLint](http://eslint.org) for code linting
-* [Istanbul](https://gotwarlost.github.io/istanbul/) for code coverage analysis
-* [Karma](http://karma-runner.github.io/0.12/index.html) is our browser test runner
-* [Sauce Labs](https://saucelabs.com/) for cross-browser testing
+* [Mocha](https://mochajs.org/) is our primary test case framework
+* [ESLint](https://eslint.org) for code linting
+* [Istanbul](https://istanbul.js.org/) for code coverage analysis
+* [Karma](http://karma-runner.github.io/) is our browser test runner
+* [BrowserStack](https://www.browserstack.com) for cross-browser testing
 
-These are all configured to run on gulp. Tasks `mocha` and `eslint` are the most basic you can run. Other tasks include:
+These are all configured to run in npm scripts. Tasks `npm test` and `npm run lint` are the most basic you can run. Other tasks include:
 
-* `test` transpiles the code and runs ESLint and Mocha
-* `coverage` runs Istanbul code coverage on the Mocha tests
-* Karma has a number of tasks that allow you to run Mocha tests on different browsers (via [Browserify](http://browserify.org/))
-	* `karma` runs tests on the [PhantomJS](http://phantomjs.org/) headless browser
-	* `karma-chrome` runs tests on [Google Chrome](http://www.google.com/chrome/)
-	* `karma-ci` (or `test-ci`) runs Sauce Labs cross-browser tests (Sauce Labs environment configuration required)
+* `npm run build` converts the `src` ES source code into browser- and Node.js- compatible JavaScript. It also outputs TypeScript definitions.
+* `npm run clean` removes all generated files
+* `npm run dist` cleans, builds and copies the final browser distribution bundle into the root `dist` directory
 
 ### Building plugins
 
 **Caution:** The plugin development API is in its very early stages and only supports very basic plugins. Updated features, APIs, and docs are in the works.
 
-Check out the sample [Hashtag plugin](https://github.com/Hypercontext/linkifyjs/blob/2.0/src/linkify/plugins/hashtag.js) for an idea of how plugins are made. You have access to all the previously described tokens from the `linkify` variable. And should be able to extend them as necessary.
-
-If you decide that your plugin can be used by many people, you can add them to `src/linkify/plugins/`. Make sure you also create build templates for your plugin inside `templates/linkify/plugins/`. Follow the format of the existing files.
-
-Any plugin you add to `src/linkify/plugins/` will automatically be added to the build system.
+Check out the sample [Hashtag plugin](https://github.com/Hypercontext/linkifyjs/blob/main/packages/linkifyjs/src/plugins/hashtag.js) for an example.
