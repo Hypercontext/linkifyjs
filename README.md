@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
 [![CI](https://github.com/Soapbox/linkifyjs/actions/workflows/ci.yml/badge.svg)](https://github.com/Soapbox/linkifyjs/actions/workflows/ci.yml)
 [![BrowserStack Status](https://automate.browserstack.com/badge.svg?badge_key=MEY1aklrOVlacVR3UFlQSXJ1cnd2Q3E4ckF3SWYwU1QwUTdhYlB2WHgxST0tLWcxUlhVckFiQUN3YkYrZHJQRHUyZ0E9PQ==--b974ce8f45b084b7e3a8eea67d8307971a829ab8)](https://automate.browserstack.com/public-build/MEY1aklrOVlacVR3UFlQSXJ1cnd2Q3E4ckF3SWYwU1QwUTdhYlB2WHgxST0tLWcxUlhVckFiQUN3YkYrZHJQRHUyZ0E9PQ==--b974ce8f45b084b7e3a8eea67d8307971a829ab8)
-[![Coverage Status](https://coveralls.io/repos/github/Soapbox/linkifyjs/badge.svg?branch=master)](https://coveralls.io/github/Soapbox/linkifyjs?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Soapbox/linkifyjs/badge.svg?branch=main)](https://coveralls.io/github/Soapbox/linkifyjs?branch=main)
 
 Linkify is a JavaScript plugin. Use Linkify to find links in plain-text and
 convert them to HTML &lt;a&gt; tags. It automatically highlights URLs,
@@ -151,7 +151,7 @@ View full documentation at [soapbox.github.io/linkifyjs/docs](https://soapbox.gi
 
 ## Contributing
 
-Check out [CONTRIBUTING.md](https://github.com/Soapbox/linkifyjs/blob/master/CONTRIBUTING.md).
+Check out [CONTRIBUTING.md](https://github.com/Soapbox/linkifyjs/blob/main/CONTRIBUTING.md).
 
 ## License
 
