@@ -1,6 +1,12 @@
 <footer class="site-footer py-5">
   <div class="container text-center">
     <ul class="social-media-list list-inline">
+      <li class="list-inline-item footer-icon mr-4">
+        <a href="{{ site.websiteurl }}" title="Hypercontext">
+          {% include icon-hypercontext.html %}
+          <span class="visually-hidden">Hypercontext</span>
+        </a>
+      </li>
       {% if site.github_username %}
       <li class="list-inline-item footer-icon">
         <a href="https://github.com/{{ site.github_username }}" title="{{ site.github_username }} on GitHub">
@@ -18,6 +24,7 @@
         </a>
       </li>
       {% endif %}
-    </ul>  </div>
-
+    </ul>
+    <p>©{{ 'now' | date: "%Y" }} Hypercontext</p>
+  </div>
 </footer>

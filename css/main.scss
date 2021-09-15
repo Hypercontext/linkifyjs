@@ -91,6 +91,14 @@ a {
   padding-bottom: 2em;
 }
 
+.hypercontext-logo {
+  display: inline;
+
+  path {
+    fill: var(--bs-dark);
+  }
+}
+
 #page-title {
   line-height: 1;
 }
