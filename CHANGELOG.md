@@ -32,6 +32,7 @@
 * Full Internationalized Domain (IDN) and Emoji domain support 🇺🇳🌍✈️🎉💃! Detect URLs, #hashtags and @mentions in any language
 * ~10x faster startup; ~4x faster combined startup + first run
 * Custom protocols with `linkify.registerCustomProtocol('protocol')`
+* Modernized codebase and build system
 * Add new `rel` option at top level as an alternate way of including it in `attributes`
 * New and improved plugin API
 * TypeScript definitions included in published packages
