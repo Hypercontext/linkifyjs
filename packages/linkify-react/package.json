@@ -1,6 +1,6 @@
 {
   "name": "linkify-react",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "React element interface for linkifyjs",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,9 @@
   "homepage": "https://github.com/Hypercontext/linkifyjs#readme",
   "peerDependencies": {
     "linkifyjs": "^3.0.0",
-    "react": ">= 0.14.0"
+    "react": ">= 15.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.21"
   }
 }

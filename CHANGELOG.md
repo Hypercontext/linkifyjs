@@ -1,5 +1,10 @@
 # Linkify Changelog
 
+## v3.0.1
+
+* Fix React component type declarations
+* Include LICENSE file in all published packages
+
 ## v3.0.0
 
 ### BREAKING CHANGES

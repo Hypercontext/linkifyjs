@@ -1,6 +1,6 @@
 {
   "name": "linkify-plugin-mention",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "@mentions plugin for linkifyjs",
   "main": "index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "linkify",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Intelligent link recognition, made easy",
   "repository": {
     "type": "git",
@@ -19,7 +19,6 @@
     "test": "nyc --reporter=lcov --reporter=text mocha test/index.js",
     "test:ci": "karma start test/ci.conf.js --single-run"
   },
-
   "author": "Hypercontext",
   "license": "MIT",
   "devDependencies": {
