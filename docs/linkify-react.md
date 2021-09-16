@@ -6,7 +6,7 @@ toc: true
 
 # Linkify React Component Interface
 
-`linkify-react` provides a React component that walks through its children and
+The `<Linkify>` component from `linkify-react` walks through its children and
 replaces strings containing URLs with strings and `<a>` elements.
 
 ## Installation
@@ -43,7 +43,7 @@ Include the following scripts in your HTML:
 ## Usage
 
 ```jsx
-// Example render() function body
+// Example render function body
 const options = {/* … */};
 const content = 'For help with GitHub.com, please email support@github.com';
 return (
@@ -61,7 +61,7 @@ This renders the following HTML into the outer element
 
 ### Properties
 
-* _`String`_ **`tagName`** The HTML tag to use for the outermost element (`'span'` by default)
+* _`string | React.JSXElementConstructor`_ [**`tagName`**] The HTML tag or component class to use for the outermost element. Defaults to `React.Fragment` (React 16+) or `'span'`
 * _`Object`_ [**`options`**] [Options](options.html) object
 
 ### Events
@@ -71,14 +71,17 @@ Add event handlers to the discovered links by specifying them in the
 for a regular React element:
 
 ```jsx
-let linkProps = {
+const linkProps = {
   onClick: (event) => {
     if (!confirm('Are you sure you want to leave this page?')) {
        event.preventDefault()
     }
   }
 };
-return <Linkify options={% raw %}{{attributes: linkProps}}{% endraw %}>
-  ...
-</Linkify>;
+
+return (
+  <Linkify options={% raw %}{{ attributes: linkProps }}{% endraw %}>
+    ...
+  </Linkify>
+);
 ```
