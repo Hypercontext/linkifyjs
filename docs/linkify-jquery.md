@@ -73,7 +73,7 @@ $(selector).linkify(options);
 
 See [all available options](options.html).
 
-## DOM Data API
+### DOM Data API
 
 The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript required after import!
 

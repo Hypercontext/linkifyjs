@@ -30,21 +30,34 @@ const linkify = require('linkifyjs');
 const linkifyHtml = require('linkify-html');
 ```
 
-### Option 2: Import for direct use in the browser
+### Option 2: Download and import for direct use in the browser
 
-If using JavaScript directly in the browser, add `linkify` and `linkify-html`
-scripts to your HTML:
+If using JavaScript directly in the browser, [download the latest release](https://github.com/{{ site.github_username }}/releases/download/v{{ site.version }}/linkifyjs.zip)
+and add `linkify` and `linkify-html` scripts to your HTML:
 
 ```html
 <script src="linkify.min.js"></script>
 <script src="linkify-html.min.js"></script>
 ```
 
-This creates global variables `linkify` and `linkifyHtml`
-
 **Note:** When linkify-ing text that does not contain HTML, install and use the
 `linkify-string` package instead of `linkify-html`. [Read more about Linkify's
 interfaces](interfaces.html).
+
+### Option 3: Import from a CDN
+
+Include Linkify in your HTML from any NPM-compatible CDN such as
+[jsDelivr](https://www.jsdelivr.com/package/npm/linkifyjs?path=dist). The latest
+browser scripts are located in the `dist` subdirectory. This applies
+to `linkifyjs` and all related modules such as `linkify-react` or
+`linkify-plugin-hashtag`
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/linkifyjs@{{ site.version }}/dist/linkify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/linkify-html@{{ site.version }}/dist/linkify-html.min.js"></script>
+```
+
+This also creates global variables `linkify` and `linkifyHtml`
 
 ## Usage
 
@@ -77,12 +90,18 @@ Returns the following array
   {
     type: 'url',
     value: 'github.com',
-    href: 'http://github.com'
+    isLink: true,
+    href: 'http://github.com',
+    start: 13,
+    end: 23
   },
   {
     type: 'email',
     value: 'test@example.com',
-    href: 'mailto:test@example.com'
+    isLink: true,
+    href: 'mailto:test@example.com',
+    start: 46,
+    end: 62
   }
 ]
 ```
