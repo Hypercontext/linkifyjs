@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { tokenize, Options } from 'linkifyjs';
 
-// Given a string, converts to an array of valid React components
-// (which may include strings)
+/**
+ * Given a string, converts to an array of valid React components
+ * (which may include strings)
+ * @param {string} str
+ * @param {any} opts
+ * @returns {React.ReactNodeArray}
+ */
 function stringToElements(str, opts) {
 
 	const tokens = tokenize(str);
@@ -52,6 +57,14 @@ function stringToElements(str, opts) {
 }
 
 // Recursively linkify the contents of the given React Element instance
+/**
+ * @template P
+ * @template {string | React.JSXElementConstructor<P>} T
+ * @param {React.ReactElement<P, T>} element
+ * @param {Object} opts
+ * @param {number} elementId
+ * @returns {React.ReactElement<P, T>}
+ */
 function linkifyReactElement(element, opts, elementId = 0) {
 	if (React.Children.count(element.props.children) === 0) {
 		// No need to clone if the element had no children
@@ -90,22 +103,24 @@ function linkifyReactElement(element, opts, elementId = 0) {
 }
 
 /**
- * @param {Object} props
- * @param {Object} [props.options] Linkify options
- * @param {string | React.Element} [props.tagName] element in which to wrap all Linkified content (default React.Fragment)
+ * @template P
+ * @template {string | React.JSXElementConstructor<P>} T
+ * @param {P & { tagName?: T, options?: any, children?: React.ReactNode}} props
+ * @returns {React.ReactElement<P, T>}
  */
 const Linkify = (props) => {
 	// Copy over all non-linkify-specific props
 	const newProps = { key: 'linkified-element-wrapper' };
 	for (const prop in props) {
-		if (prop !== 'options' && prop !== 'tagName') {
+		if (prop !== 'options' && prop !== 'tagName' && prop !== 'children') {
 			newProps[prop] = props[prop];
 		}
 	}
 
 	const opts = new Options(props.options);
 	const tagName = props.tagName || React.Fragment || 'span';
-	const element = React.createElement(tagName, newProps);
+	const children = props.children;
+	const element = React.createElement(tagName, newProps, children);
 
 	return linkifyReactElement(element, opts, 0);
 };
