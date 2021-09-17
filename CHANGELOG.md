@@ -1,5 +1,11 @@
 # Linkify Changelog
 
+## v3.0.2
+
+* Correctly detect hashtags with underscores
+* Fix plugin import bug
+* Fix `linkify-string` and `linkify-html` type declarations
+
 ## v3.0.1
 
 * Fix React component type declarations

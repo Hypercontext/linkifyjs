@@ -40,6 +40,9 @@ describe('plugins/hashtag', () => {
 			}]);
 
 			expect(linkify.test('#wat', 'hashtag')).to.be.ok;
+			expect(linkify.test('#bug_', 'hashtag')).to.be.ok;
+			expect(linkify.test('#bug_test', 'hashtag')).to.be.ok;
+			expect(linkify.test('#bug__test', 'hashtag')).to.be.ok;
 			expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
 		});
 	});

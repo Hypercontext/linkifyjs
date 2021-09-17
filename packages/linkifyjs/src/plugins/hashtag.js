@@ -30,8 +30,13 @@ export const hashtag = ({ scanner, parser, utils }) => {
 	HASH_UNDERSCORE_STATE.tt(TLD, HASHTAG_STATE);
 	HASH_UNDERSCORE_STATE.tt(LOCALHOST, HASHTAG_STATE);
 
-	// Trailing underscore is okay
+	// Continue the transitions
 	HASHTAG_STATE.tt(UNDERSCORE, HASHTAG_STATE);
+	HASHTAG_STATE.tt(DOMAIN, HASHTAG_STATE);
+	HASHTAG_STATE.tt(TLD, HASHTAG_STATE);
+	HASHTAG_STATE.tt(LOCALHOST, HASHTAG_STATE);
+	// Trailing underscore is okay
+
 };
 
 registerPlugin('hashtag', hashtag);
