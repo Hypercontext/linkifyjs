@@ -8,7 +8,7 @@ const INIT = {
 	scanner: null,
 	parser: null,
 	pluginQueue: [],
-	customProtocols: [],
+	customSchemes: [],
 	initialized: false,
 };
 
@@ -21,7 +21,7 @@ export function reset() {
 	INIT.scanner = null;
 	INIT.parser = null;
 	INIT.pluginQueue = [];
-	INIT.customProtocols = [];
+	INIT.customSchemes = [];
 	INIT.initialized = false;
 }
 
@@ -45,18 +45,20 @@ export function registerPlugin(name, plugin) {
 }
 
 /**
- * Detect URLs with the following additional protocol. Anything following
- * "protocol:" will be considered a link.
+ * Detect URLs with the following additional protocol. Anything with format
+ * "protocol://..." will be considered a link. If `optionalSlashSlash` is set to
+ * `true`, anything with format "protocol:..." will be considered a link.
  * @param {string} protocol
+ * @param {boolean} [optionalSlashSlash] if set to true,
  */
-export function registerCustomProtocol(protocol) {
+export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register custom protocol "${protocol}" until you manually call linkify.init(). To avoid this warning, please register all custom protocols before invoking linkify the first time.`);
+		warn(`linkifyjs: already initialized - will not register custom protocol "${protocol}" until you manually call linkify.init(). To avoid this warning, please register all custom schemes before invoking linkify the first time.`);
 	}
-	if (!/^[a-z-]+$/.test(protocol)) {
-		throw Error('linkifyjs: protocols containing characters other than a-z or - (hyphen) are not supported');
+	if (!/^[a-z]+(-[a-z]+)*$/.test(protocol)) {
+		throw Error('linkifyjs: incorrect protocol format.\n 1. Must only contain lowercase ASCII letters or -\n 2. Cannot start or end with -\n 3. - cannot repeat');
 	}
-	INIT.customProtocols.push(protocol);
+	INIT.customSchemes.push([protocol, optionalSlashSlash]);
 }
 
 /**
@@ -65,7 +67,7 @@ export function registerCustomProtocol(protocol) {
  */
 export function init() {
 	// Initialize state machines
-	INIT.scanner = { start: scanner.init(INIT.customProtocols), tokens: scanner.tokens };
+	INIT.scanner = { start: scanner.init(INIT.customSchemes), tokens: scanner.tokens };
 	INIT.parser = { start: parser.init(), tokens: parser.tokens };
 	const utils = { createTokenClass: parser.tokens.createTokenClass };
 

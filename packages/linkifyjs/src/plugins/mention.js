@@ -4,10 +4,10 @@
 import { registerPlugin } from 'linkifyjs';
 
 export const mention = ({ scanner, parser, utils }) => {
-	const { DOMAIN, LOCALHOST, TLD, NUM, SLASH, UNDERSCORE, DOT, AT } = scanner.tokens;
-	const START_STATE = parser.start;
+	const { numeric, domain, HYPHEN, SLASH, UNDERSCORE, AT } = scanner.tokens;
+	const Start = parser.start;
 
-	const Mention = utils.createTokenClass('mention', {
+	const MentionToken = utils.createTokenClass('mention', {
 		isLink: true,
 		toHref() {
 			return '/' + this.toString().substr(1);
@@ -15,53 +15,27 @@ export const mention = ({ scanner, parser, utils }) => {
 	});
 
 	// @
-	const AT_STATE = START_STATE.tt(AT); // @
-
-	// @_,
-	const AT_SYMS_STATE = AT_STATE.tt(UNDERSCORE);
-
-	//  @_*
-	AT_SYMS_STATE.tt(UNDERSCORE, AT_SYMS_STATE);
-	AT_SYMS_STATE.tt(DOT, AT_SYMS_STATE);
+	const At = Start.tt(AT); // @
 
 	// Valid mention (not made up entirely of symbols)
-	const MENTION_STATE = AT_STATE.tt(DOMAIN, Mention);
-	AT_STATE.tt(TLD, MENTION_STATE);
-	AT_STATE.tt(LOCALHOST, MENTION_STATE);
-	AT_STATE.tt(NUM, MENTION_STATE);
-
-	// @[_.]* + valid mention
-	AT_SYMS_STATE.tt(DOMAIN, MENTION_STATE);
-	AT_SYMS_STATE.tt(LOCALHOST, MENTION_STATE);
-	AT_SYMS_STATE.tt(TLD, MENTION_STATE);
-	AT_SYMS_STATE.tt(NUM, MENTION_STATE);
+	const Mention = At.tt(domain, MentionToken);
+	At.tt(numeric, Mention);
+	At.tt(UNDERSCORE, Mention);
 
 	// More valid mentions
-	MENTION_STATE.tt(DOMAIN, MENTION_STATE);
-	MENTION_STATE.tt(LOCALHOST, MENTION_STATE);
-	MENTION_STATE.tt(TLD, MENTION_STATE);
-	MENTION_STATE.tt(NUM, MENTION_STATE);
-	MENTION_STATE.tt(UNDERSCORE, MENTION_STATE);
+	Mention.tt(domain, Mention);
+	Mention.tt(numeric, Mention);
+	Mention.tt(UNDERSCORE, Mention);
+	Mention.tt(HYPHEN, Mention);
 
 	// Mention with a divider
-	const MENTION_DIVIDER_STATE = MENTION_STATE.tt(SLASH);
-	MENTION_STATE.tt(SLASH, MENTION_DIVIDER_STATE);
-	MENTION_STATE.tt(DOT, MENTION_DIVIDER_STATE);
-	MENTION_STATE.tt(AT, MENTION_DIVIDER_STATE);
-
-	// Mention _ trailing stash plus syms
-	const MENTION_DIVIDER_SYMS_STATE = MENTION_DIVIDER_STATE.tt(UNDERSCORE);
-	MENTION_DIVIDER_SYMS_STATE.tt(UNDERSCORE, MENTION_DIVIDER_SYMS_STATE);
+	const MentionDivider = Mention.tt(SLASH);
 
 	// Once we get a word token, mentions can start up again
-	MENTION_DIVIDER_STATE.tt(DOMAIN, MENTION_STATE);
-	MENTION_DIVIDER_STATE.tt(LOCALHOST, MENTION_STATE);
-	MENTION_DIVIDER_STATE.tt(TLD, MENTION_STATE);
-	MENTION_DIVIDER_STATE.tt(NUM, MENTION_STATE);
-	MENTION_DIVIDER_SYMS_STATE.tt(DOMAIN, MENTION_STATE);
-	MENTION_DIVIDER_SYMS_STATE.tt(LOCALHOST, MENTION_STATE);
-	MENTION_DIVIDER_SYMS_STATE.tt(TLD, MENTION_STATE);
-	MENTION_DIVIDER_SYMS_STATE.tt(NUM, MENTION_STATE);
+	MentionDivider.tt(domain, Mention);
+	MentionDivider.tt(numeric, Mention);
+	MentionDivider.tt(UNDERSCORE, Mention);
+	MentionDivider.tt(HYPHEN, Mention);
 };
 
 registerPlugin('mention', mention);
