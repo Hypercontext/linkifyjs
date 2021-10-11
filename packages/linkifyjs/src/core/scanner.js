@@ -194,15 +194,6 @@ export function init(customSchemes = []) {
 	makeRegexT(EmojiJoiner, EMOJI, Emoji);
 	makeRegexT(EmojiJoiner, EMOJI_VARIATION, Emoji);
 
-	// FIXME: Incorporte this state machine into the parser
-	// makeRegexT(Start, EMOJI, S_DOMAIN);
-	// makeRegexT(Start, EMOJI_VARIATION, S_DOMAIN);
-	// makeRegexT(Num, DIGIT, Num);
-	// makeRegexT(Num, LETTER, S_DOMAIN); // number becomes DOMAIN
-	// makeRegexT(Num, EMOJI, S_DOMAIN); // number becomes DOMAIN
-	// makeRegexT(Num, EMOJI_VARIATION, S_DOMAIN); // number becomes DOMAIN
-	// makeT(Num, '-', S_DOMAIN_HYPHEN);
-
 	// Set default transition for start state (some symbol)
 	Start.jd = makeAcceptingState(tk.SYM, 'Sym');
 	return Start;
