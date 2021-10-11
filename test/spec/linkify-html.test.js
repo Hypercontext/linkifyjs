@@ -33,9 +33,25 @@ describe('linkify-html', () => {
 			'Ignore tags like <script>const a = {}; <a href="http://a.ca">a.ca</a> = "Hello";</script> and <style><a href="http://b.com">b.com</a> {color: blue;}</style>',
 			'Ignore tags like <script>const a = {}; a.ca = "Hello";</script> and <style>b.com {color: blue;}</style>'
 		], [
-			'6. Link followed by nbsp escape sequence https://github.com&nbsp;',
-			'6. Link followed by nbsp escape sequence <a href="https://github.com">https://github.com</a>\u00a0',
-			'6. Link followed by nbsp escape sequence <span href="https://github.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">https://github.com</span>\u00a0'
+			'Link followed by nbsp escape sequence https://github.com&nbsp;',
+			'Link followed by nbsp escape sequence <a href="https://github.com">https://github.com</a>\u00a0',
+			'Link followed by nbsp escape sequence <span href="https://github.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">https://github.com</span>\u00a0'
+		], [
+			'Link surrounded by encoded quotes &quot;http://google.com&quot;',
+			'Link surrounded by encoded quotes "<a href="http://google.com">http://google.com</a>"',
+			'Link surrounded by encoded quotes "<span href="http://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">http://google.com</span>"'
+		], [
+			'https:&#x2F;&#x2F;html5-chat.com&#x2F;',
+			'<a href="https://html5-chat.com/">https://html5-chat.com/</a>',
+			'<span href="https://html5-chat.com/" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">https://html5-chat.com/</span>'
+		], [
+			'Surrounded by lt/gt symbols &lt;http://nu.nl&gt;',
+			'Surrounded by lt/gt symbols &lt;<a href="http://nu.nl">http://nu.nl</a>&gt;',
+			'Surrounded by lt/gt symbols &lt;<span href="http://nu.nl" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">http://nu.nl</span>&gt;'
+		], [
+			'http://xml.example.com/pub.dtd?a=1&b=2',
+			'<a href="http://xml.example.com/pub.dtd?a=1&b=2">http://xml.example.com/pub.dtd?a=1&amp;b=2</a>',
+			'<span href="http://xml.example.com/pub.dtd?a=1&b=2" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">http://xml.example.com/pub.dtd?a=1&amp;b=2</span>'
 		]
 	];
 
