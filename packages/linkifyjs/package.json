@@ -34,6 +34,6 @@
   },
   "homepage": "https://github.com/Hypercontext/linkifyjs#readme",
   "devDependencies": {
-    "@nfrasser/simple-html-tokenizer": "^0.5.11-1"
+    "@nfrasser/simple-html-tokenizer": "^0.5.11-2"
   }
 }
