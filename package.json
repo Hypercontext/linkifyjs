@@ -61,6 +61,8 @@
     "node": ">=8"
   },
   "workspaces": [
+    "./packages/linkifyjs",
+    "./packages/linkify-plugin-*/",
     "./packages/*"
   ]
 }

@@ -3,8 +3,8 @@ var ITERATIONS = 500;
 function bench1(linkify) {
 	// eslint-disable-next-line no-debugger
 	debugger; // prevents V8 optimization
-	delete require.cache[require.resolve('../lib/linkify')];
-	linkify = require('../lib/linkify');
+	delete require.cache[require.resolve('linkifyjs')];
+	linkify = require('linkifyjs');
 	// linkify.init();
 	linkify.find('');
 	// delete require.cache[require.resolve('moment')];
@@ -252,7 +252,7 @@ mailto:bar`);
 [bench1, bench2].forEach((bench) => {
 	debugger;
 	// var usageInitial = process.memoryUsage();
-	var linkify = require('../lib/linkify');
+	var linkify = require('linkifyjs');
 	linkify.init();
 	// var usageLinkify = process.memoryUsage();
 

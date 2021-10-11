@@ -10,6 +10,7 @@
  * @param {string|class} token to emit
  */
 export function State(token) {
+	// this.n = null; // DEBUG: State name
 	this.j = {}; // IMPLEMENTATION 1
 	// this.j = []; // IMPLEMENTATION 2
 	this.jr = [];
@@ -49,11 +50,21 @@ State.prototype = {
 	 * transitioned to on the given input regardless of what that input
 	 * previously did.
 	 *
-	 * @param {string} input character or token to transition on
+	 * @param {string} input character or token type to transition on
 	 * @param {Token|State} tokenOrState transition to a matching state
 	 * @returns State taken after the given input
 	 */
 	tt(input, tokenOrState) {
+		if (input instanceof Array) {
+			// Recursive case
+			if (input.length === 0) { return; }
+			const nextState = this.tt(input[0], tokenOrState);
+			for (let i = 1; i < input.length; i++) {
+				this.tt(input[i], nextState);
+			}
+			return nextState;
+		}
+
 		if (tokenOrState && tokenOrState.j) {
 			// State, default a basic transition
 			this.j[input] = tokenOrState;
@@ -92,13 +103,21 @@ State.prototype = {
  * Utility function to create state without using new keyword (reduced file size
  * when minified)
  */
-export const makeState = () => new State();
+export const makeState = (/*name*/) => {
+	const s = new State();
+	// if (name) { s.n = name; } // DEBUG
+	return s;
+};
 
 /**
  * Similar to previous except it is an accepting state that emits a token
  * @param {Token} token
  */
-export const makeAcceptingState = (token) => new State(token);
+export const makeAcceptingState = (token/*, name*/) => {
+	const s = new State(token);
+	// if (name) { s.n = name; } // DEBUG
+	return s;
+};
 
 /**
  * Create a transition from startState to nextState via the given character
@@ -112,6 +131,7 @@ export const makeT = (startState, input, nextState) => {
 
 	// IMPLEMENTATION 2: Add to array (slower)
 	// startState.j.push([input, nextState]);
+	return startState.j[input];
 };
 
 /**
@@ -127,7 +147,7 @@ export const makeRegexT = (startState, regex, nextState) => {
 /**
  * Follow the transition from the given character to the next state
  * @param {State} state
- * @param {Token} input character or other concrete token type to transition
+ * @param {string|Token} input character or other concrete token type to transition
  * @returns {?State} the next state, if any
  */
 export const takeT = (state, input) => {
@@ -145,8 +165,8 @@ export const takeT = (state, input) => {
 
 	for (let i = 0; i < state.jr.length; i++) {
 		const regex = state.jr[i][0];
-		const nextState = state.jr[i][1];
-		if (regex.test(input)) {return nextState;}
+		const nextState = state.jr[i][1];  // note: might be empty to prevent default jump
+		if (nextState && regex.test(input)) { return nextState; }
 	}
 	// Nowhere left to jump! Return default, if any
 	return state.jd;
@@ -176,6 +196,7 @@ export const makeBatchT = (startState, transitions) => {
 	for (let i = 0; i < transitions.length; i++) {
 		const input = transitions[i][0];
 		const nextState = transitions[i][1];
+		// if (!nextState.n && typeof input === 'string') { nextState.n = input; } // DEBUG
 		makeT(startState, input, nextState);
 	}
 };
@@ -193,6 +214,7 @@ export const makeBatchT = (startState, transitions) => {
  * @param {string} str
  * @param {Token} endStateFactory
  * @param {Token} defaultStateFactory
+ * @return {State} the final state
  */
 export const makeChainT = (state, str, endState, defaultStateFactory) => {
 	let i = 0, len = str.length, nextState;
@@ -203,7 +225,7 @@ export const makeChainT = (state, str, endState, defaultStateFactory) => {
 		i++;
 	}
 
-	if (i >= len) { return []; } // no new tokens were added
+	if (i >= len) { return state; } // no new tokens were added
 
 	while (i < len - 1) {
 		nextState = defaultStateFactory();
@@ -213,4 +235,6 @@ export const makeChainT = (state, str, endState, defaultStateFactory) => {
 	}
 
 	makeT(state, str[len - 1], endState);
+	// if (!endState.n) { endState.n === str; } // DEBUG
+	return endState;
 };

@@ -2,10 +2,13 @@
 // be as commonly used without the http prefix anyway and linkify will already
 // force-encode those.
 
+// NOTE: vermögensberater vermögensberatung are special cases because they're
+// the only ones in this list that contain non-ASCII characters
+
 // To be updated with the values in this list
 // http://data.iana.org/TLD/tlds-alpha-by-domain.txt
 // Version 2021022800, Last Updated Sun Feb 28 07:07:01 2021 UTC
-export default 'aaa \
+export const tlds = 'aaa \
 aarp \
 abarth \
 abb \
@@ -1264,6 +1267,8 @@ ve \
 vegas \
 ventures \
 verisign \
+vermögensberater \
+vermögensberatung \
 versicherung \
 vet \
 vg \
@@ -1353,10 +1358,10 @@ zip \
 zm \
 zone \
 zuerich \
-zw \
-vermögensberater-ctb \
-vermögensberatung-pwb \
-ελ \
+zw'.split(' ');
+
+// Internationalized domain names containing non-ASCII
+export const utlds = 'ελ \
 ευ \
 бг \
 бел \

@@ -16,48 +16,38 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 	describe('Url', () => {
 		let input1 = 'Ftps://www.github.com/Hypercontext/linkify';
-		let input2 = '//Amazon.ca/Sales';
-		let input3 = 'co.co?o=%2D&p=@gc#wat';
-		let url1, url2, url3;
+		let input2 = 'co.co/?o=%2D&p=@gc#wat';
+		let url1, url2;
 
 		before(() => {
 			const urlTextTokens1 = scanner.run(scannerStart, input1);
 			const urlTextTokens2 = scanner.run(scannerStart, input2);
-			const urlTextTokens3 = scanner.run(scannerStart, input3);
 
 			url1 = new mtk.Url(input1, urlTextTokens1);
 			url2 = new mtk.Url(input2, urlTextTokens2);
-			url3 = new mtk.Url(input3, urlTextTokens3);
 		});
 
 		describe('#isLink', () => {
 			it('Is true in all cases', () => {
 				expect(url1.isLink).to.be.ok;
 				expect(url2.isLink).to.be.ok;
-				expect(url3.isLink).to.be.ok;
 			});
 		});
 
 		describe('#toString()', () => {
 			it('Returns the exact URL text', () => {
 				expect(url1.toString()).to.be.eql('Ftps://www.github.com/Hypercontext/linkify');
-				expect(url2.toString()).to.be.eql('//Amazon.ca/Sales');
-				expect(url3.toString()).to.be.eql('co.co?o=%2D&p=@gc#wat');
+				expect(url2.toString()).to.be.eql('co.co/?o=%2D&p=@gc#wat');
 			});
 		});
 
 		describe('#toHref()', () => {
-			it('Keeps the protocol the same as the original URL (and lowercases it)', () => {
+			it('Keeps the protocol the same as the original URL', () => {
 				expect(url1.toHref()).to.be.eql('Ftps://www.github.com/Hypercontext/linkify');
 			});
 
-			it('Lowercases the domain name only and leaves off the protocol if the URL begins with "//"', () => {
-				expect(url2.toHref()).to.be.eql('//Amazon.ca/Sales');
-			});
-
 			it('Adds a default protocol, if required', () => {
-				expect(url3.toHref()).to.be.eql('http://co.co?o=%2D&p=@gc#wat');
-				expect(url3.toHref('ftp')).to.be.eql('ftp://co.co?o=%2D&p=@gc#wat');
+				expect(url2.toHref()).to.be.eql('http://co.co/?o=%2D&p=@gc#wat');
 			});
 		});
 
@@ -73,22 +63,13 @@ describe('linkifyjs/core/tokens/multi', () => {
 					end: input1.length
 				});
 
-				expect(url2.toObject()).to.be.eql({
+				expect(url2.toObject('https')).to.be.eql({
 					type: 'url',
 					value: input2,
-					href: input2,
+					href: 'https://co.co/?o=%2D&p=@gc#wat',
 					isLink: true,
 					start: 0,
 					end: input2.length
-				});
-
-				expect(url3.toObject('https')).to.be.eql({
-					type: 'url',
-					value: input3,
-					href: 'https://co.co?o=%2D&p=@gc#wat',
-					isLink: true,
-					start: 0,
-					end: input3.length
 				});
 			});
 		});
@@ -99,7 +80,6 @@ describe('linkifyjs/core/tokens/multi', () => {
 			});
 			it('Tests false when there is no protocol', () => {
 				expect(url2.hasProtocol()).to.not.be.ok;
-				expect(url3.hasProtocol()).to.not.be.ok;
 			});
 		});
 
@@ -140,7 +120,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 
 		before(() => {
 			const emailTextTokens = scanner.run(scannerStart, input);
-			email = new mtk.MailtoEmail(input, emailTextTokens);
+			email = new mtk.Url(input, emailTextTokens);
 		});
 
 		describe('#isLink', () => {

@@ -4,25 +4,43 @@
 ******************************************************************************/
 
 // A valid web domain token
-export const DOMAIN = 'DOMAIN';
-export const LOCALHOST = 'LOCALHOST'; // special case of domain
+export const WORD = 'WORD';  // only contains a-z
+export const UWORD = 'UWORD';  // contains letters other than a-z, used for IDN
 
-// Valid top-level domain (see tlds.js)
+// Special case of word
+export const LOCALHOST = 'LOCALHOST';
+
+// Valid top-level domain, special case of WORD (see tlds.js)
 export const TLD = 'TLD';
+
+// Valid IDN TLD, special case of UWORD (see tlds.js)
+export const UTLD = 'UTLD';
+
+// The scheme portion of a web URI protocol. Supported types include: `mailto`,
+// `file`, and user-defined custom protocols. Limited to schemes that contain
+// only letters
+export const SCHEME = 'SCHEME';
+
+// Similar to SCHEME, except makes distinction for schemes that must always be
+// followed by `://`, not just `:`. Supported types include `http`, `https`,
+// `ftp`, `ftps`
+export const SLASH_SCHEME = 'SLASH_SCHEME';
+
+// Similar to SCHEME, except contains -
+export const COMPOUND_SCHEME = 'COMPOUND_SCHEME';
+
+// Similar to SLASH_SCHEME, except contains -
+export const COMPOUND_SLASH_SCHEME = 'COMPOUND_SLASH_SCHEME';
+
+// TODO: Move this to keyword plugin
+// Arbirary words that can keyword links
+// export const KEYWORD = 'KEYWORD'; // simple [0-9a-z]
+// export const UKEYWORD = 'UKEYWORD'; // containing [0-9\{Letter}]
+// export const COMPOUND_KEYWORD = 'COMPOUND_KEYWORD'; // similar to KEYWORD but can have hyphens
+// export const COMPOUND_UKEYWORD = 'COMPOUND_UKEYWORD'; // similar to UKEYWORD but can have hyphens
 
 // Any sequence of digits 0-9
 export const NUM = 'NUM';
-
-// A web URL protocol. Supported types include
-// - `http:`
-// - `https:`
-// - `ftp:`
-// - `ftps:`
-// - user-defined custom protocols
-export const PROTOCOL = 'PROTOCOL';
-
-// Start of the email URI protocol
-export const MAILTO = 'MAILTO'; // mailto:
 
 // Any number of consecutive whitespace characters that are not newline
 export const WS = 'WS';
@@ -67,5 +85,19 @@ export const SLASH = 'SLASH'; // /
 export const TILDE = 'TILDE'; // ~
 export const UNDERSCORE = 'UNDERSCORE'; // _
 
+// Emoji symbol
+export const EMOJIS = 'EMOJIS';
+
 // Default token - anything that is not one of the above
 export const SYM = 'SYM';
+
+// Token collections for grouping similar jumps in the parser
+export const numeric = [NUM];
+export const ascii = [WORD, LOCALHOST, TLD, SCHEME, SLASH_SCHEME];
+export const asciinumeric = ascii.concat(NUM);
+export const words = ascii.concat(UWORD, UTLD);
+export const alphanumeric = words.concat(NUM);
+export const domain = words.concat(COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME, NUM, EMOJIS);
+export const scheme = [SCHEME, SLASH_SCHEME, COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME];
+
+export const collections = { ascii, asciinumeric, words, alphanumeric, domain, scheme };

@@ -1,4 +1,4 @@
-import { PROTOCOL, SLASH } from './text';
+import { scheme, COLON } from './text';
 import { defaults } from '../options';
 
 /******************************************************************************
@@ -125,13 +125,6 @@ export function createTokenClass(type, props) {
 }
 
 /**
-	Represents an arbitrarily mailto email address with the prefix included
-	@class MailtoEmail
-	@extends MultiToken
-*/
-export const MailtoEmail = createTokenClass('email', { isLink: true });
-
-/**
 	Represents a list of tokens making up a valid email address
 	@class Email
 	@extends MultiToken
@@ -175,42 +168,12 @@ export const Url = createTokenClass('url', {
 		@return {string}
 	*/
 	toHref(protocol = defaults.defaultProtocol) {
-		const tokens = this.tk;
-		let hasProtocol = false;
-		let hasSlashSlash = false;
-		let result = [];
-		let i = 0;
-
-		// Make the first part of the domain lowercase
-		// Lowercase protocol
-		while (tokens[i].t === PROTOCOL) {
-			hasProtocol = true;
-			result.push(tokens[i].v);
-			i++;
-		}
-
-		// Skip slash-slash
-		while (tokens[i].t === SLASH) {
-			hasSlashSlash = true;
-			result.push(tokens[i].v);
-			i++;
-		}
-
-		// Continue pushing characters
-		for (; i < tokens.length; i++) {
-			result.push(tokens[i].v);
-		}
-
-		result = result.join('');
-
-		if (!(hasProtocol || hasSlashSlash)) {
-			result = `${protocol}://${result}`;
-		}
-
-		return result;
+		// Check if already has a prefix scheme
+		return this.hasProtocol() ? this.v : `${protocol}://${this.v}`;
 	},
 
 	hasProtocol() {
-		return this.tk[0].t === PROTOCOL;
+		const tokens = this.tk;
+		return tokens.length >= 2 && scheme.indexOf(tokens[0].t) >= 0 && tokens[1].t === COLON;
 	}
 });

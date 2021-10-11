@@ -5,7 +5,7 @@
 	overkill).
 
 	URL format: http://en.wikipedia.org/wiki/URI_scheme
-	Email format: http://en.wikipedia.org/wiki/Email_address (links to RFC in
+	Email format: http://en.wikipedia.org/wiki/EmailAddress (links to RFC in
 	reference)
 
 	@module linkify
@@ -29,99 +29,99 @@ import * as mtk from './tokens/multi';
  */
 export function init() {
 	// The universal starting state.
-	let S_START = makeState();
+	const Start = makeState();
 
 	// Intermediate states for URLs. Note that domains that begin with a protocol
 	// are treated slighly differently from those that don't.
-	let S_PROTOCOL						= makeState(); // e.g., 'http:'
-	let S_MAILTO						= makeState(); // 'mailto:'
-	let S_PROTOCOL_SLASH				= makeState(); // e.g., 'http:/''
-	let S_PROTOCOL_SLASH_SLASH			= makeState(); // e.g.,'http://'
-	let S_DOMAIN						= makeState(); // parsed string ends with a potential domain name (A)
-	let S_DOMAIN_DOT					= makeState(); // (A) domain followed by DOT
-	let S_TLD							= makeAcceptingState(mtk.Url); // (A) Simplest possible URL with no query string
-	let S_TLD_COLON						= makeState(); // (A) URL followed by colon (potential port number here)
-	let S_TLD_PORT						= makeAcceptingState(mtk.Url); // TLD followed by a port number
-	let S_URL							= makeAcceptingState(mtk.Url); // Long URL with optional port and maybe query string
-	let S_URL_NON_ACCEPTING				= makeState(); // URL followed by some symbols (will not be part of the final URL)
-	let S_URL_OPENBRACE					= makeState(); // URL followed by {
-	let S_URL_OPENBRACKET				= makeState(); // URL followed by [
-	let S_URL_OPENANGLEBRACKET			= makeState(); // URL followed by <
-	let S_URL_OPENPAREN					= makeState(); // URL followed by (
-	let S_URL_OPENBRACE_Q				= makeAcceptingState(mtk.Url); // URL followed by { and some symbols that the URL can end it
-	let S_URL_OPENBRACKET_Q				= makeAcceptingState(mtk.Url); // URL followed by [ and some symbols that the URL can end it
-	let S_URL_OPENANGLEBRACKET_Q		= makeAcceptingState(mtk.Url); // URL followed by < and some symbols that the URL can end it
-	let S_URL_OPENPAREN_Q				= makeAcceptingState(mtk.Url); // URL followed by ( and some symbols that the URL can end it
-	let S_URL_OPENBRACE_SYMS			= makeState(); // S_URL_OPENBRACE_Q followed by some symbols it cannot end it
-	let S_URL_OPENBRACKET_SYMS			= makeState(); // S_URL_OPENBRACKET_Q followed by some symbols it cannot end it
-	let S_URL_OPENANGLEBRACKET_SYMS		= makeState(); // S_URL_OPENANGLEBRACKET_Q followed by some symbols it cannot end it
-	let S_URL_OPENPAREN_SYMS			= makeState(); // S_URL_OPENPAREN_Q followed by some symbols it cannot end it
-	let S_EMAIL_DOMAIN					= makeState(); // parsed string starts with local email info + @ with a potential domain name (C)
-	let S_EMAIL_DOMAIN_DOT				= makeState(); // (C) domain followed by DOT
-	let S_EMAIL							= makeAcceptingState(mtk.Email); // (C) Possible email address (could have more tlds)
-	let S_EMAIL_COLON					= makeState(); // (C) URL followed by colon (potential port number here)
-	let S_EMAIL_PORT					= makeAcceptingState(mtk.Email); // (C) Email address with a port
-	let S_MAILTO_EMAIL					= makeAcceptingState(mtk.MailtoEmail); // Email that begins with the mailto prefix (D)
-	let S_MAILTO_EMAIL_NON_ACCEPTING	= makeState(); // (D) Followed by some non-query string chars
-	let S_LOCALPART						= makeState(); // Local part of the email address
-	let S_LOCALPART_AT					= makeState(); // Local part of the email address plus @
-	let S_LOCALPART_DOT					= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
-	let S_NL							= makeAcceptingState(mtk.Nl); // single new line
+	const Scheme						= makeState(); // e.g., 'mailto'
+	const SlashScheme					= makeState(); // e.g., 'http'
+	const SlashSchemeColon				= makeState(); // e.g., 'http:'
+	const SlashSchemeColonSlash			= makeState(); // e.g., 'http:/'
+	const UriPrefix						= makeState(); // e.g., 'mailto:' or 'http://'
+
+	const Domain						= makeState(); // parsed string ends with a potential domain name (A)
+	const DomainDot						= makeState(); // domain followed by DOT
+	const DomainHyphen					= makeState(); // domain followed by hyphen
+	const DomainDotTld					= makeAcceptingState(mtk.Url); // Simplest possible URL with no query string
+	const DomainDotTldColon				= makeState(); // URL followed by colon (potential port number here)
+	const DomainDotTldColonPort			= makeAcceptingState(mtk.Url); // TLD followed by a port number
+
+	const Url							= makeAcceptingState(mtk.Url); // Long URL with optional port and maybe query string
+	const UrlNonaccept					= makeState(); // URL followed by some symbols (will not be part of the final URL)
+	const UrlOpenbrace					= makeState(); // URL followed by {
+	const UrlOpenbracket				= makeState(); // URL followed by [
+	const UrlOpenanglebracket			= makeState(); // URL followed by <
+	const UrlOpenparen					= makeState(); // URL followed by (
+	const UrlOpenbraceQ					= makeAcceptingState(mtk.Url); // URL followed by { and some symbols that the URL can end it
+	const UrlOpenbracketQ				= makeAcceptingState(mtk.Url); // URL followed by [ and some symbols that the URL can end it
+	const UrlOpenanglebracketQ			= makeAcceptingState(mtk.Url); // URL followed by < and some symbols that the URL can end it
+	const UrlOpenparenQ					= makeAcceptingState(mtk.Url); // URL followed by ( and some symbols that the URL can end it
+	const UrlOpenbraceSyms				= makeState(); // UrlOpenbrace followed by some symbols it cannot end it
+	const UrlOpenbracketSyms			= makeState(); // UrlOpenbracketQ followed by some symbols it cannot end it
+	const UrlOpenanglebracketSyms		= makeState(); // UrlOpenanglebracketQ followed by some symbols it cannot end it
+	const UrlOpenparenSyms				= makeState(); // UrlOpenparenQ followed by some symbols it cannot end it
+
+	const EmailDomain					= makeState(); // parsed string starts with local email info + @ with a potential domain name
+	const EmailDomainDot				= makeState(); // domain followed by DOT
+	const EmailDomainHyphen				= makeState(); // parsed string starts with local email info + @ with a potential domain name
+	const Email							= makeAcceptingState(mtk.Email); // Possible email address (could have more tlds)
+	const EmailColon					= makeState(); // URL followed by colon (potential port number here)
+	const EmailColonPort				= makeAcceptingState(mtk.Email); // URL followed by colon and potential port numner
+	const Localpart						= makeState(); // Local part of the email address
+	const LocalpartAt					= makeState(); // Local part of the email address plus @
+	const LocalpartAtNum				= makeState(); // Local part of the email address plus @ plus a number
+	const LocalpartDot					= makeState(); // Local part of the email address plus '.' (localpart cannot end in .)
+
+	const Nl							= makeAcceptingState(mtk.Nl); // single new line
 
 	// Make path from start to protocol (with '//')
-	makeT(S_START, tk.NL, S_NL);
-	makeT(S_START, tk.PROTOCOL, S_PROTOCOL);
-	makeT(S_START, tk.MAILTO, S_MAILTO);
+	makeT(Start, tk.NL, Nl);
+	makeT(Start, tk.SCHEME, Scheme);
+	makeT(Start, tk.SLASH_SCHEME, SlashScheme);
+	makeT(Start, tk.COMPOUND_SCHEME, Scheme);
+	makeT(Start, tk.COMPOUND_SLASH_SCHEME, SlashScheme);
 
-	makeT(S_PROTOCOL, tk.SLASH, S_PROTOCOL_SLASH);
-	makeT(S_PROTOCOL_SLASH, tk.SLASH, S_PROTOCOL_SLASH_SLASH);
+	// Most transitions after a UriPrefix will be considered URL tokens
+	makeT(Scheme, tk.COLON, UriPrefix);
+	makeT(SlashScheme, tk.COLON, SlashSchemeColon);
+	makeT(SlashSchemeColon, tk.SLASH, SlashSchemeColonSlash);
+	makeT(SlashSchemeColonSlash, tk.SLASH, UriPrefix);
 
-	// The very first potential domain name
-	makeT(S_START, tk.TLD, S_DOMAIN);
-	makeT(S_START, tk.DOMAIN, S_DOMAIN);
-	makeT(S_START, tk.LOCALHOST, S_TLD);
-	makeT(S_START, tk.NUM, S_DOMAIN);
+	// The very first potential domain name + full URL
+	makeT(Start, tk.LOCALHOST, DomainDotTld);
 
-	// Force URL for protocol followed by anything sane
-	makeT(S_PROTOCOL_SLASH_SLASH, tk.TLD, S_URL);
-	makeT(S_PROTOCOL_SLASH_SLASH, tk.DOMAIN, S_URL);
-	makeT(S_PROTOCOL_SLASH_SLASH, tk.NUM, S_URL);
-	makeT(S_PROTOCOL_SLASH_SLASH, tk.LOCALHOST, S_URL);
+	// Some transitions from this call are ignored because they're already
+	// accounted for in the scheme state definitions above
+	makeMultiT(Start, tk.domain, Domain);
 
-	// Account for dots and hyphens
-	// hyphens are usually parts of domain names
-	makeT(S_DOMAIN, tk.DOT, S_DOMAIN_DOT);
-	makeT(S_EMAIL_DOMAIN, tk.DOT, S_EMAIL_DOMAIN_DOT);
 
+	// Account for dots and hyphens. Hyphens are usually parts of domain names
+	// (but not TLDs)
+	makeT(Domain, tk.DOT, DomainDot);
+	makeT(Domain, tk.HYPHEN, DomainHyphen);
+	makeMultiT(Domain, tk.domain, Domain);
+	makeT(DomainDot, tk.TLD, DomainDotTld);
+	makeT(DomainDot, tk.UTLD, DomainDotTld);
+	makeMultiT(DomainDot, tk.domain, Domain);
 	// Hyphen can jump back to a domain name
-
-	// After the first domain and a dot, we can find either a URL or another domain
-	makeT(S_DOMAIN_DOT, tk.TLD, S_TLD);
-	makeT(S_DOMAIN_DOT, tk.DOMAIN, S_DOMAIN);
-	makeT(S_DOMAIN_DOT, tk.NUM, S_DOMAIN);
-	makeT(S_DOMAIN_DOT, tk.LOCALHOST, S_DOMAIN);
-
-	makeT(S_EMAIL_DOMAIN_DOT, tk.TLD, S_EMAIL);
-	makeT(S_EMAIL_DOMAIN_DOT, tk.DOMAIN, S_EMAIL_DOMAIN);
-	makeT(S_EMAIL_DOMAIN_DOT, tk.NUM, S_EMAIL_DOMAIN);
-	makeT(S_EMAIL_DOMAIN_DOT, tk.LOCALHOST, S_EMAIL_DOMAIN);
-
-	// S_TLD accepts! But the URL could be longer, try to find a match greedily
-	// The `run` function should be able to "rollback" to the accepting state
-	makeT(S_TLD, tk.DOT, S_DOMAIN_DOT);
-	makeT(S_EMAIL, tk.DOT, S_EMAIL_DOMAIN_DOT);
+	makeMultiT(DomainHyphen, tk.domain, Domain);
+	makeT(DomainDotTld, tk.DOT, DomainDot);
+	makeT(DomainDotTld, tk.HYPHEN, DomainHyphen);
+	makeMultiT(DomainDotTld, tk.domain, Domain);
 
 	// Become real URLs after `SLASH` or `COLON NUM SLASH`
-	// Here PSS and non-PSS converge
-	makeT(S_TLD, tk.COLON, S_TLD_COLON);
-	makeT(S_TLD, tk.SLASH, S_URL);
-	makeT(S_TLD_COLON, tk.NUM, S_TLD_PORT);
-	makeT(S_TLD_PORT, tk.SLASH, S_URL);
-	makeT(S_EMAIL, tk.COLON, S_EMAIL_COLON);
-	makeT(S_EMAIL_COLON, tk.NUM, S_EMAIL_PORT);
+	// Here works with or without scheme:// prefix
+	makeT(DomainDotTld, tk.COLON, DomainDotTldColon);
+	makeT(DomainDotTld, tk.SLASH, Url);
+	makeMultiT(DomainDotTldColon, tk.numeric, DomainDotTldColonPort);
+	makeT(DomainDotTldColonPort, tk.SLASH, Url);
+
+	// Force URL with scheme prefix followed by anything sane
+	makeT(UriPrefix, tk.SLASH, Url);
+	makeMultiT(UriPrefix, tk.domain, Url);
 
 	// Types of characters the URL can definitely end in
-	const qsAccepting = [
+	const qsAccepting = tk.domain.concat([
 		tk.AMPERSAND,
 		tk.ASTERISK,
 		tk.AT,
@@ -129,22 +129,18 @@ export function init() {
 		tk.BACKTICK,
 		tk.CARET,
 		tk.DOLLAR,
-		tk.DOMAIN,
 		tk.EQUALS,
 		tk.HYPHEN,
-		tk.LOCALHOST,
 		tk.NUM,
 		tk.PERCENT,
 		tk.PIPE,
 		tk.PLUS,
 		tk.POUND,
-		tk.PROTOCOL,
 		tk.SLASH,
 		tk.SYM,
 		tk.TILDE,
-		tk.TLD,
 		tk.UNDERSCORE
-	];
+	]);
 
 	// Types of tokens that can follow a URL and be part of the query string
 	// but cannot be the very last characters
@@ -172,85 +168,72 @@ export function init() {
 	// include the final round bracket.
 
 	// URL, followed by an opening bracket
-	makeT(S_URL, tk.OPENBRACE, S_URL_OPENBRACE);
-	makeT(S_URL, tk.OPENBRACKET, S_URL_OPENBRACKET);
-	makeT(S_URL, tk.OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET);
-	makeT(S_URL, tk.OPENPAREN, S_URL_OPENPAREN);
+	makeT(Url, tk.OPENBRACE, UrlOpenbrace);
+	makeT(Url, tk.OPENBRACKET, UrlOpenbracket);
+	makeT(Url, tk.OPENANGLEBRACKET, UrlOpenanglebracket);
+	makeT(Url, tk.OPENPAREN, UrlOpenparen);
 
 	// URL with extra symbols at the end, followed by an opening bracket
-	makeT(S_URL_NON_ACCEPTING, tk.OPENBRACE, S_URL_OPENBRACE);
-	makeT(S_URL_NON_ACCEPTING, tk.OPENBRACKET, S_URL_OPENBRACKET);
-	makeT(S_URL_NON_ACCEPTING, tk.OPENANGLEBRACKET, S_URL_OPENANGLEBRACKET);
-	makeT(S_URL_NON_ACCEPTING, tk.OPENPAREN, S_URL_OPENPAREN);
+	makeT(UrlNonaccept, tk.OPENBRACE, UrlOpenbrace);
+	makeT(UrlNonaccept, tk.OPENBRACKET, UrlOpenbracket);
+	makeT(UrlNonaccept, tk.OPENANGLEBRACKET, UrlOpenanglebracket);
+	makeT(UrlNonaccept, tk.OPENPAREN, UrlOpenparen);
 
 	// Closing bracket component. This character WILL be included in the URL
-	makeT(S_URL_OPENBRACE, tk.CLOSEBRACE, S_URL);
-	makeT(S_URL_OPENBRACKET, tk.CLOSEBRACKET, S_URL);
-	makeT(S_URL_OPENANGLEBRACKET, tk.CLOSEANGLEBRACKET, S_URL);
-	makeT(S_URL_OPENPAREN, tk.CLOSEPAREN, S_URL);
-	makeT(S_URL_OPENBRACE_Q, tk.CLOSEBRACE, S_URL);
-	makeT(S_URL_OPENBRACKET_Q, tk.CLOSEBRACKET, S_URL);
-	makeT(S_URL_OPENANGLEBRACKET_Q, tk.CLOSEANGLEBRACKET, S_URL);
-	makeT(S_URL_OPENPAREN_Q, tk.CLOSEPAREN, S_URL);
-	makeT(S_URL_OPENBRACE_SYMS, tk.CLOSEBRACE, S_URL);
-	makeT(S_URL_OPENBRACKET_SYMS, tk.CLOSEBRACKET, S_URL);
-	makeT(S_URL_OPENANGLEBRACKET_SYMS, tk.CLOSEANGLEBRACKET, S_URL);
-	makeT(S_URL_OPENPAREN_SYMS, tk.CLOSEPAREN, S_URL);
+	makeT(UrlOpenbrace, tk.CLOSEBRACE, Url);
+	makeT(UrlOpenbracket, tk.CLOSEBRACKET, Url);
+	makeT(UrlOpenanglebracket, tk.CLOSEANGLEBRACKET, Url);
+	makeT(UrlOpenparen, tk.CLOSEPAREN, Url);
+	makeT(UrlOpenbrace, tk.CLOSEBRACE, Url);
+	makeT(UrlOpenbracketQ, tk.CLOSEBRACKET, Url);
+	makeT(UrlOpenanglebracketQ, tk.CLOSEANGLEBRACKET, Url);
+	makeT(UrlOpenparenQ, tk.CLOSEPAREN, Url);
+	makeT(UrlOpenbrace, tk.CLOSEBRACE, Url);
+	makeT(UrlOpenbracketSyms, tk.CLOSEBRACKET, Url);
+	makeT(UrlOpenanglebracketSyms, tk.CLOSEANGLEBRACKET, Url);
+	makeT(UrlOpenparenSyms, tk.CLOSEPAREN, Url);
 
 	// URL that beings with an opening bracket, followed by a symbols.
-	// Note that the final state can still be `S_URL_OPENBRACE_Q` (if the URL only
+	// Note that the final state can still be `UrlOpenbrace` (if the URL only
 	// has a single opening bracket for some reason).
-	makeMultiT(S_URL_OPENBRACE, qsAccepting, S_URL_OPENBRACE_Q);
-	makeMultiT(S_URL_OPENBRACKET, qsAccepting, S_URL_OPENBRACKET_Q);
-	makeMultiT(S_URL_OPENANGLEBRACKET, qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-	makeMultiT(S_URL_OPENPAREN, qsAccepting, S_URL_OPENPAREN_Q);
-	makeMultiT(S_URL_OPENBRACE, qsNonAccepting, S_URL_OPENBRACE_SYMS);
-	makeMultiT(S_URL_OPENBRACKET, qsNonAccepting, S_URL_OPENBRACKET_SYMS);
-	makeMultiT(S_URL_OPENANGLEBRACKET, qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
-	makeMultiT(S_URL_OPENPAREN, qsNonAccepting, S_URL_OPENPAREN_SYMS);
+	makeMultiT(UrlOpenbrace, qsAccepting, UrlOpenbrace);
+	makeMultiT(UrlOpenbracket, qsAccepting, UrlOpenbracketQ);
+	makeMultiT(UrlOpenanglebracket, qsAccepting, UrlOpenanglebracketQ);
+	makeMultiT(UrlOpenparen, qsAccepting, UrlOpenparenQ);
+	makeMultiT(UrlOpenbrace, qsNonAccepting, UrlOpenbrace);
+	makeMultiT(UrlOpenbracket, qsNonAccepting, UrlOpenbracketSyms);
+	makeMultiT(UrlOpenanglebracket, qsNonAccepting, UrlOpenanglebracketSyms);
+	makeMultiT(UrlOpenparen, qsNonAccepting, UrlOpenparenSyms);
 
 	// URL that begins with an opening bracket, followed by some symbols
-	makeMultiT(S_URL_OPENBRACE_Q, qsAccepting, S_URL_OPENBRACE_Q);
-	makeMultiT(S_URL_OPENBRACKET_Q, qsAccepting, S_URL_OPENBRACKET_Q);
-	makeMultiT(S_URL_OPENANGLEBRACKET_Q, qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-	makeMultiT(S_URL_OPENPAREN_Q, qsAccepting, S_URL_OPENPAREN_Q);
-	makeMultiT(S_URL_OPENBRACE_Q, qsNonAccepting, S_URL_OPENBRACE_Q);
-	makeMultiT(S_URL_OPENBRACKET_Q, qsNonAccepting, S_URL_OPENBRACKET_Q);
-	makeMultiT(S_URL_OPENANGLEBRACKET_Q, qsNonAccepting, S_URL_OPENANGLEBRACKET_Q);
-	makeMultiT(S_URL_OPENPAREN_Q, qsNonAccepting, S_URL_OPENPAREN_Q);
+	makeMultiT(UrlOpenbraceQ, qsAccepting, UrlOpenbraceQ);
+	makeMultiT(UrlOpenbracketQ, qsAccepting, UrlOpenbracketQ);
+	makeMultiT(UrlOpenanglebracketQ, qsAccepting, UrlOpenanglebracketQ);
+	makeMultiT(UrlOpenparenQ, qsAccepting, UrlOpenparenQ);
+	makeMultiT(UrlOpenbraceQ, qsNonAccepting, UrlOpenbraceQ);
+	makeMultiT(UrlOpenbracketQ, qsNonAccepting, UrlOpenbracketQ);
+	makeMultiT(UrlOpenanglebracketQ, qsNonAccepting, UrlOpenanglebracketQ);
+	makeMultiT(UrlOpenparenQ, qsNonAccepting, UrlOpenparenQ);
 
-	makeMultiT(S_URL_OPENBRACE_SYMS, qsAccepting, S_URL_OPENBRACE_Q);
-	makeMultiT(S_URL_OPENBRACKET_SYMS, qsAccepting, S_URL_OPENBRACKET_Q);
-	makeMultiT(S_URL_OPENANGLEBRACKET_SYMS, qsAccepting, S_URL_OPENANGLEBRACKET_Q);
-	makeMultiT(S_URL_OPENPAREN_SYMS, qsAccepting, S_URL_OPENPAREN_Q);
-	makeMultiT(S_URL_OPENBRACE_SYMS, qsNonAccepting, S_URL_OPENBRACE_SYMS);
-	makeMultiT(S_URL_OPENBRACKET_SYMS, qsNonAccepting, S_URL_OPENBRACKET_SYMS);
-	makeMultiT(S_URL_OPENANGLEBRACKET_SYMS, qsNonAccepting, S_URL_OPENANGLEBRACKET_SYMS);
-	makeMultiT(S_URL_OPENPAREN_SYMS, qsNonAccepting, S_URL_OPENPAREN_SYMS);
+	makeMultiT(UrlOpenbraceSyms, qsAccepting, UrlOpenbraceSyms);
+	makeMultiT(UrlOpenbracketSyms, qsAccepting, UrlOpenbracketQ);
+	makeMultiT(UrlOpenanglebracketSyms, qsAccepting, UrlOpenanglebracketQ);
+	makeMultiT(UrlOpenparenSyms, qsAccepting, UrlOpenparenQ);
+	makeMultiT(UrlOpenbraceSyms, qsNonAccepting, UrlOpenbraceSyms);
+	makeMultiT(UrlOpenbracketSyms, qsNonAccepting, UrlOpenbracketSyms);
+	makeMultiT(UrlOpenanglebracketSyms, qsNonAccepting, UrlOpenanglebracketSyms);
+	makeMultiT(UrlOpenparenSyms, qsNonAccepting, UrlOpenparenSyms);
 
 	// Account for the query string
-	makeMultiT(S_URL, qsAccepting, S_URL);
-	makeMultiT(S_URL_NON_ACCEPTING, qsAccepting, S_URL);
+	makeMultiT(Url, qsAccepting, Url);
+	makeMultiT(UrlNonaccept, qsAccepting, Url);
 
-	makeMultiT(S_URL, qsNonAccepting, S_URL_NON_ACCEPTING);
-	makeMultiT(S_URL_NON_ACCEPTING, qsNonAccepting, S_URL_NON_ACCEPTING);
+	makeMultiT(Url, qsNonAccepting, UrlNonaccept);
+	makeMultiT(UrlNonaccept, qsNonAccepting, UrlNonaccept);
 
 	// Email address-specific state definitions
 	// Note: We are not allowing '/' in email addresses since this would interfere
 	// with real URLs
-
-	// For addresses with the mailto prefix
-	// 'mailto:' followed by anything sane is a valid email
-	makeT(S_MAILTO, tk.TLD, S_MAILTO_EMAIL);
-	makeT(S_MAILTO, tk.DOMAIN, S_MAILTO_EMAIL);
-	makeT(S_MAILTO, tk.NUM, S_MAILTO_EMAIL);
-	makeT(S_MAILTO, tk.LOCALHOST, S_MAILTO_EMAIL);
-
-	// Greedily get more potential valid email values
-	makeMultiT(S_MAILTO_EMAIL, qsAccepting, S_MAILTO_EMAIL);
-	makeMultiT(S_MAILTO_EMAIL, qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
-	makeMultiT(S_MAILTO_EMAIL_NON_ACCEPTING, qsAccepting, S_MAILTO_EMAIL);
-	makeMultiT(S_MAILTO_EMAIL_NON_ACCEPTING, qsNonAccepting, S_MAILTO_EMAIL_NON_ACCEPTING);
 
 	// For addresses without the mailto prefix
 	// Tokens allowed in the localpart of the email
@@ -263,7 +246,6 @@ export function init() {
 		tk.CARET,
 		tk.CLOSEBRACE,
 		tk.DOLLAR,
-		tk.DOMAIN,
 		tk.EQUALS,
 		tk.HYPHEN,
 		tk.NUM,
@@ -276,33 +258,47 @@ export function init() {
 		tk.SLASH,
 		tk.SYM,
 		tk.TILDE,
-		tk.TLD,
 		tk.UNDERSCORE
 	];
 
 	// Some of the tokens in `localpartAccepting` are already accounted for here and
-	// will not be overwritten (don't worry)
-	makeMultiT(S_DOMAIN, localpartAccepting, S_LOCALPART);
-	makeT(S_DOMAIN, tk.AT, S_LOCALPART_AT);
-	makeMultiT(S_TLD, localpartAccepting, S_LOCALPART);
-	makeT(S_TLD, tk.AT, S_LOCALPART_AT);
-	makeMultiT(S_DOMAIN_DOT, localpartAccepting, S_LOCALPART);
+	// will not be overwritten
+	makeMultiT(Domain, localpartAccepting, Localpart);
+	makeT(Domain, tk.AT, LocalpartAt);
+	makeMultiT(DomainDotTld, localpartAccepting, Localpart);
+	makeT(DomainDotTld, tk.AT, LocalpartAt);
+	makeMultiT(DomainDot, localpartAccepting, Localpart);
 
 	// Now in localpart of address
-	// TODO: IP addresses and what if the email starts with numbers?
 
-	makeMultiT(S_LOCALPART, localpartAccepting, S_LOCALPART);
-	makeT(S_LOCALPART, tk.AT, S_LOCALPART_AT); // close to an email address now
-	makeT(S_LOCALPART, tk.DOT, S_LOCALPART_DOT);
-	makeMultiT(S_LOCALPART_DOT, localpartAccepting, S_LOCALPART);
-	makeT(S_LOCALPART_AT, tk.TLD, S_EMAIL_DOMAIN);
-	makeT(S_LOCALPART_AT, tk.DOMAIN, S_EMAIL_DOMAIN);
-	makeT(S_LOCALPART_AT, tk.NUM, S_EMAIL_DOMAIN);
-	makeT(S_LOCALPART_AT, tk.LOCALHOST, S_EMAIL);
+	makeMultiT(Localpart, tk.domain, Localpart);
+	makeMultiT(Localpart, localpartAccepting, Localpart);
+	makeT(Localpart, tk.AT, LocalpartAt); // close to an email address now
+	makeT(Localpart, tk.DOT, LocalpartDot);
+	makeMultiT(LocalpartDot, tk.domain, Localpart);
+	makeMultiT(LocalpartDot, localpartAccepting, Localpart);
+	makeT(LocalpartAt, tk.LOCALHOST, Email);
+	makeMultiT(LocalpartAt, tk.domain, EmailDomain);
+	makeMultiT(LocalpartAtNum, tk.domain, EmailDomain);
 
-	// States following `@` defined above
+	makeT(EmailDomain, tk.DOT, EmailDomainDot);
+	makeT(EmailDomain, tk.HYPHEN, EmailDomainHyphen);
+	makeT(EmailDomainDot, tk.TLD, Email);
+	makeT(EmailDomainDot, tk.UTLD, Email);
+	makeMultiT(EmailDomainDot, tk.domain, EmailDomain);
 
-	return S_START;
+	// Hyphen can jump back to a domain name
+	makeMultiT(EmailDomainHyphen, tk.domain, EmailDomain);
+	makeT(Email, tk.DOT, EmailDomainDot);
+	makeT(Email, tk.HYPHEN, EmailDomainHyphen);
+	makeMultiT(Email, tk.domain, EmailDomain);
+
+	// Become real URLs after `SLASH` or `COLON NUM SLASH`
+	// Here works with or without scheme:// prefix
+	makeT(Email, tk.COLON, EmailColon);
+	makeMultiT(EmailColon, tk.numeric, EmailColonPort);
+
+	return Start;
 }
 
 /**
@@ -356,13 +352,14 @@ export function run(start, input, tokens) {
 		}
 
 		if (sinceAccepts < 0) {
-
-			// No accepting state was found, part of a regular text token
-			// Add all the tokens we looked at to the text tokens array
-			for (let i = cursor - multiLength; i < cursor; i++) {
-				textTokens.push(tokens[i]);
+			// No accepting state was found, part of a regular text token add
+			// the first text token to the text tokens array and try again from
+			// the next
+			cursor -= multiLength;
+			if (cursor < len) {
+				textTokens.push(tokens[cursor]);
+				cursor++;
 			}
-
 		} else {
 			// Accepting state!
 			// First close off the textTokens (if available)

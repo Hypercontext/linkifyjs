@@ -1,3 +1,4 @@
+const { expect } = require('chai');
 const linkify = require('linkifyjs');
 const { mention } = require('linkifyjs/src/plugins/mention');
 
@@ -9,7 +10,7 @@ describe('plugins/mention', () => {
 		.to.be.eql([]);
 
 		expect(linkify.test('@wat', 'mention')).to.not.be.ok;
-		expect(linkify.test('@987', 'mention')).to.not.be.ok;
+		expect(linkify.test('@007', 'mention')).to.not.be.ok;
 	});
 
 	describe('after plugin is applied', () => {
@@ -76,36 +77,6 @@ describe('plugins/mention', () => {
 			}]);
 		});
 
-		it('parses mentions with email syntax', () => {
-			expect(linkify.find('Hey @developers@soapbox')).to.deep.equal([{
-				type: 'mention',
-				value: '@developers@soapbox',
-				href: '/developers@soapbox',
-				isLink: true,
-				start: 4,
-				end: 23
-			}]);
-
-			expect(linkify.find('Hey @developers@soapbox.example.com')).to.deep.equal([{
-				type: 'mention',
-				value: '@developers@soapbox.example.com',
-				href: '/developers@soapbox.example.com',
-				isLink: true,
-				start: 4,
-				end: 35
-			}]);
-
-			expect(linkify.find('Hey @developers@soapbox you can mail me at someone@soapbox')).to.deep.equal([{
-				type: 'mention',
-				value: '@developers@soapbox',
-				href: '/developers@soapbox',
-				isLink: true,
-				start: 4,
-				end: 23
-			}]);
-
-		});
-
 		it('parses github team-style mentions with slashes', () => {
 			expect(linkify.find('Hey @500px/web please review this')).to.deep.equal([{
 				type: 'mention',
@@ -135,29 +106,29 @@ describe('plugins/mention', () => {
 			}]);
 		});
 
-		it('parses mentions with dots', () => {
+		it('parses mentions with dots (ignores past the dots)', () => {
 			expect(linkify.find('Hey @john.doe please review this')).to.deep.equal([{
 				type: 'mention',
-				value: '@john.doe',
-				href: '/john.doe',
+				value: '@john',
+				href: '/john',
 				isLink: true,
 				start: 4,
-				end: 13
+				end: 9
 			}]);
 		});
 
 		it('ignores extra dots at the end of mentions', () => {
-			expect(linkify.find('We should get ...@soapbox._developers.@soapbox.cs.... to be awesome')).to.deep.equal([{
+			expect(linkify.find('We should get ...@soapbox-_developers.@soapbox_cs.... to be awesome')).to.deep.equal([{
 				type: 'mention',
-				value: '@soapbox._developers',
-				href: '/soapbox._developers',
+				value: '@soapbox-_developers',
+				href: '/soapbox-_developers',
 				isLink: true,
 				start: 17,
 				end: 37
 			}, {
 				type: 'mention',
-				value: '@soapbox.cs',
-				href: '/soapbox.cs',
+				value: '@soapbox_cs',
+				href: '/soapbox_cs',
 				isLink: true,
 				start: 38,
 				end: 49
@@ -169,7 +140,7 @@ describe('plugins/mention', () => {
 		});
 
 		it('ignores text only made up of symbols', () => {
-			expect(linkify.find('Is @- or @__ a person? What about @%_% no, probably not')).to.deep.equal([]);
+			expect(linkify.find('Is @- or @~! a person? What about @%_% no, probably not')).to.deep.equal([]);
 		});
 
 		it('ignores punctuation at the end of mentions', () => {
@@ -220,6 +191,26 @@ describe('plugins/mention', () => {
 				start: 13,
 				end: 25
 			}]);
+		});
+
+		it('detects trailing hyphen', () => {
+			expect(linkify.test('@123-', 'mention')).to.be.ok;
+		});
+
+		it('detects interjecting hyphen', () => {
+			expect(linkify.test('@123-abc', 'mention')).to.be.ok;
+		});
+
+		it('detects single underscore', () => {
+			expect(linkify.test('@_', 'mention')).to.be.ok;
+		});
+
+		it('detects multiple underscore', () => {
+			expect(linkify.test('@__', 'mention')).to.be.ok;
+		});
+
+		it('ignores interjecting dot', () => {
+			expect(linkify.test('@hello.world', 'mention')).to.not.be.ok;
 		});
 	});
 
