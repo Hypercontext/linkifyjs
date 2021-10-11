@@ -38,7 +38,7 @@ describe('linkifyjs', () => {
 			['test+4@uwaterloo.ca', true],
 			['test+4@uwaterloo.ca', false, 'url'],
 			['test+4@uwaterloo.ca', true, 'email'],
-			['mailto:test+5@uwaterloo.ca', true, 'email'],
+			['mailto:test+5@uwaterloo.ca', true, 'url'],
 			['t.co', true],
 			['t.co g.co', false], // can only be one
 			['test@g.co t.co', false] // can only be one

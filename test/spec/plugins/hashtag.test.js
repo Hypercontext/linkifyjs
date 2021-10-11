@@ -13,9 +13,12 @@ describe('plugins/hashtag', () => {
 	});
 
 	describe('after plugin is applied', () => {
-		it ('can parse hashtags after applying the plugin', () => {
+		beforeEach(() => {
 			linkify.registerPlugin('hashtag', hashtag);
-			expect(linkify.find('There is a #hashtag #YOLO-2015 #__swag__ and #1234 and #%^&*( #_ #__ should not work'))
+		});
+
+		it ('can parse hashtags after applying the plugin', () => {
+			expect(linkify.find('There is a #hashtag #YOLO_2015 #__swag__ and #1234 and #%^&*( #_ #__ should not work'))
 			.to.be.eql([{
 				type: 'hashtag',
 				value: '#hashtag',
@@ -25,8 +28,8 @@ describe('plugins/hashtag', () => {
 				end: 19
 			}, {
 				type: 'hashtag',
-				value: '#YOLO-2015',
-				href: '#YOLO-2015',
+				value: '#YOLO_2015',
+				href: '#YOLO_2015',
 				isLink: true,
 				start: 20,
 				end: 30
@@ -38,12 +41,50 @@ describe('plugins/hashtag', () => {
 				start: 31,
 				end: 40
 			}]);
+		});
 
+		it('Works with basic hashtags', () => {
 			expect(linkify.test('#wat', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with trailing underscores', () => {
 			expect(linkify.test('#bug_', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with underscores', () => {
 			expect(linkify.test('#bug_test', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with double underscores', () => {
 			expect(linkify.test('#bug__test', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with number prefix', () => {
+			expect(linkify.test('#123abc', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with number/underscore prefix', () => {
+			expect(linkify.test('#123_abc', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with Hangul characters', () => {
+			expect(linkify.test('#일상', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with Cyrillic characters', () => {
+			expect(linkify.test('#АБВ_бв', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with Arabic characters', () => {
+			expect(linkify.test('#سلام', 'hashtag')).to.be.ok;
+		});
+
+		it('Does not work with just numbers', () => {
 			expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
+		});
+
+		it('Does not work with just numbers and underscore', () => {
+			expect(linkify.test('#987_654', 'hashtag')).to.not.be.ok;
 		});
 	});
 });

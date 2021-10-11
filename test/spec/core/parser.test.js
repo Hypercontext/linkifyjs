@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const scanner = require('linkifyjs/src/core/scanner');
 const parser = require('linkifyjs/src/core/parser');
-const { Text, Url, Email, MailtoEmail } = require('linkifyjs/src/core/tokens/multi');
+const { Text, Url, Email } = require('linkifyjs/src/core/tokens/multi');
 
 /**
 	[0] - Original text to parse (should tokenize first)
@@ -106,15 +106,15 @@ const tests = [
 		['Emails cannot have two dots, e.g.: nick..', 'f@yahoo.ca']
 	], [
 		'The `mailto:` part should be included in mailto:this.is.a.test@yandex.ru',
-		[Text, MailtoEmail],
+		[Text, Url],
 		['The `mailto:` part should be included in ', 'mailto:this.is.a.test@yandex.ru']
 	], [
 		'mailto:echalk-dev@logicify.com?Subject=Hello%20again is another test',
-		[MailtoEmail, Text],
+		[Url, Text],
 		['mailto:echalk-dev@logicify.com?Subject=Hello%20again', ' is another test']
 	], [
 		'Mailto is greedy mailto:localhost?subject=Hello%20World.',
-		[Text, MailtoEmail, Text],
+		[Text, Url, Text],
 		['Mailto is greedy ', 'mailto:localhost?subject=Hello%20World', '.']
 	], [
 		'Emails like: test@42.domain.com and test@42.abc.11.domain.com should be matched in its entirety.',
@@ -196,6 +196,22 @@ const tests = [
 		'o\'malley@example.com.au', // Email with apostrophe
 		[Email],
 		['o\'malley@example.com.au']
+	], [
+		'foohttp://example.com bar',
+		[Text, Url, Text],
+		['foohttp://', 'example.com', ' bar'],
+	], [
+		'テストhttp://example.comテスト',
+		[Text, Url],
+		['テスト', 'http://example.comテスト'],
+	], [
+		'file:/etc/motd',
+		[Url],
+		['file:/etc/motd']
+	], [
+		'file:///etc/motd',
+		[Url],
+		['file:///etc/motd']
 	]
 ];
 
@@ -216,6 +232,7 @@ describe('linkifyjs/core/parser#run()', () => {
 		});
 	}
 
+	// eslint-disable-next-line mocha/no-setup-in-describe
 	tests.map(makeTest, this);
 
 	it('Correctly sets start and end indexes', () => {
