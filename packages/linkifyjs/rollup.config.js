@@ -7,7 +7,8 @@ export default [
 		output: [
 			{ file: 'lib/linkify.js', format: 'cjs', exports: 'auto' },
 			{ file: 'dist/linkify.js', name: 'linkify', format: 'iife' },
-			{ file: 'dist/linkify.min.js', name: 'linkify', format: 'iife', plugins: [terser()] }
+			{ file: 'dist/linkify.min.js', name: 'linkify', format: 'iife', plugins: [terser()] },
+			{ file: 'dist/linkify.module.js', format: 'es' }
 		],
 		plugins
 	},
