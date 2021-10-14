@@ -1,6 +1,6 @@
 {
   "name": "linkify-plugin-ticket",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Numeric ticket plugin for linkifyjs",
   "main": "index.js",
   "scripts": {
