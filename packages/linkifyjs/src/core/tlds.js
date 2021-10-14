@@ -7,7 +7,7 @@
 
 // To be updated with the values in this list
 // http://data.iana.org/TLD/tlds-alpha-by-domain.txt
-// Version 2021022800, Last Updated Sun Feb 28 07:07:01 2021 UTC
+// Version 2021101300, Last Updated Wed Oct 13 07:07:01 2021 UTC
 export const tlds = 'aaa \
 aarp \
 abarth \
@@ -469,7 +469,6 @@ frontdoor \
 frontier \
 ftr \
 fujitsu \
-fujixerox \
 fun \
 fund \
 furniture \
@@ -635,7 +634,6 @@ istanbul \
 it \
 itau \
 itv \
-iveco \
 jaguar \
 java \
 jcb \
@@ -842,7 +840,6 @@ na \
 nab \
 nagoya \
 name \
-nationwide \
 natura \
 navy \
 nba \
@@ -902,7 +899,6 @@ one \
 ong \
 onl \
 online \
-onyourside \
 ooo \
 open \
 oracle \
@@ -989,7 +985,6 @@ qa \
 qpon \
 quebec \
 quest \
-qvc \
 racing \
 radio \
 raid \
@@ -1024,7 +1019,6 @@ ricoh \
 ril \
 rio \
 rip \
-rmit \
 ro \
 rocher \
 rocks \
@@ -1135,7 +1129,6 @@ spa \
 space \
 sport \
 spot \
-spreadbetting \
 sr \
 srl \
 ss \
@@ -1164,7 +1157,6 @@ surgery \
 suzuki \
 sv \
 swatch \
-swiftcover \
 swiss \
 sx \
 sy \
