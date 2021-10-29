@@ -212,6 +212,18 @@ const tests = [
 		'file:///etc/motd',
 		[Url],
 		['file:///etc/motd']
+	], [
+		'~a@example.org',
+		[Email],
+		['~a@example.org']
+	], [
+		'~@example.org',
+		[Email],
+		['~@example.org']
+	], [
+		'~emersion/soju-dev@lists.sr.ht',
+		[Email],
+		['~emersion/soju-dev@lists.sr.ht']
 	]
 ];
 

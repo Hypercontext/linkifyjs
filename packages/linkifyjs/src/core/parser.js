@@ -263,6 +263,7 @@ export function init() {
 
 	// Some of the tokens in `localpartAccepting` are already accounted for here and
 	// will not be overwritten
+	makeT(Start, tk.TILDE, Localpart)
 	makeMultiT(Domain, localpartAccepting, Localpart);
 	makeT(Domain, tk.AT, LocalpartAt);
 	makeMultiT(DomainDotTld, localpartAccepting, Localpart);
