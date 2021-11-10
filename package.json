@@ -7,6 +7,7 @@
     "url": "git+https://github.com/Hypercontext/linkifyjs.git"
   },
   "main": "index.js",
+  "module": "dist/linkify.module.js",
   "scripts": {
     "clean": "rm -rf dist",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
