@@ -14,8 +14,7 @@
     },
     "rules": {
         "curly": 2,
-        "eqeqeq": 2,
-        "no-eq-null": 2,
+        "eqeqeq": ["error", "smart"],
         "quotes": [2, "single", "avoid-escape"],
         "semi": 2,
         "no-unused-vars": [ "error", { "varsIgnorePattern": "should|expect" }],
