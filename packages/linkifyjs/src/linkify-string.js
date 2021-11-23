@@ -15,14 +15,16 @@ function escapeAttr(href) {
 }
 
 function attributesToString(attributes) {
-	if (!attributes) { return ''; }
-	let result = [];
-
-	for (let attr in attributes) {
+	const result = [];
+	for (const attr in attributes) {
 		let val = attributes[attr] + '';
 		result.push(`${attr}="${escapeAttr(val)}"`);
 	}
 	return result.join(' ');
+}
+
+function defaultRender({ tagName, attributes, content }) {
+	return `<${tagName} ${attributesToString(attributes)}>${escapeText(content)}</${tagName}>`;
 }
 
 /**
@@ -35,41 +37,21 @@ function attributesToString(attributes) {
  * @returns {string}
  */
 function linkifyStr(str, opts = {}) {
-	opts = new Options(opts);
+	opts = new Options(opts, defaultRender);
 
-	let tokens = tokenize(str);
-	let result = [];
+	const tokens = tokenize(str);
+	const result = [];
 
 	for (let i = 0; i < tokens.length; i++) {
-		let token = tokens[i];
+		const token = tokens[i];
 
-		if (token.t === 'nl' && opts.nl2br) {
+		if (token.t === 'nl' && opts.get('nl2br')) {
 			result.push('<br>\n');
-			continue;
 		} else if (!token.isLink || !opts.check(token)) {
 			result.push(escapeText(token.toString()));
-			continue;
+		} else {
+			result.push(opts.render(token));
 		}
-
-		const {
-			formatted,
-			formattedHref,
-			tagName,
-			className,
-			target,
-			rel,
-			attributes,
-		} = opts.resolve(token);
-
-		const link = [`<${tagName} href="${escapeAttr(formattedHref)}"`];
-
-		if (className) { link.push(` class="${escapeAttr(className)}"`); }
-		if (target) { link.push(` target="${escapeAttr(target)}"`); }
-		if (rel) { link.push(` rel="${escapeAttr(rel)}"`); }
-		if (attributes) { link.push(` ${attributesToString(attributes)}`); }
-
-		link.push(`>${escapeText(formatted)}</${tagName}>`);
-		result.push(link.join(''));
 	}
 
 	return result.join('');

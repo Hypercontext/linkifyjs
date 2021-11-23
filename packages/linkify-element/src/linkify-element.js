@@ -29,52 +29,13 @@ function tokensToNodes(tokens, opts, doc) {
 	const result = [];
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
-		if (token.t === 'nl' && opts.nl2br) {
+		if (token.t === 'nl' && opts.get('nl2br')) {
 			result.push(doc.createElement('br'));
-			continue;
 		} else if (!token.isLink || !opts.check(token)) {
 			result.push(doc.createTextNode(token.toString()));
-			continue;
+		} else {
+			result.push(opts.render(token));
 		}
-
-		const {
-			formatted,
-			formattedHref,
-			tagName,
-			className,
-			target,
-			rel,
-			events,
-			attributes,
-		} = opts.resolve(token);
-
-		// Build the link
-		const link = doc.createElement(tagName);
-		link.setAttribute('href', formattedHref);
-
-		if (className) { link.setAttribute('class', className); }
-		if (target) { link.setAttribute('target', target); }
-		if (rel) { link.setAttribute('rel', rel); }
-
-		// Build up additional attributes
-		if (attributes) {
-			for (const attr in attributes) {
-				link.setAttribute(attr, attributes[attr]);
-			}
-		}
-
-		if (events) {
-			for (const event in events) {
-				if (link.addEventListener) {
-					link.addEventListener(event, events[event]);
-				} else if (link.attachEvent)  {
-					link.attachEvent('on' + event, events[event]);
-				}
-			}
-		}
-
-		link.appendChild(doc.createTextNode(formatted));
-		result.push(link);
 	}
 
 	return result;
@@ -83,7 +44,7 @@ function tokensToNodes(tokens, opts, doc) {
 /**
  * Requires document.createElement
  * @param {HTMLElement} element
- * @param {Object} opts
+ * @param {Options} opts
  * @param {Document} doc
  * @returns {HTMLElement}
  */
@@ -94,10 +55,8 @@ function linkifyElementHelper(element, opts, doc) {
 		throw new Error(`Cannot linkify ${element} - Invalid DOM Node type`);
 	}
 
-	const { ignoreTags } = opts;
-
 	// Is this element already a link?
-	if (element.tagName === 'A' || ignoreTags.indexOf(element.tagName) >= 0) {
+	if (element.tagName === 'A' || opts.ignoreTags.indexOf(element.tagName) >= 0) {
 		// No need to linkify
 		return element;
 	}
@@ -139,6 +98,27 @@ function linkifyElementHelper(element, opts, doc) {
 }
 
 /**
+ * @param {Document} doc The document implementaiton
+ */
+function getDefaultRender(doc) {
+	return ({ tagName, attributes, content, eventListeners }) => {
+		const link = doc.createElement(tagName);
+		for (const attr in attributes) {
+			link.setAttribute(attr, attributes[attr]);
+		}
+
+		if (eventListeners && link.addEventListener) {
+			for (const event in eventListeners) {
+				link.addEventListener(event, eventListeners[event]);
+			}
+		}
+
+		link.appendChild(doc.createTextNode(content));
+		return link;
+	};
+}
+
+/**
  * Recursively traverse the given DOM node, find all links in the text and
  * convert them to anchor tags.
  *
@@ -160,10 +140,12 @@ export default function linkifyElement(element, opts, doc = null) {
 		);
 	}
 
-	opts = new Options(opts);
+	opts = new Options(opts, getDefaultRender(doc));
 	return linkifyElementHelper(element, opts, doc);
 }
 
 // Maintain reference to the recursive helper to cache option-normalization
 linkifyElement.helper = linkifyElementHelper;
-linkifyElement.normalize = (opts) => new Options(opts);
+linkifyElement.getDefaultRender = getDefaultRender;
+linkifyElement.normalize = (opts, doc) => new Options(opts, getDefaultRender(doc));
+

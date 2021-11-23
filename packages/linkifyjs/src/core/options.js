@@ -26,7 +26,7 @@ export const defaults = {
 /**
  * @class Options
  * @param {Object | Options} [opts] Set option properties besides the defaults
- * @param {({ tagName: any, attributes: any, innerHTML: string, events: LinkifyEventListeners }) => any} [defaultRender]
+ * @param {({ tagName: any, attributes: any, content: string, events: LinkifyEventListeners }) => any} [defaultRender]
  *   (For internal use) default render function that determines how to generate
  *   an HTML element based on a link token's derived tagName, attributes and
  *   HTML. Similar to render option.
@@ -42,17 +42,16 @@ export function Options(opts, defaultRender = null) {
 	for (let i = 0; i < ignoredTags.length; i++) {
 		uppercaseIgnoredTags.push(ignoredTags[i].toUpperCase());
 	}
-	o.ignoreTags = uppercaseIgnoredTags;
-
 	this.o = o;
 	this.defaultRender = defaultRender;
+	this.ignoreTags = uppercaseIgnoredTags;
 }
 
 Options.prototype = {
 	o: {},
 
 	/**
-	 * @property {({ tagName: any, attributes: any, innerHTML: string, events: ?{[string]: Function} }) => any} [defaultRender]
+	 * @property {({ tagName: any, attributes: any, content: string, events: ?{[string]: Function} }) => any} [defaultRender]
 	 */
 	defaultRender: null,
 
@@ -112,7 +111,7 @@ Options.prototype = {
 	render(token) {
 		const ir = token.render(this); // intermediate representation
 		const renderFn = this.get('render', null, token) || this.defaultRender;
-		return renderFn ? renderFn(ir) : ir;
+		return renderFn ? renderFn(ir, token.t, token) : ir;
 	}
 };
 

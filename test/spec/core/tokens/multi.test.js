@@ -148,7 +148,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 				expect(url1.render(defaultOpts)).to.eql({
 					tagName: 'a',
 					attributes: { href: 'Ftps://www.github.com/Hypercontext/linkify' },
-					innerHTML: 'Ftps://www.github.com/Hypercontext/linkify',
+					content: 'Ftps://www.github.com/Hypercontext/linkify',
 					eventListeners: null
 				});
 			});
@@ -162,7 +162,7 @@ describe('linkifyjs/core/tokens/multi', () => {
 						rel: 'nofollow',
 						onclick: 'console.log(\'Hello World!\')'
 					},
-					innerHTML: 'github.com/Hypercontext/linkify',
+					content: 'github.com/Hypercontext/linkify',
 					eventListeners: null
 				});
 			});

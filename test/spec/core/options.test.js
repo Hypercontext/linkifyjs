@@ -68,15 +68,15 @@ describe('linkifyjs/core/options', () => {
 				tagName: 'b',
 				className: 'linkified',
 				render: {
-					email: ({ attributes, innerHTML }) => (
+					email: ({ attributes, content }) => (
 						// Ignore tagname and most attributes
-						`<e to="${attributes.href}?subject=Hello+From+Linkify">${innerHTML}</e>`
+						`<e to="${attributes.href}?subject=Hello+From+Linkify">${content}</e>`
 					)
 				}
-			}, ({ tagName, attributes, innerHTML }) => {
+			}, ({ tagName, attributes, content }) => {
 				const attrStrs = Object.keys(attributes)
 					.reduce((a, attr) => a.concat(`${attr}="${attributes[attr]}"`), []);
-				return `<${tagName} ${attrStrs.join(' ')}>${innerHTML}</${tagName}>`;
+				return `<${tagName} ${attrStrs.join(' ')}>${content}</${tagName}>`;
 			});
 		});
 
@@ -100,7 +100,7 @@ describe('linkifyjs/core/options', () => {
 						rel: 'nofollow',
 						type: 'text/html'
 					},
-					innerHTML: '<github.com>',
+					content: '<github.com>',
 					eventListeners: events
 				});
 			});

@@ -157,7 +157,7 @@ MultiToken.prototype = {
 		const token = this;
 		const tagName = opts.get('tagName', href, token);
 		const href = this.toFormattedHref(opts);
-		const innerHTML = this.toFormattedString(opts);
+		const content = this.toFormattedString(opts);
 
 		const attributes = {};
 		const className = opts.get('className', href, token);
@@ -172,7 +172,7 @@ MultiToken.prototype = {
 		if (rel) { attributes.rel = rel; }
 		if (attrs) { Object.assign(attributes, attrs); }
 
-		return { tagName, attributes, innerHTML, eventListeners };
+		return { tagName, attributes, content, eventListeners };
 	}
 };
 
