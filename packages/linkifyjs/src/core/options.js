@@ -12,62 +12,55 @@ export const defaults = {
 	target: null,
 	rel: null,
 	validate: true,
-	truncate: 0,
+	truncate: Infinity,
 	className: null,
 	attributes: null,
-	ignoreTags: []
+	ignoreTags: [],
+	render: null
 };
 
 /**
- * @class Options
- * @param {Object} [opts] Set option properties besides the defaults
+ * @typedef {null | {[string]: Function}} LinkifyEventListeners
  */
-export function Options(opts) {
-	opts = opts || {};
 
-	this.defaultProtocol	= 'defaultProtocol' in opts ? opts.defaultProtocol : defaults.defaultProtocol;
-	this.events				= 'events' in opts ? opts.events : defaults.events;
-	this.format				= 'format' in opts ? opts.format : defaults.format;
-	this.formatHref			= 'formatHref' in opts ? opts.formatHref : defaults.formatHref;
-	this.nl2br				= 'nl2br' in opts ? opts.nl2br : defaults.nl2br;
-	this.tagName			= 'tagName' in opts ? opts.tagName : defaults.tagName;
-	this.target				= 'target' in opts ? opts.target : defaults.target;
-	this.rel				= 'rel' in opts ? opts.rel : defaults.rel;
-	this.validate			= 'validate' in opts ? opts.validate : defaults.validate;
-	this.truncate			= 'truncate' in opts ? opts.truncate : defaults.truncate;
-	this.className 			= 'className' in opts ? opts.className : defaults.className;
-	this.attributes 		= opts.attributes || defaults.attributes;
-	this.ignoreTags			= [];
+/**
+ * @class Options
+ * @param {Object | Options} [opts] Set option properties besides the defaults
+ * @param {({ tagName: any, attributes: any, innerHTML: string, events: LinkifyEventListeners }) => any} [defaultRender]
+ *   (For internal use) default render function that determines how to generate
+ *   an HTML element based on a link token's derived tagName, attributes and
+ *   HTML. Similar to render option.
+ */
+export function Options(opts, defaultRender = null) {
+	const o = {};
+	Object.assign(o, defaults);
+	if (opts) { Object.assign(o, opts instanceof Options ? opts.o : opts); }
 
-	// Make all tags names upper case
-	const ignoredTags = 'ignoreTags' in opts ? opts.ignoreTags : defaults.ignoreTags;
+	// Ensure all ignored tags are uppercase
+	const ignoredTags = o.ignoreTags;
+	const uppercaseIgnoredTags = [];
 	for (let i = 0; i < ignoredTags.length; i++) {
-		this.ignoreTags.push(ignoredTags[i].toUpperCase());
+		uppercaseIgnoredTags.push(ignoredTags[i].toUpperCase());
 	}
+	o.ignoreTags = uppercaseIgnoredTags;
+
+	this.o = o;
+	this.defaultRender = defaultRender;
 }
 
 Options.prototype = {
+	o: {},
+
 	/**
-	 * Given the token, return all options for how it should be displayed
+	 * @property {({ tagName: any, attributes: any, innerHTML: string, events: ?{[string]: Function} }) => any} [defaultRender]
 	 */
-	resolve(token) {
-		const href = token.toHref(this.defaultProtocol);
-		return {
-			formatted: this.get('format', token.toString(), token),
-			formattedHref: this.get('formatHref', href, token),
-			tagName: this.get('tagName', href, token),
-			className: this.get('className', href, token),
-			target: this.get('target', href, token),
-			rel: this.get('rel', href, token),
-			events: this.getObject('events', href, token),
-			attributes: this.getObject('attributes', href, token),
-			truncate: this.get('truncate', href, token),
-		};
-	},
+	defaultRender: null,
 
 	/**
 	 * Returns true or false based on whether a token should be displayed as a
-	 * link based on the user options. By default,
+	 * link based on the user options.
+	 * @param {MultiToken} token
+	 * @returns {boolean}
 	 */
 	check(token) {
 		return this.get('validate', token.toString(), token);
@@ -77,30 +70,49 @@ Options.prototype = {
 
 	/**
 	 * Resolve an option's value based on the value of the option and the given
-	 * params.
+	 * params. If operator and token are specified and the target option is
+	 * callable, automatically calls the function with the given argument.
 	 * @param {string} key Name of option to use
-	 * @param operator will be passed to the target option if it's method
-	 * @param {MultiToken} token The token from linkify.tokenize
+	 * @param {any} [operator] will be passed to the target option if it's a
+	 * function. If not specified, RAW function value gets returned
+	 * @param {MultiToken} [token] The token from linkify.tokenize
+	 * @returns {any} Resolved option value
 	 */
 	get(key, operator, token) {
-		const option = this[key];
+		const isCallable = operator != null;
+		let option = this.o[key];
 		if (!option) { return option; }
-
-		let optionValue;
-		switch (typeof option) {
-		case 'function':
-			return option(operator, token.t);
-		case 'object':
-			optionValue = token.t in option ? option[token.t] : defaults[key];
-			return typeof optionValue === 'function' ? optionValue(operator, token.t) : optionValue;
+		if (typeof option === 'object') {
+			option = token.t in option ? option[token.t] : defaults[key];
+			if (typeof option === 'function' && isCallable) {
+				option = option(operator, token);
+			}
+		} else if (typeof option === 'function' && isCallable) {
+			option = option(operator, token.t, token);
 		}
 
 		return option;
 	},
 
-	getObject(key, operator, token) {
-		const option = this[key];
-		return typeof option === 'function' ? option(operator, token.t) : option;
+	getObj(key, operator, token) {
+		let obj = this.o[key];
+		if (typeof obj === 'function' && operator != null) {
+			obj = obj(operator, token.t, token);
+		}
+		return obj;
+	},
+
+	/**
+	 * Convert the given token to a rendered element that may be added to the
+	 * calling-interface's DOM
+	 * @param {MultiToken} token Token to render to an HTML element
+	 * @returns {any} Render result; e.g., HTML string, DOM element, React
+	 *   Component, etc.
+	 */
+	render(token) {
+		const ir = token.render(this); // intermediate representation
+		const renderFn = this.get('render', null, token) || this.defaultRender;
+		return renderFn ? renderFn(ir) : ir;
 	}
 };
 

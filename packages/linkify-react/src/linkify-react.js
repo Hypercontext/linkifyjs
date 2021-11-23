@@ -5,7 +5,7 @@ import { tokenize, Options } from 'linkifyjs';
  * Given a string, converts to an array of valid React components
  * (which may include strings)
  * @param {string} str
- * @param {any} opts
+ * @param {Options} opts
  * @returns {React.ReactNodeArray}
  */
 function stringToElements(str, opts) {
@@ -61,7 +61,7 @@ function stringToElements(str, opts) {
  * @template P
  * @template {string | React.JSXElementConstructor<P>} T
  * @param {React.ReactElement<P, T>} element
- * @param {Object} opts
+ * @param {Options} opts
  * @param {number} elementId
  * @returns {React.ReactElement<P, T>}
  */
