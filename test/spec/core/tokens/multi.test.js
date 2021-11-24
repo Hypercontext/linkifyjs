@@ -1,3 +1,4 @@
+const { Options } = require('linkifyjs/src/core/options');
 const tokens = require('linkifyjs/src/core/tokens');
 const scanner = require('linkifyjs/src/core/scanner');
 const { expect } = require('chai');
@@ -6,6 +7,22 @@ const mtk = tokens.multi;
 
 describe('linkifyjs/core/tokens/multi', () => {
 	let scannerStart;
+	const defaultOpts = new Options();
+	const opts = new Options({
+		tagName: 'Link',
+		target: '_parent',
+		nl2br: true,
+		className: 'my-linkify-class',
+		defaultProtocol: 'https',
+		rel: 'nofollow',
+		attributes: { onclick: 'console.log(\'Hello World!\')' },
+		truncate: 40,
+		format: (val) => val.replace(/^(ht|f)tps?:\/\/(www\.)?/i, ''),
+		formatHref: {
+			email: (href) => href + '?subject=Hello%20from%20Linkify'
+		},
+	});
+
 	before(() => { scannerStart = scanner.init(); });
 
 	describe('Multitoken', () => {
@@ -17,14 +34,17 @@ describe('linkifyjs/core/tokens/multi', () => {
 	describe('Url', () => {
 		let input1 = 'Ftps://www.github.com/Hypercontext/linkify';
 		let input2 = 'co.co/?o=%2D&p=@gc#wat';
-		let url1, url2;
+		let input3 = 'https://www.google.com/maps/place/The+DMZ/@43.6578984,-79.3819437,17z/data=!4m9!1m2!2m1!1sRyerson+DMZ!3m5!1s0x882b34cad13907bf:0x393038cf922e1378!8m2!3d43.6563702!4d-79.3793919!15sCgtSeWVyc29uIERNWloNIgtyeWVyc29uIGRtepIBHmJ1c2luZXNzX21hbmFnZW1lbnRfY29uc3VsdGFudA';
+		let url1, url2, url3;
 
 		before(() => {
 			const urlTextTokens1 = scanner.run(scannerStart, input1);
 			const urlTextTokens2 = scanner.run(scannerStart, input2);
+			const urlTextTokens3 = scanner.run(scannerStart, input3);
 
 			url1 = new mtk.Url(input1, urlTextTokens1);
 			url2 = new mtk.Url(input2, urlTextTokens2);
+			url3 = new mtk.Url(input3, urlTextTokens3);
 		});
 
 		describe('#isLink', () => {
@@ -83,6 +103,70 @@ describe('linkifyjs/core/tokens/multi', () => {
 			});
 		});
 
+		describe('#toFormattedString()', () => {
+			it('Formats with default options', () => {
+				expect(url1.toFormattedString(defaultOpts)).to.eql('Ftps://www.github.com/Hypercontext/linkify');
+			});
+			it('Formats short link', () => {
+				expect(url1.toFormattedString(opts)).to.eql('github.com/Hypercontext/linkify');
+			});
+			it('Formats long link', () => {
+				expect(url3.toFormattedString(opts)).to.eql('google.com/maps/place/The+DMZ/@43.657898…');
+			});
+		});
+
+		describe('#toFormattedHref()', () => {
+			it('Formats href with scheme', () => {
+				expect(url1.toFormattedHref(opts)).to.eql('Ftps://www.github.com/Hypercontext/linkify');
+			});
+			it('Formats href without scheme', () => {
+				expect(url2.toFormattedHref(opts)).to.eql('https://co.co/?o=%2D&p=@gc#wat');
+			});
+		});
+
+		describe('#toFormattedObject()', () => {
+			it('Returns correctly formatted object', () => {
+				expect(url1.toFormattedObject(opts)).to.eql({
+					type: 'url',
+					value: 'github.com/Hypercontext/linkify',
+					isLink: true,
+					href: 'Ftps://www.github.com/Hypercontext/linkify',
+					start: 0,
+					end: 42
+				});
+			});
+		});
+
+		describe('#validate()', () => {
+			it('Returns true for URL', () => {
+				expect(url1.validate(opts)).to.be.ok;
+			});
+		});
+
+		describe('#render()', () => {
+			it('Works with default options', () => {
+				expect(url1.render(defaultOpts)).to.eql({
+					tagName: 'a',
+					attributes: { href: 'Ftps://www.github.com/Hypercontext/linkify' },
+					content: 'Ftps://www.github.com/Hypercontext/linkify',
+					eventListeners: null
+				});
+			});
+			it('Works with overriden options', () => {
+				expect(url1.render(opts)).to.eql({
+					tagName: 'Link',
+					attributes: {
+						href: 'Ftps://www.github.com/Hypercontext/linkify' ,
+						class: 'my-linkify-class',
+						target: '_parent',
+						rel: 'nofollow',
+						onclick: 'console.log(\'Hello World!\')'
+					},
+					content: 'github.com/Hypercontext/linkify',
+					eventListeners: null
+				});
+			});
+		});
 	});
 
 	describe('Email', () => {

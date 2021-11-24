@@ -2,6 +2,7 @@ import { tokenize } from '@nfrasser/simple-html-tokenizer';
 import * as linkify from 'linkifyjs';
 
 const { Options } = linkify;
+const LinkifyResult = 'LinkifyResult';
 const StartTag = 'StartTag';
 const EndTag = 'EndTag';
 const Chars = 'Chars';
@@ -20,7 +21,7 @@ export default function linkifyHtml(str, opts = {}) {
 	const linkifiedTokens = [];
 	const linkified = [];
 
-	opts = new Options(opts);
+	opts = new Options(opts, defaultRender);
 
 	// Linkify the tokens given by the parser
 	for (let i = 0; i < tokens.length; i++) {
@@ -30,35 +31,34 @@ export default function linkifyHtml(str, opts = {}) {
 			linkifiedTokens.push(token);
 
 			// Ignore all the contents of ignored tags
-			let tagName = token.tagName.toUpperCase();
-			let isIgnored = tagName === 'A' || opts.ignoreTags.indexOf(tagName) >= 0;
+			const tagName = token.tagName.toUpperCase();
+			const isIgnored = tagName === 'A' || opts.ignoreTags.indexOf(tagName) >= 0;
 			if (!isIgnored) { continue; }
 
 			let preskipLen = linkifiedTokens.length;
 			skipTagTokens(tagName, tokens, ++i, linkifiedTokens);
 			i += linkifiedTokens.length - preskipLen - 1;
-			continue;
-
 		} else if (token.type !== Chars) {
 			// Skip this token, it's not important
 			linkifiedTokens.push(token);
-			continue;
+		} else {
+			// Valid text token, linkify it!
+			const linkifedChars = linkifyChars(token.chars, opts);
+			linkifiedTokens.push.apply(linkifiedTokens, linkifedChars);
 		}
-
-		// Valid text token, linkify it!
-		const linkifedChars = linkifyChars(token.chars, opts);
-		linkifiedTokens.push.apply(linkifiedTokens, linkifedChars);
 	}
 
 	// Convert the tokens back into a string
 	for (let i = 0; i < linkifiedTokens.length; i++) {
 		const token = linkifiedTokens[i];
 		switch (token.type) {
+		case LinkifyResult:
+			linkified.push(token.rendered);
+			break;
 		case StartTag: {
 			let link = '<' + token.tagName;
 			if (token.attributes.length > 0) {
-				let attrs = attrsToStrings(token.attributes);
-				link += ' ' + attrs.join(' ');
+				link += ' ' + attributeArrayToStrings(token.attributes).join(' ');
 			}
 			link += '>';
 			linkified.push(link);
@@ -105,44 +105,14 @@ function linkifyChars(str, opts) {
 				attributes: [],
 				selfClosing: true
 			});
-			continue;
 		} else if (!token.isLink || !opts.check(token)) {
-			result.push({type: Chars, chars: token.toString()});
-			continue;
+			result.push({ type: Chars, chars: token.toString() });
+		} else {
+			result.push({
+				type: LinkifyResult,
+				rendered: opts.render(token)
+			});
 		}
-
-		let {
-			formatted,
-			formattedHref,
-			tagName,
-			className,
-			target,
-			rel,
-			attributes,
-			truncate
-		} = opts.resolve(token);
-
-		// Build up attributes
-		const attributeArray = [['href', formattedHref]];
-
-		if (className) { attributeArray.push(['class', className]); }
-		if (target) { attributeArray.push(['target', target]); }
-		if (rel) { attributeArray.push(['rel', rel]); }
-		if (truncate && formatted.length > truncate) { formatted = formatted.substring(0, truncate) + '…'; }
-
-		for (const attr in attributes) {
-			attributeArray.push([attr, attributes[attr]]);
-		}
-
-		// Add the required tokens
-		result.push({
-			type: StartTag,
-			tagName: tagName,
-			attributes: attributeArray,
-			selfClosing: false
-		});
-		result.push({ type: Chars, chars: formatted });
-		result.push({ type: EndTag, tagName: tagName });
 	}
 
 	return result;
@@ -186,6 +156,10 @@ function skipTagTokens(tagName, tokens, i, skippedTokens) {
 	return skippedTokens;
 }
 
+function defaultRender({ tagName, attributes, content }) {
+	return `<${tagName} ${attributesToString(attributes)}>${escapeText(content)}</${tagName}>`;
+}
+
 function escapeText(text) {
 	return text
 		.replace(/&/g, '&amp;')
@@ -197,11 +171,20 @@ function escapeAttr(attr) {
 	return attr.replace(/"/g, '&quot;');
 }
 
-function attrsToStrings(attrs) {
+function attributesToString(attributes) {
+	const result = [];
+	for (const attr in attributes) {
+		const val = attributes[attr] + '';
+		result.push(`${attr}="${escapeAttr(val)}"`);
+	}
+	return result.join(' ');
+}
+
+function attributeArrayToStrings(attrs) {
 	const attrStrs = [];
 	for (let i = 0; i < attrs.length; i++) {
 		const name = attrs[i][0];
-		const value = attrs[i][1];
+		const value = attrs[i][1] + '';
 		attrStrs.push(`${name}="${escapeAttr(value)}"`);
 	}
 	return attrStrs;

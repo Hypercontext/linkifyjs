@@ -1,5 +1,6 @@
 import * as scanner from './core/scanner';
 import * as parser from './core/parser';
+import { Options } from './core/options';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
 
@@ -96,16 +97,18 @@ export function tokenize(str) {
 	Find a list of linkable items in the given string.
 	@param {string} str string to find links in
 	@param {string} [type] (optional) only find links of a specific type, e.g.,
-	'url' or 'email'
+		'url' or 'email'
+	@param {Options|Object} [options] (optional) formatting options for final output
 */
-export function find(str, type = null) {
+export function find(str, type = null, options = {}) {
+	const opts = new Options(options);
 	const tokens = tokenize(str);
 	const filtered = [];
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
 		if (token.isLink && (!type || token.t === type)) {
-			filtered.push(token.toObject());
+			filtered.push(token.toFormattedObject(opts));
 		}
 	}
 
@@ -136,4 +139,4 @@ export function test(str, type = null) {
 }
 
 export * as options from './core/options';
-export { Options } from './core/options';
+export { Options };

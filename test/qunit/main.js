@@ -98,15 +98,14 @@ QUnit.module('linkify.options.Options');
 
 QUnit.test('returns object of default options when given an empty object', function (assert) {
 	var result = new w.linkify.options.Options({});
-	assert.propEqual(result, w.linkify.options.defaults);
 
-	assert.equal(typeof result.format, 'function');
-	assert.equal(typeof result.validate, 'boolean');
-	assert.equal(result.format('test'), 'test');
-	assert.equal(typeof result.formatHref, 'function');
-	assert.equal(result.formatHref('test'), 'test');
-	assert.equal(result.target, null);
-	assert.equal(result.rel, null);
+	assert.equal(typeof result.get('format'), 'function');
+	assert.equal(typeof result.get('validate'), 'boolean');
+	assert.equal(result.get('format')('test'), 'test');
+	assert.equal(typeof result.get('formatHref'), 'function');
+	assert.equal(result.get('formatHref')('test'), 'test');
+	assert.equal(result.get('target'), null);
+	assert.equal(result.get('rel'), null);
 });
 
 

@@ -29,7 +29,7 @@ export default function apply($, doc = false) {
 	}
 
 	function jqLinkify(opts) {
-		opts = linkifyElement.normalize(opts);
+		opts = linkifyElement.normalize(opts, doc);
 		return this.each(function () {
 			linkifyElement.helper(this, opts, doc);
 		});

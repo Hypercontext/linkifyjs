@@ -33,37 +33,58 @@ export function MultiToken() {}
 
 MultiToken.prototype = {
 	/**
-		String representing the type for this token
-		@property t
-		@default 'token'
-	*/
+	 * String representing the type for this token
+	 * @property t
+	 * @default 'token'
+	 */
 	t: 'token',
 
 	/**
-		Is this multitoken a link?
-		@property isLink
-		@default false
-	*/
+	 * Is this multitoken a link?
+	 * @property isLink
+	 * @default false
+	 */
 	isLink: false,
 
 	/**
-		Return the string this token represents.
-		@method toString
-		@return {string}
-	*/
+	 * Return the string this token represents.
+	 * @param {Options | string} [_opts] Formatting options
+	 * @return {string}
+	 */
 	toString() {
 		return this.v;
 	},
 
 	/**
-		What should the value for this token be in the `href` HTML attribute?
-		Returns the `.toString` value by default.
-
-		@method toHref
-		@return {string}
+	 * What should the value for this token be in the `href` HTML attribute?
+	 * Returns the `.toString` value by default.
+	 * @param {Options | string} [_opts] Formatting options
+	 * @return {string}
 	*/
 	toHref() {
 		return this.toString();
+	},
+
+	/**
+	 * @param {Options} opts Formatting options
+	 * @returns {string}
+	 */
+	toFormattedString(opts) {
+		const val = this.toString();
+		const truncate = opts.get('truncate', val, this);
+		const formatted = opts.get('format', val, this);
+		return (truncate && formatted.length > truncate)
+			? formatted.substring(0, truncate) + '…'
+			: formatted;
+	},
+
+	/**
+	 *
+	 * @param {Options} [opts]
+	 * @returns {string}
+	 */
+	toFormattedHref(opts) {
+		return opts.get('formatHref', this.toHref(opts.get('defaultProtocol')), this);
 	},
 
 	/**
@@ -84,7 +105,7 @@ MultiToken.prototype = {
 	},
 
 	/**
-		Returns a hash of relevant values for this token, which includes keys
+		Returns an object  of relevant values for this token, which includes keys
 		* type - Kind of token ('url', 'email', etc.)
 		* value - Original text
 		* href - The value that should be added to the anchor tag's href
@@ -96,12 +117,62 @@ MultiToken.prototype = {
 	toObject(protocol = defaults.defaultProtocol) {
 		return {
 			type: this.t,
-			value: this.v,
+			value: this.toString(),
 			isLink: this.isLink,
 			href: this.toHref(protocol),
 			start: this.startIndex(),
 			end: this.endIndex()
 		};
+	},
+
+	/**
+	 *
+	 * @param {Options} opts Formatting option
+	 */
+	toFormattedObject(opts) {
+		return {
+			type: this.t,
+			value: this.toFormattedString(opts),
+			isLink: this.isLink,
+			href: this.toFormattedHref(opts),
+			start: this.startIndex(),
+			end: this.endIndex()
+		};
+	},
+
+	/**
+	 * Whether this token should be rendered as a link according to the given options
+	 * @param {Options} opts
+	 * @returns {boolean}
+	 */
+	validate(opts) {
+		return opts.get('validate', this.toString(), this);
+	},
+
+	/**
+	 * Return an object that represents how this link should be rendered.
+	 * @param {Options} opts Formattinng options
+	 */
+	render(opts) {
+		const token = this;
+		const tagName = opts.get('tagName', href, token);
+		const href = this.toFormattedHref(opts);
+		const content = this.toFormattedString(opts);
+
+		const attributes = {};
+		const className = opts.get('className', href, token);
+		const target = opts.get('target', href, token);
+		const rel = opts.get('rel', href, token);
+		const attrs = opts.getObj('attributes', href, token);
+		const eventListeners = opts.getObj('events', href, token);
+
+		attributes.href = href;
+		if (className) { attributes.class = className; }
+		if (target) { attributes.target = target; }
+		if (rel) { attributes.rel = rel; }
+		if (attrs) { Object.assign(attributes, attrs); }
+
+		return { tagName, attributes, content, eventListeners };
 	}
 };
 
@@ -163,15 +234,18 @@ export const Url = createTokenClass('url', {
 		required. Note that this will not escape unsafe HTML characters in the
 		URL.
 
-		@method href
-		@param {string} protocol
-		@return {string}
+		@param {string} [scheme] default scheme (e.g., 'https')
+		@return {string} the full href
 	*/
-	toHref(protocol = defaults.defaultProtocol) {
+	toHref(scheme = defaults.defaultProtocol) {
 		// Check if already has a prefix scheme
-		return this.hasProtocol() ? this.v : `${protocol}://${this.v}`;
+		return this.hasProtocol() ? this.v : `${scheme}://${this.v}`;
 	},
 
+	/**
+	 * Check whether this URL token has a protocol
+	 * @return {boolean}
+	 */
 	hasProtocol() {
 		const tokens = this.tk;
 		return tokens.length >= 2 && scheme.indexOf(tokens[0].t) >= 0 && tokens[1].t === COLON;
