@@ -1,6 +1,6 @@
 {
   "name": "linkifyjs",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Find URLs, email addresses, #hashtags and @mentions in plain-text strings, then convert them into HTML <a> links.",
   "main": "index.js",
   "module": "dist/linkify.module.js",

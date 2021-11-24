@@ -1,6 +1,6 @@
 {
   "name": "linkify-react",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "React element interface for linkifyjs",
   "main": "index.js",
   "module": "dist/linkify-react.module.js",
