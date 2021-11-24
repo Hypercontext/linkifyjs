@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { tokenize, Options } from 'linkifyjs';
+import { tokenize, Options, options } from 'linkifyjs';
 
 /**
  * Given a string, converts to an array of valid React components
@@ -67,7 +67,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 	});
 
 	// Set a default unique key, copy over remaining props
-	const newProps = Object.assign({ key: `__linkify-el-${elementId}` }, element.props);
+	const newProps = options.assign({ key: `__linkify-el-${elementId}` }, element.props);
 	return React.cloneElement(element, newProps, children);
 }
 
