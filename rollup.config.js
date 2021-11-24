@@ -25,6 +25,7 @@ export function linkifyInterface(name, opts = {}) {
 			{ file: 'index.js', format: 'cjs', exports: 'auto' },
 			{ file: `dist/linkify-${name}.js`, format: 'iife', globals, ...iifeOpts },
 			{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
+			{ file: `dist/linkify-${name}.module.js`, format: 'es' },
 		],
 		plugins
 	};
@@ -41,6 +42,7 @@ export function linkifyClassicInterface(name, opts = {}) {
 	const output = [
 		{ file: `dist/linkify-${name}.js`, format: 'iife', globals, ...iifeOpts },
 		{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
+		{ file: `dist/linkify-${name}.module.js`, format: 'es' }
 	];
 	if (opts.commonjs) {
 		output.push({ file: `lib/linkify-${name}.js`, format: 'cjs', exports: 'auto' });
@@ -61,7 +63,8 @@ export function linkifyPlugin(name, opts = {}) {
 	const globals =  { linkifyjs: 'linkify' };
 	const output = [
 		{ file: `dist/linkify-plugin-${name}.js`, format: 'iife', globals, name: false },
-		{ file: `dist/linkify-plugin-${name}.min.js`, format: 'iife', globals, name: false, plugins: [terser()] }
+		{ file: `dist/linkify-plugin-${name}.min.js`, format: 'iife', globals, name: false, plugins: [terser()] },
+		{ file: `dist/linkify-plugin-${name}.module.js`, format: 'es' }
 	];
 	if (opts.commonjs) {
 		output.push({ file: `lib/plugins/${name}.js`, format: 'cjs', exports: 'auto' });

@@ -1,6 +1,6 @@
 {
   "name": "linkify-jquery",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "jQuery interface for linkifyjs",
   "main": "index.js",
   "scripts": {

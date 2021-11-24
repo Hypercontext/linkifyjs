@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+## v3.0.3
+
+* Add linkifyjs ES6 module build
+
 ## v3.0.2
 
 * Correctly detect hashtags with underscores
