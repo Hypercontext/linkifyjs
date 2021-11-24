@@ -1,8 +1,9 @@
 {
   "name": "linkify-string",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "String interface for linkifyjs",
   "main": "index.js",
+  "module": "dist/linkify-string.module.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "clean": "rm -rf lib dist *.tgz *.d.ts",

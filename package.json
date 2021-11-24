@@ -1,12 +1,11 @@
 {
   "name": "linkify",
-  "version": "3.0.2",
+  "version": "3.0.4",
   "description": "Intelligent link recognition, made easy",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Hypercontext/linkifyjs.git"
   },
-  "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
