@@ -1,5 +1,6 @@
 import { scheme, COLON } from './text';
 import { defaults } from '../options';
+import assign from '../assign';
 
 /******************************************************************************
 	Multi-Tokens
@@ -170,7 +171,7 @@ MultiToken.prototype = {
 		if (className) { attributes.class = className; }
 		if (target) { attributes.target = target; }
 		if (rel) { attributes.rel = rel; }
-		if (attrs) { Object.assign(attributes, attrs); }
+		if (attrs) { assign(attributes, attrs); }
 
 		return { tagName, attributes, content, eventListeners };
 	}

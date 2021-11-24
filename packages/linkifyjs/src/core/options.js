@@ -1,3 +1,5 @@
+import assign from "./assign";
+
 /**
  * @property {string} defaultProtocol
  * @property {{[string]: (event) => void}]} [events]
@@ -33,8 +35,8 @@ export const defaults = {
  */
 export function Options(opts, defaultRender = null) {
 	const o = {};
-	Object.assign(o, defaults);
-	if (opts) { Object.assign(o, opts instanceof Options ? opts.o : opts); }
+	assign(o, defaults);
+	if (opts) { assign(o, opts instanceof Options ? opts.o : opts); }
 
 	// Ensure all ignored tags are uppercase
 	const ignoredTags = o.ignoreTags;
@@ -114,6 +116,8 @@ Options.prototype = {
 		return renderFn ? renderFn(ir, token.t, token) : ir;
 	}
 };
+
+export { assign };
 
 function noop(val) {
 	return val;

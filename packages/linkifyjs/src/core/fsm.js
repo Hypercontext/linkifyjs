@@ -1,6 +1,7 @@
 /**
  * Finite State Machine generation utilities
  */
+import assign from './assign';
 
 /**
  * Define a basic state machine state. j is the list of character transitions,
@@ -86,7 +87,7 @@ State.prototype = {
 		const templateState = takeT(this, input);
 		if (templateState) {
 			// Some default state transition, make a prime state based on this one
-			Object.assign(nextState.j, templateState.j);
+			assign(nextState.j, templateState.j);
 			nextState.jr.append(templateState.jr);
 			nextState.jr = templateState.jd;
 			nextState.t = token || templateState.t;
