@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+## v3.0.5
+
+* Fix potential Cross-Site Scripting issue when using `linkify-html`
+
 ## v3.0.4
 
 * Expose ES6 modules with `"module"` field in `package.json`
