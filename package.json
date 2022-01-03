@@ -1,6 +1,6 @@
 {
   "name": "linkify",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "Intelligent link recognition, made easy",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "@babel/eslint-plugin": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@babel/register": "^7.13.8",
-    "@nfrasser/simple-html-tokenizer": "^0.5.11-1",
+    "@nfrasser/simple-html-tokenizer": "==0.5.11-2",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",

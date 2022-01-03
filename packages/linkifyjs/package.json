@@ -1,6 +1,6 @@
 {
   "name": "linkifyjs",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "Find URLs, email addresses, #hashtags and @mentions in plain-text strings, then convert them into HTML <a> links.",
   "main": "index.js",
   "module": "dist/linkify.module.js",
@@ -35,6 +35,6 @@
   },
   "homepage": "https://github.com/Hypercontext/linkifyjs#readme",
   "devDependencies": {
-    "@nfrasser/simple-html-tokenizer": "^0.5.11-2"
+    "@nfrasser/simple-html-tokenizer": "==0.5.11-2"
   }
 }
