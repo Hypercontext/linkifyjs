@@ -87,6 +87,12 @@ export function init() {
 	makeT(S_PROTOCOL_SLASH_SLASH, tk.DOMAIN, S_URL);
 	makeT(S_PROTOCOL_SLASH_SLASH, tk.NUM, S_URL);
 	makeT(S_PROTOCOL_SLASH_SLASH, tk.LOCALHOST, S_URL);
+	
+	// The same as above but also allowing url's without //
+	makeT(S_PROTOCOL, tk.TLD, S_URL);
+	makeT(S_PROTOCOL, tk.DOMAIN, S_URL);
+	makeT(S_PROTOCOL, tk.NUM, S_URL);
+	makeT(S_PROTOCOL, tk.LOCALHOST, S_URL);
 
 	// Account for dots and hyphens
 	// hyphens are usually parts of domain names
