@@ -1,6 +1,6 @@
 import { scheme, COLON } from './text';
-import { defaults } from '../options';
-import assign from '../assign';
+import { defaults } from './options';
+import assign from './assign';
 
 /******************************************************************************
 	Multi-Tokens

@@ -1,4 +1,4 @@
-import linkifyHtml from 'linkifyjs/src/linkify-html';
+import linkifyHtml from 'linkify-html/src/linkify-html';
 import htmlOptions from './html/options';
 
 describe('linkify-html', () => {

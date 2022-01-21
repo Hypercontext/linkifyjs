@@ -15,7 +15,7 @@ import {
 	makeBatchT,
 	makeChainT
 } from './fsm';
-import * as tk from './tokens/text';
+import * as tk from './text';
 import { tlds, utlds } from './tlds';
 
 // Note that these two Unicode ones expand into a really big one with Babel

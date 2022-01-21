@@ -1,5 +1,5 @@
 {
-	"include": ["index.js"],
+	"include": ["index.js", "dist/linkify-jquery.module.js"],
 	"exclude": [],
 	"compilerOptions": {
 		"allowJs": true,

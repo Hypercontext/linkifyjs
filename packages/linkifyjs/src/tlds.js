@@ -26,7 +26,6 @@ aeg \
 aero \
 aetna \
 af \
-afamilycompany \
 afl \
 africa \
 ag \
@@ -361,7 +360,6 @@ download \
 drive \
 dtv \
 dubai \
-duck \
 dunlop \
 dupont \
 durban \
@@ -495,7 +493,6 @@ gifts \
 gives \
 giving \
 gl \
-glade \
 glass \
 gle \
 global \
@@ -721,7 +718,6 @@ link \
 lipsy \
 live \
 living \
-lixil \
 lk \
 llc \
 llp \
@@ -879,7 +875,6 @@ nyc \
 nz \
 obi \
 observer \
-off \
 office \
 okinawa \
 olayan \
@@ -980,7 +975,6 @@ quebec \
 quest \
 racing \
 radio \
-raid \
 re \
 read \
 realestate \
@@ -1057,7 +1051,6 @@ school \
 schule \
 schwarz \
 science \
-scjohnson \
 scot \
 sd \
 se \

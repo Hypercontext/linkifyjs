@@ -20,8 +20,8 @@ import {
 	makeT,
 	makeMultiT
 } from './fsm';
-import * as tk from './tokens/text';
-import * as mtk from './tokens/multi';
+import * as tk from './text';
+import * as mtk from './multi';
 
 /**
  * Generate the parser multi token-based state machine

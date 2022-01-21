@@ -1,11 +1,11 @@
-const { Options } = require('linkifyjs/src/core/options');
-const tokens = require('linkifyjs/src/core/tokens');
-const scanner = require('linkifyjs/src/core/scanner');
+const { Options } = require('linkifyjs/src/options');
+const tokens = require('linkifyjs/src/tokens');
+const scanner = require('linkifyjs/src/scanner');
 const { expect } = require('chai');
 const tk = tokens.text;
 const mtk = tokens.multi;
 
-describe('linkifyjs/core/tokens/multi', () => {
+describe('linkifyjs/multi', () => {
 	let scannerStart;
 	const defaultOpts = new Options();
 	const opts = new Options({

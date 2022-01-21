@@ -1,7 +1,7 @@
 const { expect } = require('chai');
-const scanner = require('linkifyjs/src/core/scanner');
-const parser = require('linkifyjs/src/core/parser');
-const { Text, Url, Email } = require('linkifyjs/src/core/tokens/multi');
+const scanner = require('linkifyjs/src/scanner');
+const parser = require('linkifyjs/src/parser');
+const { Text, Url, Email } = require('linkifyjs/src/multi');
 
 /**
 	[0] - Original text to parse (should tokenize first)
@@ -229,7 +229,7 @@ const tests = [
 
 let scannerStart = scanner.init();
 let start = parser.init();
-describe('linkifyjs/core/parser#run()', () => {
+describe('linkifyjs/parser#run()', () => {
 
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', () => {

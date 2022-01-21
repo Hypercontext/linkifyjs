@@ -1,4 +1,4 @@
-import linkifyStr from 'linkifyjs/src/linkify-string';
+import linkifyStr from 'linkify-string/src/linkify-string';
 
 describe('linkify-string', () => {
 	// For each element in this array

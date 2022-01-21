@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const linkify = require('linkifyjs');
-const { mention } = require('linkifyjs/src/plugins/mention');
+const { mention } = require('linkify-plugin-mention/src/mention');
 
 describe('plugins/mention', () => {
 	beforeEach(() => { linkify.reset(); });

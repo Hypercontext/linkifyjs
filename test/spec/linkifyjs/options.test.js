@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import * as options from 'linkifyjs/src/core/options';
-import * as scanner from 'linkifyjs/src/core/scanner';
-import { multi as mtk } from 'linkifyjs/src/core/tokens';
+import * as options from 'linkifyjs/src/options';
+import * as scanner from 'linkifyjs/src/scanner';
+import { multi as mtk } from 'linkifyjs/src/tokens';
 
 const Options = options.Options;
 
-describe('linkifyjs/core/options', () => {
+describe('linkifyjs/options', () => {
 	describe('defaults', () => {
 		after(() => { options.defaults.defaultProtocol = 'http'; });
 

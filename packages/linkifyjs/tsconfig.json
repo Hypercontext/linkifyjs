@@ -1,5 +1,5 @@
 {
-	"include": ["index.js", "string.js", "html.js", "plugins/*.js"],
+	"include": ["index.js", "dist/linkify.module.js"],
 	"exclude": [],
 	"compilerOptions": {
 		"allowJs": true,

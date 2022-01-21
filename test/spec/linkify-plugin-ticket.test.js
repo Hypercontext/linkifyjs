@@ -1,5 +1,5 @@
 const linkify = require('linkifyjs');
-const { ticket } = require('linkifyjs/src/plugins/ticket');
+const { ticket } = require('linkify-plugin-ticket/src/ticket');
 
 describe('plugins/ticket', () => {
 	beforeEach(() => { linkify.reset(); });

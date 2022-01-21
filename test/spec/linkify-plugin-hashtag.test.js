@@ -1,5 +1,5 @@
 const linkify = require('linkifyjs');
-const { hashtag } = require('linkifyjs/src/plugins/hashtag');
+const { hashtag } = require('linkify-plugin-hashtag/src/hashtag');
 
 describe('plugins/hashtag', () => {
 	beforeEach(() => { linkify.reset(); });

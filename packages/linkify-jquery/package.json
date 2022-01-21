@@ -6,7 +6,7 @@
   "module": "dist/linkify-jquery.module.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "clean": "rm -rf lib dist *.tgz *.d.ts",
+    "clean": "rm -rf lib dist index.js *.tgz *.d.ts",
     "prepack": "run-s clean build tsc",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -29,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/Hypercontext/linkifyjs/issues"
   },
-  "homepage": "https://github.com/Hypercontext/linkifyjs#readme",
+  "homepage": "https://linkify.js.org",
   "peerDependencies": {
     "jquery": ">= 1.11.0",
     "linkifyjs": "^3.0.0"

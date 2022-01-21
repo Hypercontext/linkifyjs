@@ -1,9 +1,9 @@
-const { makeAcceptingState } = require('linkifyjs/src/core/fsm');
+const { makeAcceptingState } = require('linkifyjs/src/fsm');
 
-const tk = require('linkifyjs/src/core/tokens/text');
-const { takeT, makeT, makeRegexT, ...fsm } = require('linkifyjs/src/core/fsm');
+const tk = require('linkifyjs/src/text');
+const { takeT, makeT, makeRegexT, ...fsm } = require('linkifyjs/src/fsm');
 
-describe('linkifyjs/core/fsm', () => {
+describe('linkifyjs/fsm', () => {
 	var S_START, S_DOT, S_NUM;
 
 	before(() => {

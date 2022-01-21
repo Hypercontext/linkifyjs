@@ -1,5 +1,5 @@
 {
-	"include": ["index.js"],
+	"include": ["index.js", "dist/linkify-plugin-hashtag.module.js"],
 	"exclude": [],
 	"compilerOptions": {
 		"allowJs": true,

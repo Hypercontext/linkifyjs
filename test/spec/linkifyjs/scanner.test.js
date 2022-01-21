@@ -1,5 +1,5 @@
-const scanner = require('linkifyjs/src/core/scanner');
-const t = require('linkifyjs/src/core/tokens').text;
+const scanner = require('linkifyjs/src/scanner');
+const { text: t } = require('linkifyjs/src/tokens');
 
 // The elements are
 // 1. input string
@@ -110,7 +110,7 @@ const customSchemeTests = [
 ];
 
 
-describe('linkifyjs/core/scanner#run()', () => {
+describe('linkifyjs/scanner#run()', () => {
 	let start;
 	before(() => { start = scanner.init(); });
 

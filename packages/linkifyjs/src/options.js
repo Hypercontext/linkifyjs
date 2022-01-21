@@ -1,4 +1,4 @@
-import assign from "./assign";
+import assign from './assign';
 
 /**
  * @property {string} defaultProtocol
@@ -22,7 +22,7 @@ export const defaults = {
 };
 
 /**
- * @typedef {null | {[string]: Function}} LinkifyEventListeners
+ * @typedef {null | {[event: string]: Function}} LinkifyEventListeners
  */
 
 /**

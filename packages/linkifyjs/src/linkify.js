@@ -1,6 +1,6 @@
-import * as scanner from './core/scanner';
-import * as parser from './core/parser';
-import { Options } from './core/options';
+import * as scanner from './scanner';
+import * as parser from './parser';
+import { Options } from './options';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
 
@@ -138,5 +138,5 @@ export function test(str, type = null) {
 	);
 }
 
-export * as options from './core/options';
+export * as options from './options';
 export { Options };
