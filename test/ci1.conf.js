@@ -52,7 +52,7 @@ module.exports = function (config) {
 			username: process.env.BROWSERSTACK_USERNAME,
 			accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
 			name: process.env.GITHUB_WORKFLOW,
-			build: process.env.GITHUB_RUN_ID
+			build: process.env.GITHUB_RUN_NUMBER
 		},
 
 		customLaunchers,
