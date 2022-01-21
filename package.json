@@ -19,7 +19,9 @@
     "prepack": "npm run prepack --workspaces",
     "test": "mocha test/index.js",
     "test:coverage": "nyc --reporter=lcov --reporter=text mocha test/index.js",
-    "test:ci": "karma start test/ci.conf.js --single-run",
+    "test:ci": "run-s test:ci1 test:ci2",
+    "test:ci1": "karma start test/ci1.conf.js --single-run",
+    "test:ci2": "karma start test/ci2.conf.js --single-run",
     "tlds": "node tasks/update-tlds.js"
   },
   "author": "Hypercontext",

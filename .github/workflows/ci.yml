@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  unit:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,7 +25,7 @@ jobs:
       - name: "Run basic tests"
         run: bash test/run.sh
 
-  dist:
+  integration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
