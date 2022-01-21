@@ -2,7 +2,9 @@ name: Node.js CI
 
 on:
   push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
   test:
@@ -18,9 +20,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
-      - name: "setup"
+      - name: "Setup tests"
         run: bash test/setup.sh
-      - name: "basic tests"
+      - name: "Run basic tests"
         run: bash test/run.sh
 
   dist:
@@ -32,9 +34,9 @@ jobs:
           node-version: '16.x'
           cache: 'npm'
       - run: npm install
-      - name: "setup"
+      - name: "Setup dist"
         run: bash test/setup.sh --dist
-      - name: "complete test suite"
+      - name: "Run complete test suite"
         run: bash test/run.sh --dist
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
