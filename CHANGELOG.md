@@ -1,5 +1,24 @@
 # Linkify Changelog
 
+## v4.0.0
+
+## Breaking Changes
+* Removed deprecated `linkifyjs/string`, `linkifyjs/html`, `linkifyjs/plugins/*` packages
+* Refactored scanner internals break plugins created with Linkify v3
+* Links that begin with `mailto:` now have type `url` instead of `email`
+
+## Added
+* `linkify.find()` function accepts a third `options` argument for output formatting
+* Link token methods `toFormattedString(options)`, `toFormattedHref(options)` and `toFormattedObject(options)` that accept a `linkify.Options` object
+* New `render` option to override link rendering
+* More granular scanner tokens for improved plugin flexibility
+* Second `optionalSlashSlash` argument for `registerCustomProtocol` to allow links that don't require `//` after `scheme:`
+
+## Fixed
+* Improved HTML entity parsing with `linkify-html`
+* Improved link detection with mixed languages
+* Consistent option availability across interfaces (including `truncate`)
+
 ## v3.0.5
 
 * Fix potential Cross-Site Scripting issue when using `linkify-html`
