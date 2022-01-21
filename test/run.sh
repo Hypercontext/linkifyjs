@@ -6,7 +6,8 @@ if [[ "$1" == "--dist" ]]; then
 	echo "Running complete test suite..."
 	npm run lint
 	npm run test:coverage
-	npm run dist:ci
+	npm run build:ci
+	npm run copy
 	npm run test:ci
 	sleep 3  # Wait for threads to exit?
 else

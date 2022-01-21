@@ -7,7 +7,8 @@
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "clean": "rm -rf lib dist index.js *.tgz *.d.ts",
-    "prepack": "run-s clean build tsc",
+    "copy:license": "copyfiles -f ../../node_modules/@nfrasser/simple-html-tokenizer/LICENSE dist/simple-html-tokenizer",
+    "prepack": "run-s clean build tsc copy:license",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
