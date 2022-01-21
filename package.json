@@ -15,7 +15,8 @@
     "dist": "run-s clean build copy",
     "dist:ci": "run-s clean build:ci copy",
     "lint": "eslint *.js packages/**/*.js test/**/*.js tasks/**/*.js",
-    "test": "nyc --reporter=lcov --reporter=text mocha test/index.js",
+    "test": "mocha test/index.js",
+    "test:coverage": "nyc --reporter=lcov --reporter=text mocha test/index.js",
     "test:ci": "karma start test/ci.conf.js --single-run",
     "tlds": "node tasks/update-tlds.js"
   },

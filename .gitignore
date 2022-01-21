@@ -61,3 +61,6 @@ js
 
 # Generated typescript declarations
 *.d.ts
+
+# Generated index.js files
+packages/*/index.js
