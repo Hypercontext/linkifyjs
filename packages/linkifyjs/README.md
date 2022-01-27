@@ -24,14 +24,14 @@ import * as linkify from 'linkifyjs';
 ```
 
 Separate packages are available for each of the following features:
-- [HTML strings](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-html)
-- [React component](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-react)
-- [jQuery plugin](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-jquery)
-- [DOM Elements](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-element)
-- [Plain-text](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-string)
-- [#hashtag plugin](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-plugin-hashtag)
-- [@mention plugin](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-plugin-mention)
-- [#ticket plugin](https://github.com/Hypercontext/linkifyjs/tree/main/packages/linkify-plugin-ticket)
+- [HTML strings](../linkify-html)
+- [React component](../linkify-react)
+- [jQuery plugin](../linkify-jquery)
+- [DOM Elements](../linkify-element)
+- [Plain-text](../linkify-string)
+- [#hashtag plugin](../linkify-plugin-hashtag)
+- [@mention plugin](../linkify-plugin-mention)
+- [#ticket plugin](../linkify-plugin-ticket)
 
 ## Usage
 
