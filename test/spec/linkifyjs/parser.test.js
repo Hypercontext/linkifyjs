@@ -229,6 +229,14 @@ const tests = [
 		[Url],
 		['http.org']
 	], [
+		'http123.org',
+		[Url],
+		['http123.org']
+	], [
+		'http-help.org',
+		[Url],
+		['http-help.org']
+	], [
 		'view-source.net',
 		[Url],
 		['view-source.net']

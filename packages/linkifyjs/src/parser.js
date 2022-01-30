@@ -87,10 +87,6 @@ export function init() {
 	makeT(SlashSchemeColon, tk.SLASH, SlashSchemeColonSlash);
 	makeT(SlashSchemeColonSlash, tk.SLASH, UriPrefix);
 
-	// Scheme followed by dot can be the start of a URL:
-	makeT(Scheme, tk.DOT, DomainDot);
-	makeT(SlashScheme, tk.DOT, DomainDot);
-
 	// The very first potential domain name + full URL
 	makeT(Start, tk.LOCALHOST, DomainDotTld);
 
@@ -104,6 +100,12 @@ export function init() {
 	makeT(Domain, tk.DOT, DomainDot);
 	makeT(Domain, tk.HYPHEN, DomainHyphen);
 	makeMultiT(Domain, tk.domain, Domain);
+	makeT(Scheme, tk.DOT, DomainDot);
+	makeT(Scheme, tk.HYPHEN, DomainHyphen);
+	makeMultiT(Scheme, tk.domain, Domain);
+	makeT(SlashScheme, tk.DOT, DomainDot);
+	makeT(SlashScheme, tk.HYPHEN, DomainHyphen);
+	makeMultiT(SlashScheme, tk.domain, Domain);
 	makeT(DomainDot, tk.TLD, DomainDotTld);
 	makeT(DomainDot, tk.UTLD, DomainDotTld);
 	makeMultiT(DomainDot, tk.domain, Domain);
