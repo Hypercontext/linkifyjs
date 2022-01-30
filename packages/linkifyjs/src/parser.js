@@ -405,6 +405,6 @@ export { mtk as tokens };
 function parserCreateMultiToken(Multi, input, tokens) {
 	const startIdx = tokens[0].s;
 	const endIdx = tokens[tokens.length - 1].e;
-	const value = input.substr(startIdx, endIdx - startIdx);
+	const value = input.slice(startIdx, endIdx);
 	return new Multi(value, tokens);
 }
