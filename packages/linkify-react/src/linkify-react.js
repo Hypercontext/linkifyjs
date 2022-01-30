@@ -80,7 +80,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 /**
  * @template P
  * @template {string | React.JSXElementConstructor<P>} T
- * @param {P & { tagName?: T, options?: any, children?: React.ReactNode}} props
+ * @param {P & { as?: T, tagName?: T, tagName?: T, options?: any, children?: React.ReactNode}} props
  * @returns {React.ReactElement<P, T>}
  */
 const Linkify = (props) => {
@@ -98,15 +98,15 @@ const Linkify = (props) => {
 
 	const newProps = { key: '__linkify-wrapper' };
 	for (const prop in props) {
-		if (prop !== 'options' && prop !== 'tagName' && prop !== 'children') {
+		if (prop !== 'options' && prop !== 'as' && prop !== 'tagName' && prop !== 'children') {
 			newProps[prop] = props[prop];
 		}
 	}
 
 	const opts = new Options(props.options, defaultLinkRender);
-	const tagName = props.tagName || React.Fragment || 'span';
+	const as = props.as || props.tagName || React.Fragment || 'span';
 	const children = props.children;
-	const element = React.createElement(tagName, newProps, children);
+	const element = React.createElement(as, newProps, children);
 
 	return linkifyReactElement(element, opts, 0);
 };

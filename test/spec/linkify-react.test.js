@@ -57,7 +57,7 @@ describe('linkify-react', () => {
 
 	it('Works with overriden options', function () {
 		tests.map((test) => {
-			var props = {options, tagName: 'div', className: 'lambda'};
+			var props = {options, as: 'div', className: 'lambda'};
 			var linkified = React.createElement(Linkify, props, test[0]);
 			var result = ReactDOMServer.renderToStaticMarkup(linkified);
 			expect(result).to.be.eql(test[2]);
