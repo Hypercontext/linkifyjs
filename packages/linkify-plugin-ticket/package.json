@@ -1,6 +1,6 @@
 {
   "name": "linkify-plugin-ticket",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.2",
   "description": "Numeric ticket plugin for linkifyjs",
   "main": "index.js",
   "module": "dist/linkify-plugin-ticket.module.js",
@@ -29,6 +29,6 @@
   },
   "homepage": "https://linkify.js.org",
   "peerDependencies": {
-    "linkifyjs": "*"
+    "linkifyjs": "^4.0.0-beta.1"
   }
 }
