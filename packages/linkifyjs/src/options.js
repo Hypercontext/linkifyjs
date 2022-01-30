@@ -22,16 +22,19 @@ export const defaults = {
 };
 
 /**
- * @typedef {null | {[event: string]: Function}} LinkifyEventListeners
+ * @typedef {?{ [event: string]: Function }} LinkifyEventListeners
+ */
+
+/**
+ * @typedef {{ tagName: any, attributes: any, content: string, events: LinkifyEventListeners }} LinkifyIntermediateRepresentation
  */
 
 /**
  * @class Options
  * @param {Object | Options} [opts] Set option properties besides the defaults
- * @param {({ tagName: any, attributes: any, content: string, events: LinkifyEventListeners }) => any} [defaultRender]
- *   (For internal use) default render function that determines how to generate
- *   an HTML element based on a link token's derived tagName, attributes and
- *   HTML. Similar to render option.
+ * @param {(ir: LinkifyIntermediateRepresentation) => any} [defaultRender] (For internal use) default
+ * 	 render function that determines how to generate an HTML element based on a
+ *   link token's derived tagName, attributes and HTML. Similar to render option
  */
 export function Options(opts, defaultRender = null) {
 	const o = {};
@@ -53,7 +56,7 @@ Options.prototype = {
 	o: {},
 
 	/**
-	 * @property {({ tagName: any, attributes: any, content: string, events: ?{[string]: Function} }) => any} [defaultRender]
+	 * @property {(ir: LinkifyIntermediateRepresentation) => any} [defaultRender]
 	 */
 	defaultRender: null,
 
