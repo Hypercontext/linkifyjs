@@ -12,18 +12,24 @@ function stringToElements(str, opts, parentElementId) {
 
 	const tokens = tokenize(str);
 	const elements = [];
-	let nlId = 0;
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
+		const defaultKey = `__linkify-el-${parentElementId}-${i}`;
 
 		if (token.t === 'nl' && opts.get('nl2br')) {
-			elements.push(React.createElement('br', { key: `__linkify-el-${parentElementId}-nl-${nlId++}` }));
+			elements.push(React.createElement('br', { key: defaultKey }));
 		} else if (!token.isLink || !opts.check(token)) {
 			// Regular text
 			elements.push(token.toString());
 		} else {
-			elements.push(opts.render(token));
+			let rendered = opts.render(token);
+			if (!('key' in rendered.props)) {
+				// Ensure generated element has unique key
+				const props = options.assign({ key: defaultKey }, rendered.props);
+				rendered = React.cloneElement(rendered, props);
+			}
+			elements.push(rendered);
 		}
 	}
 

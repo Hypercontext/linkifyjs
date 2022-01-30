@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import * as linkify from 'linkifyjs/src/linkify';
 import Linkify from 'linkify-react/src/linkify-react';
+import mention from 'linkify-plugin-mention/src/mention';
 
 const options = { // test options
 	tagName: 'em',
@@ -25,7 +27,7 @@ describe('linkify-react', () => {
 	// [0] - Original text
 	// [1] - Linkified with default options
 	// [2] - Linkified with new options
-	var tests = [
+	let tests = [
 		[
 			'Test with no links',
 			'Test with no links',
@@ -99,6 +101,27 @@ describe('linkify-react', () => {
 		var result = ReactDOMServer.renderToStaticMarkup(linkified);
 		var expected = 'A great site is <a href="http://google.com">google.com</a> AND <em>https://facebook.github.io/react/</em>';
 		expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
+	});
 
+	describe('Custom render', () => {
+		beforeEach(() => { linkify.registerPlugin('mention', mention); });
+
+		it('Renders dedicated mentions component', () => {
+			const options = {
+				formatHref: {
+					mention: (href) =>`/users${href}`
+				},
+				render: {
+					mention: ({ attributes, content }) => {
+						const { href, ...props } = attributes;
+						return React.createElement('span', { 'data-to': href, ...props }, content);
+					}
+				}
+			};
+			const linkified = React.createElement(Linkify, { options }, 'Check out linkify.js.org or contact @nfrasser');
+			const result = ReactDOMServer.renderToStaticMarkup(linkified);
+			const expected = 'Check out <a href="http://linkify.js.org">linkify.js.org</a> or contact <span data-to="/users/nfrasser">@nfrasser</span>';
+			expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
+		});
 	});
 });
