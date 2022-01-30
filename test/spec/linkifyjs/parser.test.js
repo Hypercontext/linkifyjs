@@ -224,10 +224,26 @@ const tests = [
 		'~emersion/soju-dev@lists.sr.ht',
 		[Email],
 		['~emersion/soju-dev@lists.sr.ht']
+	], [
+		'http.org',
+		[Url],
+		['http.org']
+	], [
+		'view-source.net',
+		[Url],
+		['view-source.net']
+	], [
+		'steam.com',
+		[Url],
+		['steam.com']
 	]
 ];
 
-let scannerStart = scanner.init();
+let scannerStart = scanner.init([
+	['steam', true],
+	['view-source', false],
+]);
+
 let start = parser.init();
 describe('linkifyjs/parser#run()', () => {
 
