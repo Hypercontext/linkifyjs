@@ -60,6 +60,7 @@ export default function linkifyHtml(str, opts = {}) {
 			if (token.attributes.length > 0) {
 				link += ' ' + attributeArrayToStrings(token.attributes).join(' ');
 			}
+			if (token.selfClosing) { link += ' /'; }
 			link += '>';
 			linkified.push(link);
 			break;

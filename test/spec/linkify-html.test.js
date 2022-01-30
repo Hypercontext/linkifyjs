@@ -1,6 +1,11 @@
 import linkifyHtml from 'linkify-html/src/linkify-html';
 import htmlOptions from './html/options';
 
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 801.197 614.273">
+	<rect height="304" width="554" y="50" x="50" stroke="#000" fill="#ff0000" />
+	<rect height="304" width="554" y="150" x="131" stroke="#000" fill="#fff" />
+</svg>`;
+
 describe('linkify-html', () => {
 
 	// For each element in this array
@@ -13,17 +18,17 @@ describe('linkify-html', () => {
 			'Test with no links',
 			'Test with no links'
 		], [
-			'The URL is google.com and the email is <strong>test@example.com</strong>',
-			'The URL is <a href="http://google.com">google.com</a> and the email is <strong><a href="mailto:test@example.com">test@example.com</a></strong>',
-			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">google.com</span> and the email is <strong><span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">test@example.com</span></strong>'
+			'The URL is google.com and the email is <strong>test@example.com</strong><br>',
+			'The URL is <a href="http://google.com">google.com</a> and the email is <strong><a href="mailto:test@example.com">test@example.com</a></strong><br>',
+			'The URL is <span href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">google.com</span> and the email is <strong><span href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">test@example.com</span></strong><br>'
 		], [
 			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test.wut.yo@gmail.co.uk!',
 			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.wut.yo@gmail.co.uk">test.wut.yo@gmail.co.uk</a>!',
 			'Super long maps URL <span href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">https://www.google.ca/maps/@43.472082,-8…</span>, a #hash-tag, and an email: <span href="mailto:test.wut.yo@gmail.co.uk?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">test.wut.yo@gmail.co.uk</span>!',
 		], [
-			'This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt http://github.com</h1>',
-			'This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt <a href="http://github.com">http://github.com</a></h1>',
-			'This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt <span href="http://github.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">http://github.com</span></h1>'
+			'This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt http://github.com</h1><br />',
+			'This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt <a href="http://github.com">http://github.com</a></h1><br />',
+			'This link is already in an anchor tag <a href="#bro">google.com</a> LOL and this one <h1>isnt <span href="http://github.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">http://github.com</span></h1><br />'
 		], [
 			'Unterminated anchor tag <a href="http://google.com"> This <em>is a link google.com</em> and this works!! https://reddit.com/r/photography/',
 			'Unterminated anchor tag <a href="http://google.com"> This <em>is a link google.com</em> and this works!! https://reddit.com/r/photography/',
@@ -52,6 +57,10 @@ describe('linkify-html', () => {
 			'http://xml.example.com/pub.dtd?a=1&b=2',
 			'<a href="http://xml.example.com/pub.dtd?a=1&b=2">http://xml.example.com/pub.dtd?a=1&amp;b=2</a>',
 			'<span href="http://xml.example.com/pub.dtd?a=1&b=2" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">http://xml.example.com/pub.dtd?a=1&amp;b=2</span>'
+		], [
+			svg,
+			svg,
+			svg
 		]
 	];
 
