@@ -1,8 +1,9 @@
-const linkify = require('linkifyjs');
-const { hashtag } = require('linkify-plugin-hashtag/src/hashtag');
+import * as linkify from 'linkifyjs';
+import hashtag from 'linkify-plugin-hashtag/src/hashtag';
 
 describe('plugins/hashtag', () => {
-	beforeEach(() => { linkify.reset(); });
+	before(() => { linkify.reset(); });
+	after(() => { linkify.reset(); });
 
 	it('cannot parse hashtags before applying the plugin', () => {
 		expect(linkify.find('There is a #hashtag #YOLO-2015 and #1234 and #%^&*( should not work'))

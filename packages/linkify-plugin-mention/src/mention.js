@@ -1,9 +1,7 @@
 /**
 	Mention parser plugin for linkify
 */
-import { registerPlugin } from 'linkifyjs';
-
-export const mention = ({ scanner, parser, utils }) => {
+const mention = ({ scanner, parser, utils }) => {
 	const { numeric, domain, HYPHEN, SLASH, UNDERSCORE, AT } = scanner.tokens;
 	const Start = parser.start;
 
@@ -45,4 +43,5 @@ export const mention = ({ scanner, parser, utils }) => {
 	MentionDivider.tt(HYPHEN, Mention);
 };
 
-registerPlugin('mention', mention);
+export default mention;
+

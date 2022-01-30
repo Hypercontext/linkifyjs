@@ -1,9 +1,10 @@
-const { expect } = require('chai');
-const linkify = require('linkifyjs');
-const { mention } = require('linkify-plugin-mention/src/mention');
+import { expect } from 'chai';
+import * as linkify from 'linkifyjs';
+import mention from 'linkify-plugin-mention/src/mention';
 
 describe('plugins/mention', () => {
-	beforeEach(() => { linkify.reset(); });
+	before(() => { linkify.reset(); });
+	after(() => { linkify.reset(); });
 
 	it('Cannot parse mentions before applying the plugin', () => {
 		expect(linkify.find('There is a @mention @YOLO2016 and @1234 and @%^&*( should not work'))

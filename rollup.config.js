@@ -37,7 +37,7 @@ export function linkifyInterface(name, opts = {}) {
 export function linkifyPlugin(name) {
 	const globals =  { linkifyjs: 'linkify' };
 	return {
-		input: `src/${name}.js`,
+		input: 'src/index.js',
 		external: ['linkifyjs'],
 		output: [
 			{ file: 'index.js', format: 'cjs', exports: 'auto'},

@@ -1,9 +1,4 @@
-/**
-	Quick Hashtag parser plugin for linkify
-*/
-import { registerPlugin } from 'linkifyjs';
-
-export const hashtag = ({ scanner, parser, utils }) => {
+const hashtag = ({ scanner, parser, utils }) => {
 	// Various tokens that may compose a hashtag
 	const { POUND, NUM, UNDERSCORE, words } = scanner.tokens;
 
@@ -29,8 +24,6 @@ export const hashtag = ({ scanner, parser, utils }) => {
 	HashPrefix.tt(NUM, HashPrefix);
 	HashPrefix.tt(UNDERSCORE, HashPrefix);
 	HashPrefix.tt(words, Hashtag);
-
-
 };
 
-registerPlugin('hashtag', hashtag);
+export default hashtag;

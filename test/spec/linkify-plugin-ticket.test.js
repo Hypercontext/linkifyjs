@@ -1,8 +1,9 @@
-const linkify = require('linkifyjs');
-const { ticket } = require('linkify-plugin-ticket/src/ticket');
+import * as linkify from 'linkifyjs';
+import ticket from 'linkify-plugin-ticket/src/ticket';
 
 describe('plugins/ticket', () => {
-	beforeEach(() => { linkify.reset(); });
+	before(() => { linkify.reset(); });
+	after(() => { linkify.reset(); });
 
 	it('cannot parse tickets before applying the plugin', () => {
 		expect(

@@ -80,10 +80,6 @@ describe('linkifyjs', () => {
 			expect(linkify.find).to.be.a('function');
 		});
 
-		it('takes a single argument', () => {
-			expect(linkify.find.length).to.be.eql(1); // type is optional
-		});
-
 		it('Find nothing in an empty string', () => {
 			expect(linkify.find('')).to.deep.eql([]);
 		});
@@ -141,9 +137,6 @@ describe('linkifyjs', () => {
 
 		it('is a function', () => {
 			expect(linkify.test).to.be.a('function');
-		});
-		it('takes a single argument', () => {
-			expect(linkify.test.length).to.be.eql(1); // type is optional
 		});
 
 		let testName;

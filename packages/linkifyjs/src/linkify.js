@@ -32,6 +32,7 @@ export function reset() {
  * @param {Function} plugin function that accepts mutable linkify state
  */
 export function registerPlugin(name, plugin) {
+	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid plugin ${plugin} (expects function)`); }
 	for (let i = 0; i < INIT.pluginQueue.length; i++) {
 		if (name === INIT.pluginQueue[i][0]) {
 			warn(`linkifyjs: plugin "${name}" already registered - will be overwritten`);
@@ -57,7 +58,7 @@ export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
 		warn(`linkifyjs: already initialized - will not register custom protocol "${protocol}" until you manually call linkify.init(). To avoid this warning, please register all custom schemes before invoking linkify the first time.`);
 	}
 	if (!/^[a-z]+(-[a-z]+)*$/.test(protocol)) {
-		throw Error('linkifyjs: incorrect protocol format.\n 1. Must only contain lowercase ASCII letters or -\n 2. Cannot start or end with -\n 3. - cannot repeat');
+		throw new Error('linkifyjs: incorrect protocol format.\n 1. Must only contain lowercase ASCII letters or -\n 2. Cannot start or end with -\n 3. - cannot repeat');
 	}
 	INIT.customSchemes.push([protocol, optionalSlashSlash]);
 }
