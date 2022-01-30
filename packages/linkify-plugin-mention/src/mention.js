@@ -22,6 +22,13 @@ export const mention = ({ scanner, parser, utils }) => {
 	At.tt(numeric, Mention);
 	At.tt(UNDERSCORE, Mention);
 
+	// Begin with hyphen (not mention unless contains other characters)
+	const AtHyphen = At.tt(HYPHEN);
+	AtHyphen.tt(HYPHEN, AtHyphen);
+	AtHyphen.tt(domain, Mention);
+	AtHyphen.tt(numeric, Mention);
+	AtHyphen.tt(UNDERSCORE, Mention);
+
 	// More valid mentions
 	Mention.tt(domain, Mention);
 	Mention.tt(numeric, Mention);

@@ -212,6 +212,10 @@ describe('plugins/mention', () => {
 		it('ignores interjecting dot', () => {
 			expect(linkify.test('@hello.world', 'mention')).to.not.be.ok;
 		});
+
+		it('begin with hyphen', () => {
+			expect(linkify.test('@-advanced', 'mention')).to.be.ok;
+		});
 	});
 
 	afterEach(() => { linkify.reset(); });
