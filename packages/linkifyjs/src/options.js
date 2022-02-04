@@ -10,9 +10,9 @@ import assign from './assign';
 
 /**
  * All formatted properties required to render a link, including `tagName`,
- * `attributes`, `content` and `events`.
+ * `attributes`, `content` and `eventListeners`.
  * @typedef {{ tagName: any, attributes: {[attr: string]: any}, content: string,
- * events: EventListeners }} IntermediateRepresentation
+ * eventListeners: EventListeners }} IntermediateRepresentation
  */
 
 /**
@@ -55,26 +55,26 @@ import assign from './assign';
  * { url: 'hello', email: (value, token) => 'world'}
  * ```
  * @template V
- * @typedef {OptObj<V> | { [type: string]: V | ((value: string, token: MultiToken) => V) }} Opt
+ * @typedef {V | ((value: string, type: string, token: MultiToken) => V) | { [type: string]: V | ((value: string, token: MultiToken) => V) }} Opt
  */
 
 /**
  * See available options: https://linkify.js.org/docs/options.html
  * @typedef {{
  * 	defaultProtocol?: string,
- *  events?: null | OptObj<EventListeners>,
+ *  events?: OptObj<EventListeners>,
  * 	format?: Opt<string>,
  * 	formatHref?: Opt<string>,
  * 	nl2br?: boolean,
- * 	tagName?: ?Opt<string>,
- * 	target?: ?Opt<string>,
- * 	rel?: ?Opt<string>,
+ * 	tagName?: Opt<any>,
+ * 	target?: Opt<string>,
+ * 	rel?: Opt<string>,
  * 	validate?: Opt<boolean>,
  * 	truncate?: Opt<number>,
  * 	className?: Opt<string>,
- * 	attributes?: OptObj<{[attr: string]: any}>,
+ * 	attributes?: OptObj<({ [attr: string]: any })>,
  *  ignoreTags?: string[],
- * 	render?: OptFn<(ir: IntermediateRepresentation) => any>
+ * 	render?: OptFn<((ir: IntermediateRepresentation) => any)>
  * }} Opts
  */
 

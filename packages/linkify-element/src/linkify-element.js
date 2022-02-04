@@ -1,6 +1,3 @@
-/**
-	Linkify a HTML DOM node
-*/
 import { tokenize, Options } from 'linkifyjs';
 
 const HTML_NODE = 1, TXT_NODE = 3;

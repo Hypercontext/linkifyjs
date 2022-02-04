@@ -51,7 +51,7 @@ export function registerPlugin(name, plugin) {
  * "protocol://..." will be considered a link. If `optionalSlashSlash` is set to
  * `true`, anything with format "protocol:..." will be considered a link.
  * @param {string} protocol
- * @param {boolean} [optionalSlashSlash] if set to true,
+ * @param {boolean} [optionalSlashSlash]
  */
 export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
 	if (INIT.initialized) {
