@@ -80,7 +80,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 /**
  * @template P
  * @template {string | React.JSXElementConstructor<P>} T
- * @param {P & { as?: T, tagName?: T, tagName?: T, options?: any, children?: React.ReactNode}} props
+ * @param {P & { as?: T, tagName?: T, tagName?: T, options?: import('linkifyjs').Opts, children?: React.ReactNode}} props
  * @returns {React.ReactElement<P, T>}
  */
 const Linkify = (props) => {

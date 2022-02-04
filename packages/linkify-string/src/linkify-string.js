@@ -33,7 +33,7 @@ function defaultRender({ tagName, attributes, content }) {
  * interface if you need to parse HTML entities.
  *
  * @param {string} str string to linkify
- * @param {object} [opts] overridable options
+ * @param {import('linkifyjs').Opts} [opts] overridable options
  * @returns {string}
  */
 function linkifyStr(str, opts = {}) {

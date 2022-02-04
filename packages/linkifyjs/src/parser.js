@@ -315,7 +315,7 @@ export function init() {
  *
  * @param {State} start parser start state
  * @param {string} input the original input used to generate the given tokens
- * @param {{t: string, v: string, s: number, e: number}[]} tokens list of scanned tokens
+ * @param {Token[]} tokens list of scanned tokens
  * @returns {MultiToken[]}
  */
 export function run(start, input, tokens) {
@@ -399,9 +399,9 @@ export { mtk as tokens };
 /**
  * Utility function for instantiating a new multitoken with all the relevant
  * fields during parsing.
- * @param {Class<MultiToken>} Multi class to instantiate
+ * @param {new (value: string, tokens: Token[]) => MultiToken} Multi class to instantiate
  * @param {string} input original input string
- * @param {{t: string, v: string, s: number, e: number}[]} tokens consecutive tokens scanned from input string
+ * @param {Token[]} tokens consecutive tokens scanned from input string
  * @returns {MultiToken}
  */
 function parserCreateMultiToken(Multi, input, tokens) {

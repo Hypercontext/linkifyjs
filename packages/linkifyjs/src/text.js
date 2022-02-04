@@ -100,4 +100,51 @@ export const alphanumeric = words.concat(NUM);
 export const domain = words.concat(COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME, NUM, EMOJIS);
 export const scheme = [SCHEME, SLASH_SCHEME, COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME];
 
-export const collections = { ascii, asciinumeric, words, alphanumeric, domain, scheme };
+// Define each property separately to let typescript know that this object is
+// open for adding more collections.
+export const collections = {};
+collections.ascii = ascii;
+collections.asciinumeric = asciinumeric;
+collections.words = words;
+collections.alphanumeric = alphanumeric;
+collections.domain = domain;
+collections.scheme = scheme;
+
+/**
+ * @param {string} name Name of text token collections. Will be available in plugins as scanner.tokens.collections.<name>
+ * @returns {string[]} the collection
+ */
+export function registerTextTokenCollection(name) {
+	if (!(name in collections)) {
+		collections[name] = [];
+	}
+	return collections[name];
+}
+
+export function collectionsWithToken(name) {
+	let collectionNames = [];
+	for (let col in collections) {
+		if (collections[col].indexOf(name) >= 0) {
+			collectionNames.push(col);
+		}
+	}
+	return collectionNames;
+}
+
+/**
+ * Register a text token that the parser can recognize
+ * @param {string} name Token name in all caps (by convention)
+ * @param {string[]} collectionNames List of collections into which to add this token. Any previously-unknown collection will be created.
+ * @returns {string}
+ */
+export function registerTextToken(name, collectionNames = []) {
+	for (let i = 0; i < collectionNames.length; i++) {
+		const collection = registerTextTokenCollection(collectionNames[i]);
+		collection.push(name);
+	}
+	return name;
+}
+
+/**
+ * @typedef {{t: string, v: string, s: number, e: number}} Token
+ */

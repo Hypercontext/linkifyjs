@@ -7,49 +7,35 @@ import assign from './assign';
 	Tokens composed of arrays of TextTokens
 ******************************************************************************/
 
-function inherits(parent, child, props={}) {
-	const extended = Object.create(parent.prototype);
-	for (const p in props) {
-		extended[p] = props[p];
-	}
-	extended.constructor = child;
-	child.prototype = extended;
-	return child;
+
+/**
+ * @param {string} value
+ * @param {Token[]} tokens
+ */
+export function MultiToken(value, tokens) {
+	this.t = 'token';
+	this.v = value;
+	this.tk = tokens;
 }
 
 /**
-	Abstract class used for manufacturing tokens of text tokens. That is rather
-	than the value for a token being a small string of text, it's value an array
-	of text tokens.
-
-	Used for grouping together URLs, emails, hashtags, and other potential
-	creations.
-
-	@class MultiToken
-	@param {string} value
-	@param {{t: string, v: string, s: number, e: number}[]} tokens
-	@abstract
-*/
-export function MultiToken() {}
-
+ * Abstract class used for manufacturing tokens of text tokens. That is rather
+ * than the value for a token being a small string of text, it's value an array
+ * of text tokens.
+ *
+ * Used for grouping together URLs, emails, hashtags, and other potential
+ * creations.
+ * @class MultiToken
+ * @property {string} t
+ * @property {string} v
+ * @property {Token[]} tk
+ * @abstract
+ */
 MultiToken.prototype = {
-	/**
-	 * String representing the type for this token
-	 * @property t
-	 * @default 'token'
-	 */
-	t: 'token',
-
-	/**
-	 * Is this multitoken a link?
-	 * @property isLink
-	 * @default false
-	 */
 	isLink: false,
 
 	/**
 	 * Return the string this token represents.
-	 * @param {Options | string} [_opts] Formatting options
 	 * @return {string}
 	 */
 	toString() {
@@ -59,21 +45,22 @@ MultiToken.prototype = {
 	/**
 	 * What should the value for this token be in the `href` HTML attribute?
 	 * Returns the `.toString` value by default.
-	 * @param {Options | string} [_opts] Formatting options
+	 * @param {string} [scheme]
 	 * @return {string}
 	*/
-	toHref() {
+	toHref(scheme) {
+		!!scheme;
 		return this.toString();
 	},
 
 	/**
-	 * @param {Options} opts Formatting options
+	 * @param {Options} options Formatting options
 	 * @returns {string}
 	 */
-	toFormattedString(opts) {
+	toFormattedString(options) {
 		const val = this.toString();
-		const truncate = opts.get('truncate', val, this);
-		const formatted = opts.get('format', val, this);
+		const truncate = options.get('truncate', val, this);
+		const formatted = options.get('format', val, this);
 		return (truncate && formatted.length > truncate)
 			? formatted.substring(0, truncate) + '…'
 			: formatted;
@@ -81,11 +68,11 @@ MultiToken.prototype = {
 
 	/**
 	 *
-	 * @param {Options} [opts]
+	 * @param {Options} options
 	 * @returns {string}
 	 */
-	toFormattedHref(opts) {
-		return opts.get('formatHref', this.toHref(opts.get('defaultProtocol')), this);
+	toFormattedHref(options) {
+		return options.get('formatHref', this.toHref(options.get('defaultProtocol')), this);
 	},
 
 	/**
@@ -128,14 +115,14 @@ MultiToken.prototype = {
 
 	/**
 	 *
-	 * @param {Options} opts Formatting option
+	 * @param {Options} options Formatting option
 	 */
-	toFormattedObject(opts) {
+	toFormattedObject(options) {
 		return {
 			type: this.t,
-			value: this.toFormattedString(opts),
+			value: this.toFormattedString(options),
 			isLink: this.isLink,
-			href: this.toFormattedHref(opts),
+			href: this.toFormattedHref(options),
 			start: this.startIndex(),
 			end: this.endIndex()
 		};
@@ -143,29 +130,29 @@ MultiToken.prototype = {
 
 	/**
 	 * Whether this token should be rendered as a link according to the given options
-	 * @param {Options} opts
+	 * @param {Options} options
 	 * @returns {boolean}
 	 */
-	validate(opts) {
-		return opts.get('validate', this.toString(), this);
+	validate(options) {
+		return options.get('validate', this.toString(), this);
 	},
 
 	/**
 	 * Return an object that represents how this link should be rendered.
-	 * @param {Options} opts Formattinng options
+	 * @param {Options} options Formattinng options
 	 */
-	render(opts) {
+	render(options) {
 		const token = this;
-		const tagName = opts.get('tagName', href, token);
-		const href = this.toFormattedHref(opts);
-		const content = this.toFormattedString(opts);
+		const href = this.toFormattedHref(options);
+		const tagName = options.get('tagName', href, token);
+		const content = this.toFormattedString(options);
 
 		const attributes = {};
-		const className = opts.get('className', href, token);
-		const target = opts.get('target', href, token);
-		const rel = opts.get('rel', href, token);
-		const attrs = opts.getObj('attributes', href, token);
-		const eventListeners = opts.getObj('events', href, token);
+		const className = options.get('className', href, token);
+		const target = options.get('target', href, token);
+		const rel = options.get('rel', href, token);
+		const attrs = options.getObj('attributes', href, token);
+		const eventListeners = options.getObj('events', href, token);
 
 		attributes.href = href;
 		if (className) { attributes.class = className; }
@@ -184,22 +171,23 @@ export { MultiToken as Base };
  * Create a new token that can be emitted by the parser state machine
  * @param {string} type readable type of the token
  * @param {object} props properties to assign or override, including isLink = true or false
- * @returns {(value: string, tokens: {t: string, v: string, s: number, e: number}) => MultiToken} new token class
+ * @returns {new (value: string, tokens: Token[]) => MultiToken} new token class
  */
 export function createTokenClass(type, props) {
-	function Token(value, tokens) {
-		this.t = type;
-		this.v = value;
-		this.tk = tokens;
+	class Token extends MultiToken {
+		constructor(value, tokens) {
+			super(value, tokens);
+			this.t = type;
+		}
 	}
-	inherits(MultiToken, Token, props);
+	for (const p in props) {
+		Token.prototype[p] = props[p];
+	}
 	return Token;
 }
 
 /**
 	Represents a list of tokens making up a valid email address
-	@class Email
-	@extends MultiToken
 */
 export const Email = createTokenClass('email', {
 	isLink: true,
@@ -210,22 +198,18 @@ export const Email = createTokenClass('email', {
 
 /**
 	Represents some plain text
-	@class Text
-	@extends MultiToken
 */
 export const Text = createTokenClass('text');
 
 /**
 	Multi-linebreak token - represents a line break
 	@class Nl
-	@extends MultiToken
 */
 export const Nl = createTokenClass('nl');
 
 /**
 	Represents a list of text tokens making up a valid URL
 	@class Url
-	@extends MultiToken
 */
 export const Url = createTokenClass('url', {
 	isLink: true,

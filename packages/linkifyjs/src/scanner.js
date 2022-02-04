@@ -206,7 +206,7 @@ export function init(customSchemes = []) {
 	@method run
 	@param {State} start scanner starting state
 	@param {string} str input string to scan
-	@return {{t: string, v: string, s: number, l: number}[]} list of tokens, each with a type and value
+	@return {Token[]} list of tokens, each with a type and value
 */
 export function run(start, str) {
 	// State machine is not case sensitive, so input is tokenized in lowercased

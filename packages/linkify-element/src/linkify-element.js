@@ -7,7 +7,7 @@ const HTML_NODE = 1, TXT_NODE = 3;
 
 /**
  * @param {HTMLElement} parent
- * @param {Text | HTMLElement} oldChild
+ * @param {Text | HTMLElement | ChildNode} oldChild
  * @param {Array<Text | HTMLElement>} newChildren
  */
 function replaceChildWithChildren(parent, oldChild, newChildren) {
@@ -20,21 +20,21 @@ function replaceChildWithChildren(parent, oldChild, newChildren) {
 }
 
 /**
- * @param {MultiToken[]} tokens
- * @param {Object} opts
- * @param {Document} doc A
+ * @param {import('linkifyjs').MultiToken[]} tokens
+ * @param {import('linkifyjs').Options} options
+ * @param {Document} doc Document implementation
  * @returns {Array<Text | HTMLElement>}
  */
-function tokensToNodes(tokens, opts, doc) {
+function tokensToNodes(tokens, options, doc) {
 	const result = [];
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
-		if (token.t === 'nl' && opts.get('nl2br')) {
+		if (token.t === 'nl' && options.get('nl2br')) {
 			result.push(doc.createElement('br'));
-		} else if (!token.isLink || !opts.check(token)) {
+		} else if (!token.isLink || !options.check(token)) {
 			result.push(doc.createTextNode(token.toString()));
 		} else {
-			result.push(opts.render(token));
+			result.push(options.render(token));
 		}
 	}
 
@@ -43,12 +43,12 @@ function tokensToNodes(tokens, opts, doc) {
 
 /**
  * Requires document.createElement
- * @param {HTMLElement} element
- * @param {Options} opts
+ * @param {HTMLElement | ChildNode} element
+ * @param {import('linkifyjs').Options} options
  * @param {Document} doc
  * @returns {HTMLElement}
  */
-function linkifyElementHelper(element, opts, doc) {
+function linkifyElementHelper(element, options, doc) {
 
 	// Can the element be linkified?
 	if (!element || element.nodeType !== HTML_NODE) {
@@ -56,7 +56,7 @@ function linkifyElementHelper(element, opts, doc) {
 	}
 
 	// Is this element already a link?
-	if (element.tagName === 'A' || opts.ignoreTags.indexOf(element.tagName) >= 0) {
+	if (element.tagName === 'A' || options.ignoreTags.indexOf(element.tagName) >= 0) {
 		// No need to linkify
 		return element;
 	}
@@ -68,7 +68,7 @@ function linkifyElementHelper(element, opts, doc) {
 
 		switch (childElement.nodeType) {
 		case HTML_NODE:
-			linkifyElementHelper(childElement, opts, doc);
+			linkifyElementHelper(childElement, options, doc);
 			break;
 		case TXT_NODE: {
 			str = childElement.nodeValue;
@@ -79,7 +79,7 @@ function linkifyElementHelper(element, opts, doc) {
 				break;
 			}
 
-			nodes = tokensToNodes(tokens, opts, doc);
+			nodes = tokensToNodes(tokens, options, doc);
 
 			// Swap out the current child for the set of nodes
 			replaceChildWithChildren(element, childElement, nodes);
@@ -123,11 +123,11 @@ function getDefaultRender(doc) {
  * convert them to anchor tags.
  *
  * @param {HTMLElement} element A DOM node to linkify
- * @param {Object} opts linkify options
+ * @param {import('linkifyjs').Opts} [opts] linkify options
  * @param {Document} [doc] (optional) window.document implementation, if differs from global
  * @returns {HTMLElement}
  */
-export default function linkifyElement(element, opts, doc = null) {
+export default function linkifyElement(element, opts = null, doc = null) {
 	try {
 		doc = doc || document || window && window.document || global && global.document;
 	} catch (e) { /* do nothing for now */ }
@@ -140,12 +140,18 @@ export default function linkifyElement(element, opts, doc = null) {
 		);
 	}
 
-	opts = new Options(opts, getDefaultRender(doc));
-	return linkifyElementHelper(element, opts, doc);
+	const options = new Options(opts, getDefaultRender(doc));
+	return linkifyElementHelper(element, options, doc);
 }
 
-// Maintain reference to the recursive helper to cache option-normalization
+// Maintain reference to the recursive helper and option-normalization for use
+// in linkify-jquery
 linkifyElement.helper = linkifyElementHelper;
 linkifyElement.getDefaultRender = getDefaultRender;
+
+/**
+ * @param {import('linkifyjs').Opts | import('linkifyjs').Options} opts
+ * @param {Document} doc
+ */
 linkifyElement.normalize = (opts, doc) => new Options(opts, getDefaultRender(doc));
 

@@ -11,7 +11,7 @@ const Doctype = 'Doctype';
 
 /**
  * @param {string} str html string to link
- * @param {object} [opts] linkify options
+ * @param {import('linkifyjs').Opts} [opts] linkify options
  * @returns {string} resulting string
  */
 export default function linkifyHtml(str, opts = {}) {
@@ -21,7 +21,7 @@ export default function linkifyHtml(str, opts = {}) {
 	const linkifiedTokens = [];
 	const linkified = [];
 
-	opts = new Options(opts, defaultRender);
+	const options = new Options(opts, defaultRender);
 
 	// Linkify the tokens given by the parser
 	for (let i = 0; i < tokens.length; i++) {
@@ -32,7 +32,7 @@ export default function linkifyHtml(str, opts = {}) {
 
 			// Ignore all the contents of ignored tags
 			const tagName = token.tagName.toUpperCase();
-			const isIgnored = tagName === 'A' || opts.ignoreTags.indexOf(tagName) >= 0;
+			const isIgnored = tagName === 'A' || options.ignoreTags.indexOf(tagName) >= 0;
 			if (!isIgnored) { continue; }
 
 			let preskipLen = linkifiedTokens.length;
@@ -43,7 +43,7 @@ export default function linkifyHtml(str, opts = {}) {
 			linkifiedTokens.push(token);
 		} else {
 			// Valid text token, linkify it!
-			const linkifedChars = linkifyChars(token.chars, opts);
+			const linkifedChars = linkifyChars(token.chars, options);
 			linkifiedTokens.push.apply(linkifiedTokens, linkifedChars);
 		}
 	}
@@ -91,27 +91,29 @@ export default function linkifyHtml(str, opts = {}) {
 /**
 	`tokens` and `token` in this section referes to tokens returned by
 	`linkify.tokenize`. `linkified` will contain HTML Parser-style tokens
+	@param {string}
+	@param {import('linkifyjs').Options}
 */
-function linkifyChars(str, opts) {
+function linkifyChars(str, options) {
 	const tokens = linkify.tokenize(str);
 	const result = [];
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
 
-		if (token.t === 'nl' && opts.nl2br) {
+		if (token.t === 'nl' && options.nl2br) {
 			result.push({
 				type: StartTag,
 				tagName: 'br',
 				attributes: [],
 				selfClosing: true
 			});
-		} else if (!token.isLink || !opts.check(token)) {
+		} else if (!token.isLink || !options.check(token)) {
 			result.push({ type: Chars, chars: token.toString() });
 		} else {
 			result.push({
 				type: LinkifyResult,
-				rendered: opts.render(token)
+				rendered: options.render(token)
 			});
 		}
 	}

@@ -5,7 +5,7 @@
 		"allowJs": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
-		"maxNodeModuleJsDepth": 1,
+		"maxNodeModuleJsDepth": 2,
 		"outDir": "."
 	}
 }

@@ -85,31 +85,30 @@ export function init() {
 }
 
 /**
-	Parse a string into tokens that represent linkable and non-linkable sub-components
-	@param {string} str
-	@return {MultiToken[]} tokens
-*/
+ * Parse a string into tokens that represent linkable and non-linkable sub-components
+ * @param {string} str
+ * @return {MultiToken[]} tokens
+ */
 export function tokenize(str) {
 	if (!INIT.initialized) { init(); }
 	return parser.run(INIT.parser.start, str, scanner.run(INIT.scanner.start, str));
 }
 
 /**
-	Find a list of linkable items in the given string.
-	@param {string} str string to find links in
-	@param {string} [type] (optional) only find links of a specific type, e.g.,
-		'url' or 'email'
-	@param {Options|Object} [options] (optional) formatting options for final output
+ * Find a list of linkable items in the given string.
+ * @param {string} str string to find links in
+ * @param {string} [type] only find links of a specific type, e.g., 'url' or 'email'
+ * @param {Opts} [opts] formatting options for final output
 */
-export function find(str, type = null, options = {}) {
-	const opts = new Options(options);
+export function find(str, type = null, opts = null) {
+	const options = new Options(opts);
 	const tokens = tokenize(str);
 	const filtered = [];
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
 		if (token.isLink && (!type || token.t === type)) {
-			filtered.push(token.toFormattedObject(opts));
+			filtered.push(token.toFormattedObject(options));
 		}
 	}
 
@@ -140,4 +139,5 @@ export function test(str, type = null) {
 }
 
 export * as options from './options';
+export { MultiToken } from './multi';
 export { Options };

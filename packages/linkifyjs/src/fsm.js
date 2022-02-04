@@ -8,32 +8,28 @@ import assign from './assign';
  * jr is the list of regex-match transitions, jd is the default state to
  * transition to t is the accepting token type, if any. If this is the terminal
  * state, then it does not emit a token.
- * @param {string|class} token to emit
+ * @template T
+ * @property {{ [string]: State<T> }} j
+ * @property {[RegExp, State<T>][]} jr
+ * @property {State<T>} jd
+ * @property {?T} t
  */
-export function State(token) {
-	// this.n = null; // DEBUG: State name
-	this.j = {}; // IMPLEMENTATION 1
-	// this.j = []; // IMPLEMENTATION 2
-	this.jr = [];
-	this.jd = null;
-	this.t = token;
-}
-
-/**
- * Take the transition from this state to the next one on the given input.
- * If this state does not exist deterministically, will create it.
- *
- * @param {string} input character or token to transition on
- * @param {string|class} [token] token or multi-token to emit when reaching
- * this state
- */
-State.prototype = {
+export class State {
 	/**
-	 * @param {State} state
+	 * @param {T} [token] to emit
 	 */
+	constructor(token) {
+		// this.n = null; // DEBUG: State name
+		this.j = {}; // IMPLEMENTATION 1
+		// this.j = []; // IMPLEMENTATION 2
+		this.jr = [];
+		this.jd = null;
+		this.t = token;
+	}
+
 	accepts() {
 		return !!this.t;
-	},
+	}
 
 	/**
 	 * Short for "take transition", this is a method for building/working with
@@ -51,9 +47,9 @@ State.prototype = {
 	 * transitioned to on the given input regardless of what that input
 	 * previously did.
 	 *
-	 * @param {string} input character or token type to transition on
-	 * @param {Token|State} tokenOrState transition to a matching state
-	 * @returns State taken after the given input
+	 * @param {string | string[]} input character or token type to transition on
+	 * @param {State | T} tokenOrState transition to a matching state
+	 * @returns {State} taken after the given input
 	 */
 	tt(input, tokenOrState) {
 		if (input instanceof Array) {
@@ -66,7 +62,7 @@ State.prototype = {
 			return nextState;
 		}
 
-		if (tokenOrState && tokenOrState.j) {
+		if (tokenOrState && tokenOrState instanceof State) {
 			// State, default a basic transition
 			this.j[input] = tokenOrState;
 			return tokenOrState;
@@ -98,7 +94,7 @@ State.prototype = {
 		this.j[input] = nextState;
 		return nextState;
 	}
-};
+}
 
 /**
  * Utility function to create state without using new keyword (reduced file size
@@ -112,7 +108,8 @@ export const makeState = (/*name*/) => {
 
 /**
  * Similar to previous except it is an accepting state that emits a token
- * @param {Token} token
+ * @template T
+ * @param {T} token
  */
 export const makeAcceptingState = (token/*, name*/) => {
 	const s = new State(token);
@@ -122,9 +119,11 @@ export const makeAcceptingState = (token/*, name*/) => {
 
 /**
  * Create a transition from startState to nextState via the given character
+ * @template T
  * @param {State} startState transition from thie starting state
- * @param {Token} input via this input character or other concrete token type
+ * @param {string} input via this input character or other concrete token type
  * @param {State} nextState to this next state
+ * @return {State}
  */
 export const makeT = (startState, input, nextState) => {
 	// IMPLEMENTATION 1: Add to object (fast)
@@ -136,7 +135,6 @@ export const makeT = (startState, input, nextState) => {
 };
 
 /**
- *
  * @param {State} startState stransition from this starting state
  * @param {RegExp} regex Regular expression to match on input
  * @param {State} nextState transition to this next state if there's are regex match
@@ -148,7 +146,7 @@ export const makeRegexT = (startState, regex, nextState) => {
 /**
  * Follow the transition from the given character to the next state
  * @param {State} state
- * @param {string|Token} input character or other concrete token type to transition
+ * @param {string} input character or other concrete token type to transition
  * @returns {?State} the next state, if any
  */
 export const takeT = (state, input) => {
@@ -177,7 +175,7 @@ export const takeT = (state, input) => {
  * Similar to makeT, but takes a list of characters that all transition to the
  * same nextState startState
  * @param {State} startState
- * @param {Array} chars
+ * @param {string[]} chars
  * @param {State} nextState
  */
 export const makeMultiT = (startState, chars, nextState) => {
@@ -191,7 +189,7 @@ export const makeMultiT = (startState, chars, nextState) => {
  * tuples, where the first element is the transitions character and the second
  * is the state to transition to
  * @param {State} startState
- * @param {Array} transitions
+ * @param {[string, State][]} transitions
  */
 export const makeBatchT = (startState, transitions) => {
 	for (let i = 0; i < transitions.length; i++) {
@@ -211,11 +209,11 @@ export const makeBatchT = (startState, transitions) => {
  *
  * This turns the state machine into a Trie-like data structure (rather than a
  * intelligently-designed DFA).
- * @param {State} state
+ * @param {State<string>} state
  * @param {string} str
- * @param {Token} endStateFactory
- * @param {Token} defaultStateFactory
- * @return {State} the final state
+ * @param {State<string>} endState
+ * @param {() => State<string>} defaultStateFactory
+ * @return {State<string>} the final state
  */
 export const makeChainT = (state, str, endState, defaultStateFactory) => {
 	let i = 0, len = str.length, nextState;
