@@ -71,24 +71,18 @@ State.prototype = {
 			return tokenOrState;
 		}
 
-		// See if there's a direct state transition (not regex or default)
-		const token = tokenOrState;
-		let nextState = this.j[input];
-		if (nextState) {
-			if (token) { nextState.t = token; } // overrwites previous token
-			return nextState;
-		}
+		const token = tokenOrState; // Known token
 
 		// Create a new state for this input
-		nextState = makeState();
+		const nextState = makeState();
 
-		// Take the transition using the usual default mechanisms
+		// Take the transition with the usual default mechanisms
 		const templateState = takeT(this, input);
 		if (templateState) {
 			// Some default state transition, make a prime state based on this one
 			assign(nextState.j, templateState.j);
-			nextState.jr.append(templateState.jr);
-			nextState.jr = templateState.jd;
+			nextState.jr.push.apply(nextState.jr, templateState.jr);
+			nextState.jd = templateState.jd;
 			nextState.t = token || templateState.t;
 		} else {
 			nextState.t = token;

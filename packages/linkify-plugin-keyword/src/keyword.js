@@ -117,14 +117,15 @@ function nMatch(str, regexp) {
 export function keyword({ scanner, parser }) {
 	// Create scanner transitions from all registered tokens
 	for (const token in registeredKeywordsByToken) {
-		const keyword = registeredKeywordsByToken[token];
-		const chars = stringToArray(keyword);
-		const lastCharIdx = chars.length - 1;
-		let state = scanner.start;
-		for (let i = 0; i < lastCharIdx; i++) {
-			state = state.tt(chars[i]);
-		}
-		state.tt(chars[lastCharIdx], token);
+		registeredKeywordsByToken[token].map(keyword => {
+			const chars = stringToArray(keyword);
+			const lastCharIdx = chars.length - 1;
+			let state = scanner.start;
+			for (let j = 0; j < lastCharIdx; j++) {
+				state = state.tt(chars[j]);
+			}
+			state.tt(chars[lastCharIdx], token);
+		});
 
 		// Parser transition for the current token with an immediately-accepting multitoken
 		parser.start.tt(token, Keyword);
