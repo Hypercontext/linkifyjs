@@ -8,28 +8,31 @@ import assign from './assign';
  * jr is the list of regex-match transitions, jd is the default state to
  * transition to t is the accepting token type, if any. If this is the terminal
  * state, then it does not emit a token.
+ *
+ * The template type T represents the type of the token this state accepts. This
+ * should be either one of the token exports in text.js or a MultiToken subclass
+ * from multi.js
+ *
  * @template T
- * @property {{ [string]: State<T> }} j
- * @property {[RegExp, State<T>][]} jr
- * @property {State<T>} jd
- * @property {?T} t
+ * @param {T} [token] Token that this state emits
  */
-export class State {
-	/**
-	 * @param {T} [token] to emit
-	 */
-	constructor(token) {
-		// this.n = null; // DEBUG: State name
-		this.j = {}; // IMPLEMENTATION 1
-		// this.j = []; // IMPLEMENTATION 2
-		this.jr = [];
-		this.jd = null;
-		this.t = token;
-	}
+export function State(token = null) {
+	// this.n = null; // DEBUG: State name
+	/** @type {{ [token: string]: State<T> }} j */
+	this.j = {}; // IMPLEMENTATION 1
+	// this.j = []; // IMPLEMENTATION 2
+	/** @type {[RegExp, State<T>][]} jr */
+	this.jr = [];
+	/** @type {?State<T>} jd */
+	this.jd = null;
+	/** @type {?T} t */
+	this.t = token;
+}
 
+State.prototype = {
 	accepts() {
 		return !!this.t;
-	}
+	},
 
 	/**
 	 * Short for "take transition", this is a method for building/working with
@@ -47,11 +50,11 @@ export class State {
 	 * transitioned to on the given input regardless of what that input
 	 * previously did.
 	 *
-	 * @param {string | string[]} input character or token type to transition on
-	 * @param {State | T} tokenOrState transition to a matching state
-	 * @returns {State} taken after the given input
+	 * @param {string | string[]} input character, token type or collection to transition on
+	 * @param {T | State<T>} [tokenOrState] transition to a matching state
+	 * @returns {State<T>} taken after the given input
 	 */
-	tt(input, tokenOrState) {
+	tt(input, tokenOrState = null) {
 		if (input instanceof Array) {
 			// Recursive case
 			if (input.length === 0) { return; }
@@ -93,8 +96,8 @@ export class State {
 
 		this.j[input] = nextState;
 		return nextState;
-	}
-}
+	},
+};
 
 /**
  * Utility function to create state without using new keyword (reduced file size
@@ -119,7 +122,6 @@ export const makeAcceptingState = (token/*, name*/) => {
 
 /**
  * Create a transition from startState to nextState via the given character
- * @template T
  * @param {State} startState transition from thie starting state
  * @param {string} input via this input character or other concrete token type
  * @param {State} nextState to this next state
@@ -209,11 +211,11 @@ export const makeBatchT = (startState, transitions) => {
  *
  * This turns the state machine into a Trie-like data structure (rather than a
  * intelligently-designed DFA).
- * @param {State<string>} state
+ * @param {State} state
  * @param {string} str
- * @param {State<string>} endState
- * @param {() => State<string>} defaultStateFactory
- * @return {State<string>} the final state
+ * @param {State} endState
+ * @param {() => State} defaultStateFactory
+ * @return {State} the final state
  */
 export const makeChainT = (state, str, endState, defaultStateFactory) => {
 	let i = 0, len = str.length, nextState;

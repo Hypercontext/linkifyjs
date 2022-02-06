@@ -1,6 +1,6 @@
 /******************************************************************************
-	Text Tokens
-	Tokens composed of strings
+Text Tokens
+Identifiers for token outputs from the regexp scanner
 ******************************************************************************/
 
 // A valid web domain token
@@ -31,13 +31,6 @@ export const COMPOUND_SCHEME = 'COMPOUND_SCHEME';
 
 // Similar to SLASH_SCHEME, except contains -
 export const COMPOUND_SLASH_SCHEME = 'COMPOUND_SLASH_SCHEME';
-
-// TODO: Move this to keyword plugin
-// Arbirary words that can keyword links
-// export const KEYWORD = 'KEYWORD'; // simple [0-9a-z]
-// export const UKEYWORD = 'UKEYWORD'; // containing [0-9\{Letter}]
-// export const COMPOUND_KEYWORD = 'COMPOUND_KEYWORD'; // similar to KEYWORD but can have hyphens
-// export const COMPOUND_UKEYWORD = 'COMPOUND_UKEYWORD'; // similar to UKEYWORD but can have hyphens
 
 // Any sequence of digits 0-9
 export const NUM = 'NUM';
@@ -95,56 +88,99 @@ export const SYM = 'SYM';
 export const numeric = [NUM];
 export const ascii = [WORD, LOCALHOST, TLD, SCHEME, SLASH_SCHEME];
 export const asciinumeric = ascii.concat(NUM);
-export const words = ascii.concat(UWORD, UTLD);
-export const alphanumeric = words.concat(NUM);
-export const domain = words.concat(COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME, NUM, EMOJIS);
+export const alpha = ascii.concat(UWORD, UTLD);
+export const alphanumeric = alpha.concat(NUM);
+export const domain = alphanumeric.concat(COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME, EMOJIS);
 export const scheme = [SCHEME, SLASH_SCHEME, COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME];
 
-// Define each property separately to let typescript know that this object is
-// open for adding more collections.
-export const collections = {};
-collections.ascii = ascii;
-collections.asciinumeric = asciinumeric;
-collections.words = words;
-collections.alphanumeric = alphanumeric;
-collections.domain = domain;
-collections.scheme = scheme;
+/**
+ * Collections of text tokens. More may be added
+ */
+export const collections = {
+	numeric,
+	ascii,
+	asciinumeric,
+	alpha,
+	alphanumeric,
+	domain
+	// scheme // purposely excluded
+};
 
 /**
- * @param {string} name Name of text token collections. Will be available in plugins as scanner.tokens.collections.<name>
- * @returns {string[]} the collection
+ * @typedef {keyof collections} BuiltinTokenCollection
  */
-export function registerTextTokenCollection(name) {
-	if (!(name in collections)) {
-		collections[name] = [];
-	}
-	return collections[name];
-}
 
-export function collectionsWithToken(name) {
-	let collectionNames = [];
-	for (let col in collections) {
-		if (collections[col].indexOf(name) >= 0) {
-			collectionNames.push(col);
-		}
-	}
-	return collectionNames;
-}
+/**
+ * @typedef {BuiltinTokenCollection | string} Collection
+ */
 
 /**
  * Register a text token that the parser can recognize
- * @param {string} name Token name in all caps (by convention)
- * @param {string[]} collectionNames List of collections into which to add this token. Any previously-unknown collection will be created.
- * @returns {string}
+ * @template {string} K
+ * @param {K} name Token name in all caps (by convention)
+ * @param {Collection[]} [collections] Flag whether this token should be added
+ * to any built-in or new collection. Built-in collections that inherit from
+ * each other don't have to be specified. For example, if you include `numeric`,
+ * you don't have to also include `alphanumeric`, `domain`, etc.
+ * @returns {K}
  */
-export function registerTextToken(name, collectionNames = []) {
-	for (let i = 0; i < collectionNames.length; i++) {
-		const collection = registerTextTokenCollection(collectionNames[i]);
-		collection.push(name);
+export function registerToken(name, collections = []) {
+	const flags = collections.reduce((f, k) => f[k] = true && f, {});
+	if (flags.numeric) {
+		flags.asciinumeric = true;
+		flags.alphanumeric = true;
+	}
+	if (flags.ascii) {
+		flags.asciinumeric = true;
+		flags.alpha = true;
+	}
+	if (flags.alpha) {
+		flags.alphanumeric = true;
+	}
+	if (flags.alphanumeric) {
+		flags.domain = true;
+	}
+	for (const k in flags) {
+		registerCollection(k).push(name);
 	}
 	return name;
 }
 
 /**
- * @typedef {{t: string, v: string, s: number, e: number}} Token
+ * Convert a String to an Array of characters, taking into account that some
+ * characters like emojis take up two string indexes.
+ *
+ * Adapted from core-js (MIT license)
+ * https://github.com/zloirock/core-js/blob/2d69cf5f99ab3ea3463c395df81e5a15b68f49d9/packages/core-js/internals/string-multibyte.js
+ *
+ * @function stringToArray
+ * @param {string} str
+ * @returns {string[]}
  */
+ export function stringToArray(str) {
+	const result = [];
+	const len = str.length;
+	let index = 0;
+	while (index < len) {
+		let first = str.charCodeAt(index);
+		let second;
+		let char = first < 0xd800 || first > 0xdbff || index + 1 === len
+		|| (second = str.charCodeAt(index + 1)) < 0xdc00 || second > 0xdfff
+			? str[index] // single character
+			: str.slice(index, index + 2); // two-index characters
+		result.push(char);
+		index += char.length;
+	}
+	return result;
+}
+
+/**
+ * @param {string} name Name of text token collections. Will be available in plugins as scanner.tokens.collections.<name>
+ * @returns {Collection[]} the collection
+ */
+function registerCollection(name) {
+	if (!(name in collections)) {
+		collections[name] = [];
+	}
+	return collections[name];
+}

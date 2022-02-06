@@ -25,7 +25,7 @@ import * as mtk from './multi';
 
 /**
  * Generate the parser multi token-based state machine
- * @returns {State} the starting state
+ * @returns {State<MultiToken>} the starting state
  */
 export function init() {
 	// The universal starting state.
@@ -313,7 +313,7 @@ export function init() {
  * create a list of multi tokens, each of which represents a URL, email address,
  * plain text, etc.
  *
- * @param {State} start parser start state
+ * @param {State<MultiToken>} start parser start state
  * @param {string} input the original input used to generate the given tokens
  * @param {Token[]} tokens list of scanned tokens
  * @returns {MultiToken[]}

@@ -1,11 +1,8 @@
 /**
 	The scanner provides an interface that takes a string of text as input, and
 	outputs an array of tokens instances that can be used for easy URL parsing.
-
-	@module linkify
-	@submodule scanner
-	@main scanner
 */
+
 import {
 	makeState,
 	makeAcceptingState,
@@ -16,15 +13,17 @@ import {
 	makeChainT
 } from './fsm';
 import * as tk from './text';
+import * as re from './regexp';
 import { tlds, utlds } from './tlds';
 
-// Note that these two Unicode ones expand into a really big one with Babel
-export const ASCII_LETTER = /[a-z]/;
-export const LETTER = /\p{L}/u; // Any Unicode character with letter data type
-export const EMOJI = /\p{Emoji}/u; // Any Unicode emoji character
-export const EMOJI_VARIATION = /\ufe0f/; // Variation selector, follows heart and others
-export const DIGIT = /\d/;
-export const SPACE = /\s/;
+/**
+ * Scanner output token:
+ * - `t` is the token name (e.g., 'NUM', 'EMOJI', 'TLD')
+ * - `v` is the value of the token (e.g., '123', '❤️', 'com')
+ * - `s` is the start index of the token in the original string
+ * - `e` is the end index of the token in the original string
+ * @typedef {{t: string, v: string, s: number, e: number}} Token
+ */
 
 /**
  * Initialize the scanner character-based state machine for the given start
@@ -32,7 +31,7 @@ export const SPACE = /\s/;
  * @param {[string, boolean][]} customSchemes List of custom schemes, where each
  * item is a length-2 tuple with the first element set to the string scheme, and
  * the second element set to `true` if the `://` after the scheme is optional
- * @return {State} scanner starting state
+ * @return {State<string>} scanner starting state
  */
 export function init(customSchemes = []) {
 	// Frequently used states (name argument removed during minification)
@@ -49,7 +48,7 @@ export function init(customSchemes = []) {
 	 */
 	const makeWordState = (name) => {
 		const state = makeAcceptingState(tk.WORD, name);
-		state.jr = [[ASCII_LETTER, Word]];
+		state.jr = [[re.ASCII_LETTER, Word]];
 		return state;
 	};
 
@@ -58,7 +57,7 @@ export function init(customSchemes = []) {
 	 */
 	const makeUWordState = (name) => {
 		const state = makeAcceptingState(tk.UWORD, name);
-		state.jr = [[ASCII_LETTER, NonAccepting], [LETTER, UWord]];
+		state.jr = [[re.ASCII_LETTER, NonAccepting], [re.LETTER, UWord]];
 		return state;
 	};
 
@@ -121,11 +120,11 @@ export function init(customSchemes = []) {
 	// Whitespace jumps
 	// Tokens of only non-newline whitespace are arbitrarily long
 	makeT(Start, '\n', makeAcceptingState(tk.NL, 'Nl'));
-	makeRegexT(Start, SPACE, Ws);
+	makeRegexT(Start, re.SPACE, Ws);
 
 	// If any whitespace except newline, more whitespace!
 	makeT(Ws, '\n', makeState()); // non-accepting state
-	makeRegexT(Ws, SPACE, Ws);
+	makeRegexT(Ws, re.SPACE, Ws);
 
 	// Generates states for top-level domains
 	// Note that this is most accurate when tlds are in alphabetical order
@@ -175,24 +174,24 @@ export function init(customSchemes = []) {
 
 	// Everything else
 	// Number and character transitions
-	makeRegexT(Start, DIGIT, Num);
-	makeRegexT(Start, ASCII_LETTER, Word);
-	makeRegexT(Start, LETTER, UWord);
-	makeRegexT(Start, EMOJI, Emoji);
-	makeRegexT(Start, EMOJI_VARIATION, Emoji); // This one is sketchy
-	makeRegexT(Num, DIGIT, Num);
-	makeRegexT(Word, ASCII_LETTER, Word);
-	makeRegexT(UWord, ASCII_LETTER, NonAccepting);
-	makeRegexT(UWord, LETTER, UWord);
-	makeRegexT(Emoji, EMOJI, Emoji);
-	makeRegexT(Emoji, EMOJI_VARIATION, Emoji);
+	makeRegexT(Start, re.DIGIT, Num);
+	makeRegexT(Start, re.ASCII_LETTER, Word);
+	makeRegexT(Start, re.LETTER, UWord);
+	makeRegexT(Start, re.EMOJI, Emoji);
+	makeRegexT(Start, re.EMOJI_VARIATION, Emoji); // This one is sketchy
+	makeRegexT(Num, re.DIGIT, Num);
+	makeRegexT(Word, re.ASCII_LETTER, Word);
+	makeRegexT(UWord, re.ASCII_LETTER, NonAccepting);
+	makeRegexT(UWord, re.LETTER, UWord);
+	makeRegexT(Emoji, re.EMOJI, Emoji);
+	makeRegexT(Emoji, re.EMOJI_VARIATION, Emoji);
 
 	// Account for zero-width joiner for chaining multiple emojis
 	// Not sure if these are actu
 	const EmojiJoiner = makeState();
 	makeT(Emoji, '\u200d', EmojiJoiner);
-	makeRegexT(EmojiJoiner, EMOJI, Emoji);
-	makeRegexT(EmojiJoiner, EMOJI_VARIATION, Emoji);
+	makeRegexT(EmojiJoiner, re.EMOJI, Emoji);
+	makeRegexT(EmojiJoiner, re.EMOJI_VARIATION, Emoji);
 
 	// Set default transition for start state (some symbol)
 	Start.jd = makeAcceptingState(tk.SYM, 'Sym');
@@ -204,7 +203,7 @@ export function init(customSchemes = []) {
 	composition of that string.
 
 	@method run
-	@param {State} start scanner starting state
+	@param {State<string>} start scanner starting state
 	@param {string} str input string to scan
 	@return {Token[]} list of tokens, each with a type and value
 */
@@ -213,7 +212,7 @@ export function run(start, str) {
 	// form (still returns regular case). Uses selective `toLowerCase` because
 	// lowercasing the entire string causes the length and character position to
 	// vary in some non-English strings with V8-based runtimes.
-	const iterable = stringToArray(str.replace(/[A-Z]/g, (c) => c.toLowerCase()));
+	const iterable = tk.stringToArray(str.replace(/[A-Z]/g, (c) => c.toLowerCase()));
 	const charCount = iterable.length; // <= len if there are emojis, etc
 	const tokens = []; // return value
 
@@ -260,7 +259,7 @@ export function run(start, str) {
 		// TODO: If possible, don't output v, instead output range where values ocur
 		tokens.push({
 			t: latestAccepting.t, // token type/name
-			v: str.substr(cursor - tokenLength, tokenLength), // string value
+			v: str.slice(cursor - tokenLength, cursor), // string value
 			s: cursor - tokenLength, // start index
 			e: cursor // end index (excluding)
 		});
@@ -270,31 +269,3 @@ export function run(start, str) {
 }
 
 export { tk as tokens };
-
-/**
- * Convert a String to an Array of characters, taking into account that some
- * characters like emojis take up two string indexes.
- *
- * Adapted from core-js (MIT license)
- * https://github.com/zloirock/core-js/blob/2d69cf5f99ab3ea3463c395df81e5a15b68f49d9/packages/core-js/internals/string-multibyte.js
- *
- * @function stringToArray
- * @param {string} str
- * @returns {string[]}
- */
- function stringToArray(str) {
-	const result = [];
-	const len = str.length;
-	let index = 0;
-	while (index < len) {
-		let first = str.charCodeAt(index);
-		let second;
-		let char = first < 0xd800 || first > 0xdbff || index + 1 === len
-		|| (second = str.charCodeAt(index + 1)) < 0xdc00 || second > 0xdfff
-			? str[index] // single character
-			: str.slice(index, index + 2); // two-index characters
-		result.push(char);
-		index += char.length;
-	}
-	return result;
-}

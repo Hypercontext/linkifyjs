@@ -1,5 +1,5 @@
-import * as scanner from './scanner';
-import * as parser from './parser';
+import { init as initScanner, run as runScanner, tokens as textTokens } from './scanner';
+import { init as initParser, run as runParser, tokens as multiTokens } from './parser';
 import { Options } from './options';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
@@ -12,6 +12,16 @@ const INIT = {
 	customSchemes: [],
 	initialized: false,
 };
+
+export const scanner = Object.freeze({ tokens: textTokens });
+export const parser = Object.freeze({ tokens: multiTokens });
+
+/**
+ * @typedef {(arg: {
+ * 	scanner: { start: State<string> } & typeof scanner,
+ * 	parser: { start: State<MultiToken> } & typeof parser
+ * }) => void} Plugin
+ */
 
 /**
  * De-register all plugins and reset the internal state-machine. Used for
@@ -29,7 +39,7 @@ export function reset() {
 /**
  * Register a linkify extension plugin
  * @param {string} name of plugin to register
- * @param {Function} plugin function that accepts mutable linkify state
+ * @param {Plugin} plugin function that accepts mutable linkify state
  */
 export function registerPlugin(name, plugin) {
 	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid plugin ${plugin} (expects function)`); }
@@ -69,16 +79,14 @@ export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
  */
 export function init() {
 	// Initialize state machines
-	INIT.scanner = { start: scanner.init(INIT.customSchemes), tokens: scanner.tokens };
-	INIT.parser = { start: parser.init(), tokens: parser.tokens };
-	const utils = { createTokenClass: parser.tokens.createTokenClass };
+	INIT.scanner = { start: initScanner(INIT.customSchemes), tokens: textTokens };
+	INIT.parser = { start: initParser(), tokens: multiTokens };
 
 	// Initialize plugins
 	for (let i = 0; i < INIT.pluginQueue.length; i++) {
 		INIT.pluginQueue[i][1]({
 			scanner: INIT.scanner,
 			parser: INIT.parser,
-			utils
 		});
 	}
 	INIT.initialized = true;
@@ -91,7 +99,7 @@ export function init() {
  */
 export function tokenize(str) {
 	if (!INIT.initialized) { init(); }
-	return parser.run(INIT.parser.start, str, scanner.run(INIT.scanner.start, str));
+	return runParser(INIT.parser.start, str, runScanner(INIT.scanner.start, str));
 }
 
 /**
@@ -139,5 +147,8 @@ export function test(str, type = null) {
 }
 
 export * as options from './options';
-export { MultiToken } from './multi';
+export * as regexp from './regexp';
+export { registerToken, stringToArray } from './text';
+export { MultiToken, createTokenClass } from './multi';
+export { State } from './fsm';
 export { Options };
