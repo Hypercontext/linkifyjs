@@ -1,7 +1,7 @@
 import * as linkify from 'linkifyjs';
 import hashtag from 'linkify-plugin-hashtag/src/hashtag';
 
-describe('plugins/hashtag', () => {
+describe('linkify-plugin-hashtag', () => {
 	before(() => { linkify.reset(); });
 	after(() => { linkify.reset(); });
 

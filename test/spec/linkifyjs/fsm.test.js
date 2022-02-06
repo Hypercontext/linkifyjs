@@ -1,7 +1,8 @@
-const { makeAcceptingState } = require('linkifyjs/src/fsm');
+import { makeAcceptingState } from 'linkifyjs/src/fsm';
 
-const tk = require('linkifyjs/src/text');
-const { takeT, makeT, makeRegexT, ...fsm } = require('linkifyjs/src/fsm');
+import * as tk from 'linkifyjs/src/text';
+import * as fsm from 'linkifyjs/src/fsm';
+import { takeT, makeT, makeRegexT } from 'linkifyjs/src/fsm';
 
 describe('linkifyjs/fsm', () => {
 	var S_START, S_DOT, S_NUM;
@@ -59,29 +60,29 @@ describe('linkifyjs/fsm', () => {
 
 	describe('#makeChainT()', () => {
 		it('Makes states for the domain "co"', () => {
-			fsm.makeChainT(S_START, 'co', makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.DOMAIN));
+			fsm.makeChainT(S_START, 'co', makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.WORD));
 
-			expect(S_START.j.c.t).to.eql(tk.DOMAIN);
+			expect(S_START.j.c.t).to.eql(tk.WORD);
 			expect(S_START.j.c.j.o.t).to.eql(tk.TLD);
 		});
 
 		it('Makes states for the domain "com"', () => {
-			fsm.makeChainT(S_START, 'com', makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.DOMAIN));
+			fsm.makeChainT(S_START, 'com', makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.WORD));
 			expect(S_START.j.c.j.o.j.m.t).to.eql(tk.TLD);
 		});
 
 		it('Makes states for the domain "community"', () => {
 			var state = S_START;
-			fsm.makeChainT(S_START, 'community',  makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.DOMAIN));
+			fsm.makeChainT(S_START, 'community',  makeAcceptingState(tk.TLD), () => makeAcceptingState(tk.WORD));
 
-			expect((state = takeT(state, 'c')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 'c')).t).to.be.eql(tk.WORD);
 			expect((state = takeT(state, 'o')).t).to.be.eql(tk.TLD);
 			expect((state = takeT(state, 'm')).t).to.be.eql(tk.TLD);
-			expect((state = takeT(state, 'm')).t).to.be.eql(tk.DOMAIN);
-			expect((state = takeT(state, 'u')).t).to.be.eql(tk.DOMAIN);
-			expect((state = takeT(state, 'n')).t).to.be.eql(tk.DOMAIN);
-			expect((state = takeT(state, 'i')).t).to.be.eql(tk.DOMAIN);
-			expect((state = takeT(state, 't')).t).to.be.eql(tk.DOMAIN);
+			expect((state = takeT(state, 'm')).t).to.be.eql(tk.WORD);
+			expect((state = takeT(state, 'u')).t).to.be.eql(tk.WORD);
+			expect((state = takeT(state, 'n')).t).to.be.eql(tk.WORD);
+			expect((state = takeT(state, 'i')).t).to.be.eql(tk.WORD);
+			expect((state = takeT(state, 't')).t).to.be.eql(tk.WORD);
 			expect((state = takeT(state, 'y')).t).to.be.eql(tk.TLD);
 		});
 	});

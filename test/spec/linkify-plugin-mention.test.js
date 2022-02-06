@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as linkify from 'linkifyjs';
 import mention from 'linkify-plugin-mention/src/mention';
 
-describe('plugins/mention', () => {
+describe('linkify-plugin-mention', () => {
 	before(() => { linkify.reset(); });
 	after(() => { linkify.reset(); });
 

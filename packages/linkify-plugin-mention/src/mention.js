@@ -1,16 +1,19 @@
+import { createTokenClass } from 'linkifyjs';
+
+const MentionToken = createTokenClass('mention', {
+	isLink: true,
+	toHref() {
+		return '/' + this.toString().slice(1);
+	}
+});
+
 /**
-	Mention parser plugin for linkify
-*/
-const mention = ({ scanner, parser, utils }) => {
+ * Mention parser plugin for linkify
+ * @type {import('linkifyjs').Plugin}
+ */
+export default function mention({ scanner, parser }) {
 	const { numeric, domain, HYPHEN, SLASH, UNDERSCORE, AT } = scanner.tokens;
 	const Start = parser.start;
-
-	const MentionToken = utils.createTokenClass('mention', {
-		isLink: true,
-		toHref() {
-			return '/' + this.toString().substr(1);
-		}
-	});
 
 	// @
 	const At = Start.tt(AT); // @
@@ -41,7 +44,4 @@ const mention = ({ scanner, parser, utils }) => {
 	MentionDivider.tt(numeric, Mention);
 	MentionDivider.tt(UNDERSCORE, Mention);
 	MentionDivider.tt(HYPHEN, Mention);
-};
-
-export default mention;
-
+}

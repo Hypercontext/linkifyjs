@@ -2,11 +2,14 @@
 const { expect } = require('chai');
 const linkify = require('linkifyjs/src/linkify');
 
-const ticketPlugin = ({ scanner, parser, utils }) => {
+const Ticket = linkify.createTokenClass('ticket', { isLink: true });
+/**
+ * @type import('linkifyjs').Plugin
+ */
+const ticketPlugin = ({ scanner, parser }) => {
 	const { POUND, numeric } = scanner.tokens;
-	const TicketToken = utils.createTokenClass('ticket', { isLink: true });
 	const Hash = parser.start.tt(POUND);
-	Hash.tt(numeric, TicketToken);
+	Hash.tt(numeric, Ticket);
 };
 
 describe('linkifyjs', () => {

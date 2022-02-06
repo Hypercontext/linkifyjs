@@ -1,4 +1,5 @@
 import { registerPlugin } from 'linkifyjs';
-import ticket from './ticket'
+import { ticket } from './ticket'
 
 registerPlugin('ticket', ticket);
+
