@@ -1,7 +1,7 @@
-const { expect } = require('chai');
-const scanner = require('linkifyjs/src/scanner');
-const parser = require('linkifyjs/src/parser');
-const { Text, Url, Email } = require('linkifyjs/src/multi');
+import { expect } from 'chai';
+import { Text, Url, Email } from 'linkifyjs/src/multi';
+import * as scanner from 'linkifyjs/src/scanner';
+import * as parser from 'linkifyjs/src/parser';
 
 /**
 	[0] - Original text to parse (should tokenize first)
@@ -247,13 +247,20 @@ const tests = [
 	]
 ];
 
-let scannerStart = scanner.init([
-	['steam', true],
-	['view-source', false],
-]);
 
-let start = parser.init();
 describe('linkifyjs/parser#run()', () => {
+	let scannerStart, scannerTokens, start;
+
+	before(() => {
+		const result = scanner.init([
+			['steam', true],
+			['view-source', false],
+		]);
+		scannerStart = result.start;
+		scannerTokens = result.tokens;
+
+		start = parser.init(scannerTokens).start;
+	});
 
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', () => {
@@ -273,8 +280,8 @@ describe('linkifyjs/parser#run()', () => {
 
 	it('Correctly sets start and end indexes', () => {
 		const input = 'Hello github.com!';
-		const result = parser.run(start, input, scanner.run(scannerStart, input)).map(t => t.toObject());
-		expect(result).to.eql([
+		const result = parser.run(start, input, scanner.run(scannerStart, input));
+		expect(result.map(t => t.toObject())).to.eql([
 			{ type: 'text', value: 'Hello ', href: 'Hello ', isLink: false, start: 0, end: 6 },
 			{ type: 'url', value: 'github.com', href: 'http://github.com', isLink: true, start: 6, end: 16 },
 			{ type: 'text', value: '!', href: '!', isLink: false, start: 16, end: 17 }

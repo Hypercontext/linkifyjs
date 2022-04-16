@@ -177,7 +177,6 @@ brother \
 brussels \
 bs \
 bt \
-budapest \
 bugatti \
 build \
 builders \
@@ -301,7 +300,6 @@ crown \
 crs \
 cruise \
 cruises \
-csc \
 cu \
 cuisinella \
 cv \
@@ -656,6 +654,7 @@ kg \
 kh \
 ki \
 kia \
+kids \
 kim \
 kinder \
 kindle \

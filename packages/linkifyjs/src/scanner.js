@@ -3,18 +3,16 @@
 	outputs an array of tokens instances that can be used for easy URL parsing.
 */
 
-import {
-	makeState,
-	makeAcceptingState,
-	takeT,
-	makeT,
-	makeRegexT,
-	makeBatchT,
-	makeChainT
-} from './fsm';
+import { tlds, utlds } from './tlds';
+import { State, tr, ts, tt } from './fsm';
+import * as fsm from './fsm';
 import * as tk from './text';
 import * as re from './regexp';
-import { tlds, utlds } from './tlds';
+import assign from './assign';
+
+const NL = '\n'; // New line character
+const EMOJI_VARIATION = '\ufe0f'; // Variation selector, follows heart and others
+const EMOJI_JOINER = '\u200d'; // zero-width joiner
 
 /**
  * Scanner output token:
@@ -26,176 +24,134 @@ import { tlds, utlds } from './tlds';
  */
 
 /**
+ * @template T
+ * @typedef {{ [collection: string]: T[] }} Collections
+ */
+
+/**
  * Initialize the scanner character-based state machine for the given start
  * state
  * @param {[string, boolean][]} customSchemes List of custom schemes, where each
  * item is a length-2 tuple with the first element set to the string scheme, and
  * the second element set to `true` if the `://` after the scheme is optional
- * @return {State<string>} scanner starting state
  */
 export function init(customSchemes = []) {
 	// Frequently used states (name argument removed during minification)
-	const Start = makeState('Start');
-	const NonAccepting = makeState('NonAccepting'); // must never have any transitions
-	const Num = makeAcceptingState(tk.NUM, 'Num');
-	const Word = makeAcceptingState(tk.WORD, 'Word');
-	const UWord = makeAcceptingState(tk.UWORD, 'UWord');
-	const Emoji = makeAcceptingState(tk.EMOJIS, 'Emoji');
-	const Ws = makeAcceptingState(tk.WS, 'Ws');
+	/** @type Collections<string> */
+	const collections = {}; // of tokens
+	/** @type State<string> */
+	const Start = new State();
+	// const NonAccepting = makeState('NonAccepting'); // must never have any transitions
 
-	/**
-	 * Create a state which emits a word token
-	 */
-	const makeWordState = (name) => {
-		const state = makeAcceptingState(tk.WORD, name);
-		state.jr = [[re.ASCII_LETTER, Word]];
-		return state;
-	};
+	const Num = tr(Start, re.DIGIT, [tk.NUM, [fsm.numeric]], collections);
+	tr(Num, re.DIGIT, Num);
 
-	/**
-	 * Same as previous, but specific to non-ASCII alphabet words
-	 */
-	const makeUWordState = (name) => {
-		const state = makeAcceptingState(tk.UWORD, name);
-		state.jr = [[re.ASCII_LETTER, NonAccepting], [re.LETTER, UWord]];
-		return state;
-	};
+	// State which emits a word token
+	const Word = tr(Start, re.ASCII_LETTER, [tk.WORD, [fsm.ascii]], collections);
+	tr(Word, re.ASCII_LETTER, Word);
 
-	/**
-	 * Create a state which does not emit a word but the usual alphanumeric
-	 * transitions are domains
-	 */
-	const makeNearWordState = (token, name) => {
-		const state = makeWordState(name);
-		state.t = token;
-		return state;
-	};
+	// Same as previous, but specific to non-fsm.ascii alphabet words
+	const UWord = tr(Start, re.LETTER, [tk.UWORD, [fsm.alpha]], collections);
+	tr(UWord, re.ASCII_LETTER); // Non-accepting
+	tr(UWord, re.LETTER, UWord);
 
-	/**
-	 * Create a state which does not emit a word but the usual alphanumeric
-	 * transitions are domains
-	 */
-	const makeNearUWordState = (token, name) => {
-		const state = makeUWordState(name);
-		state.t = token;
-		return state;
-	};
+	// Emoji tokens. They are not grouped by the scanner except in cases where a
+	// zero-width joiner is present
+	const Emoji = tr(Start, re.EMOJI, [tk.EMOJI, [fsm.emoji]], collections);
+	tr(Emoji, re.EMOJI, Emoji);
+	tt(Emoji, EMOJI_VARIATION, Emoji);
+	// tt(Start, EMOJI_VARIATION, Emoji); // This one is sketchy
 
-	// States for special URL symbols that accept immediately after start
-	makeBatchT(Start, [
-		["'", makeAcceptingState(tk.APOSTROPHE)],
-		['{', makeAcceptingState(tk.OPENBRACE)],
-		['[', makeAcceptingState(tk.OPENBRACKET)],
-		['<', makeAcceptingState(tk.OPENANGLEBRACKET)],
-		['(', makeAcceptingState(tk.OPENPAREN)],
-		['}', makeAcceptingState(tk.CLOSEBRACE)],
-		[']', makeAcceptingState(tk.CLOSEBRACKET)],
-		['>', makeAcceptingState(tk.CLOSEANGLEBRACKET)],
-		[')', makeAcceptingState(tk.CLOSEPAREN)],
-		['&', makeAcceptingState(tk.AMPERSAND)],
-		['*', makeAcceptingState(tk.ASTERISK)],
-		['@', makeAcceptingState(tk.AT)],
-		['`', makeAcceptingState(tk.BACKTICK)],
-		['^', makeAcceptingState(tk.CARET)],
-		[':', makeAcceptingState(tk.COLON)],
-		[',', makeAcceptingState(tk.COMMA)],
-		['$', makeAcceptingState(tk.DOLLAR)],
-		['.', makeAcceptingState(tk.DOT)],
-		['=', makeAcceptingState(tk.EQUALS)],
-		['!', makeAcceptingState(tk.EXCLAMATION)],
-		['-', makeAcceptingState(tk.HYPHEN)],
-		['%', makeAcceptingState(tk.PERCENT)],
-		['|', makeAcceptingState(tk.PIPE)],
-		['+', makeAcceptingState(tk.PLUS)],
-		['#', makeAcceptingState(tk.POUND)],
-		['?', makeAcceptingState(tk.QUERY)],
-		['"', makeAcceptingState(tk.QUOTE)],
-		['/', makeAcceptingState(tk.SLASH)],
-		[';', makeAcceptingState(tk.SEMI)],
-		['~', makeAcceptingState(tk.TILDE)],
-		['_', makeAcceptingState(tk.UNDERSCORE)],
-		['\\', makeAcceptingState(tk.BACKSLASH)]
-	]);
+	const EmojiJoiner = tt(Emoji, EMOJI_JOINER);
+	tr(EmojiJoiner, re.EMOJI, Emoji);
+	// tt(EmojiJoiner, EMOJI_VARIATION, Emoji); // also sketchy
 
 	// Whitespace jumps
 	// Tokens of only non-newline whitespace are arbitrarily long
-	makeT(Start, '\n', makeAcceptingState(tk.NL, 'Nl'));
-	makeRegexT(Start, re.SPACE, Ws);
-
 	// If any whitespace except newline, more whitespace!
-	makeT(Ws, '\n', makeState()); // non-accepting state
-	makeRegexT(Ws, re.SPACE, Ws);
+	const Ws = tr(Start, re.SPACE, [tk.WS, [fsm.whitespace]], collections);
+	tt(Start, NL, [tk.NL, [fsm.whitespace]], collections);
+	tt(Ws, NL); // non-accepting state to avoid mixing whitespaces
+	tr(Ws, re.SPACE, Ws);
+
+	// States for special URL symbols that accept immediately after start
+	tt(Start, "'", tk.APOSTROPHE);
+	tt(Start, '{', tk.OPENBRACE);
+	tt(Start, '[', tk.OPENBRACKET);
+	tt(Start, '<', tk.OPENANGLEBRACKET);
+	tt(Start, '(', tk.OPENPAREN);
+	tt(Start, '}', tk.CLOSEBRACE);
+	tt(Start, ']', tk.CLOSEBRACKET);
+	tt(Start, '>', tk.CLOSEANGLEBRACKET);
+	tt(Start, ')', tk.CLOSEPAREN);
+	tt(Start, '&', tk.AMPERSAND);
+	tt(Start, '*', tk.ASTERISK);
+	tt(Start, '@', tk.AT);
+	tt(Start, '`', tk.BACKTICK);
+	tt(Start, '^', tk.CARET);
+	tt(Start, ':', tk.COLON);
+	tt(Start, ',', tk.COMMA);
+	tt(Start, '$', tk.DOLLAR);
+	tt(Start, '.', tk.DOT);
+	tt(Start, '=', tk.EQUALS);
+	tt(Start, '!', tk.EXCLAMATION);
+	tt(Start, '-', tk.HYPHEN);
+	tt(Start, '%', tk.PERCENT);
+	tt(Start, '|', tk.PIPE);
+	tt(Start, '+', tk.PLUS);
+	tt(Start, '#', tk.POUND);
+	tt(Start, '?', tk.QUERY);
+	tt(Start, '"', tk.QUOTE);
+	tt(Start, '/', tk.SLASH);
+	tt(Start, ';', tk.SEMI);
+	tt(Start, '~', tk.TILDE);
+	tt(Start, '_', tk.UNDERSCORE);
+	tt(Start, '\\', tk.BACKSLASH);
 
 	// Generates states for top-level domains
 	// Note that this is most accurate when tlds are in alphabetical order
 	for (let i = 0; i < tlds.length; i++) {
-		makeChainT(Start, tlds[i], makeNearWordState(tk.TLD), makeWordState);
+		ts(Start, tlds[i], [tk.TLD, [fsm.tld, fsm.ascii]], collections);
 	}
 	for (let i = 0; i < utlds.length; i++) {
-		makeChainT(Start, utlds[i], makeNearUWordState(tk.UTLD), makeUWordState);
+		ts(Start, utlds[i], [tk.UTLD, [fsm.utld, fsm.alpha]], collections);
 	}
 
-	// Collect the states generated by different protocls
-	const DefaultScheme = makeNearWordState(tk.SCHEME, 'DefaultScheme');
-	const DefaultSlashScheme = makeNearWordState(tk.SLASH_SCHEME, 'DefaultSlashScheme');
-	makeChainT(Start, 'file', DefaultScheme, makeWordState);
-	makeChainT(Start, 'mailto', DefaultScheme, makeWordState);
-	makeChainT(Start, 'ftp', DefaultSlashScheme, makeWordState);
-	makeChainT(Start, 'http', DefaultSlashScheme, makeWordState);
+	// Collect the states generated by different protocols. NOTE: If any new TLDs
+	// get added that are also protocols, set the token to be the same as the
+	// protocol to ensure parsing works as expected.
+	ts(Start, 'file', [tk.SCHEME, [fsm.scheme, fsm.ascii]], collections);
+	ts(Start, 'mailto', [tk.SCHEME, [fsm.scheme, fsm.ascii]], collections);
+	ts(Start, 'http', [tk.SLASH_SCHEME, [fsm.slashscheme, fsm.ascii]], collections);
+	ts(Start, 'https', [tk.SLASH_SCHEME, [fsm.slashscheme, fsm.ascii]], collections);
+	ts(Start, 'ftp', [tk.SLASH_SCHEME, [fsm.slashscheme, fsm.ascii]], collections);
+	ts(Start, 'ftps', [tk.SLASH_SCHEME, [fsm.slashscheme, fsm.ascii]], collections);
 
-	// Secure (https, ftps) protocols (end with 's')
-	makeT(DefaultSlashScheme, 's', DefaultSlashScheme);
-
-	// Register custom schemes
-	const CustomScheme = makeNearWordState(tk.SCHEME, 'CustomScheme');
-	const CustomSlashScheme = makeNearWordState(tk.SLASH_SCHEME, 'CustomSlashScheme');
-	const CustomCompoundScheme = makeAcceptingState(tk.SCHEME, 'CustomCompoundScheme');
-	const CustomCompoundSlashScheme = makeAcceptingState(tk.SLASH_SCHEME, 'CustomCompoundSlashScheme');
+	// Register custom schemes. Assumes each scheme is asciinumeric with hyphens
 	customSchemes = customSchemes.sort((a, b) => a[0] > b[0] ? 1 : -1);
 	for (let i = 0; i < customSchemes.length; i++) {
-		const schemeParts = customSchemes[i][0].split('-');
-		const schemeState = schemeParts.length === 1
-			? (customSchemes[i][1] ? CustomScheme : CustomSlashScheme)
-			: (customSchemes[i][1] ? CustomCompoundScheme : CustomCompoundSlashScheme);
-
-		let state = Start;
-		for (let j = 0; j < schemeParts.length; j++) {
-			let defaultStateFactory = j === 0 ? makeWordState : makeState;
-			let endState = j === schemeParts.length - 1 ? schemeState : defaultStateFactory();
-			state = makeChainT(state, schemeParts[j], endState, defaultStateFactory);
-			if (schemeParts.length > 1 && j < schemeParts.length - 1) {
-				state = makeT(state, '-', makeState());
-			}
+		const sch = customSchemes[i][0];
+		const optionalSlashSlash = customSchemes[i][1];
+		const c = [optionalSlashSlash ? fsm.scheme : fsm.slashscheme];
+		if (sch.indexOf('-') >= 0) {
+			c.push(fsm.domain);
+		} else if (!re.ASCII_LETTER.test(sch)) {
+			c.push(fsm.numeric); // numbers only??
+		} else if (re.DIGIT.test(sch)) {
+			c.push(fsm.asciinumeric);
+		} else {
+			c.push(fsm.ascii);
 		}
+
+		ts(Start, sch, [sch, c], collections);
 	}
 
 	// Localhost token
-	makeChainT(Start, 'localhost', makeNearWordState(tk.LOCALHOST), makeWordState);
-
-	// Everything else
-	// Number and character transitions
-	makeRegexT(Start, re.DIGIT, Num);
-	makeRegexT(Start, re.ASCII_LETTER, Word);
-	makeRegexT(Start, re.LETTER, UWord);
-	makeRegexT(Start, re.EMOJI, Emoji);
-	makeRegexT(Start, re.EMOJI_VARIATION, Emoji); // This one is sketchy
-	makeRegexT(Num, re.DIGIT, Num);
-	makeRegexT(Word, re.ASCII_LETTER, Word);
-	makeRegexT(UWord, re.ASCII_LETTER, NonAccepting);
-	makeRegexT(UWord, re.LETTER, UWord);
-	makeRegexT(Emoji, re.EMOJI, Emoji);
-	makeRegexT(Emoji, re.EMOJI_VARIATION, Emoji);
-
-	// Account for zero-width joiner for chaining multiple emojis
-	// Not sure if these are actu
-	const EmojiJoiner = makeState();
-	makeT(Emoji, '\u200d', EmojiJoiner);
-	makeRegexT(EmojiJoiner, re.EMOJI, Emoji);
-	makeRegexT(EmojiJoiner, re.EMOJI_VARIATION, Emoji);
+	ts(Start, 'localhost', [tk.LOCALHOST, [fsm.ascii]], collections);
 
 	// Set default transition for start state (some symbol)
-	Start.jd = makeAcceptingState(tk.SYM, 'Sym');
-	return Start;
+	Start.jd = new State(tk.SYM);
+	return { start: Start, tokens: assign(collections, tk) };
 }
 
 /**
@@ -232,7 +188,7 @@ export function run(start, str) {
 		let sinceAccepts = -1;
 		let charsSinceAccepts = -1;
 
-		while (charCursor < charCount && (nextState = takeT(state, iterable[charCursor]))) {
+		while (charCursor < charCount && (nextState = state.go(iterable[charCursor]))) {
 			state = nextState;
 
 			// Keep track of the latest accepting state
@@ -256,7 +212,6 @@ export function run(start, str) {
 		tokenLength -= sinceAccepts;
 
 		// No more jumps, just make a new token from the last accepting one
-		// TODO: If possible, don't output v, instead output range where values ocur
 		tokens.push({
 			t: latestAccepting.t, // token type/name
 			v: str.slice(cursor - tokenLength, cursor), // string value

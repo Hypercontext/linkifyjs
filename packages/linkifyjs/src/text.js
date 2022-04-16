@@ -26,12 +26,6 @@ export const SCHEME = 'SCHEME';
 // `ftp`, `ftps`
 export const SLASH_SCHEME = 'SLASH_SCHEME';
 
-// Similar to SCHEME, except contains -
-export const COMPOUND_SCHEME = 'COMPOUND_SCHEME';
-
-// Similar to SLASH_SCHEME, except contains -
-export const COMPOUND_SLASH_SCHEME = 'COMPOUND_SLASH_SCHEME';
-
 // Any sequence of digits 0-9
 export const NUM = 'NUM';
 
@@ -79,72 +73,10 @@ export const TILDE = 'TILDE'; // ~
 export const UNDERSCORE = 'UNDERSCORE'; // _
 
 // Emoji symbol
-export const EMOJIS = 'EMOJIS';
+export const EMOJI = 'EMOJI';
 
 // Default token - anything that is not one of the above
 export const SYM = 'SYM';
-
-// Token collections for grouping similar jumps in the parser
-export const numeric = [NUM];
-export const ascii = [WORD, LOCALHOST, TLD, SCHEME, SLASH_SCHEME];
-export const asciinumeric = ascii.concat(NUM);
-export const alpha = ascii.concat(UWORD, UTLD);
-export const alphanumeric = alpha.concat(NUM);
-export const domain = alphanumeric.concat(COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME, EMOJIS);
-export const scheme = [SCHEME, SLASH_SCHEME, COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME];
-
-/**
- * Collections of text tokens. More may be added
- */
-export const collections = {
-	numeric,
-	ascii,
-	asciinumeric,
-	alpha,
-	alphanumeric,
-	domain
-	// scheme // purposely excluded
-};
-
-/**
- * @typedef {keyof collections} BuiltinTokenCollection
- */
-
-/**
- * @typedef {BuiltinTokenCollection | string} Collection
- */
-
-/**
- * Register a text token that the parser can recognize
- * @template {string} K
- * @param {K} name Token name in all caps (by convention)
- * @param {Collection[]} [collections] Flag whether this token should be added
- * to any built-in or new collection. Built-in collections that inherit from
- * each other don't have to be specified. For example, if you include `numeric`,
- * you don't have to also include `alphanumeric`, `domain`, etc.
- * @returns {K}
- */
-export function registerToken(name, collections = []) {
-	const flags = collections.reduce((f, k) => f[k] = true && f, {});
-	if (flags.numeric) {
-		flags.asciinumeric = true;
-		flags.alphanumeric = true;
-	}
-	if (flags.ascii) {
-		flags.asciinumeric = true;
-		flags.alpha = true;
-	}
-	if (flags.alpha) {
-		flags.alphanumeric = true;
-	}
-	if (flags.alphanumeric) {
-		flags.domain = true;
-	}
-	for (const k in flags) {
-		registerCollection(k).push(name);
-	}
-	return name;
-}
 
 /**
  * Convert a String to an Array of characters, taking into account that some
@@ -172,15 +104,4 @@ export function registerToken(name, collections = []) {
 		index += char.length;
 	}
 	return result;
-}
-
-/**
- * @param {string} name Name of text token collections. Will be available in plugins as scanner.tokens.collections.<name>
- * @returns {Collection[]} the collection
- */
-function registerCollection(name) {
-	if (!(name in collections)) {
-		collections[name] = [];
-	}
-	return collections[name];
 }

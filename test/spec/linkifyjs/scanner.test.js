@@ -1,3 +1,4 @@
+const { expect } = require('chai');
 const scanner = require('linkifyjs/src/scanner');
 const { text: t } = require('linkifyjs/src/tokens');
 
@@ -59,9 +60,9 @@ const tests = [
 	['123-456', [t.NUM, t.HYPHEN, t.NUM], ['123', '-', '456']],
 	['foo\u00a0bar', [t.TLD, t.WS, t.TLD], ['foo', '\u00a0', 'bar']], // nbsp
 	['çïrâ.ca', [t.UWORD, t.WORD, t.UWORD, t.DOT, t.TLD], ['çï', 'r', 'â', '.', 'ca']],
-	['❤️💚', [t.EMOJIS], ['❤️💚']],
-	['👊🏿🧑🏼‍🔬🌚', [t.EMOJIS], ['👊🏿🧑🏼‍🔬🌚']], // contains zero-width joiner \u200d
-	['www.🍕💩.ws', [t.WORD, t.DOT, t.EMOJIS, t.DOT, t.TLD], ['www', '.', '🍕💩', '.', 'ws']],
+	['❤️💚', [t.EMOJI], ['❤️💚']],
+	['👊🏿🧑🏼‍🔬🌚', [t.EMOJI], ['👊🏿🧑🏼‍🔬🌚']], // contains zero-width joiner \u200d
+	['www.🍕💩.ws', [t.WORD, t.DOT, t.EMOJI, t.DOT, t.TLD], ['www', '.', '🍕💩', '.', 'ws']],
 	[
 		'za̡͊͠͝lgό.gay', // May support diacritics in the future if someone complains
 		[t.TLD, t.SYM, t.SYM, t.SYM, t.SYM, t.WORD, t.UWORD, t.DOT, t.TLD],
@@ -96,23 +97,28 @@ const tests = [
 
 const customSchemeTests = [
 	['stea', [t.WORD], ['stea']],
-	['steam', [t.SCHEME], ['steam']],
+	['steam', ['steam'], ['steam']],
 	['steams', [t.WORD], ['steams']],
 	['view', [t.WORD], ['view']],
 	['view-', [t.WORD, t.HYPHEN], ['view', '-']],
 	['view-s', [t.WORD, t.HYPHEN, t.WORD], ['view', '-', 's']],
 	['view-sour', [t.WORD, t.HYPHEN, t.WORD], ['view', '-', 'sour']],
-	['view-source', [t.SLASH_SCHEME], ['view-source']],
-	['view-sources', [t.SLASH_SCHEME, t.WORD], ['view-source', 's']], // This is an unfortunate consequence :(
-	['fb', [t.SLASH_SCHEME], ['fb']],
-	['twitter sux', [t.SLASH_SCHEME, t.WS, t.WORD], ['twitter', ' ', 'sux']],
-	['ms-settings', [t.SCHEME], ['ms-settings']],
+	['view-source', ['view-source'], ['view-source']],
+	['view-sources', ['view-source', t.WORD], ['view-source', 's']], // This is an unfortunate consequence :(
+	['twitter dot com', ['twitter', t.WS, t.TLD, t.WS, t.TLD], ['twitter', ' ', 'dot', ' ', 'com']],
+	['ms-settings', ['ms-settings'], ['ms-settings']],
+	['geo', ['geo'], ['geo']],
+	['42', ['42'], ['42']],
 ];
 
 
-describe('linkifyjs/scanner#run()', () => {
-	let start;
-	before(() => { start = scanner.init(); });
+describe('linkifyjs/scanner', () => {
+	let start, tokens;
+	before(() => {
+		const result = scanner.init();
+		start = result.start;
+		tokens = result.tokens;
+	});
 
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', () => {
@@ -142,21 +148,31 @@ describe('linkifyjs/scanner#run()', () => {
 	describe('Custom protocols', () => {
 
 		before(() => {
-			start = scanner.init([
+			const result = scanner.init([
 				['twitter', false],
-				['fb', false],
 				['steam', true],
+				['org', false], // TLD is also a domain
+				['geo', false],
+				['42', true],
 				['view-source', false],
 				['ms-settings', true]
 			]);
+			start = result.start;
+			tokens = result.tokens;
 		});
 
 		// eslint-disable-next-line mocha/no-setup-in-describe
 		customSchemeTests.map(makeTest, this);
 
+		it('Updates collections correctly', () => {
+			expect(tokens.scheme).to.eql([t.SCHEME, '42', 'ms-settings', 'steam']);
+			expect(tokens.slashscheme).to.eql([t.SLASH_SCHEME, 'geo', 'org', 'twitter', 'view-source']);
+			expect(tokens.tld).includes('org');
+		});
+
 		it('Correctly tokenizes a full custom protocols', () => {
 			expect(scanner.run(start, 'steam://hello')).to.eql([
-				{ t: t.SCHEME, v: 'steam', s: 0, e: 5 },
+				{ t: 'steam', v: 'steam', s: 0, e: 5 },
 				{ t: t.COLON, v: ':', s: 5, e: 6 },
 				{ t: t.SLASH, v: '/', s: 6, e: 7 },
 				{ t: t.SLASH, v: '/', s: 7, e: 8 },
@@ -165,10 +181,12 @@ describe('linkifyjs/scanner#run()', () => {
 		});
 
 		it('Classifies partial schemes', () => {
-			expect(scanner.run(start, 'twitter sux')).to.eql([
-				{ t: t.SLASH_SCHEME, v: 'twitter', s: 0, e: 7 },
+			expect(scanner.run(start, 'twitter dot com')).to.eql([
+				{ t: 'twitter', v: 'twitter', s: 0, e: 7 },
 				{ t: t.WS, v: ' ', s: 7, e: 8 },
-				{ t: t.WORD, v: 'sux', s: 8, e: 11 }
+				{ t: t.TLD, v: 'dot', s: 8, e: 11 },
+				{ t: t.WS, v: ' ', s: 11, e: 12 },
+				{ t: t.TLD, v: 'com', s: 12, e: 15 }
 			]);
 		});
 	});

@@ -3,6 +3,7 @@ import { init as initParser, run as runParser, tokens as multiTokens } from './p
 import { Options } from './options';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
+const warnAdvice = 'To avoid this warning, please register all custom schemes before invoking linkify the first time.';
 
 // Side-effect initialization state
 const INIT = {
@@ -52,7 +53,7 @@ export function registerPlugin(name, plugin) {
 	}
 	INIT.pluginQueue.push([name, plugin]);
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init(). To avoid this warning, please register all plugins before invoking linkify the first time.`);
+		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init(). ${warnAdvice}`);
 	}
 }
 
@@ -63,14 +64,14 @@ export function registerPlugin(name, plugin) {
  * @param {string} protocol
  * @param {boolean} [optionalSlashSlash]
  */
-export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
+export function registerCustomProtocol(scheme, optionalSlashSlash = false) {
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register custom protocol "${protocol}" until you manually call linkify.init(). To avoid this warning, please register all custom schemes before invoking linkify the first time.`);
+		warn(`linkifyjs: already initialized - will not register custom scheme "${scheme}" until you manually call linkify.init(). ${warnAdvice}`);
 	}
-	if (!/^[a-z]+(-[a-z]+)*$/.test(protocol)) {
-		throw new Error('linkifyjs: incorrect protocol format.\n 1. Must only contain lowercase ASCII letters or -\n 2. Cannot start or end with -\n 3. - cannot repeat');
+	if (!/^[0-9a-z]+(-[0-9a-z]+)*$/.test(scheme)) {
+		throw new Error('linkifyjs: incorrect scheme format.\n 1. Must only contain digits, lowercase ASCII letters or "-"\n 2. Cannot start or end with "-"\n 3. "-" cannot repeat');
 	}
-	INIT.customSchemes.push([protocol, optionalSlashSlash]);
+	INIT.customSchemes.push([scheme, optionalSlashSlash]);
 }
 
 /**
@@ -79,8 +80,8 @@ export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
  */
 export function init() {
 	// Initialize state machines
-	INIT.scanner = { start: initScanner(INIT.customSchemes), tokens: textTokens };
-	INIT.parser = { start: initParser(), tokens: multiTokens };
+	INIT.scanner = initScanner(INIT.customSchemes);
+	INIT.parser = initParser(INIT.scanner.tokens);
 
 	// Initialize plugins
 	for (let i = 0; i < INIT.pluginQueue.length; i++) {
@@ -148,7 +149,7 @@ export function test(str, type = null) {
 
 export * as options from './options';
 export * as regexp from './regexp';
-export { registerToken, stringToArray } from './text';
+export { stringToArray } from './text';
 export { MultiToken, createTokenClass } from './multi';
 export { State } from './fsm';
 export { Options };
