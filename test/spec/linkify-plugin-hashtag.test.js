@@ -18,7 +18,7 @@ describe('linkify-plugin-hashtag', () => {
 			linkify.registerPlugin('hashtag', hashtag);
 		});
 
-		it ('can parse hashtags after applying the plugin', () => {
+		it('can parse hashtags after applying the plugin', () => {
 			expect(linkify.find('There is a #hashtag #YOLO_2015 #__swag__ and #1234 and #%^&*( #_ #__ should not work'))
 			.to.be.eql([{
 				type: 'hashtag',

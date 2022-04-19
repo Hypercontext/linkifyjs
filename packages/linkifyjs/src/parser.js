@@ -17,13 +17,15 @@ import { State, ta, tt } from './fsm';
 import * as tk from './text';
 import * as mtk from './multi';
 
+const makeState = (arg) => new State(arg);
+
 /**
  * Generate the parser multi token-based state machine
- * @param {Collections<string> & typeof tk} tokens
+ * @param {{ groups: Collections<string> }} tokens
  */
-export function init(tokens) {
+export function init({ groups }) {
 	// Types of characters the URL can definitely end in
-	const qsAccepting = tokens.domain.concat([
+	const qsAccepting = groups.domain.concat([
 		tk.AMPERSAND,
 		tk.ASTERISK,
 		tk.AT,
@@ -93,17 +95,21 @@ export function init(tokens) {
 	];
 
 	// The universal starting state.
-	const Start = new State();
+	/**
+	 * @type State<Token>
+	 */
+	const Start = makeState();
 	const Localpart = tt(Start, tk.TILDE); // Local part of the email address
 	ta(Localpart, localpartAccepting, Localpart);
-	ta(Localpart, tokens.domain, Localpart);
+	ta(Localpart, groups.domain, Localpart);
 
-	const Domain = ta(Start, tokens.domain); // parsed string ends with a potential domain name (A)
-	const Scheme = ta(Start, tokens.scheme); // e.g., 'mailto'
-	const SlashScheme = ta(Start, tokens.slashscheme); // e.g., 'http'
+	const Domain = makeState(), Scheme = makeState(), SlashScheme = makeState();
+	ta(Start, groups.domain, Domain); // parsed string ends with a potential domain name (A)
+	ta(Start, groups.scheme, Scheme); // e.g., 'mailto'
+	ta(Start, groups.slashscheme, SlashScheme); // e.g., 'http'
 
 	ta(Domain, localpartAccepting, Localpart);
-	ta(Domain, tokens.domain, Domain);
+	ta(Domain, groups.domain, Domain);
 
 	const LocalpartAt = tt(Domain, tk.AT); // Local part of the email address plus @
 
@@ -111,51 +117,55 @@ export function init(tokens) {
 
 	const LocalpartDot = tt(Localpart, tk.DOT); // Local part of the email address plus '.' (localpart cannot end in .)
 	ta(LocalpartDot, localpartAccepting, Localpart);
-	ta(LocalpartDot, tokens.domain, Localpart);
+	ta(LocalpartDot, groups.domain, Localpart);
 
-	const EmailDomain = ta(LocalpartAt, tokens.domain); // parsed string starts with local email info + @ with a potential domain name
+	const EmailDomain = makeState();
+	ta(LocalpartAt, groups.domain, EmailDomain); // parsed string starts with local email info + @ with a potential domain name
 	const EmailDomainDot = tt(EmailDomain, tk.DOT); // domain followed by DOT
-	ta(EmailDomainDot, tokens.domain, EmailDomain);
+	ta(EmailDomainDot, groups.domain, EmailDomain);
 
-	const Email = ta(EmailDomainDot, tokens.tld, mtk.Email); // Possible email address (could have more tlds)
-	ta(EmailDomainDot, tokens.utld, Email);
+	const Email = makeState(mtk.Email); // Possible email address (could have more tlds)
+	ta(EmailDomainDot, groups.tld, Email);
+	ta(EmailDomainDot, groups.utld, Email);
 	tt(LocalpartAt, tk.LOCALHOST, Email);
 
 	// Hyphen can jump back to a domain name
 	const EmailDomainHyphen = tt(EmailDomain, tk.HYPHEN); // parsed string starts with local email info + @ with a potential domain name
-	ta(EmailDomainHyphen, tokens.domain, EmailDomain);
-	ta(Email, tokens.domain, EmailDomain);
+	ta(EmailDomainHyphen, groups.domain, EmailDomain);
+	ta(Email, groups.domain, EmailDomain);
 	tt(Email, tk.DOT, EmailDomainDot);
 	tt(Email, tk.HYPHEN, EmailDomainHyphen);
 
 	// Final possible email states
 	const EmailColon = tt(Email, tk.COLON); // URL followed by colon (potential port number here)
-	/*const EmailColonPort = */ta(EmailColon, tokens.numeric, mtk.Email); // URL followed by colon and port numner
+	/*const EmailColonPort = */ta(EmailColon, groups.numeric, mtk.Email); // URL followed by colon and port numner
 
 	// Account for dots and hyphens. Hyphens are usually parts of domain names
 	// (but not TLDs)
 	const DomainHyphen = tt(Domain, tk.HYPHEN); // domain followed by hyphen
 	const DomainDot = tt(Domain, tk.DOT); // domain followed by DOT
-	ta(DomainHyphen, tokens.domain, Domain);
+	ta(DomainHyphen, groups.domain, Domain);
 	ta(DomainDot, localpartAccepting, Localpart);
-	ta(DomainDot, tokens.domain, Domain);
+	ta(DomainDot, groups.domain, Domain);
 
-	const DomainDotTld = ta(DomainDot, tokens.tld, mtk.Url);   // Simplest possible URL with no query string
-	ta(DomainDot, tokens.utld, DomainDotTld);
-	ta(DomainDotTld, tokens.domain, Domain);
+	const DomainDotTld = makeState(mtk.Url); // Simplest possible URL with no query string
+	ta(DomainDot, groups.tld, DomainDotTld);
+	ta(DomainDot, groups.utld, DomainDotTld);
+	ta(DomainDotTld, groups.domain, Domain);
 	ta(DomainDotTld, localpartAccepting, Localpart);
 	tt(DomainDotTld, tk.DOT, DomainDot);
 	tt(DomainDotTld, tk.HYPHEN, DomainHyphen);
 	tt(DomainDotTld, tk.AT, LocalpartAt);
 
 	const DomainDotTldColon = tt(DomainDotTld, tk.COLON); // URL followed by colon (potential port number here)
-	const DomainDotTldColonPort = ta(DomainDotTldColon, tokens.numeric, mtk.Url); // TLD followed by a port number
+	const DomainDotTldColonPort = makeState(mtk.Url); // TLD followed by a port number
+	ta(DomainDotTldColon, groups.numeric, DomainDotTldColonPort);
 
 	// Long URL with optional port and maybe query string
-	const Url = new State(mtk.Url);
+	const Url = makeState(mtk.Url);
 
 	// URL with extra symbols at the end, followed by an opening bracket
-	const UrlNonaccept = new State(); // URL followed by some symbols (will not be part of the final URL)
+	const UrlNonaccept = makeState(); // URL followed by some symbols (will not be part of the final URL)
 
 	// Query strings
 	ta(Url, qsAccepting, Url);
@@ -176,15 +186,15 @@ export function init(tokens) {
 	tt(SlashSchemeColonSlash, tk.SLASH, UriPrefix);
 
 	// Scheme states can transition to domain states
-	ta(Scheme, tokens.domain, Domain);
+	ta(Scheme, groups.domain, Domain);
 	tt(Scheme, tk.DOT, DomainDot);
 	tt(Scheme, tk.HYPHEN, DomainHyphen);
-	ta(SlashScheme, tokens.domain, Domain);
+	ta(SlashScheme, groups.domain, Domain);
 	tt(SlashScheme, tk.DOT, DomainDot);
 	tt(SlashScheme, tk.HYPHEN, DomainHyphen);
 
 	// Force URL with scheme prefix followed by anything sane
-	ta(UriPrefix, tokens.domain, Url);
+	ta(UriPrefix, groups.domain, Url);
 	tt(UriPrefix, tk.SLASH, Url);
 
 	// URL, followed by an opening bracket
@@ -208,15 +218,23 @@ export function init(tokens) {
 	// URL that beings with an opening bracket, followed by a symbols.
 	// Note that the final state can still be `UrlOpenbrace` (if the URL only
 	// has a single opening bracket for some reason).
-	const UrlOpenbraceQ = ta(UrlOpenbrace, qsAccepting, mtk.Url); // URL followed by { and some symbols that the URL can end it
-	const UrlOpenbracketQ = ta(UrlOpenbracket, qsAccepting, mtk.Url); // URL followed by [ and some symbols that the URL can end it
-	const UrlOpenanglebracketQ = ta(UrlOpenanglebracket, qsAccepting, mtk.Url); // URL followed by < and some symbols that the URL can end it
-	const UrlOpenparenQ = ta(UrlOpenparen, qsAccepting, mtk.Url); // URL followed by ( and some symbols that the URL can end it
+	const UrlOpenbraceQ = makeState(mtk.Url); // URL followed by { and some symbols that the URL can end it
+	const UrlOpenbracketQ = makeState(mtk.Url); // URL followed by [ and some symbols that the URL can end it
+	const UrlOpenanglebracketQ = makeState(mtk.Url); // URL followed by < and some symbols that the URL can end it
+	const UrlOpenparenQ = makeState(mtk.Url); // URL followed by ( and some symbols that the URL can end it
+	ta(UrlOpenbrace, qsAccepting, UrlOpenbraceQ);
+	ta(UrlOpenbracket, qsAccepting, UrlOpenbracketQ);
+	ta(UrlOpenanglebracket, qsAccepting, UrlOpenanglebracketQ);
+	ta(UrlOpenparen, qsAccepting, UrlOpenparenQ);
 
-	const UrlOpenbraceSyms = ta(UrlOpenbrace, qsNonAccepting); // UrlOpenbrace followed by some symbols it cannot end it
-	const UrlOpenbracketSyms = ta(UrlOpenbracket, qsNonAccepting); // UrlOpenbracketQ followed by some symbols it cannot end it
-	const UrlOpenanglebracketSyms = ta(UrlOpenanglebracket, qsNonAccepting); // UrlOpenanglebracketQ followed by some symbols it cannot end it
-	const UrlOpenparenSyms = ta(UrlOpenparen, qsNonAccepting); // UrlOpenparenQ followed by some symbols it cannot end it
+	const UrlOpenbraceSyms = makeState(); // UrlOpenbrace followed by some symbols it cannot end it
+	const UrlOpenbracketSyms = makeState(); // UrlOpenbracketQ followed by some symbols it cannot end it
+	const UrlOpenanglebracketSyms = makeState(); // UrlOpenanglebracketQ followed by some symbols it cannot end it
+	const UrlOpenparenSyms = makeState(); // UrlOpenparenQ followed by some symbols it cannot end it
+	ta(UrlOpenbrace, qsNonAccepting);
+	ta(UrlOpenbracket, qsNonAccepting);
+	ta(UrlOpenanglebracket, qsNonAccepting);
+	ta(UrlOpenparen, qsNonAccepting);
 
 	// URL that begins with an opening bracket, followed by some symbols
 	ta(UrlOpenbraceQ, qsAccepting, UrlOpenbraceQ);

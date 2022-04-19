@@ -1,5 +1,5 @@
-import * as linkify from 'linkifyjs';
-import { keyword, registerKeywords } from 'linkify-plugin-keyword/src/keyword';
+import * as linkify from 'linkifyjs/src/linkify';
+import { keyword, tokens, registerKeywords } from 'linkify-plugin-keyword/src/keyword';
 import { expect } from 'chai';
 
 describe('linkify-plugin-keyword', () => {
@@ -10,9 +10,20 @@ describe('linkify-plugin-keyword', () => {
 		expect(linkify.find('Hello, World!')).to.be.eql([]);
 	});
 
+	describe('#registerKeywords()', () => {
+		it('Throws on empty keywords', () => {
+			expect(() => registerKeywords([''])).to.throw();
+		});
+
+		it('Throws on non-string keywords', () => {
+			expect(() => registerKeywords([42])).to.throw();
+		});
+	});
+
 	describe('after plugin is applied', () => {
 		const keywords = [
 			'42',
+			'hello',
 			'world',
 			'500px',
 			'テスト',
@@ -23,12 +34,28 @@ describe('linkify-plugin-keyword', () => {
 			'-view-source-',
 			'🍕💩',
 			'Hello, World!',
-			'world',
+			'world', // repeat
 			'~ ^_^ ~'
 		];
+
+		const potentiallyConflictingStrings = [
+			['http://192.168.0.42:4242', 'url'],
+			['http.org', 'url'],
+			['hello.world', 'url'],
+			['world.world', 'url'],
+			['hello42öko123.world', 'url'],
+			['https://hello.world', 'url'],
+			['500px.com', 'url'],
+			['テスト@example.com', 'email'],
+			['example@テスト.to', 'email'],
+			['www.view-source.com', 'url'],
+			['🍕💩.kz', 'url']
+		];
+
 		beforeEach(() => {
 			registerKeywords([]);  // just to test the branch
 			registerKeywords(keywords);
+			linkify.registerTokenPlugin('keyword', tokens);
 			linkify.registerPlugin('keyword', keyword);
 		});
 
@@ -46,6 +73,12 @@ describe('linkify-plugin-keyword', () => {
 		for (const keyword of keywords) {
 			it(`Detects keyword ${keyword}`, () => {
 				expect(linkify.test(keyword, 'keyword')).to.be.ok;
+			});
+		}
+
+		for (const [str, type] of potentiallyConflictingStrings) {
+			it(`Does not conflict with existing token ${type} ${str}`, () => {
+				expect(linkify.test(str, type)).to.be.ok;
 			});
 		}
 	});

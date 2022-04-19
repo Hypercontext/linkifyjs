@@ -78,30 +78,3 @@ export const EMOJI = 'EMOJI';
 // Default token - anything that is not one of the above
 export const SYM = 'SYM';
 
-/**
- * Convert a String to an Array of characters, taking into account that some
- * characters like emojis take up two string indexes.
- *
- * Adapted from core-js (MIT license)
- * https://github.com/zloirock/core-js/blob/2d69cf5f99ab3ea3463c395df81e5a15b68f49d9/packages/core-js/internals/string-multibyte.js
- *
- * @function stringToArray
- * @param {string} str
- * @returns {string[]}
- */
- export function stringToArray(str) {
-	const result = [];
-	const len = str.length;
-	let index = 0;
-	while (index < len) {
-		let first = str.charCodeAt(index);
-		let second;
-		let char = first < 0xd800 || first > 0xdbff || index + 1 === len
-		|| (second = str.charCodeAt(index + 1)) < 0xdc00 || second > 0xdfff
-			? str[index] // single character
-			: str.slice(index, index + 2); // two-index characters
-		result.push(char);
-		index += char.length;
-	}
-	return result;
-}

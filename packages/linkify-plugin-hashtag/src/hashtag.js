@@ -1,4 +1,4 @@
-import { createTokenClass } from 'linkifyjs';
+import { State, createTokenClass } from 'linkifyjs';
 
 // Create a new token that class that the parser emits when it finds a hashtag
 const HashtagToken = createTokenClass('hashtag', { isLink: true });
@@ -8,25 +8,21 @@ const HashtagToken = createTokenClass('hashtag', { isLink: true });
  */
  export default function hashtag({ scanner, parser }) {
 	// Various tokens that may compose a hashtag
-	const { POUND, NUM, UNDERSCORE, alpha } = scanner.tokens;
-
-	// The start state
-	const Start = parser.start;
+	const { POUND, UNDERSCORE } = scanner.tokens;
+	const { alpha, numeric, alphanumeric } = scanner.tokens.groups;
 
 	// Take or create a transition from start to the '#' sign (non-accepting)
-	const Hash = Start.tt(POUND);
-
 	// Take transition from '#' to any text token to yield valid hashtag state
-	const Hashtag = Hash.tt(alpha, HashtagToken);
-	Hashtag.tt(NUM, Hashtag);
-	Hashtag.tt(UNDERSCORE, Hashtag); // Trailing underscore is okay
-	Hashtag.tt(alpha, Hashtag);
+	// Account for leading underscore (non-accepting unless followed by alpha)
+	const Hash = parser.start.tt(POUND);
+	const HashPrefix = Hash.tt(UNDERSCORE);
+	const Hashtag = new State(HashtagToken);
 
-	// Account for leading underscore (non-accepting unless followed by domain)
-	const HashPrefix = Hash.tt(NUM);
-
-	Hash.tt(UNDERSCORE, HashPrefix);
-	HashPrefix.tt(NUM, HashPrefix);
+	Hash.ta(numeric, HashPrefix);
+	Hash.ta(alpha, Hashtag);
+	HashPrefix.ta(alpha, Hashtag);
+	HashPrefix.ta(numeric, HashPrefix);
 	HashPrefix.tt(UNDERSCORE, HashPrefix);
-	HashPrefix.tt(alpha, Hashtag);
+	Hashtag.ta(alphanumeric, Hashtag);
+	Hashtag.tt(UNDERSCORE, Hashtag); // Trailing underscore is okay
 }

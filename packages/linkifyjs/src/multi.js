@@ -1,4 +1,4 @@
-import { COLON } from './text';
+import { COLON, LOCALHOST } from './text';
 import { defaults } from './options';
 import assign from './assign';
 
@@ -234,6 +234,6 @@ export const Url = createTokenClass('url', {
 	 */
 	hasProtocol() {
 		const tokens = this.tk;
-		return tokens.length >= 2 && tokens[1].t === COLON;
+		return tokens.length >= 2 && tokens[0].t !== LOCALHOST && tokens[1].t === COLON
 	}
 });

@@ -1,18 +1,10 @@
-import { createTokenClass, regexp, registerToken, stringToArray } from 'linkifyjs';
-
-// Scanner text tokens
-const KEYWORD = registerToken('KEYWORD');
-const KEYWORD_NUMERIC = registerToken('KEYWORD_NUMERIC', ['numeric']);
-const KEYWORD_ASCII = registerToken('KEYWORD_ASCII', ['ascii']);
-const KEYWORD_ASCIINUMERIC = registerToken('KEYWORD_ASCIINUMERIC', ['asciinumeric']);
-const KEYWORD_ALPHA = registerToken('KEYWORD_ALPHA', ['alpha']);
-const KEYWORD_ALPHANUMERIC = registerToken('KEYWORD_ALPHANUMERIC', ['alphanumeric']);
-const KEYWORD_DOMAIN = registerToken('KEYWORD_DOMAIN', ['domain']);
+import { createTokenClass, regexp, stringToArray } from 'linkifyjs';
 
 /**
  * Tokenize will emit token classes of this type
  */
- const Keyword = createTokenClass('keyword', { isLink: true });
+const Keyword = createTokenClass('keyword', { isLink: true });
+
 
 /**
  * Keys are registered tokens recognized by the scanner in the plugin
@@ -22,14 +14,14 @@ const KEYWORD_DOMAIN = registerToken('KEYWORD_DOMAIN', ['domain']);
  * Organized this way to ensure other links that rely on these collections are
  * still recognized by the parser.
  */
-const registeredKeywordsByToken = {
-	[KEYWORD]: [],
-	[KEYWORD_NUMERIC]: [],
-	[KEYWORD_ASCII]: [],
-	[KEYWORD_ASCIINUMERIC]: [],
-	[KEYWORD_ALPHA]: [],
-	[KEYWORD_ALPHANUMERIC]: [],
-	[KEYWORD_DOMAIN]: [],
+const registeredKeywordsGroups = {
+	numeric: [],
+	ascii: [],
+	asciinumeric: [],
+	alpha: [],
+	alphanumeric: [],
+	domain: [],
+	keyword: [],
 };
 
 // Additional pre-processing regular expressions
@@ -64,36 +56,36 @@ function nMatch(str, regexp) {
 	for (let i = 0; i < keywords.length; i++) {
 		const keyword = keywords[i];
 		if (typeof keyword !== 'string' || !keyword) {
-			throw new Error(`linkify-plugin-keyword: Invalid keyword "${keyword}"`);
+			throw new Error(`linkify-plugin-keyword: Invalid keyword: ${keyword}`);
 		}
 	}
 
 	for (let i = 0; i < keywords.length; i++) {
 		const keyword = keywords[i].toLowerCase();
 		if (/^[0-9]+$/.test(keyword)) {
-			pushIfMissing(keyword, registeredKeywordsByToken[KEYWORD_NUMERIC]);
+			pushIfMissing(keyword, registeredKeywordsGroups.numeric);
 			continue;
 		}
 
 		if (/^[a-z]+$/.test(keyword)) {
-			pushIfMissing(keyword, registeredKeywordsByToken[KEYWORD_ASCII]);
+			pushIfMissing(keyword, registeredKeywordsGroups.ascii);
 			continue;
 		}
 
 		if (/^[0-9a-z]+$/.test(keyword)) {
-			pushIfMissing(keyword, registeredKeywordsByToken[KEYWORD_ASCIINUMERIC]);
+			pushIfMissing(keyword, registeredKeywordsGroups.asciinumeric);
 			continue;
 		}
 
 		const nLetters = nMatch(keyword, ALL_LETTERS);
 		if (nLetters === keyword.length) {
-			pushIfMissing(keyword, registeredKeywordsByToken[KEYWORD_ALPHA]);
+			pushIfMissing(keyword, registeredKeywordsGroups.alpha);
 			continue;
 		}
 
 		const nNumbers = nMatch(keyword, /[0-9]/g);
 		if (nLetters + nNumbers === keyword.length) {
-			pushIfMissing(keyword, registeredKeywordsByToken[KEYWORD_ALPHANUMERIC]);
+			pushIfMissing(keyword, registeredKeywordsGroups.alphanumeric);
 			continue;
 		}
 
@@ -102,12 +94,25 @@ function nMatch(str, regexp) {
 		if (nLetters + nNumbers + nEmojis + nHyphens === keyword.length && !/(^-|-$|--)/.test(keyword)) {
 			// Composed of letters, numbers hyphens or emojis. No leading,
 			// trailing or consecutive hyphens. Valid domain name.
-			pushIfMissing(keyword, registeredKeywordsByToken[KEYWORD_DOMAIN]);
+			pushIfMissing(keyword, registeredKeywordsGroups.domain);
 			continue;
 		}
 
 		// Keyword does not match any existing tokens that the scanner may recognize
-		pushIfMissing(keyword, registeredKeywordsByToken[KEYWORD]);
+		pushIfMissing(keyword, registeredKeywordsGroups.keyword);
+	}
+}
+
+/**
+ * @type import('linkifyjs').TokenPlugin
+ */
+export function tokens({ scanner }) {
+	for (const group in registeredKeywordsGroups) {
+		const keywords = registeredKeywordsGroups[group];
+		for (let i = 0; i < keywords.length; i++) {
+			const chars = stringToArray(keywords[i]);
+			scanner.start.ts(chars, [keywords[i], ['keyword', group]], scanner.tokens.groups);
+		}
 	}
 }
 
@@ -115,19 +120,6 @@ function nMatch(str, regexp) {
  * @type import('linkifyjs').Plugin
  */
 export function keyword({ scanner, parser }) {
-	// Create scanner transitions from all registered tokens
-	for (const token in registeredKeywordsByToken) {
-		registeredKeywordsByToken[token].map(keyword => {
-			const chars = stringToArray(keyword);
-			const lastCharIdx = chars.length - 1;
-			let state = scanner.start;
-			for (let j = 0; j < lastCharIdx; j++) {
-				state = state.tt(chars[j]);
-			}
-			state.tt(chars[lastCharIdx], token);
-		});
-
-		// Parser transition for the current token with an immediately-accepting multitoken
-		parser.start.tt(token, Keyword);
-	}
+	// Create parser transitions from all registered tokens
+	parser.start.ta(scanner.tokens.groups.keyword, Keyword);
 }

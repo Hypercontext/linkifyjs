@@ -1,9 +1,8 @@
-const { Options } = require('linkifyjs/src/options');
-const tokens = require('linkifyjs/src/tokens');
-const scanner = require('linkifyjs/src/scanner');
-const { expect } = require('chai');
-const tk = tokens.text;
-const mtk = tokens.multi;
+import { Options } from 'linkifyjs/src/options';
+import { expect } from 'chai';
+import * as tk from 'linkifyjs/src/text';
+import * as mtk from 'linkifyjs/src/multi';
+import * as scanner from 'linkifyjs/src/scanner';
 
 describe('linkifyjs/multi', () => {
 	let scannerStart;
@@ -23,11 +22,11 @@ describe('linkifyjs/multi', () => {
 		},
 	});
 
-	before(() => { scannerStart = scanner.init(); });
+	before(() => { scannerStart = scanner.init().start; });
 
 	describe('Multitoken', () => {
 		it('Constructor runs', () => {
-			expect(new tokens.multi.Base()).to.be.ok;
+			expect(new mtk.Base()).to.be.ok;
 		});
 	});
 

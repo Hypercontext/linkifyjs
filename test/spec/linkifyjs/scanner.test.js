@@ -1,6 +1,6 @@
-const { expect } = require('chai');
-const scanner = require('linkifyjs/src/scanner');
-const { text: t } = require('linkifyjs/src/tokens');
+import { expect } from 'chai';
+import * as scanner from 'linkifyjs/src/scanner';
+import * as t from 'linkifyjs/src/text';
 
 // The elements are
 // 1. input string
@@ -165,9 +165,9 @@ describe('linkifyjs/scanner', () => {
 		customSchemeTests.map(makeTest, this);
 
 		it('Updates collections correctly', () => {
-			expect(tokens.scheme).to.eql([t.SCHEME, '42', 'ms-settings', 'steam']);
-			expect(tokens.slashscheme).to.eql([t.SLASH_SCHEME, 'geo', 'org', 'twitter', 'view-source']);
-			expect(tokens.tld).includes('org');
+			expect(tokens.groups.scheme).to.eql([t.SCHEME, '42', 'ms-settings', 'steam']);
+			expect(tokens.groups.slashscheme).to.eql([t.SLASH_SCHEME, 'geo', 'org', 'twitter', 'view-source']);
+			expect(tokens.groups.tld).includes('org');
 		});
 
 		it('Correctly tokenizes a full custom protocols', () => {

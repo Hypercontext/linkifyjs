@@ -1,4 +1,4 @@
-import { createTokenClass } from 'linkifyjs';
+import { createTokenClass, State } from 'linkifyjs';
 
 const TicketToken = createTokenClass('ticket', { isLink: true });
 
@@ -8,9 +8,9 @@ const TicketToken = createTokenClass('ticket', { isLink: true });
 export default function ticket({ scanner, parser }) {
 	// TODO: Add cross-repo style tickets? e.g., Hypercontext/linkifyjs#42
 	// Is that even feasible?
-	const { POUND, numeric } = scanner.tokens;
-	const Start = parser.start;
+	const { POUND, groups } = scanner.tokens;
 
-	const Hash = Start.tt(POUND);
-	Hash.tt(numeric, TicketToken);
+	const Hash = parser.start.tt(POUND);
+	const Ticket = new State(TicketToken);
+	Hash.ta(groups.numeric, Ticket);
 }

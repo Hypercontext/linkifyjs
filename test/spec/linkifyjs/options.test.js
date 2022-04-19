@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as options from 'linkifyjs/src/options';
 import * as scanner from 'linkifyjs/src/scanner';
-import { multi as mtk } from 'linkifyjs/src/tokens';
+import * as mtk from 'linkifyjs/src/multi';
 
 const Options = options.Options;
 
@@ -33,7 +33,7 @@ describe('linkifyjs/options', () => {
 		let opts, renderOpts;
 
 		before(() => {
-			scannerStart = scanner.init();
+			scannerStart = scanner.init().start;
 			const inputUrl = 'github.com';
 			const inputEmail = 'test@example.com';
 

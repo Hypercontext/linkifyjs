@@ -84,7 +84,8 @@ function addToCollections(t, collectionNames, collections) {
 function collectionNamesForToken(t, collections) {
 	const result = [];
 	for (const c in collections) {
-		if (collections[c].indexOf(t) >= 0) {
+		const coll = collections[c];
+		if (coll instanceof Array && coll.indexOf(t) >= 0) {
 			result.push(c);
 		}
 	}
@@ -168,21 +169,15 @@ State.prototype = {
 
 	/**
 	 * Short for "transition all"; create a transition from the array of items
-	 * in the given list to the same final resulting state (return value)
+	 * in the given list to the same final resulting state.
 	 * @param {string | string[]} inputs Group of inputs to transition on
 	 * @param {Transition<T> | State<T>} [next] Transition options
 	 * @param {Collections<T>} [collections] Master list of token collections
-	 * @returns {State<T>} taken after the given input
 	 */
 	ta(inputs, next = null, collections = {}) {
-		const state = this;
-		const len = inputs.length;
-		if (!len) { return state; }
-		const nextState = state.tt(inputs[0], next, collections);
-		for (let i = 1; i < len; i++) {
-			state.tt(inputs[i], nextState, collections);
+		for (let i = 0; i < inputs.length; i++) {
+			this.tt(inputs[i], next, collections);
 		}
-		return nextState;
 	},
 
 	/**

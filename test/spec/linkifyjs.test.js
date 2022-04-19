@@ -1,15 +1,17 @@
 /* eslint-disable mocha/no-setup-in-describe */
-const { expect } = require('chai');
-const linkify = require('linkifyjs/src/linkify');
+import { expect } from 'chai';
+import * as linkify from 'linkifyjs/src/linkify';
 
-const Ticket = linkify.createTokenClass('ticket', { isLink: true });
+const TicketToken = linkify.createTokenClass('ticket', { isLink: true });
+
 /**
  * @type import('linkifyjs').Plugin
  */
 const ticketPlugin = ({ scanner, parser }) => {
-	const { POUND, numeric } = scanner.tokens;
+	const { POUND, groups } = scanner.tokens;
 	const Hash = parser.start.tt(POUND);
-	Hash.tt(numeric, Ticket);
+	const Ticket = new linkify.State(TicketToken);
+	Hash.ta(groups.numeric, Ticket);
 };
 
 describe('linkifyjs', () => {

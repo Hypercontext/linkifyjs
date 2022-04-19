@@ -1,5 +1,5 @@
-import { init as initScanner, run as runScanner, tokens as textTokens } from './scanner';
-import { init as initParser, run as runParser, tokens as multiTokens } from './parser';
+import { init as initScanner, run as runScanner } from './scanner';
+import { init as initParser, run as runParser } from './parser';
 import { Options } from './options';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
@@ -9,19 +9,32 @@ const warnAdvice = 'To avoid this warning, please register all custom schemes be
 const INIT = {
 	scanner: null,
 	parser: null,
+	tokenQueue: [],
 	pluginQueue: [],
 	customSchemes: [],
 	initialized: false,
 };
 
-export const scanner = Object.freeze({ tokens: textTokens });
-export const parser = Object.freeze({ tokens: multiTokens });
+/**
+ * @typedef {{
+ * 	start: State<string>,
+ * 	tokens: { groups: Collections<string> } & typeof tk
+ * }} ScannerInit
+ */
 
 /**
- * @typedef {(arg: {
- * 	scanner: { start: State<string> } & typeof scanner,
- * 	parser: { start: State<MultiToken> } & typeof parser
- * }) => void} Plugin
+ * @typedef {{
+ * 	start: State<MultiToken>,
+ * 	tokens: typeof multi
+ * }} ParserInit
+ */
+
+/**
+ * @typedef {(arg: { scanner: ScannerInit }) => void} TokenPlugin
+ */
+
+/**
+ * @typedef {(arg: { scanner: ScannerInit, parser: ParserInit }) => void} Plugin
  */
 
 /**
@@ -32,15 +45,40 @@ export const parser = Object.freeze({ tokens: multiTokens });
 export function reset() {
 	INIT.scanner = null;
 	INIT.parser = null;
+	INIT.tokenQueue = [];
 	INIT.pluginQueue = [];
 	INIT.customSchemes = [];
 	INIT.initialized = false;
 }
 
 /**
- * Register a linkify extension plugin
+ * Register a token plugin to allow the scanner to recognize additional token
+ * types before the parser state machine is constructed from the results.
  * @param {string} name of plugin to register
- * @param {Plugin} plugin function that accepts mutable linkify state
+ * @param {TokenPlugin} plugin function that accepts the scanner state machine
+ * and available scanner tokens and collections and extends the state machine to
+ * recognize additional tokens or groups.
+ */
+export function registerTokenPlugin(name, plugin) {
+	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid token plugin ${plugin} (expects function)`); }
+	for (let i = 0; i < INIT.tokenQueue.length; i++) {
+		if (name === INIT.tokenQueue[i][0]) {
+			warn(`linkifyjs: token plugin "${name}" already registered - will be overwritten`);
+			INIT.tokenQueue[i] = [name, plugin];
+			return;
+		}
+	}
+	INIT.tokenQueue.push([name, plugin]);
+	if (INIT.initialized) {
+		warn(`linkifyjs: already initialized - will not register token plugin "${name}" until you manually call linkify.init(). ${warnAdvice}`);
+	}
+}
+
+/**
+ * Register a linkify plugin
+ * @param {string} name of plugin to register
+ * @param {Plugin} plugin function that accepts the parser state machine and
+ * extends the parser to recognize additional link types
  */
 export function registerPlugin(name, plugin) {
 	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid plugin ${plugin} (expects function)`); }
@@ -79,11 +117,16 @@ export function registerCustomProtocol(scheme, optionalSlashSlash = false) {
  * linkify is called on a string, but may be called manually as well.
  */
 export function init() {
-	// Initialize state machines
+	// Initialize scanner state machine and plugins
 	INIT.scanner = initScanner(INIT.customSchemes);
-	INIT.parser = initParser(INIT.scanner.tokens);
+	for (let i = 0; i < INIT.tokenQueue.length; i++) {
+		INIT.tokenQueue[i][1]({
+			scanner: INIT.scanner
+		});
+	}
 
-	// Initialize plugins
+	// Initialize parser state machine and plugins
+	INIT.parser = initParser(INIT.scanner.tokens);
 	for (let i = 0; i < INIT.pluginQueue.length; i++) {
 		INIT.pluginQueue[i][1]({
 			scanner: INIT.scanner,
@@ -149,7 +192,8 @@ export function test(str, type = null) {
 
 export * as options from './options';
 export * as regexp from './regexp';
-export { stringToArray } from './text';
+export * as multi from './multi';
 export { MultiToken, createTokenClass } from './multi';
+export { stringToArray } from './scanner';
 export { State } from './fsm';
 export { Options };
