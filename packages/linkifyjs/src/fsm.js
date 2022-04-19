@@ -8,6 +8,10 @@ import assign from './assign';
  * @typedef {{ [collection: string]: T[] }} Collections
  */
 
+/**
+ * @typedef {{ [collection: string]: true }} Flags
+ */
+
 // Keys in scanner Collections instances
 export const numeric = 'numeric';
 export const ascii = 'ascii';
@@ -38,12 +42,10 @@ function registerCollection(name, collections) {
 /**
  * @template T
  * @param {T} t token to add
- * @param {string[]} collectionNames
  * @param {Collections<T>} collections
- * @returns {string[]} final list of collections for the given token
+ * @param {Flags} flags
  */
-function addToCollections(t, collectionNames, collections) {
-	const flags = collectionNames.reduce((f, k) => f[k] = true && f, {});
+export function addToCollections(t, collections, flags) {
 	if (flags[numeric]) {
 		flags[asciinumeric] = true;
 		flags[alphanumeric] = true;
@@ -65,28 +67,23 @@ function addToCollections(t, collectionNames, collections) {
 		flags[domain] = true;
 	}
 
-	collectionNames = [];
 	for (const k in flags) {
-		collectionNames.push(k);
 		const collection = registerCollection(k, collections);
 		if (collection.indexOf(t) < 0) { collection.push(t); }
 	}
-
-	return collectionNames;
 }
 
 /**
  * @template T
  * @param {T} t token to check
  * @param {Collections<T>} collections
- * @returns {string[]} collection names that contain this token
+ * @returns {Flags} collection flags that contain this token
  */
-function collectionNamesForToken(t, collections) {
-	const result = [];
+function collectionFlagsForToken(t, collections) {
+	const result = {};
 	for (const c in collections) {
-		const coll = collections[c];
-		if (coll instanceof Array && coll.indexOf(t) >= 0) {
-			result.push(c);
+		if (collections[c].indexOf(t) >= 0) {
+			result[c] = true;
 		}
 	}
 	return result;
@@ -94,16 +91,8 @@ function collectionNamesForToken(t, collections) {
 
 /**
  * @template T
- * @typedef {null | T | [T, string[]]} Transition
+ * @typedef {null | T } Transition
  */
-
-/**
- * @template T
- * @param {Transition<T>} next
- */
-function toTokenAndCollections(next) {
-	return next instanceof Array ? { t: next[0], c: next[1] } : { t: next, c: [] };
-}
 
 /**
  * Define a basic state machine state. j is the list of character transitions,
@@ -172,11 +161,12 @@ State.prototype = {
 	 * in the given list to the same final resulting state.
 	 * @param {string | string[]} inputs Group of inputs to transition on
 	 * @param {Transition<T> | State<T>} [next] Transition options
-	 * @param {Collections<T>} [collections] Master list of token collections
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
 	 */
-	ta(inputs, next = null, collections = {}) {
+	ta(inputs, next, collections, flags) {
 		for (let i = 0; i < inputs.length; i++) {
-			this.tt(inputs[i], next, collections);
+			this.tt(inputs[i], next, collections, flags);
 		}
 	},
 
@@ -184,21 +174,21 @@ State.prototype = {
 	 * Short for "take regexp transition"; defines a transition for this state
 	 * when it encounters a token which matches the given regular expression
 	 * @param {RegExp} regexp Regular expression transition (populate first)
-	 * @param {Transition<T> | State<T>} [next] Transition options
-	 * @param {Collections<T>} [collections] Master list of token collections
+	 * @param {T | State<T>} [next] Transition options
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
 	 * @returns {State<T>} taken after the given input
 	 */
-	tr(regexp, next = null, collections = {}) {
+	tr(regexp, next, collections, flags) {
 		let nextState;
-		if (next instanceof State) {
+		if (next && next.j) {
 			nextState = next;
-		} else if (next) {
-			// Token with maybe collections
-			let { t, c } = toTokenAndCollections(next);
-			nextState = new State(t);
-			addToCollections(t, c, collections);
 		} else {
-			nextState = new State();
+			// Token with maybe collections
+			nextState = new State(next);
+			if (collections && flags) {
+				addToCollections(next, collections, flags);
+			}
 		}
 		this.jr.push([regexp, nextState]);
 		return nextState;
@@ -209,18 +199,19 @@ State.prototype = {
 	 * the length of the given input and returns the
 	 * resulting final state.
 	 * @param {string | string[]} input
-	 * @param {Transition<T> | State<T>} [next] Transition options
-	 * @param {Collections<T>} [collections] Master list of token collections
+	 * @param {T | State<T>} [next] Transition options
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
 	 * @returns {State<T>} taken after the given input
 	 */
-	ts(input, next, collections = {}) {
+	ts(input, next, collections, flags) {
 		let state = this;
 		const len = input.length;
 		if (!len) { return state; }
 		for (let i = 0; i < len - 1; i++) {
 			state = state.tt(input[i]);
 		}
-		return state.tt(input[len - 1], next, collections);
+		return state.tt(input[len - 1], next, collections, flags);
 	},
 
 	/**
@@ -244,21 +235,21 @@ State.prototype = {
 	 * given collections object.
 	 *
 	 * @param {string} input character, token type to transition on
-	 * @param {Transition<T> | State<T>} [next] Transition options
-	 * @param {Collections<T>} [collections] Master list of collections; not
-	 * required for most plugins.
+	 * @param {T | State<T>} [next] Transition options
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
 	 * @returns {State<T>} taken after the given input
 	 */
-	tt(input, next = null, collections = {}) {
+	tt(input, next, collections, flags) {
 		const state = this;
 
 		// Check if existing state given, just a basic transition
-		if (next instanceof State) {
+		if (next && next.j) {
 			state.j[input] = next;
 			return next;
 		}
 
-		let { t, c } = toTokenAndCollections(next); // Known token or null
+		const t = next;
 
 		// // Check for existing easy (non-regex) transition
 		// const existingState = state.j[input];
@@ -283,11 +274,15 @@ State.prototype = {
 
 		if (t) {
 			// Ensure newly token is in the same collections as the old token
-			if (nextState.t) {
-				c = c.concat(collectionNamesForToken(nextState.t, collections));
+			if (collections) {
+				if (nextState.t) {
+					const allFlags = assign(collectionFlagsForToken(nextState.t, collections), flags);
+					addToCollections(t, collections, allFlags);
+				} else if (flags) {
+					addToCollections(t, collections, flags);
+				}
 			}
 			nextState.t = t; // overwrite anything that was previously there
-			addToCollections(t, c, collections);
 		}
 
 		state.j[input] = nextState;
@@ -301,34 +296,37 @@ State.prototype = {
  * @template T
  * @param {State<T>} state
  * @param {string | string[]} input
- * @param {Transition<T> | State<T>} [next]
- * @param {{ [collection: string]: T[] }} [collections]
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
- export const ta = (state, input, next, collections) => state.ta(input, next, collections);
+ export const ta = (state, input, next, collections, flags) => state.ta(input, next, collections, flags);
 
 /**
  * @template T
  * @param {State<T>} state
  * @param {RegExp} regexp
- * @param {Transition<T> | State<T>} [next]
- * @param {{ [collection: string]: T[] }} [collections]
+ * @param {T | State<T>} [next]
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
-export const tr = (state, regexp, next, collections) => state.tr(regexp, next, collections);
+export const tr = (state, regexp, next, collections, flags) => state.tr(regexp, next, collections, flags);
 
 /**
  * @template T
  * @param {State<T>} state
  * @param {string | string[]} input
- * @param {Transition<T> | State<T>} [next]
- * @param {{ [collection: string]: T[] }} [collections]
+ * @param {T | State<T>} [next]
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
-export const ts = (state, input, next, collections) => state.ts(input, next, collections);
+export const ts = (state, input, next, collections, flags) => state.ts(input, next, collections, flags);
 
 /**
  * @template T
  * @param {State<T>} state
  * @param {string} input
- * @param {Transition<T> | State<T>} [next]
- * @param {{ [collection: string]: T[] }} [collections]
+ * @param {T | State<T>} [next]
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
-export const tt = (state, input, next, collections) => state.tt(input, next, collections);
+export const tt = (state, input, next, collections, flags) => state.tt(input, next, collections, flags);

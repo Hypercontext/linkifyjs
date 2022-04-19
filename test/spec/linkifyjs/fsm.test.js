@@ -12,9 +12,9 @@ describe('linkifyjs/fsm/State', () => {
 		collections = {};
 		Start = new fsm.State();
 		Start.tt('.', tk.DOT);
-		Num = Start.tr(/[0-9]/, [tk.NUM, ['numeric']], collections);
+		Num = Start.tr(/[0-9]/, tk.NUM, collections, { numeric: true });
 		Num.tr(/[0-9]/, Num);
-		Word = Start.tr(/[a-z]/i, [tk.WORD, ['ascii']], collections);
+		Word = Start.tr(/[a-z]/i, tk.WORD, collections, { ascii: true });
 		Word.tr(/[a-z]/i, Word);
 	});
 
@@ -48,28 +48,28 @@ describe('linkifyjs/fsm/State', () => {
 
 	describe('Add schemes', () => {
 		beforeEach(() => {
-			Start.ts('http', ['http', ['ascii', 'scheme']], collections);
-			Start.ts('https', ['https', ['ascii', 'scheme']], collections);
-			Start.ts('view-source', ['view-source', ['domain', 'scheme']], collections);
+			Start.ts('http', 'http', collections, { ascii: true, scheme: true });
+			Start.ts('https', 'https', collections, { ascii: true, scheme: true });
+			Start.ts('view-source', 'view-source', collections, { domain: true, scheme: true });
 		});
 
 		it('Adds tokens to ascii collection', () => {
-			expect(collections.ascii.indexOf('htt')).lessThan(0);
-			expect(collections.ascii.indexOf('http')).greaterThanOrEqual(0);
-			expect(collections.ascii.indexOf('https')).greaterThanOrEqual(0);
-			expect(collections.ascii.indexOf('view-source')).lessThan(0);
+			expect(collections.ascii).not.contains('htt');
+			expect(collections.ascii).contains('http');
+			expect(collections.ascii).contains('https');
+			expect(collections.ascii).not.contains('view-source');
 		});
 		it('Adds tokens to domain collection', () => {
-			expect(collections.domain.indexOf('htt')).lessThan(0);
-			expect(collections.domain.indexOf('http')).greaterThanOrEqual(0);
-			expect(collections.domain.indexOf('https')).greaterThanOrEqual(0);
-			expect(collections.domain.indexOf('view-source')).greaterThanOrEqual(0);
+			expect(collections.domain).not.contains('htt');
+			expect(collections.domain).contains('http');
+			expect(collections.domain).contains('https');
+			expect(collections.domain).contains('view-source');
 		});
 
 		it('Adds tokens to scheme collection', () => {
-			expect(collections.scheme.indexOf('http')).greaterThanOrEqual(0);
-			expect(collections.scheme.indexOf('https')).greaterThanOrEqual(0);
-			expect(collections.scheme.indexOf('view-source')).greaterThanOrEqual(0);
+			expect(collections.scheme).contains('http');
+			expect(collections.scheme).contains('https');
+			expect(collections.scheme).contains('view-source');
 		});
 	});
 });

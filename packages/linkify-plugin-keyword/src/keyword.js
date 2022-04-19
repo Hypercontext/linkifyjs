@@ -111,7 +111,7 @@ export function tokens({ scanner }) {
 		const keywords = registeredKeywordsGroups[group];
 		for (let i = 0; i < keywords.length; i++) {
 			const chars = stringToArray(keywords[i]);
-			scanner.start.ts(chars, [keywords[i], ['keyword', group]], scanner.tokens.groups);
+			scanner.start.ts(chars, keywords[i], scanner.tokens.groups, { keyword: true, [group]: true });
 		}
 	}
 }

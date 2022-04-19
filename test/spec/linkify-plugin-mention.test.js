@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as linkify from 'linkifyjs';
+import * as linkify from 'linkifyjs/src/linkify';
 import mention from 'linkify-plugin-mention/src/mention';
 
 describe('linkify-plugin-mention', () => {

@@ -234,6 +234,6 @@ export const Url = createTokenClass('url', {
 	 */
 	hasProtocol() {
 		const tokens = this.tk;
-		return tokens.length >= 2 && tokens[0].t !== LOCALHOST && tokens[1].t === COLON
+		return tokens.length >= 2 && tokens[0].t !== LOCALHOST && tokens[1].t === COLON;
 	}
 });
