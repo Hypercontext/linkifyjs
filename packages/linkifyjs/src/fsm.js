@@ -4,32 +4,215 @@
 import assign from './assign';
 
 /**
+ * @template T
+ * @typedef {{ [collection: string]: T[] }} Collections
+ */
+
+/**
+ * @typedef {{ [collection: string]: true }} Flags
+ */
+
+// Keys in scanner Collections instances
+export const numeric = 'numeric';
+export const ascii = 'ascii';
+export const alpha = 'alpha';
+export const asciinumeric = 'asciinumeric';
+export const alphanumeric = 'alphanumeric';
+export const domain = 'domain';
+export const emoji = 'emoji';
+export const tld = 'tld';
+export const utld = 'utld';
+export const scheme = 'scheme';
+export const slashscheme = 'slashscheme';
+export const whitespace = 'whitespace';
+
+/**
+ * @template T
+ * @param {string} name
+ * @param {Collections<T>} collections to register in
+ * @returns {T[]} Current list of tokens in the given collection
+ */
+function registerCollection(name, collections) {
+	if (!(name in collections)) {
+		collections[name] = [];
+	}
+	return collections[name];
+}
+
+/**
+ * @template T
+ * @param {T} t token to add
+ * @param {Collections<T>} collections
+ * @param {Flags} flags
+ */
+export function addToCollections(t, collections, flags) {
+	if (flags[numeric]) {
+		flags[asciinumeric] = true;
+		flags[alphanumeric] = true;
+	}
+	if (flags[ascii]) {
+		flags[asciinumeric] = true;
+		flags[alpha] = true;
+	}
+	if (flags[asciinumeric]) {
+		flags[alphanumeric] = true;
+	}
+	if (flags[alpha]) {
+		flags[alphanumeric] = true;
+	}
+	if (flags[alphanumeric]) {
+		flags[domain] = true;
+	}
+	if (flags[emoji]) {
+		flags[domain] = true;
+	}
+
+	for (const k in flags) {
+		const collection = registerCollection(k, collections);
+		if (collection.indexOf(t) < 0) { collection.push(t); }
+	}
+}
+
+/**
+ * @template T
+ * @param {T} t token to check
+ * @param {Collections<T>} collections
+ * @returns {Flags} collection flags that contain this token
+ */
+function collectionFlagsForToken(t, collections) {
+	const result = {};
+	for (const c in collections) {
+		if (collections[c].indexOf(t) >= 0) {
+			result[c] = true;
+		}
+	}
+	return result;
+}
+
+/**
+ * @template T
+ * @typedef {null | T } Transition
+ */
+
+/**
  * Define a basic state machine state. j is the list of character transitions,
  * jr is the list of regex-match transitions, jd is the default state to
  * transition to t is the accepting token type, if any. If this is the terminal
  * state, then it does not emit a token.
+ *
+ * The template type T represents the type of the token this state accepts. This
+ * should be a string (such as of the token exports in `text.js`) or a
+ * MultiToken subclass (from `multi.js`)
+ *
  * @template T
- * @property {{ [string]: State<T> }} j
- * @property {[RegExp, State<T>][]} jr
- * @property {State<T>} jd
- * @property {?T} t
+ * @param {T} [token] Token that this state emits
  */
-export class State {
-	/**
-	 * @param {T} [token] to emit
-	 */
-	constructor(token) {
-		// this.n = null; // DEBUG: State name
-		this.j = {}; // IMPLEMENTATION 1
-		// this.j = []; // IMPLEMENTATION 2
-		this.jr = [];
-		this.jd = null;
-		this.t = token;
-	}
+export function State(token = null) {
+	// this.n = null; // DEBUG: State name
+	/** @type {{ [input: string]: State<T> }} j */
+	this.j = {}; // IMPLEMENTATION 1
+	// this.j = []; // IMPLEMENTATION 2
+	/** @type {[RegExp, State<T>][]} jr */
+	this.jr = [];
+	/** @type {?State<T>} jd */
+	this.jd = null;
+	/** @type {?T} t */
+	this.t = token;
+}
 
+State.prototype = {
 	accepts() {
 		return !!this.t;
-	}
+	},
+
+	/**
+	 * Follow an existing transition from the given input to the next state.
+	 * Does not mutate.
+	 * @param {string} input character or token type to transition on
+	 * @returns {?State<T>} the next state, if any
+	 */
+	go(input) {
+		const state = this;
+		const nextState  = state.j[input];
+		if (nextState) { return nextState; }
+
+		for (let i = 0; i < state.jr.length; i++) {
+			const regex = state.jr[i][0];
+			const nextState = state.jr[i][1];  // note: might be empty to prevent default jump
+			if (nextState && regex.test(input)) { return nextState; }
+		}
+		// Nowhere left to jump! Return default, if any
+		return state.jd;
+	},
+
+	/**
+	 * Whether the state has a transition for the given input. Set the second
+	 * argument to true to only look for an exact match (and not a default or
+	 * regular-expression-based transition)
+	 * @param {string} input
+	 * @param {boolean} exactOnly
+	 */
+	has(input, exactOnly = false) {
+		return exactOnly ? input in this.j : !!this.go(input);
+	},
+
+	/**
+	 * Short for "transition all"; create a transition from the array of items
+	 * in the given list to the same final resulting state.
+	 * @param {string | string[]} inputs Group of inputs to transition on
+	 * @param {Transition<T> | State<T>} [next] Transition options
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
+	 */
+	ta(inputs, next, collections, flags) {
+		for (let i = 0; i < inputs.length; i++) {
+			this.tt(inputs[i], next, collections, flags);
+		}
+	},
+
+	/**
+	 * Short for "take regexp transition"; defines a transition for this state
+	 * when it encounters a token which matches the given regular expression
+	 * @param {RegExp} regexp Regular expression transition (populate first)
+	 * @param {T | State<T>} [next] Transition options
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
+	 * @returns {State<T>} taken after the given input
+	 */
+	tr(regexp, next, collections, flags) {
+		let nextState;
+		if (next && next.j) {
+			nextState = next;
+		} else {
+			// Token with maybe collections
+			nextState = new State(next);
+			if (collections && flags) {
+				addToCollections(next, collections, flags);
+			}
+		}
+		this.jr.push([regexp, nextState]);
+		return nextState;
+	},
+
+	/**
+	 * Short for "take transitions", will take as many sequential transitions as
+	 * the length of the given input and returns the
+	 * resulting final state.
+	 * @param {string | string[]} input
+	 * @param {T | State<T>} [next] Transition options
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
+	 * @returns {State<T>} taken after the given input
+	 */
+	ts(input, next, collections, flags) {
+		let state = this;
+		const len = input.length;
+		if (!len) { return state; }
+		for (let i = 0; i < len - 1; i++) {
+			state = state.tt(input[i]);
+		}
+		return state.tt(input[len - 1], next, collections, flags);
+	},
 
 	/**
 	 * Short for "take transition", this is a method for building/working with
@@ -47,193 +230,103 @@ export class State {
 	 * transitioned to on the given input regardless of what that input
 	 * previously did.
 	 *
-	 * @param {string | string[]} input character or token type to transition on
-	 * @param {State | T} tokenOrState transition to a matching state
-	 * @returns {State} taken after the given input
+	 * Specify a collections list along with tokens to define groups that this
+	 * token belongs to. The token will be added to corresponding entires in the
+	 * given collections object.
+	 *
+	 * @param {string} input character, token type to transition on
+	 * @param {T | State<T>} [next] Transition options
+	 * @param {Collections<T>} [collections] Master list of collections
+	 * @param {Flags} [flags] Collections flags to add token to
+	 * @returns {State<T>} taken after the given input
 	 */
-	tt(input, tokenOrState) {
-		if (input instanceof Array) {
-			// Recursive case
-			if (input.length === 0) { return; }
-			const nextState = this.tt(input[0], tokenOrState);
-			for (let i = 1; i < input.length; i++) {
-				this.tt(input[i], nextState);
-			}
-			return nextState;
+	tt(input, next, collections, flags) {
+		const state = this;
+
+		// Check if existing state given, just a basic transition
+		if (next && next.j) {
+			state.j[input] = next;
+			return next;
 		}
 
-		if (tokenOrState && tokenOrState instanceof State) {
-			// State, default a basic transition
-			this.j[input] = tokenOrState;
-			return tokenOrState;
-		}
+		const t = next;
 
-		// See if there's a direct state transition (not regex or default)
-		const token = tokenOrState;
-		let nextState = this.j[input];
-		if (nextState) {
-			if (token) { nextState.t = token; } // overrwites previous token
-			return nextState;
-		}
+		// // Check for existing easy (non-regex) transition
+		// const existingState = state.j[input];
+		// if (existingState && existingState.t) {
+		// 	// Don't overwrite
+		// 	if (c.length > 0) { addToCollections(existingState.t, c, collections); }
+		// 	return existingState;
+		// }
 
-		// Create a new state for this input
-		nextState = makeState();
-
-		// Take the transition using the usual default mechanisms
-		const templateState = takeT(this, input);
+		// Take the transition with the usual default mechanisms and use that as
+		// a template for creating the next state
+		let nextState, templateState = state.go(input);
 		if (templateState) {
-			// Some default state transition, make a prime state based on this one
+			nextState = new State();
 			assign(nextState.j, templateState.j);
-			nextState.jr.append(templateState.jr);
-			nextState.jr = templateState.jd;
-			nextState.t = token || templateState.t;
+			nextState.jr.push.apply(nextState.jr, templateState.jr);
+			nextState.jd = templateState.jd;
+			nextState.t = templateState.t;
 		} else {
-			nextState.t = token;
+			nextState = new State();
 		}
 
-		this.j[input] = nextState;
+		if (t) {
+			// Ensure newly token is in the same collections as the old token
+			if (collections) {
+				if (nextState.t) {
+					const allFlags = assign(collectionFlagsForToken(nextState.t, collections), flags);
+					addToCollections(t, collections, allFlags);
+				} else if (flags) {
+					addToCollections(t, collections, flags);
+				}
+			}
+			nextState.t = t; // overwrite anything that was previously there
+		}
+
+		state.j[input] = nextState;
 		return nextState;
 	}
-}
-
-/**
- * Utility function to create state without using new keyword (reduced file size
- * when minified)
- */
-export const makeState = (/*name*/) => {
-	const s = new State();
-	// if (name) { s.n = name; } // DEBUG
-	return s;
 };
 
+// Helper functions to improve minification (not exported outside linkifyjs module)
+
 /**
- * Similar to previous except it is an accepting state that emits a token
  * @template T
- * @param {T} token
+ * @param {State<T>} state
+ * @param {string | string[]} input
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
-export const makeAcceptingState = (token/*, name*/) => {
-	const s = new State(token);
-	// if (name) { s.n = name; } // DEBUG
-	return s;
-};
+ export const ta = (state, input, next, collections, flags) => state.ta(input, next, collections, flags);
 
 /**
- * Create a transition from startState to nextState via the given character
  * @template T
- * @param {State} startState transition from thie starting state
- * @param {string} input via this input character or other concrete token type
- * @param {State} nextState to this next state
- * @return {State}
+ * @param {State<T>} state
+ * @param {RegExp} regexp
+ * @param {T | State<T>} [next]
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
-export const makeT = (startState, input, nextState) => {
-	// IMPLEMENTATION 1: Add to object (fast)
-	if (!startState.j[input]) { startState.j[input] = nextState; }
-
-	// IMPLEMENTATION 2: Add to array (slower)
-	// startState.j.push([input, nextState]);
-	return startState.j[input];
-};
+export const tr = (state, regexp, next, collections, flags) => state.tr(regexp, next, collections, flags);
 
 /**
- * @param {State} startState stransition from this starting state
- * @param {RegExp} regex Regular expression to match on input
- * @param {State} nextState transition to this next state if there's are regex match
+ * @template T
+ * @param {State<T>} state
+ * @param {string | string[]} input
+ * @param {T | State<T>} [next]
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
-export const makeRegexT = (startState, regex, nextState) => {
-	startState.jr.push([regex, nextState]);
-};
+export const ts = (state, input, next, collections, flags) => state.ts(input, next, collections, flags);
 
 /**
- * Follow the transition from the given character to the next state
- * @param {State} state
- * @param {string} input character or other concrete token type to transition
- * @returns {?State} the next state, if any
+ * @template T
+ * @param {State<T>} state
+ * @param {string} input
+ * @param {T | State<T>} [next]
+ * @param {Collections<T>} [collections]
+ * @param {Flags} [flags]
  */
-export const takeT = (state, input) => {
-	// IMPLEMENTATION 1: Object key lookup (faster)
-	const nextState  = state.j[input];
-	if (nextState) { return nextState; }
-
-	// IMPLEMENTATION 2: List lookup (slower)
-	// Loop through all the state transitions and see if there's a match
-	// for (let i = 0; i < state.j.length; i++) {
-	//	const val = state.j[i][0];
-	//	const nextState = state.j[i][1];
-	// 	if (input === val) { return nextState; }
-	// }
-
-	for (let i = 0; i < state.jr.length; i++) {
-		const regex = state.jr[i][0];
-		const nextState = state.jr[i][1];  // note: might be empty to prevent default jump
-		if (nextState && regex.test(input)) { return nextState; }
-	}
-	// Nowhere left to jump! Return default, if any
-	return state.jd;
-};
-
-/**
- * Similar to makeT, but takes a list of characters that all transition to the
- * same nextState startState
- * @param {State} startState
- * @param {string[]} chars
- * @param {State} nextState
- */
-export const makeMultiT = (startState, chars, nextState) => {
-	for (let i = 0; i < chars.length; i++) {
-		makeT(startState, chars[i], nextState);
-	}
-};
-
-/**
- * Set up a list of multiple transitions at once. transitions is a list of
- * tuples, where the first element is the transitions character and the second
- * is the state to transition to
- * @param {State} startState
- * @param {[string, State][]} transitions
- */
-export const makeBatchT = (startState, transitions) => {
-	for (let i = 0; i < transitions.length; i++) {
-		const input = transitions[i][0];
-		const nextState = transitions[i][1];
-		// if (!nextState.n && typeof input === 'string') { nextState.n = input; } // DEBUG
-		makeT(startState, input, nextState);
-	}
-};
-
-/**
- * For state machines that transition on characters only; given a non-empty
- * target string, generates states (if required) for each consecutive substring
- * of characters starting from the beginning of the string. The final state will
- * have a special value, as specified in options. All other "in between"
- * substrings will have a default end state.
- *
- * This turns the state machine into a Trie-like data structure (rather than a
- * intelligently-designed DFA).
- * @param {State<string>} state
- * @param {string} str
- * @param {State<string>} endState
- * @param {() => State<string>} defaultStateFactory
- * @return {State<string>} the final state
- */
-export const makeChainT = (state, str, endState, defaultStateFactory) => {
-	let i = 0, len = str.length, nextState;
-
-	// Find the next state without a jump to the next character
-	while (i < len && (nextState = state.j[str[i]])) {
-		state = nextState;
-		i++;
-	}
-
-	if (i >= len) { return state; } // no new tokens were added
-
-	while (i < len - 1) {
-		nextState = defaultStateFactory();
-		makeT(state, str[i], nextState);
-		state = nextState;
-		i++;
-	}
-
-	makeT(state, str[len - 1], endState);
-	// if (!endState.n) { endState.n === str; } // DEBUG
-	return endState;
-};
+export const tt = (state, input, next, collections, flags) => state.tt(input, next, collections, flags);

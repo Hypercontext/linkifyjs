@@ -1,7 +1,7 @@
 import * as linkify from 'linkifyjs';
 import ticket from 'linkify-plugin-ticket/src/ticket';
 
-describe('plugins/ticket', () => {
+describe('linkify-plugin-ticket', () => {
 	before(() => { linkify.reset(); });
 	after(() => { linkify.reset(); });
 

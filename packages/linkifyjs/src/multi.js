@@ -1,4 +1,4 @@
-import { scheme, COLON } from './text';
+import { COLON, LOCALHOST } from './text';
 import { defaults } from './options';
 import assign from './assign';
 
@@ -183,6 +183,7 @@ export function createTokenClass(type, props) {
 	for (const p in props) {
 		Token.prototype[p] = props[p];
 	}
+	Token.t = type;
 	return Token;
 }
 
@@ -233,6 +234,6 @@ export const Url = createTokenClass('url', {
 	 */
 	hasProtocol() {
 		const tokens = this.tk;
-		return tokens.length >= 2 && scheme.indexOf(tokens[0].t) >= 0 && tokens[1].t === COLON;
+		return tokens.length >= 2 && tokens[0].t !== LOCALHOST && tokens[1].t === COLON;
 	}
 });

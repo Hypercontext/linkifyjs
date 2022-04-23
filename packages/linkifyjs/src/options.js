@@ -129,6 +129,11 @@ Options.prototype = {
 	o: defaults,
 
 	/**
+	 * @type string[]
+	 */
+	ignoreTags: [],
+
+	/**
 	 * @param {IntermediateRepresentation} ir
 	 * @returns {any}
 	 */

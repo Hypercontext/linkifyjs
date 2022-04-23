@@ -1,17 +1,41 @@
-import * as scanner from './scanner';
-import * as parser from './parser';
+import { init as initScanner, run as runScanner } from './scanner';
+import { init as initParser, run as runParser } from './parser';
 import { Options } from './options';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
+const warnAdvice = 'To avoid this warning, please register all custom schemes before invoking linkify the first time.';
 
 // Side-effect initialization state
 const INIT = {
 	scanner: null,
 	parser: null,
+	tokenQueue: [],
 	pluginQueue: [],
 	customSchemes: [],
 	initialized: false,
 };
+
+/**
+ * @typedef {{
+ * 	start: State<string>,
+ * 	tokens: { groups: Collections<string> } & typeof tk
+ * }} ScannerInit
+ */
+
+/**
+ * @typedef {{
+ * 	start: State<MultiToken>,
+ * 	tokens: typeof multi
+ * }} ParserInit
+ */
+
+/**
+ * @typedef {(arg: { scanner: ScannerInit }) => void} TokenPlugin
+ */
+
+/**
+ * @typedef {(arg: { scanner: ScannerInit, parser: ParserInit }) => void} Plugin
+ */
 
 /**
  * De-register all plugins and reset the internal state-machine. Used for
@@ -21,15 +45,40 @@ const INIT = {
 export function reset() {
 	INIT.scanner = null;
 	INIT.parser = null;
+	INIT.tokenQueue = [];
 	INIT.pluginQueue = [];
 	INIT.customSchemes = [];
 	INIT.initialized = false;
 }
 
 /**
- * Register a linkify extension plugin
+ * Register a token plugin to allow the scanner to recognize additional token
+ * types before the parser state machine is constructed from the results.
  * @param {string} name of plugin to register
- * @param {Function} plugin function that accepts mutable linkify state
+ * @param {TokenPlugin} plugin function that accepts the scanner state machine
+ * and available scanner tokens and collections and extends the state machine to
+ * recognize additional tokens or groups.
+ */
+export function registerTokenPlugin(name, plugin) {
+	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid token plugin ${plugin} (expects function)`); }
+	for (let i = 0; i < INIT.tokenQueue.length; i++) {
+		if (name === INIT.tokenQueue[i][0]) {
+			warn(`linkifyjs: token plugin "${name}" already registered - will be overwritten`);
+			INIT.tokenQueue[i] = [name, plugin];
+			return;
+		}
+	}
+	INIT.tokenQueue.push([name, plugin]);
+	if (INIT.initialized) {
+		warn(`linkifyjs: already initialized - will not register token plugin "${name}" until you manually call linkify.init(). ${warnAdvice}`);
+	}
+}
+
+/**
+ * Register a linkify plugin
+ * @param {string} name of plugin to register
+ * @param {Plugin} plugin function that accepts the parser state machine and
+ * extends the parser to recognize additional link types
  */
 export function registerPlugin(name, plugin) {
 	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid plugin ${plugin} (expects function)`); }
@@ -42,7 +91,7 @@ export function registerPlugin(name, plugin) {
 	}
 	INIT.pluginQueue.push([name, plugin]);
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init(). To avoid this warning, please register all plugins before invoking linkify the first time.`);
+		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init(). ${warnAdvice}`);
 	}
 }
 
@@ -53,14 +102,14 @@ export function registerPlugin(name, plugin) {
  * @param {string} protocol
  * @param {boolean} [optionalSlashSlash]
  */
-export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
+export function registerCustomProtocol(scheme, optionalSlashSlash = false) {
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register custom protocol "${protocol}" until you manually call linkify.init(). To avoid this warning, please register all custom schemes before invoking linkify the first time.`);
+		warn(`linkifyjs: already initialized - will not register custom scheme "${scheme}" until you manually call linkify.init(). ${warnAdvice}`);
 	}
-	if (!/^[a-z]+(-[a-z]+)*$/.test(protocol)) {
-		throw new Error('linkifyjs: incorrect protocol format.\n 1. Must only contain lowercase ASCII letters or -\n 2. Cannot start or end with -\n 3. - cannot repeat');
+	if (!/^[0-9a-z]+(-[0-9a-z]+)*$/.test(scheme)) {
+		throw new Error('linkifyjs: incorrect scheme format.\n 1. Must only contain digits, lowercase ASCII letters or "-"\n 2. Cannot start or end with "-"\n 3. "-" cannot repeat');
 	}
-	INIT.customSchemes.push([protocol, optionalSlashSlash]);
+	INIT.customSchemes.push([scheme, optionalSlashSlash]);
 }
 
 /**
@@ -68,17 +117,20 @@ export function registerCustomProtocol(protocol, optionalSlashSlash = false) {
  * linkify is called on a string, but may be called manually as well.
  */
 export function init() {
-	// Initialize state machines
-	INIT.scanner = { start: scanner.init(INIT.customSchemes), tokens: scanner.tokens };
-	INIT.parser = { start: parser.init(), tokens: parser.tokens };
-	const utils = { createTokenClass: parser.tokens.createTokenClass };
+	// Initialize scanner state machine and plugins
+	INIT.scanner = initScanner(INIT.customSchemes);
+	for (let i = 0; i < INIT.tokenQueue.length; i++) {
+		INIT.tokenQueue[i][1]({
+			scanner: INIT.scanner
+		});
+	}
 
-	// Initialize plugins
+	// Initialize parser state machine and plugins
+	INIT.parser = initParser(INIT.scanner.tokens);
 	for (let i = 0; i < INIT.pluginQueue.length; i++) {
 		INIT.pluginQueue[i][1]({
 			scanner: INIT.scanner,
 			parser: INIT.parser,
-			utils
 		});
 	}
 	INIT.initialized = true;
@@ -91,7 +143,7 @@ export function init() {
  */
 export function tokenize(str) {
 	if (!INIT.initialized) { init(); }
-	return parser.run(INIT.parser.start, str, scanner.run(INIT.scanner.start, str));
+	return runParser(INIT.parser.start, str, runScanner(INIT.scanner.start, str));
 }
 
 /**
@@ -139,5 +191,9 @@ export function test(str, type = null) {
 }
 
 export * as options from './options';
-export { MultiToken } from './multi';
+export * as regexp from './regexp';
+export * as multi from './multi';
+export { MultiToken, createTokenClass } from './multi';
+export { stringToArray } from './scanner';
+export { State } from './fsm';
 export { Options };

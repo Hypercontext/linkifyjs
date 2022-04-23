@@ -34,16 +34,17 @@ export function linkifyInterface(name, opts = {}) {
 // Includes plugins from main linkifyjs package because those have not yet been
 // fully migrated to their own packages to maintain backward compatibility with
 // v2. Will change in v4
-export function linkifyPlugin(name) {
+export function linkifyPlugin(plugin, opts = {}) {
+	const name = opts.globalName || false; // Most plugins don't export anything
 	const globals =  { linkifyjs: 'linkify' };
 	return {
 		input: 'src/index.js',
 		external: ['linkifyjs'],
 		output: [
 			{ file: 'index.js', format: 'cjs', exports: 'auto'},
-			{ file: `dist/linkify-plugin-${name}.js`, format: 'iife', globals, name: false },
-			{ file: `dist/linkify-plugin-${name}.min.js`, format: 'iife', globals, name: false, plugins: [terser()] },
-			{ file: `dist/linkify-plugin-${name}.module.js`, format: 'es' }
+			{ file: `dist/linkify-plugin-${plugin}.js`, format: 'iife', globals, name },
+			{ file: `dist/linkify-plugin-${plugin}.min.js`, format: 'iife', globals, name, plugins: [terser()] },
+			{ file: `dist/linkify-plugin-${plugin}.module.js`, format: 'es' }
 		],
 		plugins
 	};

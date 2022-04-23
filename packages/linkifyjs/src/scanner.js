@@ -1,30 +1,32 @@
 /**
 	The scanner provides an interface that takes a string of text as input, and
 	outputs an array of tokens instances that can be used for easy URL parsing.
-
-	@module linkify
-	@submodule scanner
-	@main scanner
 */
-import {
-	makeState,
-	makeAcceptingState,
-	takeT,
-	makeT,
-	makeRegexT,
-	makeBatchT,
-	makeChainT
-} from './fsm';
-import * as tk from './text';
-import { tlds, utlds } from './tlds';
 
-// Note that these two Unicode ones expand into a really big one with Babel
-export const ASCII_LETTER = /[a-z]/;
-export const LETTER = /\p{L}/u; // Any Unicode character with letter data type
-export const EMOJI = /\p{Emoji}/u; // Any Unicode emoji character
-export const EMOJI_VARIATION = /\ufe0f/; // Variation selector, follows heart and others
-export const DIGIT = /\d/;
-export const SPACE = /\s/;
+import { tlds, utlds } from './tlds';
+import { State, addToCollections, tr, ts, tt } from './fsm';
+import * as fsm from './fsm';
+import * as tk from './text';
+import * as re from './regexp';
+import assign from './assign';
+
+const NL = '\n'; // New line character
+const EMOJI_VARIATION = '\ufe0f'; // Variation selector, follows heart and others
+const EMOJI_JOINER = '\u200d'; // zero-width joiner
+
+/**
+ * Scanner output token:
+ * - `t` is the token name (e.g., 'NUM', 'EMOJI', 'TLD')
+ * - `v` is the value of the token (e.g., '123', '❤️', 'com')
+ * - `s` is the start index of the token in the original string
+ * - `e` is the end index of the token in the original string
+ * @typedef {{t: string, v: string, s: number, e: number}} Token
+ */
+
+/**
+ * @template T
+ * @typedef {{ [collection: string]: T[] }} Collections
+ */
 
 /**
  * Initialize the scanner character-based state machine for the given start
@@ -32,171 +34,129 @@ export const SPACE = /\s/;
  * @param {[string, boolean][]} customSchemes List of custom schemes, where each
  * item is a length-2 tuple with the first element set to the string scheme, and
  * the second element set to `true` if the `://` after the scheme is optional
- * @return {State} scanner starting state
  */
 export function init(customSchemes = []) {
 	// Frequently used states (name argument removed during minification)
-	const Start = makeState('Start');
-	const NonAccepting = makeState('NonAccepting'); // must never have any transitions
-	const Num = makeAcceptingState(tk.NUM, 'Num');
-	const Word = makeAcceptingState(tk.WORD, 'Word');
-	const UWord = makeAcceptingState(tk.UWORD, 'UWord');
-	const Emoji = makeAcceptingState(tk.EMOJIS, 'Emoji');
-	const Ws = makeAcceptingState(tk.WS, 'Ws');
-
-	/**
-	 * Create a state which emits a word token
-	 */
-	const makeWordState = (name) => {
-		const state = makeAcceptingState(tk.WORD, name);
-		state.jr = [[ASCII_LETTER, Word]];
-		return state;
-	};
-
-	/**
-	 * Same as previous, but specific to non-ASCII alphabet words
-	 */
-	const makeUWordState = (name) => {
-		const state = makeAcceptingState(tk.UWORD, name);
-		state.jr = [[ASCII_LETTER, NonAccepting], [LETTER, UWord]];
-		return state;
-	};
-
-	/**
-	 * Create a state which does not emit a word but the usual alphanumeric
-	 * transitions are domains
-	 */
-	const makeNearWordState = (token, name) => {
-		const state = makeWordState(name);
-		state.t = token;
-		return state;
-	};
-
-	/**
-	 * Create a state which does not emit a word but the usual alphanumeric
-	 * transitions are domains
-	 */
-	const makeNearUWordState = (token, name) => {
-		const state = makeUWordState(name);
-		state.t = token;
-		return state;
-	};
+	/** @type Collections<string> */
+	const groups = {}; // of tokens
+	/** @type State<string> */
+	const Start = new State();
 
 	// States for special URL symbols that accept immediately after start
-	makeBatchT(Start, [
-		["'", makeAcceptingState(tk.APOSTROPHE)],
-		['{', makeAcceptingState(tk.OPENBRACE)],
-		['[', makeAcceptingState(tk.OPENBRACKET)],
-		['<', makeAcceptingState(tk.OPENANGLEBRACKET)],
-		['(', makeAcceptingState(tk.OPENPAREN)],
-		['}', makeAcceptingState(tk.CLOSEBRACE)],
-		[']', makeAcceptingState(tk.CLOSEBRACKET)],
-		['>', makeAcceptingState(tk.CLOSEANGLEBRACKET)],
-		[')', makeAcceptingState(tk.CLOSEPAREN)],
-		['&', makeAcceptingState(tk.AMPERSAND)],
-		['*', makeAcceptingState(tk.ASTERISK)],
-		['@', makeAcceptingState(tk.AT)],
-		['`', makeAcceptingState(tk.BACKTICK)],
-		['^', makeAcceptingState(tk.CARET)],
-		[':', makeAcceptingState(tk.COLON)],
-		[',', makeAcceptingState(tk.COMMA)],
-		['$', makeAcceptingState(tk.DOLLAR)],
-		['.', makeAcceptingState(tk.DOT)],
-		['=', makeAcceptingState(tk.EQUALS)],
-		['!', makeAcceptingState(tk.EXCLAMATION)],
-		['-', makeAcceptingState(tk.HYPHEN)],
-		['%', makeAcceptingState(tk.PERCENT)],
-		['|', makeAcceptingState(tk.PIPE)],
-		['+', makeAcceptingState(tk.PLUS)],
-		['#', makeAcceptingState(tk.POUND)],
-		['?', makeAcceptingState(tk.QUERY)],
-		['"', makeAcceptingState(tk.QUOTE)],
-		['/', makeAcceptingState(tk.SLASH)],
-		[';', makeAcceptingState(tk.SEMI)],
-		['~', makeAcceptingState(tk.TILDE)],
-		['_', makeAcceptingState(tk.UNDERSCORE)],
-		['\\', makeAcceptingState(tk.BACKSLASH)]
-	]);
+	tt(Start, "'", tk.APOSTROPHE);
+	tt(Start, '{', tk.OPENBRACE);
+	tt(Start, '[', tk.OPENBRACKET);
+	tt(Start, '<', tk.OPENANGLEBRACKET);
+	tt(Start, '(', tk.OPENPAREN);
+	tt(Start, '}', tk.CLOSEBRACE);
+	tt(Start, ']', tk.CLOSEBRACKET);
+	tt(Start, '>', tk.CLOSEANGLEBRACKET);
+	tt(Start, ')', tk.CLOSEPAREN);
+	tt(Start, '&', tk.AMPERSAND);
+	tt(Start, '*', tk.ASTERISK);
+	tt(Start, '@', tk.AT);
+	tt(Start, '`', tk.BACKTICK);
+	tt(Start, '^', tk.CARET);
+	tt(Start, ':', tk.COLON);
+	tt(Start, ',', tk.COMMA);
+	tt(Start, '$', tk.DOLLAR);
+	tt(Start, '.', tk.DOT);
+	tt(Start, '=', tk.EQUALS);
+	tt(Start, '!', tk.EXCLAMATION);
+	tt(Start, '-', tk.HYPHEN);
+	tt(Start, '%', tk.PERCENT);
+	tt(Start, '|', tk.PIPE);
+	tt(Start, '+', tk.PLUS);
+	tt(Start, '#', tk.POUND);
+	tt(Start, '?', tk.QUERY);
+	tt(Start, '"', tk.QUOTE);
+	tt(Start, '/', tk.SLASH);
+	tt(Start, ';', tk.SEMI);
+	tt(Start, '~', tk.TILDE);
+	tt(Start, '_', tk.UNDERSCORE);
+	tt(Start, '\\', tk.BACKSLASH);
+
+	const Num = tr(Start, re.DIGIT, tk.NUM, groups, { [fsm.numeric]: true });
+	tr(Num, re.DIGIT, Num);
+
+	// State which emits a word token
+	const Word = tr(Start, re.ASCII_LETTER, tk.WORD, groups, { [fsm.ascii]: true });
+	tr(Word, re.ASCII_LETTER, Word);
+
+	// Same as previous, but specific to non-fsm.ascii alphabet words
+	const UWord = tr(Start, re.LETTER, tk.UWORD, groups, { [fsm.alpha]: true });
+	tr(UWord, re.ASCII_LETTER); // Non-accepting
+	tr(UWord, re.LETTER, UWord);
 
 	// Whitespace jumps
 	// Tokens of only non-newline whitespace are arbitrarily long
-	makeT(Start, '\n', makeAcceptingState(tk.NL, 'Nl'));
-	makeRegexT(Start, SPACE, Ws);
-
 	// If any whitespace except newline, more whitespace!
-	makeT(Ws, '\n', makeState()); // non-accepting state
-	makeRegexT(Ws, SPACE, Ws);
+	const Ws = tr(Start, re.SPACE, tk.WS, groups, { [fsm.whitespace]: true });
+	tt(Start, NL, tk.NL, groups, { [fsm.whitespace]: true });
+	tt(Ws, NL); // non-accepting state to avoid mixing whitespaces
+	tr(Ws, re.SPACE, Ws);
+
+	// Emoji tokens. They are not grouped by the scanner except in cases where a
+	// zero-width joiner is present
+	const Emoji = tr(Start, re.EMOJI, tk.EMOJI, groups, { [fsm.emoji]: true });
+	tr(Emoji, re.EMOJI, Emoji);
+	tt(Emoji, EMOJI_VARIATION, Emoji);
+	// tt(Start, EMOJI_VARIATION, Emoji); // This one is sketchy
+
+	const EmojiJoiner = tt(Emoji, EMOJI_JOINER);
+	tr(EmojiJoiner, re.EMOJI, Emoji);
+	// tt(EmojiJoiner, EMOJI_VARIATION, Emoji); // also sketchy
 
 	// Generates states for top-level domains
 	// Note that this is most accurate when tlds are in alphabetical order
+	const wordjr = [[re.ASCII_LETTER, Word]];
+	const uwordjr = [[re.ASCII_LETTER, null], [re.LETTER, UWord]];
 	for (let i = 0; i < tlds.length; i++) {
-		makeChainT(Start, tlds[i], makeNearWordState(tk.TLD), makeWordState);
+		fastts(Start, tlds[i], tk.TLD, tk.WORD, wordjr);
 	}
 	for (let i = 0; i < utlds.length; i++) {
-		makeChainT(Start, utlds[i], makeNearUWordState(tk.UTLD), makeUWordState);
+		fastts(Start, utlds[i], tk.UTLD, tk.UWORD, uwordjr);
 	}
+	addToCollections(tk.TLD, groups, { tld: true, ascii: true });
+	addToCollections(tk.UTLD, groups, { utld: true, alpha: true });
 
-	// Collect the states generated by different protocls
-	const DefaultScheme = makeNearWordState(tk.SCHEME, 'DefaultScheme');
-	const DefaultSlashScheme = makeNearWordState(tk.SLASH_SCHEME, 'DefaultSlashScheme');
-	makeChainT(Start, 'file', DefaultScheme, makeWordState);
-	makeChainT(Start, 'mailto', DefaultScheme, makeWordState);
-	makeChainT(Start, 'ftp', DefaultSlashScheme, makeWordState);
-	makeChainT(Start, 'http', DefaultSlashScheme, makeWordState);
+	// Collect the states generated by different protocols. NOTE: If any new TLDs
+	// get added that are also protocols, set the token to be the same as the
+	// protocol to ensure parsing works as expected.
+	fastts(Start, 'file', tk.SCHEME, tk.WORD, wordjr);
+	fastts(Start, 'mailto', tk.SCHEME, tk.WORD, wordjr);
+	fastts(Start, 'http', tk.SLASH_SCHEME, tk.WORD, wordjr);
+	fastts(Start, 'https', tk.SLASH_SCHEME, tk.WORD, wordjr);
+	fastts(Start, 'ftp', tk.SLASH_SCHEME, tk.WORD, wordjr);
+	fastts(Start, 'ftps', tk.SLASH_SCHEME, tk.WORD, wordjr);
+	addToCollections(tk.SCHEME, groups, { scheme: true, ascii: true });
+	addToCollections(tk.SLASH_SCHEME, groups, { slashscheme: true, ascii: true });
 
-	// Secure (https, ftps) protocols (end with 's')
-	makeT(DefaultSlashScheme, 's', DefaultSlashScheme);
-
-	// Register custom schemes
-	const CustomScheme = makeNearWordState(tk.SCHEME, 'CustomScheme');
-	const CustomSlashScheme = makeNearWordState(tk.SLASH_SCHEME, 'CustomSlashScheme');
-	const CustomCompoundScheme = makeAcceptingState(tk.SCHEME, 'CustomCompoundScheme');
-	const CustomCompoundSlashScheme = makeAcceptingState(tk.SLASH_SCHEME, 'CustomCompoundSlashScheme');
+	// Register custom schemes. Assumes each scheme is asciinumeric with hyphens
 	customSchemes = customSchemes.sort((a, b) => a[0] > b[0] ? 1 : -1);
 	for (let i = 0; i < customSchemes.length; i++) {
-		const schemeParts = customSchemes[i][0].split('-');
-		const schemeState = schemeParts.length === 1
-			? (customSchemes[i][1] ? CustomScheme : CustomSlashScheme)
-			: (customSchemes[i][1] ? CustomCompoundScheme : CustomCompoundSlashScheme);
-
-		let state = Start;
-		for (let j = 0; j < schemeParts.length; j++) {
-			let defaultStateFactory = j === 0 ? makeWordState : makeState;
-			let endState = j === schemeParts.length - 1 ? schemeState : defaultStateFactory();
-			state = makeChainT(state, schemeParts[j], endState, defaultStateFactory);
-			if (schemeParts.length > 1 && j < schemeParts.length - 1) {
-				state = makeT(state, '-', makeState());
-			}
+		const sch = customSchemes[i][0];
+		const optionalSlashSlash = customSchemes[i][1];
+		const flags = optionalSlashSlash ? { [fsm.scheme]: true } : { [fsm.slashscheme]: true };
+		if (sch.indexOf('-') >= 0) {
+			flags[fsm.domain] = true;
+		} else if (!re.ASCII_LETTER.test(sch)) {
+			flags[fsm.numeric] = true; // numbers only
+		} else if (re.DIGIT.test(sch)) {
+			flags[fsm.asciinumeric] = true;
+		} else {
+			flags[fsm.ascii] = true;
 		}
+
+		ts(Start, sch, sch, groups, flags);
 	}
 
 	// Localhost token
-	makeChainT(Start, 'localhost', makeNearWordState(tk.LOCALHOST), makeWordState);
-
-	// Everything else
-	// Number and character transitions
-	makeRegexT(Start, DIGIT, Num);
-	makeRegexT(Start, ASCII_LETTER, Word);
-	makeRegexT(Start, LETTER, UWord);
-	makeRegexT(Start, EMOJI, Emoji);
-	makeRegexT(Start, EMOJI_VARIATION, Emoji); // This one is sketchy
-	makeRegexT(Num, DIGIT, Num);
-	makeRegexT(Word, ASCII_LETTER, Word);
-	makeRegexT(UWord, ASCII_LETTER, NonAccepting);
-	makeRegexT(UWord, LETTER, UWord);
-	makeRegexT(Emoji, EMOJI, Emoji);
-	makeRegexT(Emoji, EMOJI_VARIATION, Emoji);
-
-	// Account for zero-width joiner for chaining multiple emojis
-	// Not sure if these are actu
-	const EmojiJoiner = makeState();
-	makeT(Emoji, '\u200d', EmojiJoiner);
-	makeRegexT(EmojiJoiner, EMOJI, Emoji);
-	makeRegexT(EmojiJoiner, EMOJI_VARIATION, Emoji);
+	ts(Start, 'localhost', tk.LOCALHOST, groups, { ascii: true });
 
 	// Set default transition for start state (some symbol)
-	Start.jd = makeAcceptingState(tk.SYM, 'Sym');
-	return Start;
+	Start.jd = new State(tk.SYM);
+	return { start: Start, tokens: assign({ groups }, tk) };
 }
 
 /**
@@ -204,7 +164,7 @@ export function init(customSchemes = []) {
 	composition of that string.
 
 	@method run
-	@param {State} start scanner starting state
+	@param {State<string>} start scanner starting state
 	@param {string} str input string to scan
 	@return {Token[]} list of tokens, each with a type and value
 */
@@ -233,7 +193,7 @@ export function run(start, str) {
 		let sinceAccepts = -1;
 		let charsSinceAccepts = -1;
 
-		while (charCursor < charCount && (nextState = takeT(state, iterable[charCursor]))) {
+		while (charCursor < charCount && (nextState = state.go(iterable[charCursor]))) {
 			state = nextState;
 
 			// Keep track of the latest accepting state
@@ -257,10 +217,9 @@ export function run(start, str) {
 		tokenLength -= sinceAccepts;
 
 		// No more jumps, just make a new token from the last accepting one
-		// TODO: If possible, don't output v, instead output range where values ocur
 		tokens.push({
 			t: latestAccepting.t, // token type/name
-			v: str.substr(cursor - tokenLength, tokenLength), // string value
+			v: str.slice(cursor - tokenLength, cursor), // string value
 			s: cursor - tokenLength, // start index
 			e: cursor // end index (excluding)
 		});
@@ -268,8 +227,6 @@ export function run(start, str) {
 
 	return tokens;
 }
-
-export { tk as tokens };
 
 /**
  * Convert a String to an Array of characters, taking into account that some
@@ -282,7 +239,7 @@ export { tk as tokens };
  * @param {string} str
  * @returns {string[]}
  */
- function stringToArray(str) {
+ export function stringToArray(str) {
 	const result = [];
 	const len = str.length;
 	let index = 0;
@@ -297,4 +254,33 @@ export { tk as tokens };
 		index += char.length;
 	}
 	return result;
+}
+
+/**
+ * Fast version of ts function for when transition defaults are well known
+ * @param {State<string>} state
+ * @param {string} input
+ * @param {string} t
+ * @param {string} defaultt
+ * @param {[RegExp, State<string>][]} jr
+ * @returns {State<string>}
+ */
+function fastts(state, input, t, defaultt, jr) {
+	let next;
+	const len = input.length;
+	for (let i = 0; i < len - 1; i++) {
+		const char = input[i];
+		if (state.j[char]) {
+			next = state.j[char];
+		} else {
+			next = new State(defaultt);
+			next.jr = jr.slice();
+			state.j[char] = next;
+		}
+		state = next;
+	}
+	next = new State(t);
+	next.jr = jr.slice();
+	state.j[input[len - 1]] = next;
+	return next;
 }

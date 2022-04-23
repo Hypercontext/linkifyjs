@@ -1,6 +1,6 @@
 /******************************************************************************
-	Text Tokens
-	Tokens composed of strings
+Text Tokens
+Identifiers for token outputs from the regexp scanner
 ******************************************************************************/
 
 // A valid web domain token
@@ -25,19 +25,6 @@ export const SCHEME = 'SCHEME';
 // followed by `://`, not just `:`. Supported types include `http`, `https`,
 // `ftp`, `ftps`
 export const SLASH_SCHEME = 'SLASH_SCHEME';
-
-// Similar to SCHEME, except contains -
-export const COMPOUND_SCHEME = 'COMPOUND_SCHEME';
-
-// Similar to SLASH_SCHEME, except contains -
-export const COMPOUND_SLASH_SCHEME = 'COMPOUND_SLASH_SCHEME';
-
-// TODO: Move this to keyword plugin
-// Arbirary words that can keyword links
-// export const KEYWORD = 'KEYWORD'; // simple [0-9a-z]
-// export const UKEYWORD = 'UKEYWORD'; // containing [0-9\{Letter}]
-// export const COMPOUND_KEYWORD = 'COMPOUND_KEYWORD'; // similar to KEYWORD but can have hyphens
-// export const COMPOUND_UKEYWORD = 'COMPOUND_UKEYWORD'; // similar to UKEYWORD but can have hyphens
 
 // Any sequence of digits 0-9
 export const NUM = 'NUM';
@@ -86,65 +73,8 @@ export const TILDE = 'TILDE'; // ~
 export const UNDERSCORE = 'UNDERSCORE'; // _
 
 // Emoji symbol
-export const EMOJIS = 'EMOJIS';
+export const EMOJI = 'EMOJI';
 
 // Default token - anything that is not one of the above
 export const SYM = 'SYM';
 
-// Token collections for grouping similar jumps in the parser
-export const numeric = [NUM];
-export const ascii = [WORD, LOCALHOST, TLD, SCHEME, SLASH_SCHEME];
-export const asciinumeric = ascii.concat(NUM);
-export const words = ascii.concat(UWORD, UTLD);
-export const alphanumeric = words.concat(NUM);
-export const domain = words.concat(COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME, NUM, EMOJIS);
-export const scheme = [SCHEME, SLASH_SCHEME, COMPOUND_SCHEME, COMPOUND_SLASH_SCHEME];
-
-// Define each property separately to let typescript know that this object is
-// open for adding more collections.
-export const collections = {};
-collections.ascii = ascii;
-collections.asciinumeric = asciinumeric;
-collections.words = words;
-collections.alphanumeric = alphanumeric;
-collections.domain = domain;
-collections.scheme = scheme;
-
-/**
- * @param {string} name Name of text token collections. Will be available in plugins as scanner.tokens.collections.<name>
- * @returns {string[]} the collection
- */
-export function registerTextTokenCollection(name) {
-	if (!(name in collections)) {
-		collections[name] = [];
-	}
-	return collections[name];
-}
-
-export function collectionsWithToken(name) {
-	let collectionNames = [];
-	for (let col in collections) {
-		if (collections[col].indexOf(name) >= 0) {
-			collectionNames.push(col);
-		}
-	}
-	return collectionNames;
-}
-
-/**
- * Register a text token that the parser can recognize
- * @param {string} name Token name in all caps (by convention)
- * @param {string[]} collectionNames List of collections into which to add this token. Any previously-unknown collection will be created.
- * @returns {string}
- */
-export function registerTextToken(name, collectionNames = []) {
-	for (let i = 0; i < collectionNames.length; i++) {
-		const collection = registerTextTokenCollection(collectionNames[i]);
-		collection.push(name);
-	}
-	return name;
-}
-
-/**
- * @typedef {{t: string, v: string, s: number, e: number}} Token
- */
