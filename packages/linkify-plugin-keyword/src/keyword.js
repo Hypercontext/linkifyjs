@@ -121,5 +121,8 @@ export function tokens({ scanner }) {
  */
 export function keyword({ scanner, parser }) {
 	// Create parser transitions from all registered tokens
-	parser.start.ta(scanner.tokens.groups.keyword, Keyword);
+	const group = scanner.tokens.groups.keyword;
+	if (group && group.length > 0) {
+		parser.start.ta(scanner.tokens.groups.keyword, Keyword);
+	}
 }

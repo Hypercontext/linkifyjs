@@ -20,6 +20,18 @@ describe('linkify-plugin-keyword', () => {
 		});
 	});
 
+	describe('after plugin is applied with no keywords', () => {
+		beforeEach(() => {
+			registerKeywords([]);  // just to test the branch
+			linkify.registerTokenPlugin('keyword', tokens);
+			linkify.registerPlugin('keyword', keyword);
+		});
+
+		it('Does not interfere with initialization', () => {
+			expect(linkify.find('http.org')).to.be.ok;
+		})
+	})
+
 	describe('after plugin is applied', () => {
 		const keywords = [
 			'42',
@@ -53,7 +65,6 @@ describe('linkify-plugin-keyword', () => {
 		];
 
 		beforeEach(() => {
-			registerKeywords([]);  // just to test the branch
 			registerKeywords(keywords);
 			linkify.registerTokenPlugin('keyword', tokens);
 			linkify.registerPlugin('keyword', keyword);
