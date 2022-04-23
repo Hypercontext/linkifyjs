@@ -1,4 +1,4 @@
-import { createTokenClass, regexp, stringToArray } from 'linkifyjs';
+import { createTokenClass, stringToArray } from 'linkifyjs';
 
 /**
  * Tokenize will emit token classes of this type
@@ -26,9 +26,9 @@ const registeredKeywordsGroups = {
 
 // Additional pre-processing regular expressions
 // Clone from existing but add global flag
-const ALL_LETTERS = new RegExp(regexp.LETTER.source, regexp.LETTER.flags + 'g');
-const ALL_EMOJIS = new RegExp(regexp.EMOJI.source, regexp.EMOJI.flags + 'g');
-const ALL_EMOJI_VARIATIONS = new RegExp(regexp.EMOJI_VARIATION.source, regexp.EMOJI_VARIATION.flags + 'g');
+const ALL_LETTERS = /\p{L}/gu;
+const ALL_EMOJIS = /\p{Emoji}/gu;
+const ALL_EMOJI_VARIATIONS = /\ufe0f/g;
 
 function pushIfMissing(item, list) {
 	if (list.indexOf(item) < 0) {
