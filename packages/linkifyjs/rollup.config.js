@@ -5,10 +5,10 @@ export default [
 	{
 		input: 'src/linkify.js',
 		output: [
-			{ file: 'index.js', format: 'cjs', exports: 'auto' },
 			{ file: 'dist/linkify.js', name: 'linkify', format: 'iife' },
 			{ file: 'dist/linkify.min.js', name: 'linkify', format: 'iife', plugins: [terser()] },
-			{ file: 'dist/linkify.module.js', format: 'es' }
+			{ file: 'dist/linkify.cjs.js', format: 'cjs', exports: 'auto' },
+			{ file: 'dist/linkify.es.js', format: 'es' }
 		],
 		plugins
 	}

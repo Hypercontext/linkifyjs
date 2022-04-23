@@ -2,11 +2,11 @@
   "name": "linkify-react",
   "version": "4.0.0-beta.4",
   "description": "React element interface for linkifyjs",
-  "main": "index.js",
-  "module": "dist/linkify-react.module.js",
+  "main": "dist/linkify-react.cjs.js",
+  "module": "dist/linkify-react.es.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "clean": "rm -rf lib dist index.js *.tgz *.d.ts",
+    "clean": "rm -rf lib dist *.tgz *.d.ts",
     "prepack": "run-s clean build tsc",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"

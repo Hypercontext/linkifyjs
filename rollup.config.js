@@ -22,10 +22,10 @@ export function linkifyInterface(name, opts = {}) {
 		input: `src/linkify-${name}.js`,
 		external,
 		output: [
-			{ file: 'index.js', format: 'cjs', exports: 'auto' },
 			{ file: `dist/linkify-${name}.js`, format: 'iife', globals, ...iifeOpts },
 			{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
-			{ file: `dist/linkify-${name}.module.js`, format: 'es' },
+			{ file: `dist/linkify-${name}.cjs.js`, format: 'cjs', exports: 'auto' },
+			{ file: `dist/linkify-${name}.es.js`, format: 'es' },
 		],
 		plugins
 	};
@@ -41,10 +41,10 @@ export function linkifyPlugin(plugin, opts = {}) {
 		input: 'src/index.js',
 		external: ['linkifyjs'],
 		output: [
-			{ file: 'index.js', format: 'cjs', exports: 'auto'},
 			{ file: `dist/linkify-plugin-${plugin}.js`, format: 'iife', globals, name },
 			{ file: `dist/linkify-plugin-${plugin}.min.js`, format: 'iife', globals, name, plugins: [terser()] },
-			{ file: `dist/linkify-plugin-${plugin}.module.js`, format: 'es' }
+			{ file: `dist/linkify-plugin-${plugin}.cjs.js`, format: 'cjs', exports: 'auto'},
+			{ file: `dist/linkify-plugin-${plugin}.es.js`, format: 'es' }
 		],
 		plugins
 	};
