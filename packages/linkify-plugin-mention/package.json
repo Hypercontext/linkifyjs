@@ -1,6 +1,6 @@
 {
   "name": "linkify-plugin-mention",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.5",
   "description": "@mentions plugin for linkifyjs",
   "main": "dist/linkify-plugin-mention.cjs.js",
   "module": "dist/linkify-plugin-mention.es.js",

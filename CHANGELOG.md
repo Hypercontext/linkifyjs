@@ -8,6 +8,7 @@
 * Links that begin with `mailto:` now have type `url` instead of `email`
 
 ### Added
+* `linkify-plugin-keyword` plugin for detecting arbitrary keywords
 * `linkify.find()` function accepts a third `options` argument for output formatting
 * Link token methods `toFormattedString(options)`, `toFormattedHref(options)` and `toFormattedObject(options)` that accept a `linkify.Options` object
 * New `render` option to override link rendering
