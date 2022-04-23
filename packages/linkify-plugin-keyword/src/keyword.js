@@ -26,9 +26,9 @@ const registeredKeywordsGroups = {
 
 // Additional pre-processing regular expressions
 // Clone from existing but add global flag
-const ALL_LETTERS = new RegExp(regexp.LETTER, regexp.LETTER.flags + 'g');
-const ALL_EMOJIS = new RegExp(regexp.EMOJI, regexp.EMOJI.flags + 'g');
-const ALL_EMOJI_VARIATIONS = new RegExp(regexp.EMOJI_VARIATION, regexp.EMOJI_VARIATION.flags + 'g');
+const ALL_LETTERS = new RegExp(regexp.LETTER.source, regexp.LETTER.flags + 'g');
+const ALL_EMOJIS = new RegExp(regexp.EMOJI.source, regexp.EMOJI.flags + 'g');
+const ALL_EMOJI_VARIATIONS = new RegExp(regexp.EMOJI_VARIATION.source, regexp.EMOJI_VARIATION.flags + 'g');
 
 function pushIfMissing(item, list) {
 	if (list.indexOf(item) < 0) {
