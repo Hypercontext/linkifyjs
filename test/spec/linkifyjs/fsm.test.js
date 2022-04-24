@@ -4,19 +4,24 @@ import * as tk from 'linkifyjs/src/text';
 import * as fsm from 'linkifyjs/src/fsm';
 // import { takeT, makeT, makeRegexT } from 'linkifyjs/src/fsm';
 import { expect } from 'chai';
+import { State } from 'linkifyjs';
 
 describe('linkifyjs/fsm/State', () => {
-	let collections, Start, Num, Word;
+	let Start, Num, Word;
 
 	beforeEach(() => {
-		collections = {};
+		State.groups = {};
 		Start = new fsm.State();
 		Start.tt('.', tk.DOT);
-		Num = Start.tr(/[0-9]/, tk.NUM, collections, { numeric: true });
+		Num = Start.tr(/[0-9]/, tk.NUM, { numeric: true });
 		Num.tr(/[0-9]/, Num);
-		Word = Start.tr(/[a-z]/i, tk.WORD, collections, { ascii: true });
+		Word = Start.tr(/[a-z]/i, tk.WORD, { ascii: true });
 		Word.tr(/[a-z]/i, Word);
 	});
+
+	after(() => {
+		State.groups = {}
+	})
 
 	it('Creates DOT transition on Start state', () => {
 		expect(Object.keys(Start.j)).to.eql(['.']);
@@ -35,8 +40,8 @@ describe('linkifyjs/fsm/State', () => {
 		expect(Start.jr[1][1].t).to.eql(tk.WORD);
 	});
 
-	it('Populates collections', () => {
-		expect(collections).to.eql({
+	it('Populates groups', () => {
+		expect(State.groups).to.eql({
 			numeric: [tk.NUM],
 			ascii: [tk.WORD],
 			asciinumeric: [tk.NUM, tk.WORD],
@@ -46,30 +51,48 @@ describe('linkifyjs/fsm/State', () => {
 		});
 	});
 
+	describe('#has()', () => {
+		it('Does not have # transition', () => {
+			expect(Start.has('#')).to.not.be.ok;
+		});
+		it('Has . transition', () => {
+			expect(Start.has('.')).to.be.ok;
+		});
+		it('Has exact . transition', () => {
+			expect(Start.has('.', true)).to.be.ok;
+		});
+		it('Has x transition', () => {
+			expect(Start.has('x')).to.be.ok;
+		});
+		it('Does not have exact # transition', () => {
+			expect(Start.has('#', true)).to.not.be.ok;
+		});
+	});
+
 	describe('Add schemes', () => {
 		beforeEach(() => {
-			Start.ts('http', 'http', collections, { ascii: true, scheme: true });
-			Start.ts('https', 'https', collections, { ascii: true, scheme: true });
-			Start.ts('view-source', 'view-source', collections, { domain: true, scheme: true });
+			Start.ts('http', 'http', { ascii: true, scheme: true });
+			Start.ts('https', 'https', { ascii: true, scheme: true });
+			Start.ts('view-source', 'view-source', { domain: true, scheme: true });
 		});
 
-		it('Adds tokens to ascii collection', () => {
-			expect(collections.ascii).not.contains('htt');
-			expect(collections.ascii).contains('http');
-			expect(collections.ascii).contains('https');
-			expect(collections.ascii).not.contains('view-source');
+		it('Adds tokens to ascii group', () => {
+			expect(State.groups.ascii).not.contains('htt');
+			expect(State.groups.ascii).contains('http');
+			expect(State.groups.ascii).contains('https');
+			expect(State.groups.ascii).not.contains('view-source');
 		});
-		it('Adds tokens to domain collection', () => {
-			expect(collections.domain).not.contains('htt');
-			expect(collections.domain).contains('http');
-			expect(collections.domain).contains('https');
-			expect(collections.domain).contains('view-source');
+		it('Adds tokens to domain group', () => {
+			expect(State.groups.domain).not.contains('htt');
+			expect(State.groups.domain).contains('http');
+			expect(State.groups.domain).contains('https');
+			expect(State.groups.domain).contains('view-source');
 		});
 
-		it('Adds tokens to scheme collection', () => {
-			expect(collections.scheme).contains('http');
-			expect(collections.scheme).contains('https');
-			expect(collections.scheme).contains('view-source');
+		it('Adds tokens to scheme group', () => {
+			expect(State.groups.scheme).contains('http');
+			expect(State.groups.scheme).contains('https');
+			expect(State.groups.scheme).contains('view-source');
 		});
 	});
 });
