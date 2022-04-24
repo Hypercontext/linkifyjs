@@ -20,13 +20,12 @@ const IPv6Token = createTokenClass("ipv6", {
 
 export function tokens({ scanner }) {
 	const { start, tokens } = scanner;
-	const collections = tokens.groups;
 	const flags = { byte: true, numeric: true };
 
 	// States for [0, 9]
 	const Digits = [];
 	for (let i = 0; i < 10; i++) {
-		const Digit = start.tt(`${i}`, `${i}`, collections, flags);
+		const Digit = start.tt(`${i}`, `${i}`, flags);
 		Digits.push(Digit);
 	}
 
@@ -34,27 +33,27 @@ export function tokens({ scanner }) {
 	for (let i = 1; i < 10; i++) {
 		const Digit = Digits[i];
 		for (let j = 0; j < 10; j++) {
-			Digit.tt(`${j}`, `${i}${j}`, collections, flags);
+			Digit.tt(`${j}`, `${i}${j}`, flags);
 		}
 	}
 
 	// States for [100, 199]
 	for (let i = 0; i < 10; i++) {
 		for (let j = 0; j < 10; j++) {
-			Digits[1].tt(`${i}`).tt(`${j}`, `1${i}${j}`, collections, flags);
+			Digits[1].tt(`${i}`).tt(`${j}`, `1${i}${j}`, flags);
 		}
 	}
 
 	// States for [200, 249]
 	for (let i = 0; i < 5; i++) {
 		for (let j = 0; j < 10; j++) {
-			Digits[2].tt(`${i}`).tt(`${j}`, `2${i}${j}`, collections, flags);
+			Digits[2].tt(`${i}`).tt(`${j}`, `2${i}${j}`, flags);
 		}
 	}
 
 	// States for [250, 255]
 	for (let i = 0; i < 6; i++) {
-		Digits[2].tt('5').tt(`${i}`, `25${i}`, collections, flags);
+		Digits[2].tt('5').tt(`${i}`, `25${i}`, flags);
 	}
 }
 
