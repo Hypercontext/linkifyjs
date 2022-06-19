@@ -506,6 +506,7 @@ glass \
 gle \
 global \
 globo \
+glow \
 gm \
 gmail \
 gmbh \
