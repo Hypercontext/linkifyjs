@@ -1,5 +1,6 @@
 import { registerTokenPlugin, registerPlugin } from 'linkifyjs';
-import { tokens, ip } from './ip';
+import { ipv4Tokens, ipv6Tokens, ip } from './ip';
 
-registerTokenPlugin('ip', tokens);
+registerTokenPlugin('ipv4', ipv4Tokens);
+registerTokenPlugin('ipv6', ipv6Tokens);
 registerPlugin('ip', ip);
