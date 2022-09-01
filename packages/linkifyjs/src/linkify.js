@@ -1,6 +1,7 @@
 import { init as initScanner, run as runScanner } from './scanner';
 import { init as initParser, run as runParser } from './parser';
 import { Options } from './options';
+import { State } from './fsm';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
 const warnAdvice = 'To avoid this warning, please register all custom schemes before invoking linkify the first time.';
@@ -43,6 +44,7 @@ const INIT = {
  * @private
  */
 export function reset() {
+	State.groups = {};
 	INIT.scanner = null;
 	INIT.parser = null;
 	INIT.tokenQueue = [];
