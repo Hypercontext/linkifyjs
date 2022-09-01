@@ -124,7 +124,7 @@ export function State(token = null) {
  * Scanner token groups
  * @type Collections<T>
  */
-State.groups = {}
+State.groups = {};
 
 State.prototype = {
 	accepts() {

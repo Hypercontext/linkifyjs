@@ -10,6 +10,7 @@ describe('linkify-plugin-ip', () => {
 	it('cannot parse IP addresse before applying the plugin', () => {
 		expect(linkify.find('No place like 127.0.0.1')).to.be.eql([]);
 		expect(linkify.test('255.255.255.255', 'ipv4')).to.not.be.ok;
+		expect(linkify.test('http://[2001:db8::ff00:42:8329]', 'url')).to.not.be.ok;
 	});
 
 	describe('scanner', () => {
