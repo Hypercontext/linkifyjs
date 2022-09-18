@@ -1,6 +1,6 @@
 {
   "name": "linkify-plugin-ip",
-  "version": "4.0.0-beta.5",
+  "version": "4.0.0-beta.6",
   "description": "IP address plugin for linkifyjs",
   "main": "dist/linkify-plugin-ip.cjs.js",
   "module": "dist/linkify-plugin-ip.es.js",

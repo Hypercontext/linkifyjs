@@ -122,7 +122,7 @@ export function State(token = null) {
 
 /**
  * Scanner token groups
- * @type Collections<T>
+ * @type Collections<string>
  */
 State.groups = {};
 

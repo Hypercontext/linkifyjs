@@ -1,6 +1,6 @@
 {
   "name": "linkify-string",
-  "version": "4.0.0-beta.5",
+  "version": "4.0.0-beta.6",
   "description": "String interface for linkifyjs",
   "main": "dist/linkify-string.cjs.js",
   "module": "dist/linkify-string.es.js",
