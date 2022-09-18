@@ -23,28 +23,30 @@ npm install linkifyjs linkify-jquery
 Import into your JavaScript with `require`
 
 ```js
-const $ = require('jquery');
-require('linkify-jquery')
+const $ = require("jquery");
+require("linkify-jquery");
 ```
 
 or with ES modules
 
 ```js
-import $ from 'jquery';
-import 'linkify-jquery';
+import $ from "jquery";
+import "linkify-jquery";
 ```
 
 If a `window.document` global is not available in your environment, provide it
 manually instead as follows.
 
 With `require`:
+
 ```js
-require('linkify-jquery')($, document);
+require("linkify-jquery")($, document);
 ```
 
 or with ES modules:
+
 ```js
-import linkifyJq from 'linkify-jquery';
+import linkifyJq from "linkify-jquery";
 linkifyJq($, document);
 ```
 
@@ -63,13 +65,15 @@ Include the following scripts in your HTML:
 ## Usage
 
 ```js
-const options = { /* … */ };
+const options = {
+  /* … */
+};
 $(selector).linkify(options);
 ```
 
 **Params**
 
-* _`Object`_ [**`options`**] [Options](options.html) object
+- _`Object`_ [**`options`**] [Options](options.html) object
 
 See [all available options](options.html).
 
@@ -82,7 +86,9 @@ The jQuery plugin also provides a DOM data/HTML API - no extra JavaScript requir
 <div data-linkify="this">…</div>
 
 <!-- Find and linkify the paragraphs and `#footer` element in the body -->
-<body data-linkify="p, #footer" data-linkify-target="_parent">…</body>
+<body data-linkify="p, #footer" data-linkify-target="_parent">
+  …
+</body>
 ```
 
 [Additional data options](options.html) are available.

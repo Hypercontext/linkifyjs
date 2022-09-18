@@ -17,16 +17,17 @@ Install from the command line with NPM
 ```
 npm install linkifyjs linkify-plugin-ticket
 ```
+
 ```js
-const linkify = require('linkifyjs')
-require('linkify-plugin-ticket');
+const linkify = require("linkifyjs");
+require("linkify-plugin-ticket");
 ```
 
 or with ES6 modules
 
 ```js
-import * as linkify from 'linkifyjs';;
-import 'linkify-plugin-ticket';
+import * as linkify from "linkifyjs";
+import "linkify-plugin-ticket";
 ```
 
 ### Browser globals
@@ -49,14 +50,15 @@ correctly resolve a ticket. Example linking to GitHub issues with
 ```js
 const options = {
   formatHref: {
-    ticket: (href) => 'https://github.com/Hypercontext/linkifyjs/issues/' + href.substr(1)
-  }
-}
-linkifyHtml('This is related to #42.')
+    ticket: (href) =>
+      "https://github.com/Hypercontext/linkifyjs/issues/" + href.substr(1),
+  },
+};
+linkifyHtml("This is related to #42.");
 ```
 
 The last line returns the following string:
 
 ```js
-'This is related to <a href="https://github.com/Hypercontext/linkifyjs/issues/42">#42</a>.'
+'This is related to <a href="https://github.com/Hypercontext/linkifyjs/issues/42">#42</a>.';
 ```

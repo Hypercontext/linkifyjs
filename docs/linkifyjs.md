@@ -17,13 +17,15 @@ npm install linkifyjs
 ```
 
 Import into your JavaScript with `require`
+
 ```js
-const linkify = require('linkifyjs');
+const linkify = require("linkifyjs");
 ```
+
 or with ES modules
 
 ```js
-import * as linkify from 'linkifyjs';
+import * as linkify from "linkifyjs";
 ```
 
 ### Browser globals
@@ -38,45 +40,55 @@ Include the following script in your HTML:
 
 ## Methods
 
-### linkify.find _(str [, type])_
+### linkify.find _(str [, type = null [, opts = null ] ])_
 
 Finds all links in the given string
 
 **Params**
 
-* _`String`_ **`str`** Search string
-* _`String`_ [**`type`**] only find links of the given type
+- _`String`_ **`str`** Search string
+- _`String`_ [**`type`**] only find links of the given type
+- _`Object`_ [**`opts`**] [Link formatting options](options.html)
 
-**Returns** _`Array`_ List of links where each element is a hash with properties type, value, and href:
+**Returns** _`Array`_ List of links where each element is an object with the
+following properties:
 
-* **type** is the type of entity found. Possible values are
+- **type** is the type of entity found. Possible values are
   - `'url'`
   - `'email'`
   - `'hashtag'` (with Hashtag plugin)
   - `'mention'` (with Mention plugin)
   - `'ticket'` (with Ticket plugin)
-* **value** is the original entity substring.
-* **href** should be the value of this link's `href` attribute.
+- **value** is the original entity substring.
+- **href** is the value of this link's `href` attribute.
+- **start** is the index of the link's first character in the given string
+- **end** is the index after link's last character in the given string
 
 ```js
-linkify.find('For help with GitHub.com, please email support@github.com');
+linkify.find("For help with GitHub.com, please email support@github.com");
 ```
 
-Returns the array
+Returns the following array
 
 ```js
 [
   {
-    type: 'url',
-    value: 'GitHub.com',
-    href: 'http://github.com',
+    type: "url",
+    value: "GitHub.com",
+    isLink: true,
+    href: "http://GitHub.com",
+    start: 14,
+    end: 24,
   },
   {
-    type: 'email',
-    value: 'support@github.com',
-    href: 'mailto:support@github.com'
-  }
-]
+    type: "email",
+    value: "support@github.com",
+    isLink: true,
+    href: "mailto:support@github.com",
+    start: 39,
+    end: 57,
+  },
+];
 ```
 
 ### linkify.init()
@@ -88,14 +100,14 @@ plugins get registered after the first invokation.
 To avoid calling manually, register any plugins or protocols _before_ finding links:
 
 ```js
-import * as linkify from 'linkifyjs'
-import linkifyStr from 'linkify-string'
-import 'linkify-plugin-hashtag'
+import * as linkify from "linkifyjs";
+import linkifyStr from "linkify-string";
+import "linkify-plugin-hashtag";
 
-linkify.registerCustomProtocol('fb')
-linkify.registerPlugin('my-custom-plugin', () => { })
+linkify.registerCustomProtocol("fb");
+linkify.registerPlugin("my-custom-plugin", () => {});
 
-linkifyStr('Hello World.com!') // init() called automatically here on first invocation
+linkifyStr("Hello World.com!"); // init() called automatically here on first invocation
 
 // If registering new protocols or plugins *here*, call linkify.init() immediately after
 ```
@@ -107,11 +119,11 @@ string that begins with the given protocol followed by a `:` as a URL link.
 
 **Params**
 
-* _`String`_ **`str`** The protocol. May only contain characters `a-z` and `-` (hyphens)
+- _`String`_ **`str`** The protocol. May only contain characters `a-z` and `-` (hyphens)
 
 ```js
-linkify.registerCustomProtocol('fb'); // now recognizes links such as fb://feed
-linkify.registerCustomProtocol('instagram'); // now recognizes links such as instagram://account
+linkify.registerCustomProtocol("fb"); // now recognizes links such as fb://feed
+linkify.registerCustomProtocol("instagram"); // now recognizes links such as instagram://account
 ```
 
 ### linkify.registerPlugin _(name, plugin)_
@@ -121,8 +133,8 @@ before invoking linkify for the first time.
 
 **Params**
 
-* _`String`_ **`name`** unique name of the plugin to register
-• _`Function`_ **`plugin`** plugin implementation function
+- _`String`_ **`name`** unique name of the plugin to register
+  • *`Function`* **`plugin`** plugin implementation function
 
 [See example plugin function implementations](https://github.com/{{ site.github_username }}/tree/master/packages/linkifyjs/src/plugins).
 
@@ -132,14 +144,14 @@ Is the given string a link? Note that linkify is not 100% spec compliant, so thi
 
 **Params**
 
-* _`String`_ **`str`** Test string
-* _`String`_ [**`type`**] returns `true` only if the link is of the given type (see `linkify.find`),
+- _`String`_ **`str`** Test string
+- _`String`_ [**`type`**] returns `true` only if the link is of the given type (see `linkify.find`),
 
 **Returns** _`Boolean`_
 
 ```js
-linkify.test('google.com'); // true
-linkify.test('google.com', 'email'); // false
+linkify.test("google.com"); // true
+linkify.test("google.com", "email"); // false
 ```
 
 ### linkify.tokenize _(str)_
@@ -149,6 +161,6 @@ Used by linkify's interfaces.
 
 **Params**
 
-* _`String`_ **`str`**
+- _`String`_ **`str`**
 
 **Returns** _`Array`_

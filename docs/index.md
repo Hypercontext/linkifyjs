@@ -19,15 +19,15 @@ When developing in an environment with JavaScript module loader such as Webpack,
 use an `import` statement:
 
 ```js
-import * as linkify from 'linkifyjs';
-import linkifyHtml from 'linkify-html';
+import * as linkify from "linkifyjs";
+import linkifyHtml from "linkify-html";
 ```
 
 Or in Node.js with CommonJS modules
 
 ```js
-const linkify = require('linkifyjs');
-const linkifyHtml = require('linkify-html');
+const linkify = require("linkifyjs");
+const linkifyHtml = require("linkify-html");
 ```
 
 ### Option 2: Download and import for direct use in the browser
@@ -64,14 +64,17 @@ This also creates global variables `linkify` and `linkifyHtml`
 ### Example 1: Convert all links to &lt;a&gt; tags in the given string
 
 ```js
-const options = { defaultProtocol: 'https' };
-linkifyHtml('Any links to github.com here? If not, contact test@example.com', options);
+const options = { defaultProtocol: "https" };
+linkifyHtml(
+  "Any links to github.com here? If not, contact test@example.com",
+  options
+);
 ```
 
 Returns the following string:
 
 ```js
-'Any links to <a href="https://github.com">github.com</a> here? If not, contact <a href="mailto:test@example.com">test@example.com</a>'
+'Any links to <a href="https://github.com">github.com</a> here? If not, contact <a href="mailto:test@example.com">test@example.com</a>';
 ```
 
 To modify the resulting links with a target attribute, class name and more, [use
@@ -80,7 +83,7 @@ the available options](options.html).
 ### Example 2: Find all links in the given string
 
 ```js
-linkify.find('Any links to github.com here? If not, contact test@example.com');
+linkify.find("Any links to github.com here? If not, contact test@example.com");
 ```
 
 Returns the following array
@@ -88,22 +91,22 @@ Returns the following array
 ```js
 [
   {
-    type: 'url',
-    value: 'github.com',
+    type: "url",
+    value: "github.com",
     isLink: true,
-    href: 'http://github.com',
+    href: "http://github.com",
     start: 13,
-    end: 23
+    end: 23,
   },
   {
-    type: 'email',
-    value: 'test@example.com',
+    type: "email",
+    value: "test@example.com",
     isLink: true,
-    href: 'mailto:test@example.com',
+    href: "mailto:test@example.com",
     start: 46,
-    end: 62
-  }
-]
+    end: 62,
+  },
+];
 ```
 
 ### Example 3: Check whether a string is a valid link:
@@ -111,14 +114,14 @@ Returns the following array
 Check if as string is a valid URL or email address:
 
 ```js
-linkify.test('github.com'); // true
+linkify.test("github.com"); // true
 ```
 
 Check if a string is a valid email address:
 
 ```js
-linkify.test('github.com', 'email'); // false
-linkify.test('noreply@github.com', 'email'); // true
+linkify.test("github.com", "email"); // false
+linkify.test("noreply@github.com", "email"); // true
 ```
 
 ## Usage with React, jQuery or the browser DOM

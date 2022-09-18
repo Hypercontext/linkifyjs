@@ -14,19 +14,21 @@ replaces strings containing URLs with strings and `<a>` elements.
 ### Node.js module
 
 Install from the command line with NPM
+
 ```
 npm install linkifyjs linkify-react
 ```
 
 Import into your JavaScript with `require`
+
 ```js
-const Linkify = require('linkify-react');
+const Linkify = require("linkify-react");
 ```
 
 or with ES modules
 
 ```js
-import Linkify from 'linkify-react';
+import Linkify from "linkify-react";
 ```
 
 ### Browser globals
@@ -44,8 +46,10 @@ Include the following scripts in your HTML:
 
 ```jsx
 // Example render function body
-const options = {/* … */};
-const content = 'For help with GitHub.com, please email support@github.com';
+const options = {
+  /* … */
+};
+const content = "For help with GitHub.com, please email support@github.com";
 return (
   <Linkify tagName="p" options={options}>
     {content}
@@ -56,13 +60,54 @@ return (
 This renders the following HTML into the outer element
 
 ```js
-'<p>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></p>'
+'<p>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></p>';
 ```
 
 ### Properties
 
-* _`string | React.JSXElementConstructor`_ [**`tagName`**] The HTML tag or component class to use for the outermost element. Defaults to `React.Fragment` (React 16+) or `'span'`
-* _`Object`_ [**`options`**] [Options](options.html) object
+- _`string | React.JSXElementConstructor`_ [**`as`**] The HTML tag or component class to use for the outermost element. Defaults to `React.Fragment` (React 16+) or `'span'`
+- _`Object`_ [**`options`**] [Options](options.html) object
+
+### Custom Link Components
+
+Some link types such as @-mentions and hashtags may require special components
+(e.g., `<Link>` from `react-router`) to navigate correctly. Use the [`render` option](options.html#render)
+to override how link elements are generated.
+
+```jsx
+import { Link } from 'react-router-dom';
+
+// ...
+
+const renderLink = ({ attributes, content }) => {
+  const { href, ...props } = attributes;
+  return <Link to={href} {...props}>{content}</Link>;
+};
+
+return (
+  <Linkify options={% raw %}{{ render: renderLink }}{% endraw %}>
+    Hello @everyone, welcome to linkify.js.org
+  </Linkify>
+);
+```
+
+This will override the rendering for all link types. To leave URLs and other
+link types, specify an abject where keys are the link types that should be
+affected. All other link types will be rendered as regular `<a>` components.
+
+```jsx
+const options = {
+  render: {
+    hashtag: renderLink,
+    mention: renderLink,
+  },
+};
+return (
+  <Linkify options={options}>
+    Hello @everyone, #welcome to linkify.js.org
+  </Linkify>
+);
+```
 
 ### Events
 

@@ -1,6 +1,6 @@
 ---
 layout: docv3
-title: '#Hashtag plugin · Documentation'
+title: "#Hashtag plugin · Documentation"
 toc: true
 ---
 
@@ -17,16 +17,17 @@ Install from the command line with NPM
 ```
 npm install linkifyjs linkify-plugin-hashtag
 ```
+
 ```js
-const linkify = require('linkifyjs')
-require('linkify-plugin-hashtag');
+const linkify = require("linkifyjs");
+require("linkify-plugin-hashtag");
 ```
 
 or with ES6 modules
 
 ```js
-import * as linkify from 'linkifyjs';;
-import 'linkify-plugin-hashtag';
+import * as linkify from "linkifyjs";
+import "linkify-plugin-hashtag";
 ```
 
 ### Browser globals
@@ -49,14 +50,14 @@ correctly resolve a hashtag. Example linking to Twitter hashtags with
 ```js
 const options = {
   formatHref: {
-    hashtag: (href) => 'https://twitter.com/hashtag/' + href.substr(1)
-  }
-}
-linkifyHtml('Works with hashtags #PhotoOfTheDay or #일상')
+    hashtag: (href) => "https://twitter.com/hashtag/" + href.substr(1),
+  },
+};
+linkifyHtml("Works with hashtags #PhotoOfTheDay or #일상");
 ```
 
 The last line returns the following string:
 
 ```js
-'Works with hashtags <a href="https://twitter.com/hashtag/PhotoOfTheDay">#PhotoOfTheDay</a> or <a href="https://twitter.com/hashtag/일상">#일상</a>'
+'Works with hashtags <a href="https://twitter.com/hashtag/PhotoOfTheDay">#PhotoOfTheDay</a> or <a href="https://twitter.com/hashtag/일상">#일상</a>';
 ```

@@ -11,9 +11,9 @@ Linkify. A custom plugin API is currently in the works.
 
 Plugins are available for the following link types:
 
-* [Twitter-style hashtags](plugin-hashtag.html)
-* ["@" Mentions](plugin-mention.html)
-* [GitHub-style ticket/issue numbers](plugin-ticket.html)
+- [Twitter-style hashtags](plugin-hashtag.html)
+- ["@" Mentions](plugin-mention.html)
+- [GitHub-style ticket/issue numbers](plugin-ticket.html)
 
 ## General Installation
 
@@ -27,16 +27,17 @@ Install from the command line with NPM
 ```
 npm install linkifyjs linkify-plugin-[PLUGIN]
 ```
+
 ```js
-const linkify = require('linkifyjs')
-require('linkify-plugin-[PLUGIN]');
+const linkify = require("linkifyjs");
+require("linkify-plugin-[PLUGIN]");
 ```
 
 or with ES6 modules
 
 ```js
-import * as linkify from 'linkifyjs';;
-import 'linkify-plugin-[PLUGIN]';
+import * as linkify from "linkifyjs";
+import "linkify-plugin-[PLUGIN]";
 ```
 
 ### Browser globals

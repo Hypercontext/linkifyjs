@@ -19,13 +19,15 @@ npm install linkifyjs linkify-html
 ```
 
 Import into your JavaScript with `require`
+
 ```js
-const linkifyHtml = require('linkify-html');
+const linkifyHtml = require("linkify-html");
 ```
+
 or with ES modules
 
 ```js
-import linkifyHtml from 'linkify-html';
+import linkifyHtml from "linkify-html";
 ```
 
 ### Browser globals
@@ -42,20 +44,22 @@ Include the following scripts in your HTML:
 ## Usage
 
 ```js
-const options = {/* … */};
-const str = '<p>For help with GitHub.com, please email support@github.com</p>';
+const options = {
+  /* … */
+};
+const str = "<p>For help with GitHub.com, please email support@github.com</p>";
 linkifyHtml(str, options);
 ```
 
 Returns
 
 ```js
-'<p>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></p>'
+'<p>For help with <a href="http://github.com" target="_blank">GitHub.com</a>, please email <a href="mailto:support@github.com">support@github.com</a></p>';
 ```
 
 **Params**
 
-* _`string`_ **`str`** string to linkify
-* _`Object`_ [**`options`**] [Options](options.html) object
+- _`string`_ **`str`** string to linkify
+- _`Object`_ [**`options`**] [Options](options.html) object
 
 **Returns** _`string`_ Linkified HTML string

@@ -17,16 +17,17 @@ Install from the command line with NPM
 ```
 npm install linkifyjs linkify-plugin-mention
 ```
+
 ```js
-const linkify = require('linkifyjs')
-require('linkify-plugin-mention');
+const linkify = require("linkifyjs");
+require("linkify-plugin-mention");
 ```
 
 or with ES6 modules
 
 ```js
-import * as linkify from 'linkifyjs';;
-import 'linkify-plugin-mention';
+import * as linkify from "linkifyjs";
+import "linkify-plugin-mention";
 ```
 
 ### Browser globals
@@ -42,8 +43,7 @@ Include the following scripts in your HTML:
 
 ## Usage
 
-With @-mentions enabled, strings such as `@username` are replaced with `<a
-href="/username">@username</a>`. **If this formatting works for your website, no
+With @-mentions enabled, strings such as `@username` are replaced with `<a href="/username">@username</a>`. **If this formatting works for your website, no
 additional options are required.**
 
 If you have different username path requirements, use the `formatHref` option
@@ -54,14 +54,14 @@ Example linking to a user account on a website where accounts are located at
 ```js
 const options = {
   formatHref: {
-    mention: (href) => 'https://example.com/profiles' + href
-  }
-}
-linkifyHtml('Check out @Hypercontext and @nfrasser')
+    mention: (href) => "https://example.com/profiles" + href,
+  },
+};
+linkifyHtml("Check out @Hypercontext and @nfrasser");
 ```
 
 The last line returns the following string:
 
 ```js
-'Check out <a href="https://example.com/profiles/Hypercontext">@Hypercontext</a> and <a href="https://example.com/profiles/nfrasser">@nfrasser</a>'
+'Check out <a href="https://example.com/profiles/Hypercontext">@Hypercontext</a> and <a href="https://example.com/profiles/nfrasser">@nfrasser</a>';
 ```
