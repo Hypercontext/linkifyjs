@@ -151,10 +151,19 @@ export function tokenize(str) {
 /**
  * Find a list of linkable items in the given string.
  * @param {string} str string to find links in
- * @param {string} [type] only find links of a specific type, e.g., 'url' or 'email'
- * @param {Opts} [opts] formatting options for final output
+ * @param {string | Opts} [type] either formatting options or specific type of
+ * links to find, e.g., 'url' or 'email'
+ * @param {Opts} [opts] formatting options for final output. Cannot be specified
+ * if opts already provided in `type` argument
 */
 export function find(str, type = null, opts = null) {
+	if (type && typeof type === 'object') {
+		if (opts) {
+			throw Error(`linkifyjs: Invalid link type ${type}; must be a string`);
+		}
+		opts = type;
+		type = null;
+	}
 	const options = new Options(opts);
 	const tokens = tokenize(str);
 	const filtered = [];

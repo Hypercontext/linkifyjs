@@ -3,14 +3,15 @@
 ## v4.0.0
 
 ### Breaking Changes
-* Removed deprecated `linkifyjs/string`, `linkifyjs/html`, `linkifyjs/plugins/*` packages
-* Refactored scanner internals break link plugins created with Linkify v3
+* Removed deprecated `linkifyjs/string`, `linkifyjs/html`, `linkifyjs/plugins/*`
+  packages. Use `linkify-string`, `linkify-html` and `linkify-plugin-*` instead.
+* Refactored scanner internals break custom link plugins created with Linkify v3
 * Links that begin with `mailto:` now have type `url` instead of `email`
 
 ### Added
-* `linkify-plugin-keyword` plugin for detecting arbitrary keywords
 * `linkify-plugin-ip` plugin for detecting IPv4 and IPv6 addresses
-* `linkify.find()` function accepts a third `options` argument for output formatting
+* `linkify-plugin-keyword` plugin for detecting arbitrary keywords
+* `linkify.find()` function accepts an `options` argument for output formatting
 * New `render` option to override link rendering
 * Second `optionalSlashSlash` argument for `registerCustomProtocol` to allow links that don't require `//` after `scheme:`
 * Link token methods `toFormattedString(options)`, `toFormattedHref(options)` and `toFormattedObject(options)` that accept a `linkify.Options` object

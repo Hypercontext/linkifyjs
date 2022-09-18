@@ -114,6 +114,36 @@ describe('linkifyjs', () => {
 				end: 60
 			}]);
 		});
+
+		it('Finds with opts', () => {
+			expect(linkify.find('Does www.truncate.com work with truncate?', { truncate: 10 })).to.deep.eql([
+				{
+					type: 'url',
+					value: 'www.trunca…',
+					isLink: true,
+					href: 'http://www.truncate.com',
+					start: 5,
+					end: 21
+				}
+			]);
+		});
+
+		it('Finds type and opts', () => {
+			expect(linkify.find('Does www.truncate.com work with example@truncate.com?', 'email', { truncate: 10 })).to.deep.eql([
+				{
+					type: 'email',
+					value: 'example@tr…',
+					isLink: true,
+					href: 'mailto:example@truncate.com',
+					start: 32,
+					end: 52
+				}
+			]);
+		});
+
+		it('Throws on ambiguous invocation', () => {
+			expect(() => linkify.find('Hello.com', { type: 'email' }, { truncate: 10 })).to.throw();
+		});
 	});
 
 	describe('test', () => {

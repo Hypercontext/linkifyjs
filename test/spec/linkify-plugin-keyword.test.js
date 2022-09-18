@@ -29,8 +29,8 @@ describe('linkify-plugin-keyword', () => {
 
 		it('Does not interfere with initialization', () => {
 			expect(linkify.find('http.org')).to.be.ok;
-		})
-	})
+		});
+	});
 
 	describe('after plugin is applied', () => {
 		const keywords = [
