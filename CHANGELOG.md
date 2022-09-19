@@ -7,6 +7,7 @@
   packages. Use `linkify-string`, `linkify-html` and `linkify-plugin-*` instead.
 * Refactored scanner internals break custom link plugins created with Linkify v3
 * Links that begin with `mailto:` now have type `url` instead of `email`
+* Drop official IE 11 support
 
 ### Added
 * `linkify-plugin-ip` plugin for detecting IPv4 and IPv6 addresses

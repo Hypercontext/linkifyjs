@@ -16,7 +16,7 @@ module.exports = function (config) {
 			base: 'BrowserStack',
 			browser: 'safari',
 			os: 'OS X',
-			os_version: 'Big Sur'
+			os_version: 'Monterey'
 		},
 		bs_ios_safari: {
 			base: 'BrowserStack',
@@ -29,14 +29,7 @@ module.exports = function (config) {
 			base: 'BrowserStack',
 			browser: 'edge',
 			os: 'Windows',
-			os_version: '10'
-		},
-		bs_ie_11: {
-			base: 'BrowserStack',
-			browser: 'ie',
-			browser_version: '11.0',
-			os: 'Windows',
-			os_version: '8.1'
+			os_version: '11'
 		}
 	};
 

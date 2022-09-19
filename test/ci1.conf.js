@@ -10,7 +10,7 @@ module.exports = function (config) {
 			base: 'BrowserStack',
 			browser: 'chrome',
 			os: 'OS X',
-			os_version: 'Big Sur'
+			os_version: 'Monterey'
 		},
 		bs_chrome_windows: {
 			base: 'BrowserStack',
