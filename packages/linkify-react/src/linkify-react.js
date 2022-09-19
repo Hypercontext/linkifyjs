@@ -1,56 +1,36 @@
 import * as React from 'react';
-import { tokenize, Options } from 'linkifyjs';
+import { tokenize, Options, options } from 'linkifyjs';
 
 /**
  * Given a string, converts to an array of valid React components
  * (which may include strings)
  * @param {string} str
- * @param {any} opts
+ * @param {Options} opts
  * @returns {React.ReactNodeArray}
  */
-function stringToElements(str, opts) {
+function stringToElements(str, opts, parentElementId) {
 
 	const tokens = tokenize(str);
 	const elements = [];
-	let linkId = 0;
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
+		const defaultKey = `__linkify-el-${parentElementId}-${i}`;
 
-		if (token.t === 'nl' && opts.nl2br) {
-			elements.push(React.createElement('br', {key: `linkified-${++linkId}`}));
-			continue;
+		if (token.t === 'nl' && opts.get('nl2br')) {
+			elements.push(React.createElement('br', { key: defaultKey }));
 		} else if (!token.isLink || !opts.check(token)) {
 			// Regular text
 			elements.push(token.toString());
-			continue;
-		}
-
-		const {
-			formatted,
-			formattedHref,
-			tagName,
-			className,
-			target,
-			rel,
-			attributes
-		} = opts.resolve(token);
-
-		const props = { key: `linkified-${++linkId}`, href: formattedHref };
-
-		if (className) { props.className = className; }
-		if (target) { props.target = target; }
-		if (rel) { props.rel = rel; }
-
-		// Build up additional attributes
-		// Support for events via attributes hash
-		if (attributes) {
-			for (var attr in attributes) {
-				props[attr] = attributes[attr];
+		} else {
+			let rendered = opts.render(token);
+			if (!('key' in rendered.props)) {
+				// Ensure generated element has unique key
+				const props = options.assign({ key: defaultKey }, rendered.props);
+				rendered = React.cloneElement(rendered, props);
 			}
+			elements.push(rendered);
 		}
-
-		elements.push(React.createElement(tagName, props, formatted));
 	}
 
 	return elements;
@@ -61,7 +41,7 @@ function stringToElements(str, opts) {
  * @template P
  * @template {string | React.JSXElementConstructor<P>} T
  * @param {React.ReactElement<P, T>} element
- * @param {Object} opts
+ * @param {Options} opts
  * @param {number} elementId
  * @returns {React.ReactElement<P, T>}
  */
@@ -76,8 +56,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 	React.Children.forEach(element.props.children, (child) => {
 		if (typeof child === 'string') {
 			// ensure that we always generate unique element IDs for keys
-			elementId = elementId + 1;
-			children.push(...stringToElements(child, opts));
+			children.push.apply(children, stringToElements(child, opts, elementId));
 		} else if (React.isValidElement(child)) {
 			if (typeof child.type === 'string'
 				&& opts.ignoreTags.indexOf(child.type.toUpperCase()) >= 0
@@ -85,7 +64,7 @@ function linkifyReactElement(element, opts, elementId = 0) {
 				// Don't linkify this element
 				children.push(child);
 			} else {
-				children.push(linkifyReactElement(child, opts, ++elementId));
+				children.push(linkifyReactElement(child, opts, elementId + 1));
 			}
 		} else {
 			// Unknown element type, just push
@@ -94,33 +73,40 @@ function linkifyReactElement(element, opts, elementId = 0) {
 	});
 
 	// Set a default unique key, copy over remaining props
-	const newProps = { key: `linkified-element-${elementId}` };
-	for (const prop in element.props) {
-		newProps[prop] = element.props[prop];
-	}
-
+	const newProps = options.assign({ key: `__linkify-el-${elementId}` }, element.props);
 	return React.cloneElement(element, newProps, children);
 }
 
 /**
  * @template P
  * @template {string | React.JSXElementConstructor<P>} T
- * @param {P & { tagName?: T, options?: any, children?: React.ReactNode}} props
+ * @param {P & { as?: T, tagName?: T, tagName?: T, options?: import('linkifyjs').Opts, children?: React.ReactNode}} props
  * @returns {React.ReactElement<P, T>}
  */
 const Linkify = (props) => {
 	// Copy over all non-linkify-specific props
-	const newProps = { key: 'linkified-element-wrapper' };
+	let linkId = 0;
+
+	const defaultLinkRender = ({ tagName, attributes, content }) => {
+		attributes.key = `__linkify-lnk-${++linkId}`;
+		if (attributes.class) {
+			attributes.className = attributes.class;
+			delete attributes.class;
+		}
+		return React.createElement(tagName, attributes, content);
+	};
+
+	const newProps = { key: '__linkify-wrapper' };
 	for (const prop in props) {
-		if (prop !== 'options' && prop !== 'tagName' && prop !== 'children') {
+		if (prop !== 'options' && prop !== 'as' && prop !== 'tagName' && prop !== 'children') {
 			newProps[prop] = props[prop];
 		}
 	}
 
-	const opts = new Options(props.options);
-	const tagName = props.tagName || React.Fragment || 'span';
+	const opts = new Options(props.options, defaultLinkRender);
+	const as = props.as || props.tagName || React.Fragment || 'span';
 	const children = props.children;
-	const element = React.createElement(tagName, newProps, children);
+	const element = React.createElement(as, newProps, children);
 
 	return linkifyReactElement(element, opts, 0);
 };

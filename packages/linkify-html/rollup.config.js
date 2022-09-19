@@ -1,2 +1,2 @@
-import { linkifyClassicInterface } from '../../rollup.config';
-export default linkifyClassicInterface('html', { globalName: 'linkifyHtml' });
+import { linkifyInterface } from '../../rollup.config';
+export default linkifyInterface('html', { globalName: 'linkifyHtml' });

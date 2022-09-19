@@ -29,9 +29,9 @@ export default function apply($, doc = false) {
 	}
 
 	function jqLinkify(opts) {
-		opts = linkifyElement.normalize(opts);
+		const options = linkifyElement.normalize(opts, doc);
 		return this.each(function () {
-			linkifyElement.helper(this, opts, doc);
+			linkifyElement.helper(this, options, doc);
 		});
 	}
 
@@ -44,58 +44,56 @@ export default function apply($, doc = false) {
 			const target = data.linkify;
 			const nl2br = data.linkifyNl2br;
 
-			let options = {
+			const opts = {
 				nl2br: !!nl2br && nl2br !== 0 && nl2br !== 'false'
 			};
 
 			if ('linkifyAttributes' in data) {
-				options.attributes = data.linkifyAttributes;
+				opts.attributes = data.linkifyAttributes;
 			}
 
 			if ('linkifyDefaultProtocol' in data) {
-				options.defaultProtocol = data.linkifyDefaultProtocol;
+				opts.defaultProtocol = data.linkifyDefaultProtocol;
 			}
 
 			if ('linkifyEvents' in data) {
-				options.events = data.linkifyEvents;
+				opts.events = data.linkifyEvents;
 			}
 
 			if ('linkifyFormat' in data) {
-				options.format = data.linkifyFormat;
+				opts.format = data.linkifyFormat;
 			}
 
 			if ('linkifyFormatHref' in data) {
-				options.formatHref = data.linkifyFormatHref;
+				opts.formatHref = data.linkifyFormatHref;
 			}
 
 			if ('linkifyTagname' in data) {
-				options.tagName = data.linkifyTagname;
+				opts.tagName = data.linkifyTagname;
 			}
 
 			if ('linkifyTarget' in data) {
-				options.target = data.linkifyTarget;
+				opts.target = data.linkifyTarget;
 			}
 
 			if ('linkifyRel' in data) {
-				options.rel = data.linkifyRel;
+				opts.rel = data.linkifyRel;
 			}
 
 			if ('linkifyValidate' in data) {
-				options.validate = data.linkifyValidate;
+				opts.validate = data.linkifyValidate;
 			}
 
 			if ('linkifyIgnoreTags' in data) {
-				options.ignoreTags = data.linkifyIgnoreTags;
+				opts.ignoreTags = data.linkifyIgnoreTags;
 			}
 
 			if ('linkifyClassName' in data) {
-				options.className = data.linkifyClassName;
+				opts.className = data.linkifyClassName;
 			}
 
-			options = linkifyElement.normalize(options);
-
 			const $target = target === 'this' ? $this : $this.find(target);
-			$target.linkify(options);
+			$target.linkify(opts);
 		});
 	});
 }

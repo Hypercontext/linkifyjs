@@ -7,6 +7,7 @@ module.exports = (api) => {
 			'@babel/preset-env',
 			{
 				useBuiltIns: false,
+				loose: true,
 				targets: {
 					node: '10',
 					browsers: [

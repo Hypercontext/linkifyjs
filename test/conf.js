@@ -20,10 +20,7 @@ module.exports = {
 		{pattern: `node_modules/react-dom/${reactDomPath}.min.js`, watched: false },
 		'dist/linkify.min.js',
 		// 'dist/linkify.js', // Uncompressed
-		'dist/linkify-react.min.js',
-		// {pattern: 'dist/linkify-reactjs', included: false, served: true}, // Uncompressed
 		'dist/*.min.js',
-		// 'dist/*.js', // Uncompressed
 		'test/qunit/globals.js',
 		'test/qunit/main.js'
 	],

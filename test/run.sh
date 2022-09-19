@@ -2,17 +2,12 @@
 set -e
 
 # Run complete test suite only these conditions hold
-# * SauceLabs credentials are defined
-# * The node version is 14.*
-# * The jQuery version is 1.*
-#	- so only a single member machine in the matrix calls sauce
-
-if [[ "$BROWSERSTACK_ACCESS_KEY" != "" && "$BROWSERSTACK_USERNAME" != "" && "$1" == "16.x" ]]; then
-	# Run build, basic tests and SauceLabs tests
+if [[ "$1" == "--dist" ]]; then
 	echo "Running complete test suite..."
-	npm test
-	npm run lint
-	npm run dist:ci
+	# npm run lint  # Causes segfault, pause for now
+	npm run test:coverage
+	npm run build:ci
+	npm run copy
 	npm run test:ci
 	sleep 3  # Wait for threads to exit?
 else

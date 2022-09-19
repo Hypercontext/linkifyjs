@@ -1,24 +1,4 @@
-import linkifyStr from 'linkifyjs/src/linkify-string';
-
-/**
-	Gracefully truncate a string to a given limit. Will replace extraneous
-	text with a single ellipsis character (`…`).
-*/
-String.prototype.truncate = function (limit) {
-	var string = this.toString();
-	limit = limit || Infinity;
-
-	if (limit <= 3) {
-		string = '…';
-	} else if (string.length > limit) {
-		string = string.slice(0, limit).split(/\s/);
-		if (string.length > 1) {
-			string.pop();
-		}
-		string = string.join(' ') + '…';
-	}
-	return string;
-};
+import linkifyStr from 'linkify-string/src/linkify-string';
 
 describe('linkify-string', () => {
 	// For each element in this array

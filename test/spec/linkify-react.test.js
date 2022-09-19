@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import * as linkify from 'linkifyjs/src/linkify';
 import Linkify from 'linkify-react/src/linkify-react';
+import mention from 'linkify-plugin-mention/src/mention';
 
 const options = { // test options
 	tagName: 'em',
@@ -25,7 +27,7 @@ describe('linkify-react', () => {
 	// [0] - Original text
 	// [1] - Linkified with default options
 	// [2] - Linkified with new options
-	var tests = [
+	let tests = [
 		[
 			'Test with no links',
 			'Test with no links',
@@ -33,11 +35,11 @@ describe('linkify-react', () => {
 		], [
 			'The URL is google.com and the email is test@example.com',
 			'The URL is <a href="http://google.com">google.com</a> and the email is <a href="mailto:test@example.com">test@example.com</a>',
-			'<div class="lambda">The URL is <em href="https://google.com" class="my-linkify-class" target="_parent" rel="nofollow">google.com</em> and the email is <em href="mailto:test@example.com?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow">test@example.com</em></div>',
+			'<div class="lambda">The URL is <em href="https://google.com" target="_parent" rel="nofollow" class="my-linkify-class">google.com</em> and the email is <em href="mailto:test@example.com?subject=Hello%20from%20Linkify" target="_parent" rel="nofollow" class="my-linkify-class">test@example.com</em></div>',
 		], [
 			'Super long maps URL https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en, a #hash-tag, and an email: test.wut.yo@gmail.co.uk!\n',
 			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.wut.yo@gmail.co.uk">test.wut.yo@gmail.co.uk</a>!\n',
-			'<div class="lambda">Super long maps URL <em href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" class="my-linkify-class" target="_parent" rel="nofollow">https://www.google.ca/maps/@43.472082,-8…</em>, a #hash-tag, and an email: <em href="mailto:test.wut.yo@gmail.co.uk?subject=Hello%20from%20Linkify" class="my-linkify-class" target="_parent" rel="nofollow">test.wut.yo@gmail.co.uk</em>!<br/></div>',
+			'<div class="lambda">Super long maps URL <em href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" target="_parent" rel="nofollow" class="my-linkify-class">https://www.google.ca/maps/@43.472082,-8…</em>, a #hash-tag, and an email: <em href="mailto:test.wut.yo@gmail.co.uk?subject=Hello%20from%20Linkify" target="_parent" rel="nofollow" class="my-linkify-class">test.wut.yo@gmail.co.uk</em>!<br/></div>',
 		], [
 			'Link with @some.username should not work as a link',
 			'Link with @some.username should not work as a link',
@@ -55,7 +57,7 @@ describe('linkify-react', () => {
 
 	it('Works with overriden options', function () {
 		tests.map((test) => {
-			var props = {options, tagName: 'div', className: 'lambda'};
+			var props = {options, as: 'div', className: 'lambda'};
 			var linkified = React.createElement(Linkify, props, test[0]);
 			var result = ReactDOMServer.renderToStaticMarkup(linkified);
 			expect(result).to.be.eql(test[2]);
@@ -99,6 +101,27 @@ describe('linkify-react', () => {
 		var result = ReactDOMServer.renderToStaticMarkup(linkified);
 		var expected = 'A great site is <a href="http://google.com">google.com</a> AND <em>https://facebook.github.io/react/</em>';
 		expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
+	});
 
+	describe('Custom render', () => {
+		beforeEach(() => { linkify.registerPlugin('mention', mention); });
+
+		it('Renders dedicated mentions component', () => {
+			const options = {
+				formatHref: {
+					mention: (href) =>`/users${href}`
+				},
+				render: {
+					mention: ({ attributes, content }) => {
+						const { href, ...props } = attributes;
+						return React.createElement('span', { 'data-to': href, ...props }, content);
+					}
+				}
+			};
+			const linkified = React.createElement(Linkify, { options }, 'Check out linkify.js.org or contact @nfrasser');
+			const result = ReactDOMServer.renderToStaticMarkup(linkified);
+			const expected = 'Check out <a href="http://linkify.js.org">linkify.js.org</a> or contact <span data-to="/users/nfrasser">@nfrasser</span>';
+			expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
+		});
 	});
 });

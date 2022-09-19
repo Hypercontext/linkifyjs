@@ -1,5 +1,29 @@
 # Linkify Changelog
 
+## v4.0.0
+
+### Breaking Changes
+* Removed deprecated `linkifyjs/string`, `linkifyjs/html`, `linkifyjs/plugins/*`
+  packages. Use `linkify-string`, `linkify-html` and `linkify-plugin-*` instead.
+* Refactored scanner internals break custom link plugins created with Linkify v3
+* Links that begin with `mailto:` now have type `url` instead of `email`
+* Drop official IE 11 support
+
+### Added
+* `linkify-plugin-ip` plugin for detecting IPv4 and IPv6 addresses
+* `linkify-plugin-keyword` plugin for detecting arbitrary keywords
+* `linkify.find()` function accepts an `options` argument for output formatting
+* New `render` option to override link rendering
+* Second `optionalSlashSlash` argument for `registerCustomProtocol` to allow links that don't require `//` after `scheme:`
+* Link token methods `toFormattedString(options)`, `toFormattedHref(options)` and `toFormattedObject(options)` that accept a `linkify.Options` object
+* More granular scanner tokens for improved plugin flexibility
+* `linkify-react`: New `as` property (alias for `tagName`)
+
+### Fixed
+* Improved link detection with mixed languages
+* Consistent option availability across interfaces (including `truncate`)
+* `linkify-html`: Improved HTML entity parsing
+
 ## v3.0.5
 
 * Fix potential Cross-Site Scripting issue when using `linkify-html`

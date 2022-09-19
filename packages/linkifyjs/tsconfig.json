@@ -1,10 +1,10 @@
 {
-	"include": ["index.js", "string.js", "html.js", "plugins/*.js"],
+	"include": ["dist/linkify.cjs.js", "dist/linkify.es.js"],
 	"exclude": [],
 	"compilerOptions": {
 		"allowJs": true,
+		// "checkJs": true,
 		"declaration": true,
-		"emitDeclarationOnly": true,
-		"outDir": "."
+		"emitDeclarationOnly": true
 	}
 }

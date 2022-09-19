@@ -22,36 +22,11 @@ export function linkifyInterface(name, opts = {}) {
 		input: `src/linkify-${name}.js`,
 		external,
 		output: [
-			{ file: 'index.js', format: 'cjs', exports: 'auto' },
 			{ file: `dist/linkify-${name}.js`, format: 'iife', globals, ...iifeOpts },
 			{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
-			{ file: `dist/linkify-${name}.module.js`, format: 'es' },
+			{ file: `dist/linkify-${name}.cjs.js`, format: 'cjs', exports: 'auto' },
+			{ file: `dist/linkify-${name}.es.js`, format: 'es' },
 		],
-		plugins
-	};
-}
-
-
-// Interfaces embedded in the main linkifyjs package, not yet fully migrated
-// over to their own packages. This should be removed in v3.1 or v4
-export function linkifyClassicInterface(name, opts = {}) {
-	const iifeOpts = { name };
-	const globals = { linkifyjs: 'linkify' };
-	if ('globalName' in opts) { iifeOpts.name = opts.globalName; }
-
-	const output = [
-		{ file: `dist/linkify-${name}.js`, format: 'iife', globals, ...iifeOpts },
-		{ file: `dist/linkify-${name}.min.js`, format: 'iife', globals, ...iifeOpts, plugins: [terser()] },
-		{ file: `dist/linkify-${name}.module.js`, format: 'es' }
-	];
-	if (opts.commonjs) {
-		output.push({ file: `lib/linkify-${name}.js`, format: 'cjs', exports: 'auto' });
-	}
-
-	return {
-		input: `../linkifyjs/src/linkify-${name}.js`,
-		external: ['linkifyjs'], // add other dependent packages here
-		output,
 		plugins
 	};
 }
@@ -59,37 +34,18 @@ export function linkifyClassicInterface(name, opts = {}) {
 // Includes plugins from main linkifyjs package because those have not yet been
 // fully migrated to their own packages to maintain backward compatibility with
 // v2. Will change in v4
-export function linkifyPlugin(name, opts = {}) {
+export function linkifyPlugin(plugin, opts = {}) {
+	const name = opts.globalName || false; // Most plugins don't export anything
 	const globals =  { linkifyjs: 'linkify' };
-	const output = [
-		{ file: `dist/linkify-plugin-${name}.js`, format: 'iife', globals, name: false },
-		{ file: `dist/linkify-plugin-${name}.min.js`, format: 'iife', globals, name: false, plugins: [terser()] },
-		{ file: `dist/linkify-plugin-${name}.module.js`, format: 'es' }
-	];
-	if (opts.commonjs) {
-		output.push({ file: `lib/plugins/${name}.js`, format: 'cjs', exports: 'auto' });
-	}
 	return {
-		input: `../linkifyjs/src/plugins/${name}.js`,
+		input: 'src/index.js',
 		external: ['linkifyjs'],
-		output,
+		output: [
+			{ file: `dist/linkify-plugin-${plugin}.js`, format: 'iife', globals, name },
+			{ file: `dist/linkify-plugin-${plugin}.min.js`, format: 'iife', globals, name, plugins: [terser()] },
+			{ file: `dist/linkify-plugin-${plugin}.cjs.js`, format: 'cjs', exports: 'auto'},
+			{ file: `dist/linkify-plugin-${plugin}.es.js`, format: 'es' }
+		],
 		plugins
 	};
 }
-
-export default [
-	/*
-	{
-		input: 'src/linkify/core/generated/state-machine.js',
-		output: [
-			{
-				file: 'dist/state-machine.min.js',
-				name: 'linkifyScannerStart',
-				format: 'iife',
-				plugins: [terser()]
-			}
-		],
-		plugins
-	},
-	*/
-];

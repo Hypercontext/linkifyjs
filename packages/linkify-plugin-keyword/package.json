@@ -1,0 +1,35 @@
+{
+  "name": "linkify-plugin-keyword",
+  "version": "4.0.0-beta.6",
+  "description": "Keyword plugin for linkifyjs",
+  "main": "dist/linkify-plugin-keyword.cjs.js",
+  "module": "dist/linkify-plugin-keyword.es.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "clean": "rm -rf lib dist *.tgz *.d.ts",
+    "prepack": "run-s clean build tsc",
+    "tsc": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hypercontext/linkifyjs.git",
+    "directory": "packages/linkify-plugin-keyword"
+  },
+  "keywords": [
+    "link",
+    "autolink",
+    "url",
+    "email",
+    "keyword"
+  ],
+  "author": "Hypercontext",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Hypercontext/linkifyjs/issues"
+  },
+  "homepage": "https://linkify.js.org",
+  "peerDependencies": {
+    "linkifyjs": "^4.0.0-beta.1"
+  }
+}

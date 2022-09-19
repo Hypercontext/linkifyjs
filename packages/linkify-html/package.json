@@ -1,13 +1,14 @@
 {
   "name": "linkify-html",
-  "version": "3.0.5",
+  "version": "4.0.0-beta.6",
   "description": "HTML String interface for linkifyjs",
-  "main": "index.js",
-  "module": "dist/linkify-html.module.js",
+  "main": "dist/linkify-html.cjs.js",
+  "module": "dist/linkify-html.es.js",
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "clean": "rm -rf lib dist *.tgz *.d.ts",
-    "prepack": "run-s clean build tsc",
+    "copy:license": "copyfiles -f ../../node_modules/@nfrasser/simple-html-tokenizer/LICENSE dist/simple-html-tokenizer",
+    "prepack": "run-s clean build tsc copy:license",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,8 +28,11 @@
   "bugs": {
     "url": "https://github.com/Hypercontext/linkifyjs/issues"
   },
-  "homepage": "https://github.com/Hypercontext/linkifyjs#readme",
+  "homepage": "https://linkify.js.org",
+  "devDependencies": {
+    "@nfrasser/simple-html-tokenizer": "==0.5.11-2"
+  },
   "peerDependencies": {
-    "linkifyjs": "^3.0.0"
+    "linkifyjs": "^4.0.0-beta.1"
   }
 }
