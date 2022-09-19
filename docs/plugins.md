@@ -14,6 +14,8 @@ Plugins are available for the following link types:
 - [Twitter-style hashtags](plugin-hashtag.html)
 - ["@" Mentions](plugin-mention.html)
 - [GitHub-style ticket/issue numbers](plugin-ticket.html)
+- [IP Addresses](plugin-ip.html)
+- [Arbitrary keywords](plugin-keyword.html)
 
 ## General Installation
 
