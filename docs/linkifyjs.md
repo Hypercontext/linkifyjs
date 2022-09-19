@@ -40,14 +40,14 @@ Include the following script in your HTML:
 
 ## Methods
 
-### linkify.find _(str [, type = null [, opts = null ] ])_
+### linkify.find _(str [, type = null] [, opts = null])_
 
 Finds all links in the given string
 
 **Params**
 
-- _`String`_ **`str`** Search string
-- _`String`_ [**`type`**] only find links of the given type
+- _`string`_ **`str`** Search string
+- _`string`_ [**`type`**] only find links of the given type
 - _`Object`_ [**`opts`**] [Link formatting options](options.html)
 
 **Returns** _`Array`_ List of links where each element is an object with the
@@ -91,6 +91,9 @@ Returns the following array
 ];
 ```
 
+If the second argument is an object, it will be interpreted as `opts` with
+options, not as `type`.
+
 ### linkify.init()
 
 **Avoid calling this manually.** `init()` runs automatically before invoking
@@ -112,18 +115,19 @@ linkifyStr("Hello World.com!"); // init() called automatically here on first inv
 // If registering new protocols or plugins *here*, call linkify.init() immediately after
 ```
 
-### linkify.registerCustomProtocol _(str)_
+### linkify.registerCustomProtocol _(scheme [, optionalSlashSlash = false])_
 
 Call this before invoking linkify for the first time. Linkify will consider any
-string that begins with the given protocol followed by a `:` as a URL link.
+string that begins with the given scheme followed by a `:` as a URL link.
 
 **Params**
 
-- _`String`_ **`str`** The protocol. May only contain characters `a-z` and `-` (hyphens)
+- _`string`_ **`scheme`** The scheme. May only contain characters `a-z` and `-` (hyphens)
+- _`boolean`_ [**`optionalSlashSlash`**] If true, allows links that begin with `scheme:`, not just `scheme://`
 
 ```js
 linkify.registerCustomProtocol("fb"); // now recognizes links such as fb://feed
-linkify.registerCustomProtocol("instagram"); // now recognizes links such as instagram://account
+linkify.registerCustomProtocol("instagram", true); // now recognizes links such as instagram:account
 ```
 
 ### linkify.registerPlugin _(name, plugin)_
@@ -133,7 +137,7 @@ before invoking linkify for the first time.
 
 **Params**
 
-- _`String`_ **`name`** unique name of the plugin to register
+- _`string`_ **`name`** unique name of the plugin to register
   • *`Function`* **`plugin`** plugin implementation function
 
 [See example plugin function implementations](https://github.com/{{ site.github_username }}/tree/master/packages/linkifyjs/src/plugins).
@@ -144,8 +148,8 @@ Is the given string a link? Note that linkify is not 100% spec compliant, so thi
 
 **Params**
 
-- _`String`_ **`str`** Test string
-- _`String`_ [**`type`**] returns `true` only if the link is of the given type (see `linkify.find`),
+- _`string`_ **`str`** Test string
+- _`string`_ [**`type`**] returns `true` only if the link is of the given type (see `linkify.find`),
 
 **Returns** _`Boolean`_
 
@@ -161,6 +165,6 @@ Used by linkify's interfaces.
 
 **Params**
 
-- _`String`_ **`str`**
+- _`string`_ **`str`**
 
 **Returns** _`Array`_
