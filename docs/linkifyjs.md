@@ -59,6 +59,8 @@ following properties:
   - `'hashtag'` (with Hashtag plugin)
   - `'mention'` (with Mention plugin)
   - `'ticket'` (with Ticket plugin)
+  - `'ipv4'` (with IP plugin)
+  - `'keyword'` (with Keyword plugin)
 - **value** is the original entity substring.
 - **href** is the value of this link's `href` attribute.
 - **start** is the index of the link's first character in the given string

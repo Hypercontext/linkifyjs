@@ -51,7 +51,7 @@ const options = {
 };
 const content = "For help with GitHub.com, please email support@github.com";
 return (
-  <Linkify tagName="p" options={options}>
+  <Linkify as="p" options={options}>
     {content}
   </Linkify>
 );
@@ -70,9 +70,9 @@ This renders the following HTML into the outer element
 
 ### Custom Link Components
 
-Some link types such as @-mentions and hashtags may require special components
-(e.g., `<Link>` from `react-router`) to navigate correctly. Use the [`render` option](options.html#render)
-to override how link elements are generated.
+Some link types such as @-mentions and hashtags require special components
+(e.g., `<Link>` from `react-router`) to navigate correctly. Use the [`render`
+option](options.html#render) to override how link elements are generated.
 
 ```jsx
 import { Link } from 'react-router-dom';
@@ -92,7 +92,7 @@ return (
 ```
 
 This will override the rendering for all link types. To leave URLs and other
-link types, specify an abject where keys are the link types that should be
+link types, specify an object where keys are the link types that should be
 affected. All other link types will be rendered as regular `<a>` components.
 
 ```jsx
@@ -102,6 +102,7 @@ const options = {
     mention: renderLink,
   },
 };
+
 return (
   <Linkify options={options}>
     Hello @everyone, #welcome to linkify.js.org
