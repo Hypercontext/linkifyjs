@@ -41,9 +41,9 @@ describe('linkify-react', () => {
 			'Super long maps URL <a href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en">https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en</a>, a #hash-tag, and an email: <a href="mailto:test.wut.yo@gmail.co.uk">test.wut.yo@gmail.co.uk</a>!\n',
 			'<div class="lambda">Super long maps URL <em href="https://www.google.ca/maps/@43.472082,-80.5426668,18z?hl=en" target="_parent" rel="nofollow" class="my-linkify-class">https://www.google.ca/maps/@43.472082,-8…</em>, a #hash-tag, and an email: <em href="mailto:test.wut.yo@gmail.co.uk?subject=Hello%20from%20Linkify" target="_parent" rel="nofollow" class="my-linkify-class">test.wut.yo@gmail.co.uk</em>!<br/></div>',
 		], [
-			'Link with @some.username should not work as a link',
-			'Link with @some.username should not work as a link',
-			'<div class="lambda">Link with @some.username should not work as a link</div>',
+			'Link with @some.username\nshould not work as a link',
+			'Link with @some.username\nshould not work as a link',
+			'<div class="lambda">Link with @some.username<br/>should not work as a link</div>',
 		]
 	];
 
@@ -103,6 +103,33 @@ describe('linkify-react', () => {
 		expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
 	});
 
+	it('Correctly renders multiple text and element children', () => {
+		const options = { nl2br: true };
+		const foo = `hello
+
+		`;
+		const bar = `hello
+
+		`;
+		const linkified = React.createElement(Linkify, { options },
+			foo,
+			' ',
+			bar,
+			React.createElement('em', {key: 0}, ['or contact nfrasser@example.com']),
+			'For the latest javascript.net\n',
+			React.createElement('strong', {key: 1}, ['and also\n', '🥺👄.ws']),
+		);
+		const result = ReactDOMServer.renderToStaticMarkup(linkified);
+		const expected = [
+			'hello<br/><br/>\t\t ',
+			'hello<br/><br/>\t\t',
+			'<em>or contact <a href="mailto:nfrasser@example.com">nfrasser@example.com</a></em>',
+			'For the latest <a href="http://javascript.net">javascript.net</a><br/>',
+			'<strong>and also<br/><a href="http://🥺👄.ws">🥺👄.ws</a></strong>',
+		].join('');
+		expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
+	});
+
 	describe('Custom render', () => {
 		beforeEach(() => { linkify.registerPlugin('mention', mention); });
 
@@ -124,4 +151,5 @@ describe('linkify-react', () => {
 			expect(result).to.be.oneOf([expected, `<span>${expected}</span>`]);
 		});
 	});
+
 });
