@@ -99,8 +99,7 @@ function linkifyChars(str, options) {
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
-
-		if (token.t === 'nl' && options.nl2br) {
+		if (token.t === 'nl' && options.get('nl2br')) {
 			result.push({
 				type: StartTag,
 				tagName: 'br',

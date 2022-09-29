@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Text, Url, Email } from 'linkifyjs/src/multi';
+import { Text, Url, Email, Nl } from 'linkifyjs/src/multi';
 import * as scanner from 'linkifyjs/src/scanner';
 import * as parser from 'linkifyjs/src/parser';
 
@@ -244,6 +244,10 @@ const tests = [
 		'steam.com',
 		[Url],
 		['steam.com']
+	], [
+		'Hello\nWorld',
+		[Text, Nl, Text],
+		['Hello', '\n', 'World'],
 	]
 ];
 

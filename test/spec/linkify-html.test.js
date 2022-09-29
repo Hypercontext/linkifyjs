@@ -1,10 +1,12 @@
 import linkifyHtml from 'linkify-html/src/linkify-html';
 import htmlOptions from './html/options';
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 801.197 614.273">
-	<rect height="304" width="554" y="50" x="50" stroke="#000" fill="#ff0000" />
-	<rect height="304" width="554" y="150" x="131" stroke="#000" fill="#fff" />
-</svg>`;
+const svg = [
+	'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 801.197 614.273">',
+	'<rect height="304" width="554" y="50" x="50" stroke="#000" fill="#ff0000" />',
+	'<rect height="304" width="554" y="150" x="131" stroke="#000" fill="#fff" />',
+	'</svg>'
+].join('');
 
 describe('linkify-html', () => {
 
@@ -61,6 +63,10 @@ describe('linkify-html', () => {
 			svg,
 			svg,
 			svg
+		], [
+			'Does nl2br.com work?\nYes',
+			'Does <a href="http://nl2br.com">nl2br.com</a> work?\nYes',
+			'Does <span href="https://nl2br.com" class="my-linkify-class" target="_parent" rel="nofollow" onclick="console.log(\'Hello World!\')">nl2br.com</span> work?<br />Yes',
 		]
 	];
 
