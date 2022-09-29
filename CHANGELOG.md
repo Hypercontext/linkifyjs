@@ -1,8 +1,13 @@
 # Linkify Changelog
 
+## v4.0.1
+
+* Restore nl2br option for linkify-html
+* Fixed duplicate key warning in linkify-react with multiple children
+
 ## v4.0.0
 
-### Breaking Changes
+### BREAKING CHANGES
 * Removed deprecated `linkifyjs/string`, `linkifyjs/html`, `linkifyjs/plugins/*`
   packages. Use `linkify-string`, `linkify-html` and `linkify-plugin-*` instead.
 * Refactored scanner internals break custom link plugins created with Linkify v3

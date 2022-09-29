@@ -32,6 +32,8 @@ Separate packages are available for each of the following features:
 - [#hashtag plugin](../linkify-plugin-hashtag)
 - [@mention plugin](../linkify-plugin-mention)
 - [#ticket plugin](../linkify-plugin-ticket)
+- [IP address plugin](../linkify-plugin-ip)
+- [Keyword plugin](../linkify-plugin-keyword)
 
 ## Usage
 

@@ -3,6 +3,9 @@ name: Node.js CI
 on:
   push:
     branches: [ main ]
+    tags: ['*']
+    tags-ignore: ['*beta*']
+
   pull_request:
     branches: [ main ]
 
@@ -27,6 +30,7 @@ jobs:
 
   integration:
     runs-on: ubuntu-latest
+    needs: unit
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
