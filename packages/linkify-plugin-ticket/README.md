@@ -1,7 +1,9 @@
 linkify-plugin-ticket
 ===
 
-Detect GitHub-style tickets/issues with [Linkify](https://linkify.js.org/).
+[![npm version](https://badge.fury.io/js/linkify-plugin-ticket.svg)](https://www.npmjs.com/package/linkify-plugin-ticket)
+
+Detect and convert GitHub-style issue or ticket numbers (e.g., `#123`) to `<a>` anchor tags with [Linkify](https://linkify.js.org/).
 
 ## Installation
 

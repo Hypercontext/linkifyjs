@@ -1,7 +1,9 @@
 linkify-plugin-ip
 ===
 
-Detect IPv4 and IPv6 addresses with [Linkify](https://linkify.js.org/).
+[![npm version](https://badge.fury.io/js/linkify-plugin-ip.svg)](https://www.npmjs.com/package/linkify-plugin-ip)
+
+Detect and convert IPv4 and IPv6 addresses to `<a>` anchor tags with [Linkify](https://linkify.js.org/).
 
 ## Installation
 

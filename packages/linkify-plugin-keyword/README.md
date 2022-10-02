@@ -1,7 +1,9 @@
 linkify-plugin-keyword
 ===
 
-Detect arbitrary keywords with [Linkify](https://linkify.js.org/).
+[![npm version](https://badge.fury.io/js/linkify-plugin-keyword.svg)](https://www.npmjs.com/package/linkify-plugin-keyword)
+
+Detect and convert arbitrary keywords to `<a>` anchor tags with [Linkify](https://linkify.js.org/).
 
 ## Installation
 

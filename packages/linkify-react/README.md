@@ -1,7 +1,9 @@
 linkify-react
 ===
 
-[Linkify](https://linkify.js.org/) React component. Walks through its children and replaces strings containing URLs with strings and &lt;a&gt; elements.
+[![npm version](https://badge.fury.io/js/linkify-react.svg)](https://www.npmjs.com/package/linkify-react)
+
+[Linkify](https://linkify.js.org/) React component. Use it to find URLs, email addresses and more in child strings and replace them with strings and &lt;a&gt; elements.
 
 ## Installation
 
@@ -22,6 +24,14 @@ import Linkify from 'linkify-react';
 ```
 
 ## Usage
+
+```jsx
+const contents = 'helloworld.com';
+
+<Linkify options={...}>
+  {contents}
+</Linkify>
+```
 
 [Read the full documentation](https://linkify.js.org/docs/linkify-react.html).
 

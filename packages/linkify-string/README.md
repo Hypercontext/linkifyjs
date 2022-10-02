@@ -1,13 +1,15 @@
 linkify-string
 ===
 
-[Linkify](https://linkify.js.org/) String Interface. Use `linkify-string` to replace links in plain-text strings with anchor tags.
+[![npm version](https://badge.fury.io/js/linkify-string.svg)](https://www.npmjs.com/package/linkify-string)
+
+[Linkify](https://linkify.js.org/) String Interface. Use `linkify-string` to detect URLs, email addresses and more in plain-text strings and wrap them with anchor `<a>` tags.
 
 This function will ***not*** parse strings with HTML. Use one of the following instead, depending on your application:
 
-* `linkify-html`
-* `linkify-element`
-* `linkify-jquery`
+* [`linkify-html`](../linkify-html/)
+* [`linkify-element`](../linkify-element/)
+* [`linkify-jquery`](../linkify-jquery/)
 
 
 ## Installation

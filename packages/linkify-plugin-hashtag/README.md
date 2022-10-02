@@ -1,7 +1,9 @@
 linkify-plugin-hashtag
 ===
 
-Detect Twitter-style #hashtags with [Linkify](https://linkify.js.org/).
+[![npm version](https://badge.fury.io/js/linkify-plugin-hashtag.svg)](https://www.npmjs.com/package/linkify-plugin-hashtag)
+
+Detect and convert Twitter-style #hashtags to `<a>` anchor tags with [Linkify](https://linkify.js.org/).
 
 ## Installation
 

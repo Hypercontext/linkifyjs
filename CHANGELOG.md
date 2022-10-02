@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+## v4.0.2
+
+* Fix email address detection with domains containing numbers
+
 ## v4.0.1
 
 * Restore nl2br option for linkify-html

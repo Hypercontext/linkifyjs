@@ -1,7 +1,9 @@
 linkify-jquery
 ===
 
-[Linkify](https://linkify.js.org/) jQuery plugin. Also available in vanilla JavaScript via `linkify-element`.
+[![npm version](https://badge.fury.io/js/linkify-jquery.svg)](https://www.npmjs.com/package/linkify-jquery)
+
+[Linkify](https://linkify.js.org/) jQuery plugin. Also available in vanilla JavaScript via `linkify-element`. Use it to detect URLs, email addresses and more and wrap them with anchor `<a>` tags.
 
 ## Installation
 

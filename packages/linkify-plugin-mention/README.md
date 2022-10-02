@@ -1,7 +1,9 @@
 linkify-plugin-mention
 ===
 
-Detect Twitter- and GitHub- style "at"-mentions (@mentions) with [Linkify](https://linkify.js.org/).
+[![npm version](https://badge.fury.io/js/linkify-plugin-mention.svg)](https://www.npmjs.com/package/linkify-plugin-mention)
+
+Detect and convert Twitter- and GitHub- style "at"-mentions (@mentions) to `<a>` anchor tags with [Linkify](https://linkify.js.org/).
 
 ## Installation
 

@@ -1,7 +1,9 @@
 linkify-html
 ===
 
-[Linkify](https://linkify.js.org/) HTML String Interface. Use `linkify-html` to highlight links within strings that contain HTML markup.
+[![npm version](https://badge.fury.io/js/linkify-html.svg)](https://www.npmjs.com/package/linkify-html)
+
+[Linkify](https://linkify.js.org/) HTML String Interface. Use `linkify-html` to detect URLs, email addresses and more in strings that contain HTML markup and replace them with anchor `<a>` tags.
 
 ## Installation
 

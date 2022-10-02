@@ -1,9 +1,10 @@
 linkifyjs
 ===
 
-Core [Linkify](https://linkify.js.org/) JavaScript library. Use Linkify and its
-related packages to find links in plain-text and convert them to HTML &lt;a&gt; tags
+[![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
 
+Core [Linkify](https://linkify.js.org/) JavaScript library. Use Linkify and its
+related packages to detect URLs, email addresses and more in plain-text strings and convert them to HTML `<a>` anchor tags.
 
 ## Installation
 
