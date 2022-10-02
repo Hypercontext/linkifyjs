@@ -221,6 +221,14 @@ const tests = [
 		[Email],
 		['~@example.org']
 	], [
+		'test@example2.com',
+		[Email],
+		['test@example2.com']
+	], [
+		'noreply@500px.so',
+		[Email],
+		['noreply@500px.so']
+	], [
 		'~emersion/soju-dev@lists.sr.ht',
 		[Email],
 		['~emersion/soju-dev@lists.sr.ht']

@@ -121,6 +121,7 @@ export function init({ groups }) {
 
 	const EmailDomain = makeState();
 	ta(LocalpartAt, groups.domain, EmailDomain); // parsed string starts with local email info + @ with a potential domain name
+	ta(EmailDomain, groups.domain, EmailDomain);
 	const EmailDomainDot = tt(EmailDomain, tk.DOT); // domain followed by DOT
 	ta(EmailDomainDot, groups.domain, EmailDomain);
 
