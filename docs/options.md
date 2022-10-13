@@ -362,10 +362,10 @@ Returns
 ## `target`
 
 - **Type**: `string | Object | (href: string, type: string, token: MultiToken) => string`
-- **Default**: `'_blank'` for URLs, `null` for everything else
+- **Default**: `null` (no target)
 - **Data API**: `data-linkify-target`
 
-`target` attribute for generated link.
+`target` attribute for generated link such as `_blank` or `_parent`.
 
 Accepts a function that takes the unformatted href, the link type (e.g.,
 `'url'`, `'email'`, etc.) and returns the target
