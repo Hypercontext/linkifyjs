@@ -31,9 +31,9 @@ here](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model).
 
 The following interfaces operate on DOM (or DOM-like) nodes:
 
-- [`linkify-element`](element.html)
-- [`linkify-jquery`](jquery.html)
-- [`linkify-react`](react.html)
+- [`linkify-element`](linkify-element.html)
+- [`linkify-jquery`](linkify-jquery.html)
+- [`linkify-react`](linkify-react.html)
 
 The interface assumes all text nodes are plain text. It replaces those nodes
 with one or more text or `<a>` anchor element nodes.
