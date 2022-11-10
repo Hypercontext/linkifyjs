@@ -51,13 +51,18 @@ with your preferred [interface](interfaces.html) to correctly resolve a mention.
 Example linking to a user account on a website where accounts are located at
 `https://example.com/profiles/<username>`
 
-```js
+```jsx
 const options = {
   formatHref: {
     mention: (href) => "https://example.com/profiles" + href,
   },
 };
-linkifyHtml("Check out @Hypercontext and @nfrasser");
+
+// With linkify-html
+linkifyHtml("Check out @Hypercontext and @nfrasser", options);
+
+// With linkify-react
+<Linkify options={options}>Check out @Hypercontext and @nfrasser</Linkify>
 ```
 
 The last line returns the following string:

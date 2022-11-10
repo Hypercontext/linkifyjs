@@ -51,16 +51,21 @@ linkifyRegisterKeywords(["100%", "linkify", "okrs", "roi", "synergy"]);
 
 Format with a linkify inteface:
 
-```js
+```jsx
 const options = {
   formatHref: {
     keyword: (keyword) => "/tags/" + keyword.toLowerCase(),
   },
 };
+
+// With linkify-html
 linkifyHtml(
   "Use Linkify to complete your OKRs, increase ROI by 100% and create *synergy*",
   options
 );
+
+// With linkify-react
+<Linkify options={options}>Use Linkify to complete your OKRs, increase ROI by 100% and create *synergy*</Linkify>
 ```
 
 Returns the following string:

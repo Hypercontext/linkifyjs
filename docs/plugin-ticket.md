@@ -47,14 +47,19 @@ Use the `formatHref` option with your preferred [interface](interfaces.html) to
 correctly resolve a ticket. Example linking to GitHub issues with
 `linkifyHtml`:
 
-```js
+```jsx
 const options = {
   formatHref: {
     ticket: (href) =>
       "https://github.com/Hypercontext/linkifyjs/issues/" + href.substr(1),
   },
 };
-linkifyHtml("This is related to #42.");
+
+// With linkify-html
+linkifyHtml("This is related to #42.", options);
+
+// With linkify-react
+<Linkify options={options}>This is related to #42.</Linkify>
 ```
 
 The last line returns the following string:

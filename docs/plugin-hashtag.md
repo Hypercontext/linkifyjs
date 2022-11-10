@@ -47,13 +47,18 @@ Use the `formatHref` option with your preferred [interface](interfaces.html) to
 correctly resolve a hashtag. Example linking to Twitter hashtags with
 `linkifyHtml`:
 
-```js
+```jsx
 const options = {
   formatHref: {
     hashtag: (href) => "https://twitter.com/hashtag/" + href.substr(1),
   },
 };
-linkifyHtml("Works with hashtags #PhotoOfTheDay or #일상");
+
+// With linkify-html
+linkifyHtml("Works with hashtags #PhotoOfTheDay or #일상", options);
+
+// With linkify-react
+<Linkify options={options}>Works with hashtags #PhotoOfTheDay or #일상</Linkify>
 ```
 
 The last line returns the following string:
