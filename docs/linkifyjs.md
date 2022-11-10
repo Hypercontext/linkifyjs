@@ -142,7 +142,9 @@ before invoking linkify for the first time.
 - _`string`_ **`name`** unique name of the plugin to register
   • *`Function`* **`plugin`** plugin implementation function
 
-[See example plugin function implementations](https://github.com/{{ site.github_username }}/tree/master/packages/linkifyjs/src/plugins).
+**Caution:** The plugin development API is in its very early stages and only supports very basic plugins. Updated features, APIs, and docs are in progress.
+
+Check out the sample [Hashtag plugin](https://github.com/Hypercontext/linkifyjs/blob/main/packages/linkify-plugin-hashtag/src/hashtag.js) for an example. Check out the [Keyword plugin](https://github.com/Hypercontext/linkifyjs/blob/main/packages/linkify-plugin-keyword/src/keyword.js) for more advanced usage. 
 
 ### linkify.test _(str [, type])_
 
