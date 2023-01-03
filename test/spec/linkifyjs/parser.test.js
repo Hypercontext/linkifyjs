@@ -233,6 +233,14 @@ const tests = [
 		[Email],
 		['~emersion/soju-dev@lists.sr.ht']
 	], [
+		'http@example.com',
+		[Email],
+		['http@example.com']
+	], [
+		'mailto@example.com',
+		[Email],
+		['mailto@example.com']
+	], [
 		'http.org',
 		[Url],
 		['http.org']

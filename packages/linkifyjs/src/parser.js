@@ -115,6 +115,10 @@ export function init({ groups }) {
 
 	tt(Localpart, tk.AT, LocalpartAt); // close to an email address now
 
+	// Local part of an email address can be e.g. 'http' or 'mailto'
+	tt(Scheme, tk.AT, LocalpartAt);
+	tt(SlashScheme, tk.AT, LocalpartAt);
+
 	const LocalpartDot = tt(Localpart, tk.DOT); // Local part of the email address plus '.' (localpart cannot end in .)
 	ta(LocalpartDot, localpartAccepting, Localpart);
 	ta(LocalpartDot, groups.domain, Localpart);
