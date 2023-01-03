@@ -9,7 +9,7 @@ const HashtagToken = createTokenClass('hashtag', { isLink: true });
  export default function hashtag({ scanner, parser }) {
 	// Various tokens that may compose a hashtag
 	const { POUND, UNDERSCORE } = scanner.tokens;
-	const { alpha, numeric, alphanumeric } = scanner.tokens.groups;
+	const { alpha, numeric, alphanumeric, emoji } = scanner.tokens.groups;
 
 	// Take or create a transition from start to the '#' sign (non-accepting)
 	// Take transition from '#' to any text token to yield valid hashtag state
@@ -20,9 +20,12 @@ const HashtagToken = createTokenClass('hashtag', { isLink: true });
 
 	Hash.ta(numeric, HashPrefix);
 	Hash.ta(alpha, Hashtag);
+	Hash.ta(emoji, Hashtag);
 	HashPrefix.ta(alpha, Hashtag);
+	HashPrefix.ta(emoji, Hashtag);
 	HashPrefix.ta(numeric, HashPrefix);
 	HashPrefix.tt(UNDERSCORE, HashPrefix);
 	Hashtag.ta(alphanumeric, Hashtag);
+	Hashtag.ta(emoji, Hashtag);
 	Hashtag.tt(UNDERSCORE, Hashtag); // Trailing underscore is okay
 }

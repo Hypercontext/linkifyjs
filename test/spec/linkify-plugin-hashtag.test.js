@@ -80,6 +80,18 @@ describe('linkify-plugin-hashtag', () => {
 			expect(linkify.test('#سلام', 'hashtag')).to.be.ok;
 		});
 
+		it('Works with emojis', () => {
+			expect(linkify.test('#🍭', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with emojis and letters', () => {
+			expect(linkify.test('#candy🍭', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with emojis and letters and underscores', () => {
+			expect(linkify.test('#__candy_🍭sdsd🖤_wat', 'hashtag')).to.be.ok;
+		});
+
 		it('Does not work with just numbers', () => {
 			expect(linkify.test('#987', 'hashtag')).to.not.be.ok;
 		});
