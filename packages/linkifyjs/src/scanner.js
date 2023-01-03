@@ -296,10 +296,10 @@ function fastts(state, input, t, defaultt, jr) {
 }
 
 /**
- * Converts top-level domain names encoded in update-tlds.js back into a list of
- * strings.
+ * Converts a string of Top-Level Domain names encoded in update-tlds.js back
+ * into a list of strings.
  * @param {str} encoded encoded TLDs string
- * @returns {str[]} original top level domains
+ * @returns {str[]} original TLDs list
  */
 function decodeTlds(encoded) {
 	const words = [];
@@ -309,24 +309,22 @@ function decodeTlds(encoded) {
 	while (i < encoded.length) {
 		let popDigitCount = 0;
 		while (digits.indexOf(encoded[i + popDigitCount]) >= 0) {
-			popDigitCount++;
+			popDigitCount++; // encountered some digits, have to pop to go one level up trie
 		}
 		if (popDigitCount > 0) {
-			words.push(stack.join(''));
+			words.push(stack.join('')); // whatever preceded the pop digits must be a word
 			let popCount = parseInt(encoded.substring(i, i + popDigitCount), 10);
 			for (; popCount > 0; popCount--) {
 				stack.pop();
 			}
 			i += popDigitCount;
-			continue;
-		}
-
-		if (encoded[i] === '_') {
-			words.push(stack.join(''));
+		} else if (encoded[i] === '_') {
+			words.push(stack.join('')); // found a word, will be followed by another
+			i++;
 		} else {
-			stack.push(encoded[i]);
+			stack.push(encoded[i]); // drop down a level into the trie
+			i++;
 		}
-		i++;
 	}
 	return words;
 }
