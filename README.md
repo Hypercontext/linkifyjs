@@ -144,7 +144,7 @@ Linkify natively supports all modern browsers.
 
 ## Node.js Support
 
-Linkify is tested on Node.js 14 and up. Older Node.js versions are unofficially
+Linkify is tested on Node.js 10 and up. Older Node.js versions are unofficially
 supported.
 
 ## Downloads
