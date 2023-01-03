@@ -10,13 +10,13 @@ module.exports = function (config) {
 			base: 'BrowserStack',
 			browser: 'safari',
 			os: 'OS X',
-			os_version: 'Sierra'
+			os_version: 'High Sierra'
 		},
 		bs_safari_bigsur: {
 			base: 'BrowserStack',
 			browser: 'safari',
 			os: 'OS X',
-			os_version: 'Monterey'
+			os_version: 'Ventura'
 		},
 		bs_ios_safari: {
 			base: 'BrowserStack',
