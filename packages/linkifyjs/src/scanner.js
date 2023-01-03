@@ -3,7 +3,7 @@
 	outputs an array of tokens instances that can be used for easy URL parsing.
 */
 
-import { tlds, utlds } from './tlds';
+import { encodedTlds, encodedUtlds } from './tlds';
 import { State, addToGroups, tr, ts, tt } from './fsm';
 import * as fsm from './fsm';
 import * as tk from './text';
@@ -13,6 +13,8 @@ import assign from './assign';
 const NL = '\n'; // New line character
 const EMOJI_VARIATION = '\ufe0f'; // Variation selector, follows heart and others
 const EMOJI_JOINER = '\u200d'; // zero-width joiner
+
+let tlds = null, utlds = null; // don't change so only have to be computed once
 
 /**
  * Scanner output token:
@@ -42,6 +44,13 @@ export function init(customSchemes = []) {
 	State.groups = groups;
 	/** @type State<string> */
 	const Start = new State();
+
+	if (tlds == null) {
+		tlds = decodeTlds(encodedTlds);
+	}
+	if (utlds == null) {
+		utlds = decodeTlds(encodedUtlds);
+	}
 
 	// States for special URL symbols that accept immediately after start
 	tt(Start, "'", tk.APOSTROPHE);
@@ -240,7 +249,7 @@ export function run(start, str) {
  * @param {string} str
  * @returns {string[]}
  */
- export function stringToArray(str) {
+export function stringToArray(str) {
 	const result = [];
 	const len = str.length;
 	let index = 0;
@@ -248,7 +257,7 @@ export function run(start, str) {
 		let first = str.charCodeAt(index);
 		let second;
 		let char = first < 0xd800 || first > 0xdbff || index + 1 === len
-		|| (second = str.charCodeAt(index + 1)) < 0xdc00 || second > 0xdfff
+			|| (second = str.charCodeAt(index + 1)) < 0xdc00 || second > 0xdfff
 			? str[index] // single character
 			: str.slice(index, index + 2); // two-index characters
 		result.push(char);
@@ -284,4 +293,40 @@ function fastts(state, input, t, defaultt, jr) {
 	next.jr = jr.slice();
 	state.j[input[len - 1]] = next;
 	return next;
+}
+
+/**
+ * Converts top-level domain names encoded in update-tlds.js back into a list of
+ * strings.
+ * @param {str} encoded encoded TLDs string
+ * @returns {str[]} original top level domains
+ */
+function decodeTlds(encoded) {
+	const words = [];
+	const stack = [];
+	let i = 0;
+	let digits = '0123456789';
+	while (i < encoded.length) {
+		let popDigitCount = 0;
+		while (digits.indexOf(encoded[i + popDigitCount]) >= 0) {
+			popDigitCount++;
+		}
+		if (popDigitCount > 0) {
+			words.push(stack.join(''));
+			let popCount = parseInt(encoded.substring(i, i + popDigitCount), 10);
+			for (; popCount > 0; popCount--) {
+				stack.pop();
+			}
+			i += popDigitCount;
+			continue;
+		}
+
+		if (encoded[i] === '_') {
+			words.push(stack.join(''));
+		} else {
+			stack.push(encoded[i]);
+		}
+		i++;
+	}
+	return words;
 }
