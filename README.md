@@ -140,12 +140,12 @@ plugin documentation](https://linkify.js.org/docs/plugins.html).
 
 ## Browser Support
 
-Linkify natively supports all modern browsers. Linkify is tested on Internet
-Explorer 11 and above.
+Linkify natively supports all modern browsers.
 
 ## Node.js Support
 
-Linkify is tested on Node.js 10 and up. Older versions are unofficially supported.
+Linkify is tested on Node.js 10 and up. Older Node.js versions are unofficially
+supported.
 
 ## Downloads
 
