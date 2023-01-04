@@ -4,7 +4,7 @@ import { Options } from './options';
 import { State } from './fsm';
 
 const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
-const warnAdvice = 'To avoid this warning, please register all custom schemes before invoking linkify the first time.';
+const warnAdvice = 'until manual call of linkify.init(). Register all schemes and plugins before invoking linkify the first time.';
 
 // Side-effect initialization state
 const INIT = {
@@ -72,7 +72,7 @@ export function registerTokenPlugin(name, plugin) {
 	}
 	INIT.tokenQueue.push([name, plugin]);
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register token plugin "${name}" until you manually call linkify.init(). ${warnAdvice}`);
+		warn(`linkifyjs: already initialized - will not register token plugin "${name}" ${warnAdvice}`);
 	}
 }
 
@@ -93,7 +93,7 @@ export function registerPlugin(name, plugin) {
 	}
 	INIT.pluginQueue.push([name, plugin]);
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register plugin "${name}" until you manually call linkify.init(). ${warnAdvice}`);
+		warn(`linkifyjs: already initialized - will not register plugin "${name}" ${warnAdvice}`);
 	}
 }
 
@@ -106,7 +106,7 @@ export function registerPlugin(name, plugin) {
  */
 export function registerCustomProtocol(scheme, optionalSlashSlash = false) {
 	if (INIT.initialized) {
-		warn(`linkifyjs: already initialized - will not register custom scheme "${scheme}" until you manually call linkify.init(). ${warnAdvice}`);
+		warn(`linkifyjs: already initialized - will not register custom scheme "${scheme}" ${warnAdvice}`);
 	}
 	if (!/^[0-9a-z]+(-[0-9a-z]+)*$/.test(scheme)) {
 		throw new Error('linkifyjs: incorrect scheme format.\n 1. Must only contain digits, lowercase ASCII letters or "-"\n 2. Cannot start or end with "-"\n 3. "-" cannot repeat');

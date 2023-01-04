@@ -28,7 +28,7 @@ __Jump to__
 * React and jQuery support
 * Multi-language and emoji support
 * Custom link plugins
-* Fast, accurate and small footprint (~30kB minified, ~15kB gzipped)
+* Fast, accurate and small footprint (~20kB minified, ~11kB gzipped)
 * 99% test coverage
 * Compatible with all modern browsers (Internet Explorer 11 and up)
 
