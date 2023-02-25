@@ -184,11 +184,11 @@ export function init({ groups }) {
 	tt(DomainDotTldColonPort, tk.SLASH, Url);
 
 	// Note that domains that begin with schemes are treated slighly differently
-	const UriPrefix = tt(Scheme, tk.COLON); // e.g., 'mailto:' or 'http://'
+	const SchemeColon = tt(Scheme, tk.COLON); // e.g., 'mailto:'
 	const SlashSchemeColon = tt(SlashScheme, tk.COLON); // e.g., 'http:'
 	const SlashSchemeColonSlash = tt(SlashSchemeColon, tk.SLASH); // e.g., 'http:/'
 
-	tt(SlashSchemeColonSlash, tk.SLASH, UriPrefix);
+	const UriPrefix = tt(SlashSchemeColonSlash, tk.SLASH); // e.g., 'http://'
 
 	// Scheme states can transition to domain states
 	ta(Scheme, groups.domain, Domain);
@@ -199,7 +199,10 @@ export function init({ groups }) {
 	tt(SlashScheme, tk.HYPHEN, DomainHyphen);
 
 	// Force URL with scheme prefix followed by anything sane
+	ta(SchemeColon, groups.domain, Url);
+	tt(SchemeColon, tk.SLASH, Url);
 	ta(UriPrefix, groups.domain, Url);
+	ta(UriPrefix, qsAccepting, Url);
 	tt(UriPrefix, tk.SLASH, Url);
 
 	// URL, followed by an opening bracket

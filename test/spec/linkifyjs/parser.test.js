@@ -221,6 +221,10 @@ const tests = [
 		[Email],
 		['~@example.org']
 	], [
+		'~emersion/soju-dev@lists.sr.ht',
+		[Email],
+		['~emersion/soju-dev@lists.sr.ht']
+	], [
 		'test@example2.com',
 		[Email],
 		['test@example2.com']
@@ -228,10 +232,6 @@ const tests = [
 		'noreply@500px.so',
 		[Email],
 		['noreply@500px.so']
-	], [
-		'~emersion/soju-dev@lists.sr.ht',
-		[Email],
-		['~emersion/soju-dev@lists.sr.ht']
 	], [
 		'http@example.com',
 		[Email],
@@ -264,6 +264,10 @@ const tests = [
 		'Hello\nWorld',
 		[Text, Nl, Text],
 		['Hello', '\n', 'World'],
+	], [
+		'And http://↑↑↓↓←→←→ba.tk/ is also a URL',
+		[Text, Url, Text],
+		['And ', 'http://↑↑↓↓←→←→ba.tk/', ' is also a URL']
 	]
 ];
 
