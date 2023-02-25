@@ -12,7 +12,7 @@ let tldsListContents = '';
  * with decodeTlds. Works best when input is sorted alphabetically
  *
  * Example input: ['cat', 'cats', 'car', 'cars']
- * Example output: 'cat_s2r_s4'
+ * Example output: 'cat0s2r0s4'
  */
 function encodeTlds(tlds) {
 	return encodeTrie(createTrie(tlds));
@@ -25,10 +25,13 @@ function encodeTlds(tlds) {
  * Example output: {
  *   c: {
  *     a: {
- *       t: { isWord: true },
+ *       t: {
+ *         isWord: true,
+ *         s: { isWord: true }
+ *       },
  *       r: {
- *         s: { isWord: true },
- *         isWord: true
+ *         isWord: true,
+ *         s: { isWord: true }
  *       }
  *     }
  *   }
@@ -44,7 +47,7 @@ function createTrie(words) {
 			}
 			current = current[letter];
 		}
-		current.isWord = true; // underscore with 1 means word
+		current.isWord = true;
 	}
 	return root;
 }
@@ -54,7 +57,7 @@ function createTrie(words) {
  * Given an object trie created by `createTrie`, encodes into a compact string
  * that can later be decoded back into a list of strings.
  *
- * Using the example trie above, output would be: 'cat_s2r_s4'
+ * Using the example trie above, output would be: 'cat0s2r0s4'
  *
  * NOTE: Does not work if trie contains worlds with digits 0-9
  */
@@ -66,7 +69,7 @@ function encodeTrieHelper(trie) {
 	const output = [];
 	for (const k in trie) {
 		if (k === 'isWord') {
-			output.push('_'); // Underscore means previous steps make a word
+			output.push(0); // Zero means previous steps into trie make a word
 			continue;
 		}
 		output.push(k); // Push child node means drop down a level into the trie
@@ -75,8 +78,6 @@ function encodeTrieHelper(trie) {
 		// level of the trie.
 		if (typeof output[output.length - 1] === 'number') {
 			output[output.length - 1] += 1;
-		} else if (output[output.length - 1] === '_') {
-			output[output.length - 1] = 1;
 		} else {
 			output.push(1);
 		}
@@ -87,7 +88,7 @@ function encodeTrieHelper(trie) {
 /**
  * Converts a string of Top-Level Domain names back into a list of strings.
  *
- * Example input: 'cat_s2r_s4'
+ * Example input: 'cat0s2r0s4'
  * Example output: ['cat', 'cats', 'car', 'cars']
  */
 function decodeTlds(encoded) {
@@ -102,14 +103,10 @@ function decodeTlds(encoded) {
 		}
 		if (popDigitCount > 0) {
 			words.push(stack.join('')); // whatever preceded the pop digits must be a word
-			let popCount = parseInt(encoded.substring(i, i + popDigitCount), 10);
-			for (; popCount > 0; popCount--) {
+			for (let popCount = parseInt(encoded.substring(i, i + popDigitCount), 10); popCount > 0; popCount--) {
 				stack.pop();
 			}
 			i += popDigitCount;
-		} else if (encoded[i] === '_') {
-			words.push(stack.join('')); // found a word, will be followed by another
-			i++;
 		} else {
 			stack.push(encoded[i]); // drop down a level into the trie
 			i++;

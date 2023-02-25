@@ -313,14 +313,10 @@ function decodeTlds(encoded) {
 		}
 		if (popDigitCount > 0) {
 			words.push(stack.join('')); // whatever preceded the pop digits must be a word
-			let popCount = parseInt(encoded.substring(i, i + popDigitCount), 10);
-			for (; popCount > 0; popCount--) {
+			for (let popCount = parseInt(encoded.substring(i, i + popDigitCount), 10); popCount > 0; popCount--) {
 				stack.pop();
 			}
 			i += popDigitCount;
-		} else if (encoded[i] === '_') {
-			words.push(stack.join('')); // found a word, will be followed by another
-			i++;
 		} else {
 			stack.push(encoded[i]); // drop down a level into the trie
 			i++;
