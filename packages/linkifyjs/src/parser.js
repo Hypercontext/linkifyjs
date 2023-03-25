@@ -81,7 +81,6 @@ export function init({ groups }) {
 		tk.DOLLAR,
 		tk.EQUALS,
 		tk.HYPHEN,
-		tk.NUM,
 		tk.OPENBRACE,
 		tk.PERCENT,
 		tk.PIPE,

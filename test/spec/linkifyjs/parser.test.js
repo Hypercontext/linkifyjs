@@ -268,7 +268,11 @@ const tests = [
 		'And http://↑↑↓↓←→←→ba.tk/ is also a URL',
 		[Text, Url, Text],
 		['And ', 'http://↑↑↓↓←→←→ba.tk/', ' is also a URL']
-	]
+	], [
+		'This Url www.drive1.com with www and digits also www.500px.com',
+		[Text, Url, Text, Url],
+		['This Url ', 'www.drive1.com', ' with www and digits also ', 'www.500px.com']
+	],
 ];
 
 
