@@ -61,7 +61,7 @@
     "rollup": "^2.42.1",
     "rollup-plugin-terser": "^7.0.2",
     "sinon": "^15.0.2",
-    "typescript": "^4.4.2"
+    "typescript": "^5.0.2"
   },
   "private": true,
   "engines": {
