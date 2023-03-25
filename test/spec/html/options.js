@@ -17,6 +17,7 @@ export default {
 		.split('\n'),
 
 	extra: fs.readFileSync(__dirname + '/extra.html', 'utf8').trim(), // for jQuery plugin tests
+	email: fs.readFileSync(__dirname + '/email.html', 'utf8').trim(), // for linkify-html performance tests
 	altOptions: {
 		className: 'linkified',
 		rel: 'nofollow',
