@@ -143,7 +143,8 @@ MultiToken.prototype = {
 	 */
 	render(options) {
 		const token = this;
-		const href = this.toFormattedHref(options);
+		const href = this.toHref(options.get('defaultProtocol'));
+		const formattedHref = options.get('formatHref', href, this);
 		const tagName = options.get('tagName', href, token);
 		const content = this.toFormattedString(options);
 
@@ -154,7 +155,7 @@ MultiToken.prototype = {
 		const attrs = options.getObj('attributes', href, token);
 		const eventListeners = options.getObj('events', href, token);
 
-		attributes.href = href;
+		attributes.href = formattedHref;
 		if (className) { attributes.class = className; }
 		if (target) { attributes.target = target; }
 		if (rel) { attributes.rel = rel; }
