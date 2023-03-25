@@ -1,5 +1,12 @@
 # Linkify Changelog
 
+## v4.1.1
+
+- Slightly simpler TLDs encoding/parsing
+- Fix jsdoc in linkify-react
+- Improved parsing of URLs with symbols
+- Ensure function options get called with unformatted href
+
 ## v4.1.0
 
 - Drop support for Safari 10
