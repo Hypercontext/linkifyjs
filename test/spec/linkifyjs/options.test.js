@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { fake } from 'sinon';
 import * as options from 'linkifyjs/src/options';
 import * as scanner from 'linkifyjs/src/scanner';
 import * as mtk from 'linkifyjs/src/multi';
@@ -30,7 +31,7 @@ describe('linkifyjs/options', () => {
 	describe('Options', () => {
 		const events = { click: () => alert('clicked!') };
 		let urlToken, emailToken, scannerStart;
-		let opts, renderOpts;
+		let attributes, opts, renderOpts;
 
 		before(() => {
 			scannerStart = scanner.init().start;
@@ -45,6 +46,7 @@ describe('linkifyjs/options', () => {
 		});
 
 		beforeEach(() => {
+			attributes = fake.returns({ type: 'text/html' });
 			opts = new Options({
 				defaultProtocol: 'https',
 				events,
@@ -59,7 +61,7 @@ describe('linkifyjs/options', () => {
 				},
 				ignoreTags: ['script', 'style'],
 				rel: 'nofollow',
-				attributes: () => ({ type: 'text/html' }),
+				attributes,
 				className: 'custom-class-name',
 				truncate: 40
 			});
@@ -103,6 +105,11 @@ describe('linkifyjs/options', () => {
 					content: '<github.com>',
 					eventListeners: events
 				});
+			});
+
+			it('Calls attributes option with unformatted href', () => {
+				opts.render(urlToken);
+				expect(attributes.calledWith('https://github.com', 'url', urlToken)).to.be.true;
 			});
 
 			it('renders a URL', () => {
