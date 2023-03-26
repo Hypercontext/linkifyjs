@@ -13,7 +13,7 @@ following instead, depending on your application:
 
 - [`linkify-html`](linkify-html.html)
 - [`linkify-element`](linkify-element.html)
-- [`linkify-jquery`](linkify-html.html)
+- [`linkify-jquery`](linkify-jquery.html)
 
 ## Installation
 
