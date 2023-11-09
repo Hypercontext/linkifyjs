@@ -9,8 +9,8 @@ description: > # this means to ignore newlines until "baseurl:"
   #hashtags, @mentions and more.
 url: "https://linkify.js.org" # the base hostname & protocol for your site
 twitter_username: HypercontextApp
-github_username:  Hypercontext/linkifyjs
-version: '4.1.1'
+github_username: Hypercontext/linkifyjs
+version: "4.1.2"
 
 # Build settings
 markdown: kramdown
