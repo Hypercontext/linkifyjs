@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+## v4.1.2
+
+- Ensure linkify.find respects validate option
+
 ## v4.1.1
 
 - Slightly simpler TLDs encoding/parsing
