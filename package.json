@@ -37,6 +37,7 @@
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "chai": "^4.3.4",
     "copyfiles": "^2.4.1",
     "coveralls": "^3.1.0",
@@ -61,7 +62,6 @@
     "react-dom": "^18.0.0",
     "request": "^2.88.2",
     "rollup": "^2.42.1",
-    "rollup-plugin-terser": "^7.0.2",
     "sinon": "^17.0.0",
     "typescript": "^5.0.2"
   },
