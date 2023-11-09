@@ -94,25 +94,29 @@ describe('linkifyjs', () => {
 		});
 
 		it('Find the link', () => {
-			expect(linkify.find('hello.world!')).to.deep.eql([{
-				type: 'url',
-				value: 'hello.world',
-				href: 'http://hello.world',
-				isLink: true,
-				start: 0,
-				end: 11
-			}]);
+			expect(linkify.find('hello.world!')).to.deep.eql([
+				{
+					type: 'url',
+					value: 'hello.world',
+					href: 'http://hello.world',
+					isLink: true,
+					start: 0,
+					end: 11,
+				},
+			]);
 		});
 
 		it('Find the link of the specific type', () => {
-			expect(linkify.find('For help with github.com, please contact support@example.com', 'email')).to.deep.eql([{
-				type: 'email',
-				value: 'support@example.com',
-				href: 'mailto:support@example.com',
-				isLink: true,
-				start: 41,
-				end: 60
-			}]);
+			expect(linkify.find('For help with github.com, please contact support@example.com', 'email')).to.deep.eql([
+				{
+					type: 'email',
+					value: 'support@example.com',
+					href: 'mailto:support@example.com',
+					isLink: true,
+					start: 41,
+					end: 60,
+				},
+			]);
 		});
 
 		it('Finds with opts', () => {
@@ -123,26 +127,51 @@ describe('linkifyjs', () => {
 					isLink: true,
 					href: 'http://www.truncate.com',
 					start: 5,
-					end: 21
-				}
+					end: 21,
+				},
 			]);
 		});
 
 		it('Finds type and opts', () => {
-			expect(linkify.find('Does www.truncate.com work with example@truncate.com?', 'email', { truncate: 10 })).to.deep.eql([
+			expect(
+				linkify.find('Does www.truncate.com work with example@truncate.com?', 'email', { truncate: 10 }),
+			).to.deep.eql([
 				{
 					type: 'email',
 					value: 'example@tr…',
 					isLink: true,
 					href: 'mailto:example@truncate.com',
 					start: 32,
-					end: 52
-				}
+					end: 52,
+				},
 			]);
 		});
 
 		it('Throws on ambiguous invocation', () => {
 			expect(() => linkify.find('Hello.com', { type: 'email' }, { truncate: 10 })).to.throw();
+		});
+
+		it('Uses validation to ignore links', () => {
+			expect(
+				linkify.find('foo.com and bar.com and baz.com', { validate: (url) => url !== 'bar.com' }),
+			).to.deep.eql([
+				{
+					type: 'url',
+					value: 'foo.com',
+					isLink: true,
+					href: 'http://foo.com',
+					start: 0,
+					end: 7,
+				},
+				{
+					end: 31,
+					href: 'http://baz.com',
+					isLink: true,
+					start: 24,
+					type: 'url',
+					value: 'baz.com',
+				},
+			]);
 		});
 	});
 
@@ -167,7 +196,7 @@ describe('linkifyjs', () => {
 			['mailto:test+5@uwaterloo.ca', true, 'url'],
 			['t.co', true],
 			['t.co g.co', false], // can only be one
-			['test@g.co t.co', false] // can only be one
+			['test@g.co t.co', false], // can only be one
 		];
 
 		it('is a function', () => {

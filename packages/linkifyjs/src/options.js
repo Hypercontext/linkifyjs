@@ -95,7 +95,7 @@ export const defaults = {
 	className: null,
 	attributes: null,
 	ignoreTags: [],
-	render: null
+	render: null,
 };
 
 /**
@@ -109,9 +109,10 @@ export const defaults = {
  *   Similar to render option
  */
 export function Options(opts, defaultRender = null) {
-
 	let o = assign({}, defaults);
-	if (opts) { o = assign(o, opts instanceof Options ? opts.o : opts); }
+	if (opts) {
+		o = assign(o, opts instanceof Options ? opts.o : opts);
+	}
 
 	// Ensure all ignored tags are uppercase
 	const ignoredTags = o.ignoreTags;
@@ -121,7 +122,9 @@ export function Options(opts, defaultRender = null) {
 	}
 	/** @protected */
 	this.o = o;
-	if (defaultRender) { this.defaultRender = defaultRender; }
+	if (defaultRender) {
+		this.defaultRender = defaultRender;
+	}
 	this.ignoreTags = uppercaseIgnoredTags;
 }
 
@@ -167,7 +170,9 @@ Options.prototype = {
 	get(key, operator, token) {
 		const isCallable = operator != null;
 		let option = this.o[key];
-		if (!option) { return option; }
+		if (!option) {
+			return option;
+		}
 		if (typeof option === 'object') {
 			option = token.t in option ? option[token.t] : defaults[key];
 			if (typeof option === 'function' && isCallable) {
@@ -206,7 +211,7 @@ Options.prototype = {
 		const ir = token.render(this); // intermediate representation
 		const renderFn = this.get('render', null, token) || this.defaultRender;
 		return renderFn(ir, token.t, token);
-	}
+	},
 };
 
 export { assign };
