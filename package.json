@@ -60,16 +60,12 @@
     "request": "^2.88.2",
     "rollup": "^2.42.1",
     "rollup-plugin-terser": "^7.0.2",
-    "sinon": "^15.0.2",
+    "sinon": "^17.0.0",
     "typescript": "^5.0.2"
   },
   "private": true,
   "engines": {
     "node": ">=8"
   },
-  "workspaces": [
-    "./packages/linkifyjs",
-    "./packages/linkify-plugin-*",
-    "./packages/*"
-  ]
+  "workspaces": ["./packages/linkifyjs", "./packages/linkify-plugin-*", "./packages/*"]
 }
