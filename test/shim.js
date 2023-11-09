@@ -1,7 +1,7 @@
 if (typeof Object.create != 'function') {
 	// Production steps of ECMA-262, Edition 5, 15.2.3.5
 	// Reference: http://es5.github.io/#x15.2.3.5
-	Object.create = (function() {
+	Object.create = (function () {
 		// To save on memory, use a shared constructor
 		function Temp() {}
 
@@ -45,8 +45,7 @@ if (typeof Object.create != 'function') {
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
 // Reference: http://es5.github.io/#x15.4.4.14
 if (!Array.prototype.indexOf) {
-	Array.prototype.indexOf = function(searchElement, fromIndex) {
-
+	Array.prototype.indexOf = function (searchElement, fromIndex) {
 		var k;
 
 		// 1. Let O be the result of calling ToObject passing
@@ -109,41 +108,17 @@ if (!Array.prototype.indexOf) {
 }
 
 if (!String.prototype.trim) {
-	(function() {
+	(function () {
 		// Make sure we trim BOM and NBSP
 		var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-		String.prototype.trim = function() {
+		String.prototype.trim = function () {
 			return this.replace(rtrim, '');
 		};
 	})();
 }
 
-// Production steps of ECMA-262, Edition 5, 15.4.4.19
-// Reference: http://es5.github.io/#x15.4.4.19
-if (!Array.prototype.map) {
-
-	Array.prototype.map = function (a /*, thisp */) {
-		for (
-			var b = this,
-				c = b.length,
-				d = [],
-				e = 0,
-				f;
-			e < b;
-		) {
-			d[e] = e in b ? a.call(
-				arguments[1],
-				b[e],
-				e++,
-				b
-			) : f;
-		}
-		return d;
-	};
-}
-
 if (!Array.isArray) {
-	Array.isArray = function(arg) {
+	Array.isArray = function (arg) {
 		return Object.prototype.toString.call(arg) === '[object Array]';
 	};
 }

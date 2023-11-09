@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/linkifyjs.svg)](https://www.npmjs.com/package/linkifyjs)
 [![CI](https://github.com/Hypercontext/linkifyjs/actions/workflows/ci.yml/badge.svg)](https://github.com/Hypercontext/linkifyjs/actions/workflows/ci.yml)
-[![BrowserStack Status](https://automate.browserstack.com/badge.svg?badge_key=MzZ5d0h5czFJc1hydmVEbElLdnQyQzZVbjZSMlFvTXZ6ZGI0NGwyMUNNdz0tLWxUZ2FjVFB4d0JJK2NaZ1dvTFBoQ2c9PQ==--a4eae4c0338710174c2b122aee02e8a2af3fc8f9)](https://automate.browserstack.com/public-build/MzZ5d0h5czFJc1hydmVEbElLdnQyQzZVbjZSMlFvTXZ6ZGI0NGwyMUNNdz0tLWxUZ2FjVFB4d0JJK2NaZ1dvTFBoQ2c9PQ==--a4eae4c0338710174c2b122aee02e8a2af3fc8f9)
+[![BrowserStack Status](https://automate.browserstack.com/badge.svg?badge_key=alN1cUFSYVI3Yitudjh6NkJuNURhVy9sRHQ0RXE2L0t2RWpDY3lHM3Rtbz0tLVZScU8rRHAyMWRoYjVVY000elJybHc9PQ==--35ad6d7d5981f5bc0efdb7b6ba78972d8174e7e5)](https://automate.browserstack.com/public-build/alN1cUFSYVI3Yitudjh6NkJuNURhVy9sRHQ0RXE2L0t2RWpDY3lHM3Rtbz0tLVZScU8rRHAyMWRoYjVVY000elJybHc9PQ==--35ad6d7d5981f5bc0efdb7b6ba78972d8174e7e5)
 [![Coverage Status](https://coveralls.io/repos/github/Hypercontext/linkifyjs/badge.svg?branch=main)](https://coveralls.io/github/Hypercontext/linkifyjs?branch=main)
 
 Linkify is a JavaScript plugin. Use Linkify to find links in plain-text and

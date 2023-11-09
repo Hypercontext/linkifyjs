@@ -20,8 +20,8 @@ describe('linkifyjs/fsm/State', () => {
 	});
 
 	after(() => {
-		State.groups = {}
-	})
+		State.groups = {};
+	});
 
 	it('Creates DOT transition on Start state', () => {
 		expect(Object.keys(Start.j)).to.eql(['.']);
@@ -47,7 +47,7 @@ describe('linkifyjs/fsm/State', () => {
 			asciinumeric: [tk.NUM, tk.WORD],
 			alpha: [tk.WORD],
 			alphanumeric: [tk.NUM, tk.WORD],
-			domain: [tk.NUM, tk.WORD]
+			domain: [tk.NUM, tk.WORD],
 		});
 	});
 

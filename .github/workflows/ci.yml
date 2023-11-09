@@ -2,17 +2,17 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   unit:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 16.x]
+        node-version: [14.x, 16.x, 18.x, 20.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -21,9 +21,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
-      - name: "Setup tests"
+      - name: 'Setup tests'
         run: bash test/setup.sh
-      - name: "Run basic tests"
+      - name: 'Run basic tests'
         run: bash test/run.sh
 
   integration:
@@ -36,14 +36,14 @@ jobs:
           node-version: 'lts/*'
           cache: 'npm'
       - run: npm install
-      - name: "Setup dist"
+      - name: 'Setup dist'
         run: bash test/setup.sh --dist
-      - name: "Run complete test suite"
+      - name: 'Run complete test suite'
         run: bash test/run.sh --dist
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
       - name: Coveralls GitHub Action
-        uses: coverallsapp/github-action@1.1.3
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
