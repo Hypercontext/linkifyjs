@@ -3,8 +3,9 @@ import { init as initParser, run as runParser } from './parser';
 import { Options } from './options';
 import { State } from './fsm';
 
-const warn = typeof console !== 'undefined' && console && console.warn || (() => {});
-const warnAdvice = 'until manual call of linkify.init(). Register all schemes and plugins before invoking linkify the first time.';
+const warn = (typeof console !== 'undefined' && console && console.warn) || (() => {});
+const warnAdvice =
+	'until manual call of linkify.init(). Register all schemes and plugins before invoking linkify the first time.';
 
 // Side-effect initialization state
 const INIT = {
@@ -62,7 +63,9 @@ export function reset() {
  * recognize additional tokens or groups.
  */
 export function registerTokenPlugin(name, plugin) {
-	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid token plugin ${plugin} (expects function)`); }
+	if (typeof plugin !== 'function') {
+		throw new Error(`linkifyjs: Invalid token plugin ${plugin} (expects function)`);
+	}
 	for (let i = 0; i < INIT.tokenQueue.length; i++) {
 		if (name === INIT.tokenQueue[i][0]) {
 			warn(`linkifyjs: token plugin "${name}" already registered - will be overwritten`);
@@ -83,7 +86,9 @@ export function registerTokenPlugin(name, plugin) {
  * extends the parser to recognize additional link types
  */
 export function registerPlugin(name, plugin) {
-	if (typeof plugin !== 'function') { throw new Error(`linkifyjs: Invalid plugin ${plugin} (expects function)`); }
+	if (typeof plugin !== 'function') {
+		throw new Error(`linkifyjs: Invalid plugin ${plugin} (expects function)`);
+	}
 	for (let i = 0; i < INIT.pluginQueue.length; i++) {
 		if (name === INIT.pluginQueue[i][0]) {
 			warn(`linkifyjs: plugin "${name}" already registered - will be overwritten`);
@@ -109,7 +114,10 @@ export function registerCustomProtocol(scheme, optionalSlashSlash = false) {
 		warn(`linkifyjs: already initialized - will not register custom scheme "${scheme}" ${warnAdvice}`);
 	}
 	if (!/^[0-9a-z]+(-[0-9a-z]+)*$/.test(scheme)) {
-		throw new Error('linkifyjs: incorrect scheme format.\n 1. Must only contain digits, lowercase ASCII letters or "-"\n 2. Cannot start or end with "-"\n 3. "-" cannot repeat');
+		throw new Error(`linkifyjs: incorrect scheme format.
+1. Must only contain digits, lowercase ASCII letters or "-"
+2. Cannot start or end with "-"
+3. "-" cannot repeat`);
 	}
 	INIT.customSchemes.push([scheme, optionalSlashSlash]);
 }
@@ -123,7 +131,7 @@ export function init() {
 	INIT.scanner = initScanner(INIT.customSchemes);
 	for (let i = 0; i < INIT.tokenQueue.length; i++) {
 		INIT.tokenQueue[i][1]({
-			scanner: INIT.scanner
+			scanner: INIT.scanner,
 		});
 	}
 
@@ -144,7 +152,9 @@ export function init() {
  * @return {MultiToken[]} tokens
  */
 export function tokenize(str) {
-	if (!INIT.initialized) { init(); }
+	if (!INIT.initialized) {
+		init();
+	}
 	return runParser(INIT.parser.start, str, runScanner(INIT.scanner.start, str));
 }
 
@@ -155,7 +165,7 @@ export function tokenize(str) {
  * links to find, e.g., 'url' or 'email'
  * @param {Opts} [opts] formatting options for final output. Cannot be specified
  * if opts already provided in `type` argument
-*/
+ */
 export function find(str, type = null, opts = null) {
 	if (type && typeof type === 'object') {
 		if (opts) {
@@ -170,7 +180,7 @@ export function find(str, type = null, opts = null) {
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
-		if (token.isLink && (!type || token.t === type)) {
+		if (token.isLink && (!type || token.t === type) && options.check(token)) {
 			filtered.push(token.toFormattedObject(options));
 		}
 	}
@@ -196,9 +206,7 @@ export function find(str, type = null, opts = null) {
  */
 export function test(str, type = null) {
 	const tokens = tokenize(str);
-	return tokens.length === 1 && tokens[0].isLink && (
-		!type || tokens[0].t === type
-	);
+	return tokens.length === 1 && tokens[0].isLink && (!type || tokens[0].t === type);
 }
 
 export * as options from './options';
