@@ -14,7 +14,7 @@ String.prototype.truncate = function (limit) {
 	limit = limit || Infinity;
 	return this.length > limit
 		? this.substring(0, limit) + '…'
-		: this
+		: this;
 };
 
 Module.prototype.require = function (mod, ...args) {

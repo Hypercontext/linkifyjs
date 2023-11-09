@@ -248,7 +248,6 @@ foo@bar % Should be at second level domain & with correct tld
 mailto:bar`);
 }
 
-
 [bench1, bench2].forEach((bench) => {
 	debugger;
 	// var usageInitial = process.memoryUsage();
@@ -260,20 +259,19 @@ mailto:bar`);
 
 	// var usageBeforeIterations = process.memoryUsage();
 	console.log('Starting...');
-	var start = (new Date()).valueOf();
+	var start = new Date().valueOf();
 	for (var i = 0; i < ITERATIONS; i++) {
 		bench(linkify);
 	}
-	var end = (new Date()).valueOf();
+	var end = new Date().valueOf();
 	// var usageAfterIterations = process.memoryUsage();
 
 	console.log('End.');
 	console.log('Total time (ms):', end - start);
-	console.log('Average (ms):', (end - start)/ITERATIONS);
+	console.log('Average (ms):', (end - start) / ITERATIONS);
 	// console.log('Memory usage:');
 	// console.log('   Before require:\n', usageInitial);
 	// console.log('   After require:\n', usageLinkify);
 	// console.log('   Before benchmark:\n', usageBeforeIterations);
 	// console.log('   After benchmark:\n', usageAfterIterations);
 });
-
