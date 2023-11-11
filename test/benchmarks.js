@@ -249,6 +249,7 @@ mailto:bar`);
 }
 
 [bench1, bench2].forEach((bench) => {
+	// eslint-disable-next-line no-debugger
 	debugger;
 	// var usageInitial = process.memoryUsage();
 	var linkify = require('linkifyjs');
