@@ -44,6 +44,8 @@ export const CLOSEBRACE = 'CLOSEBRACE'; // }
 export const CLOSEBRACKET = 'CLOSEBRACKET'; // ]
 export const CLOSEANGLEBRACKET = 'CLOSEANGLEBRACKET'; // >
 export const CLOSEPAREN = 'CLOSEPAREN'; // )
+export const FULLWIDTH_OPENPAREN = 'FULLWIDTH_OPENPAREN'; // （
+export const FULLWIDTH_CLOSEPAREN = 'FULLWIDTH_CLOSEPAREN'; // ）
 
 // Various symbols
 export const AMPERSAND = 'AMPERSAND'; // &
