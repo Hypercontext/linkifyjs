@@ -29,6 +29,7 @@ jobs:
   integration:
     runs-on: ubuntu-latest
     needs: unit
+    if: ${{ secrets.BROWSERSTACK_USERNAME != "" && secrets.BROWSERSTACK_ACCESS_KEY != "" }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
