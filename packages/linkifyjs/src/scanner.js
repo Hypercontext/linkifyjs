@@ -14,7 +14,8 @@ const NL = '\n'; // New line character
 const EMOJI_VARIATION = '\ufe0f'; // Variation selector, follows heart and others
 const EMOJI_JOINER = '\u200d'; // zero-width joiner
 
-let tlds = null, utlds = null; // don't change so only have to be computed once
+let tlds = null,
+	utlds = null; // don't change so only have to be computed once
 
 /**
  * Scanner output token:
@@ -58,12 +59,12 @@ export function init(customSchemes = []) {
 	tt(Start, '[', tk.OPENBRACKET);
 	tt(Start, '<', tk.OPENANGLEBRACKET);
 	tt(Start, '(', tk.OPENPAREN);
-	tt(Start, '（', tk.FULLWIDTH_OPENPAREN);
+	tt(Start, '（', tk.FULLWIDTHOPENPAREN);
 	tt(Start, '}', tk.CLOSEBRACE);
 	tt(Start, ']', tk.CLOSEBRACKET);
 	tt(Start, '>', tk.CLOSEANGLEBRACKET);
 	tt(Start, ')', tk.CLOSEPAREN);
-	tt(Start, '）', tk.FULLWIDTH_CLOSEPAREN);
+	tt(Start, '）', tk.FULLWIDTHCLOSEPAREN);
 	tt(Start, '&', tk.AMPERSAND);
 	tt(Start, '*', tk.ASTERISK);
 	tt(Start, '@', tk.AT);
@@ -122,7 +123,10 @@ export function init(customSchemes = []) {
 	// Generates states for top-level domains
 	// Note that this is most accurate when tlds are in alphabetical order
 	const wordjr = [[re.ASCII_LETTER, Word]];
-	const uwordjr = [[re.ASCII_LETTER, null], [re.LETTER, UWord]];
+	const uwordjr = [
+		[re.ASCII_LETTER, null],
+		[re.LETTER, UWord],
+	];
 	for (let i = 0; i < tlds.length; i++) {
 		fastts(Start, tlds[i], tk.TLD, tk.WORD, wordjr);
 	}
@@ -145,7 +149,7 @@ export function init(customSchemes = []) {
 	addToGroups(tk.SLASH_SCHEME, { slashscheme: true, ascii: true }, groups);
 
 	// Register custom schemes. Assumes each scheme is asciinumeric with hyphens
-	customSchemes = customSchemes.sort((a, b) => a[0] > b[0] ? 1 : -1);
+	customSchemes = customSchemes.sort((a, b) => (a[0] > b[0] ? 1 : -1));
 	for (let i = 0; i < customSchemes.length; i++) {
 		const sch = customSchemes[i][0];
 		const optionalSlashSlash = customSchemes[i][1];
@@ -233,7 +237,7 @@ export function run(start, str) {
 			t: latestAccepting.t, // token type/name
 			v: str.slice(cursor - tokenLength, cursor), // string value
 			s: cursor - tokenLength, // start index
-			e: cursor // end index (excluding)
+			e: cursor, // end index (excluding)
 		});
 	}
 
@@ -258,10 +262,14 @@ export function stringToArray(str) {
 	while (index < len) {
 		let first = str.charCodeAt(index);
 		let second;
-		let char = first < 0xd800 || first > 0xdbff || index + 1 === len
-			|| (second = str.charCodeAt(index + 1)) < 0xdc00 || second > 0xdfff
-			? str[index] // single character
-			: str.slice(index, index + 2); // two-index characters
+		let char =
+			first < 0xd800 ||
+			first > 0xdbff ||
+			index + 1 === len ||
+			(second = str.charCodeAt(index + 1)) < 0xdc00 ||
+			second > 0xdfff
+				? str[index] // single character
+				: str.slice(index, index + 2); // two-index characters
 		result.push(char);
 		index += char.length;
 	}

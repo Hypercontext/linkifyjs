@@ -4,8 +4,8 @@ Identifiers for token outputs from the regexp scanner
 ******************************************************************************/
 
 // A valid web domain token
-export const WORD = 'WORD';  // only contains a-z
-export const UWORD = 'UWORD';  // contains letters other than a-z, used for IDN
+export const WORD = 'WORD'; // only contains a-z
+export const UWORD = 'UWORD'; // contains letters other than a-z, used for IDN
 
 // Special case of word
 export const LOCALHOST = 'LOCALHOST';
@@ -44,8 +44,8 @@ export const CLOSEBRACE = 'CLOSEBRACE'; // }
 export const CLOSEBRACKET = 'CLOSEBRACKET'; // ]
 export const CLOSEANGLEBRACKET = 'CLOSEANGLEBRACKET'; // >
 export const CLOSEPAREN = 'CLOSEPAREN'; // )
-export const FULLWIDTH_OPENPAREN = 'FULLWIDTH_OPENPAREN'; // （
-export const FULLWIDTH_CLOSEPAREN = 'FULLWIDTH_CLOSEPAREN'; // ）
+export const FULLWIDTHOPENPAREN = 'FULLWIDTHOPENPAREN'; // （
+export const FULLWIDTHCLOSEPAREN = 'FULLWIDTHCLOSEPAREN'; // ）
 
 // Various symbols
 export const AMPERSAND = 'AMPERSAND'; // &
@@ -79,4 +79,3 @@ export const EMOJI = 'EMOJI';
 
 // Default token - anything that is not one of the above
 export const SYM = 'SYM';
-
