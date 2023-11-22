@@ -43,7 +43,7 @@ export function init({ groups }) {
 		tk.SLASH,
 		tk.SYM,
 		tk.TILDE,
-		tk.UNDERSCORE
+		tk.UNDERSCORE,
 	]);
 
 	// Types of tokens that can follow a URL and be part of the query string
@@ -51,23 +51,29 @@ export function init({ groups }) {
 	// Characters that cannot appear in the URL at all should be excluded
 	const qsNonAccepting = [
 		tk.APOSTROPHE,
-		tk.CLOSEANGLEBRACKET,
-		tk.CLOSEBRACE,
-		tk.CLOSEBRACKET,
-		tk.CLOSEPAREN,
-		tk.FULLWIDTH_CLOSEPAREN,
 		tk.COLON,
 		tk.COMMA,
 		tk.DOT,
 		tk.EXCLAMATION,
-		tk.OPENANGLEBRACKET,
-		tk.OPENBRACE,
-		tk.OPENBRACKET,
-		tk.OPENPAREN,
-		tk.FULLWIDTH_OPENPAREN,
 		tk.QUERY,
 		tk.QUOTE,
-		tk.SEMI
+		tk.SEMI,
+		tk.OPENANGLEBRACKET,
+		tk.CLOSEANGLEBRACKET,
+		tk.OPENBRACE,
+		tk.CLOSEBRACE,
+		tk.CLOSEBRACKET,
+		tk.OPENBRACKET,
+		tk.OPENPAREN,
+		tk.CLOSEPAREN,
+		tk.FULLWIDTHLEFTPAREN,
+		tk.FULLWIDTHRIGHTPAREN,
+		tk.LEFTCORNERBRACKET,
+		tk.RIGHTCORNERBRACKET,
+		tk.LEFTWHITECORNERBRACKET,
+		tk.RIGHTWHITECORNERBRACKET,
+		tk.FULLWIDTHLESSTHAN,
+		tk.FULLWIDTHGREATERTHAN,
 	];
 
 	// For addresses without the mailto prefix
@@ -79,11 +85,11 @@ export function init({ groups }) {
 		tk.BACKSLASH,
 		tk.BACKTICK,
 		tk.CARET,
-		tk.CLOSEBRACE,
 		tk.DOLLAR,
 		tk.EQUALS,
 		tk.HYPHEN,
 		tk.OPENBRACE,
+		tk.CLOSEBRACE,
 		tk.PERCENT,
 		tk.PIPE,
 		tk.PLUS,
@@ -92,7 +98,7 @@ export function init({ groups }) {
 		tk.SLASH,
 		tk.SYM,
 		tk.TILDE,
-		tk.UNDERSCORE
+		tk.UNDERSCORE,
 	];
 
 	// The universal starting state.
@@ -104,7 +110,9 @@ export function init({ groups }) {
 	ta(Localpart, localpartAccepting, Localpart);
 	ta(Localpart, groups.domain, Localpart);
 
-	const Domain = makeState(), Scheme = makeState(), SlashScheme = makeState();
+	const Domain = makeState(),
+		Scheme = makeState(),
+		SlashScheme = makeState();
 	ta(Start, groups.domain, Domain); // parsed string ends with a potential domain name (A)
 	ta(Start, groups.scheme, Scheme); // e.g., 'mailto'
 	ta(Start, groups.slashscheme, SlashScheme); // e.g., 'http'
@@ -144,7 +152,7 @@ export function init({ groups }) {
 
 	// Final possible email states
 	const EmailColon = tt(Email, tk.COLON); // URL followed by colon (potential port number here)
-	/*const EmailColonPort = */ta(EmailColon, groups.numeric, mtk.Email); // URL followed by colon and port numner
+	/*const EmailColonPort = */ ta(EmailColon, groups.numeric, mtk.Email); // URL followed by colon and port number
 
 	// Account for dots and hyphens. Hyphens are usually parts of domain names
 	// (but not TLDs)
@@ -206,86 +214,46 @@ export function init({ groups }) {
 	ta(UriPrefix, qsAccepting, Url);
 	tt(UriPrefix, tk.SLASH, Url);
 
-	// URL, followed by an opening bracket
-	const UrlOpenbrace = tt(Url, tk.OPENBRACE); // URL followed by {
-	const UrlOpenbracket = tt(Url, tk.OPENBRACKET); // URL followed by [
-	const UrlOpenanglebracket = tt(Url, tk.OPENANGLEBRACKET); // URL followed by <
-	const UrlOpenparen = tt(Url, tk.OPENPAREN); // URL followed by (
-	const UrlFullwidthOpenparen = tt(Url, tk.FULLWIDTH_OPENPAREN); // URL followed by （
+	const bracketPairs = [
+		[tk.OPENBRACE, tk.CLOSEBRACE], // {}
+		[tk.OPENBRACKET, tk.CLOSEBRACKET], // []
+		[tk.OPENPAREN, tk.CLOSEPAREN], // ()
+		[tk.OPENANGLEBRACKET, tk.CLOSEANGLEBRACKET], // <>
+		[tk.FULLWIDTHLEFTPAREN, tk.FULLWIDTHRIGHTPAREN], // （）
+		[tk.LEFTCORNERBRACKET, tk.RIGHTCORNERBRACKET], // 「」
+		[tk.LEFTWHITECORNERBRACKET, tk.RIGHTWHITECORNERBRACKET], // 『』
+		[tk.FULLWIDTHLESSTHAN, tk.FULLWIDTHGREATERTHAN], // ＜＞
+	];
 
-	tt(UrlNonaccept, tk.OPENBRACE, UrlOpenbrace);
-	tt(UrlNonaccept, tk.OPENBRACKET, UrlOpenbracket);
-	tt(UrlNonaccept, tk.OPENANGLEBRACKET, UrlOpenanglebracket);
-	tt(UrlNonaccept, tk.OPENPAREN, UrlOpenparen);
-	tt(UrlNonaccept, tk.FULLWIDTH_OPENPAREN, UrlFullwidthOpenparen);
+	for (let i = 0; i < bracketPairs.length; i++) {
+		const [OPEN, CLOSE] = bracketPairs[i];
+		const UrlOpen = tt(Url, OPEN); // URL followed by open bracket
 
-	// Closing bracket component. This character WILL be included in the URL
-	tt(UrlOpenbrace, tk.CLOSEBRACE, Url);
-	tt(UrlOpenbracket, tk.CLOSEBRACKET, Url);
-	tt(UrlOpenanglebracket, tk.CLOSEANGLEBRACKET, Url);
-	tt(UrlOpenparen, tk.CLOSEPAREN, Url);
-	tt(UrlFullwidthOpenparen, tk.FULLWIDTH_CLOSEPAREN, Url);
-	tt(UrlOpenbrace, tk.CLOSEBRACE, Url);
+		// Continue not accepting for open brackets
+		tt(UrlNonaccept, OPEN, UrlOpen);
 
-	// URL that beings with an opening bracket, followed by a symbols.
-	// Note that the final state can still be `UrlOpenbrace` (if the URL only
-	// has a single opening bracket for some reason).
-	const UrlOpenbraceQ = makeState(mtk.Url); // URL followed by { and some symbols that the URL can end it
-	const UrlOpenbracketQ = makeState(mtk.Url); // URL followed by [ and some symbols that the URL can end it
-	const UrlOpenanglebracketQ = makeState(mtk.Url); // URL followed by < and some symbols that the URL can end it
-	const UrlOpenparenQ = makeState(mtk.Url); // URL followed by ( and some symbols that the URL can end it
-	const UrlFullwidthOpenparenQ = makeState(mtk.Url); // URL followed by （ and some symbols that the URL can end it
-	ta(UrlOpenbrace, qsAccepting, UrlOpenbraceQ);
-	ta(UrlOpenbracket, qsAccepting, UrlOpenbracketQ);
-	ta(UrlOpenanglebracket, qsAccepting, UrlOpenanglebracketQ);
-	ta(UrlOpenparen, qsAccepting, UrlOpenparenQ);
-	ta(UrlFullwidthOpenparen, qsAccepting, UrlFullwidthOpenparenQ);
+		// Closing bracket component. This character WILL be included in the URL
+		tt(UrlOpen, CLOSE, Url);
 
-	const UrlOpenbraceSyms = makeState(); // UrlOpenbrace followed by some symbols it cannot end it
-	const UrlOpenbracketSyms = makeState(); // UrlOpenbracketQ followed by some symbols it cannot end it
-	const UrlOpenanglebracketSyms = makeState(); // UrlOpenanglebracketQ followed by some symbols it cannot end it
-	const UrlOpenparenSyms = makeState(); // UrlOpenparenQ followed by some symbols it cannot end it
-	const UrlFullwidthOpenparenSyms = makeState(); // UrlFullwidthOpenparenQ followed by some symbols it cannot end it
-	ta(UrlOpenbrace, qsNonAccepting);
-	ta(UrlOpenbracket, qsNonAccepting);
-	ta(UrlOpenanglebracket, qsNonAccepting);
-	ta(UrlOpenparen, qsNonAccepting);
-	ta(UrlFullwidthOpenparen, qsNonAccepting);
+		// URL that beings with an opening bracket, followed by a symbols.
+		// Note that the final state can still be `UrlOpen` (if the URL has a
+		// single opening bracket for some reason).
+		const UrlOpenQ = makeState(mtk.Url);
+		ta(UrlOpen, qsAccepting, UrlOpenQ);
 
-	// URL that begins with an opening bracket, followed by some symbols
-	ta(UrlOpenbraceQ, qsAccepting, UrlOpenbraceQ);
-	ta(UrlOpenbracketQ, qsAccepting, UrlOpenbracketQ);
-	ta(UrlOpenanglebracketQ, qsAccepting, UrlOpenanglebracketQ);
-	ta(UrlOpenparenQ, qsAccepting, UrlOpenparenQ);
-	ta(UrlFullwidthOpenparenQ, qsAccepting, UrlFullwidthOpenparenQ);
-	ta(UrlOpenbraceQ, qsNonAccepting, UrlOpenbraceQ);
-	ta(UrlOpenbracketQ, qsNonAccepting, UrlOpenbracketQ);
-	ta(UrlOpenanglebracketQ, qsNonAccepting, UrlOpenanglebracketQ);
-	ta(UrlOpenparenQ, qsNonAccepting, UrlOpenparenQ);
-	ta(UrlFullwidthOpenparenQ, qsAccepting, UrlFullwidthOpenparenQ);
+		const UrlOpenSyms = makeState(); // UrlOpen followed by some symbols it cannot end it
+		ta(UrlOpen, qsNonAccepting);
 
-	ta(UrlOpenbraceSyms, qsAccepting, UrlOpenbraceSyms);
-	ta(UrlOpenbracketSyms, qsAccepting, UrlOpenbracketQ);
-	ta(UrlOpenanglebracketSyms, qsAccepting, UrlOpenanglebracketQ);
-	ta(UrlOpenparenSyms, qsAccepting, UrlOpenparenQ);
-	ta(UrlFullwidthOpenparenSyms, qsAccepting, UrlFullwidthOpenparenQ);
-	ta(UrlOpenbraceSyms, qsNonAccepting, UrlOpenbraceSyms);
-	ta(UrlOpenbracketSyms, qsNonAccepting, UrlOpenbracketSyms);
-	ta(UrlOpenanglebracketSyms, qsNonAccepting, UrlOpenanglebracketSyms);
-	ta(UrlOpenparenSyms, qsNonAccepting, UrlOpenparenSyms);
-	ta(UrlFullwidthOpenparenSyms, qsAccepting, UrlFullwidthOpenparenSyms);
+		// URL that begins with an opening bracket, followed by some symbols
+		ta(UrlOpenQ, qsAccepting, UrlOpenQ);
+		ta(UrlOpenQ, qsNonAccepting, UrlOpenSyms);
+		ta(UrlOpenSyms, qsAccepting, UrlOpenQ);
+		ta(UrlOpenSyms, qsNonAccepting, UrlOpenSyms);
 
-	// Close brace/bracket to become regular URL
-	tt(UrlOpenbracketQ, tk.CLOSEBRACKET, Url);
-	tt(UrlOpenanglebracketQ, tk.CLOSEANGLEBRACKET, Url);
-	tt(UrlOpenparenQ, tk.CLOSEPAREN, Url);
-	tt(UrlFullwidthOpenparenQ, tk.FULLWIDTH_CLOSEPAREN, Url);
-	tt(UrlOpenbraceQ, tk.CLOSEBRACE, Url);
-	tt(UrlOpenbracketSyms, tk.CLOSEBRACKET, Url);
-	tt(UrlOpenanglebracketSyms, tk.CLOSEANGLEBRACKET, Url);
-	tt(UrlFullwidthOpenparenSyms, tk.FULLWIDTH_CLOSEPAREN, Url);
-	tt(UrlOpenbraceSyms, tk.CLOSEPAREN, Url);
-	tt(UrlOpenbraceSyms, tk.FULLWIDTH_CLOSEPAREN, Url);
+		// Close brace/bracket to become regular URL
+		tt(UrlOpenQ, CLOSE, Url);
+		tt(UrlOpenSyms, CLOSE, Url);
+	}
 
 	tt(Start, tk.LOCALHOST, DomainDotTld); // localhost is a valid URL state
 	tt(Start, tk.NL, mtk.Nl); // single new line
@@ -323,10 +291,7 @@ export function run(start, input, tokens) {
 			textTokens.push(tokens[cursor++]);
 		}
 
-		while (cursor < len && (
-			nextState = secondState || state.go(tokens[cursor].t))
-		) {
-
+		while (cursor < len && (nextState = secondState || state.go(tokens[cursor].t))) {
 			// Get the next state
 			secondState = null;
 			state = nextState;
