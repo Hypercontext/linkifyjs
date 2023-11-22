@@ -17,12 +17,7 @@
     "url": "git+https://github.com/Hypercontext/linkifyjs.git",
     "directory": "packages/linkify-html"
   },
-  "keywords": [
-    "link",
-    "autolink",
-    "url",
-    "email"
-  ],
+  "keywords": ["link", "autolink", "url", "email"],
   "author": "Hypercontext",
   "license": "MIT",
   "bugs": {
