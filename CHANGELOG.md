@@ -1,5 +1,10 @@
 # Linkify Changelog
 
+## v4.1.3
+
+- Fix HTML entity `&` symbol double-encoding in linkify-html
+- Support for full-width brackets, full-width less-than/greater-than signs and corner bracket as delimiters
+
 ## v4.1.2
 
 - Ensure linkify.find respects validate option
