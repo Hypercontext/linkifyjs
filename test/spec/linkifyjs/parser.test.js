@@ -326,11 +326,8 @@ describe('linkifyjs/parser#run()', () => {
 
 	function makeTest(test) {
 		return it('Tokenizes the string "' + test[0] + '"', () => {
-			var str = test[0];
-			var types = test[1];
-			var values = test[2];
-			debugger;
-			var result = parser.run(start, str, scanner.run(scannerStart, str));
+			const [str, types, values] = test;
+			const result = parser.run(start, str, scanner.run(scannerStart, str));
 			expect(result.map((token) => token.v)).to.eql(values);
 			expect(result.map((token) => token.toString())).to.eql(values);
 			expect(result.map((token) => token.constructor)).to.eql(types);
