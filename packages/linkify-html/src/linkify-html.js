@@ -1,5 +1,5 @@
 import { tokenize as htmlTokenize } from '@nfrasser/simple-html-tokenizer';
-import { tokenize, Options} from 'linkifyjs';
+import { tokenize, Options } from 'linkifyjs';
 
 const LinkifyResult = 'LinkifyResult';
 const StartTag = 'StartTag';
@@ -32,7 +32,9 @@ export default function linkifyHtml(str, opts = {}) {
 			// Ignore all the contents of ignored tags
 			const tagName = token.tagName.toUpperCase();
 			const isIgnored = tagName === 'A' || options.ignoreTags.indexOf(tagName) >= 0;
-			if (!isIgnored) { continue; }
+			if (!isIgnored) {
+				continue;
+			}
 
 			let preskipLen = linkifiedTokens.length;
 			skipTagTokens(tagName, tokens, ++i, linkifiedTokens);
@@ -51,36 +53,42 @@ export default function linkifyHtml(str, opts = {}) {
 	for (let i = 0; i < linkifiedTokens.length; i++) {
 		const token = linkifiedTokens[i];
 		switch (token.type) {
-		case LinkifyResult:
-			linkified.push(token.rendered);
-			break;
-		case StartTag: {
-			let link = '<' + token.tagName;
-			if (token.attributes.length > 0) {
-				link += ' ' + attributeArrayToStrings(token.attributes).join(' ');
+			case LinkifyResult:
+				linkified.push(token.rendered);
+				break;
+			case StartTag: {
+				let link = '<' + token.tagName;
+				if (token.attributes.length > 0) {
+					link += ' ' + attributeArrayToStrings(token.attributes).join(' ');
+				}
+				if (token.selfClosing) {
+					link += ' /';
+				}
+				link += '>';
+				linkified.push(link);
+				break;
 			}
-			if (token.selfClosing) { link += ' /'; }
-			link += '>';
-			linkified.push(link);
-			break;
-		}
-		case EndTag:
-			linkified.push(`</${token.tagName}>`);
-			break;
-		case Chars:
-			linkified.push(escapeText(token.chars));
-			break;
-		case Comment:
-			linkified.push(`<!--${escapeText(token.chars)}-->`);
-			break;
-		case Doctype: {
-			let doctype = `<!DOCTYPE ${token.name}`;
-			if (token.publicIdentifier) { doctype += ` PUBLIC "${token.publicIdentifier}"`; }
-			if (token.systemIdentifier) { doctype += ` "${token.systemIdentifier}"`; }
-			doctype += '>';
-			linkified.push(doctype);
-			break;
-		}
+			case EndTag:
+				linkified.push(`</${token.tagName}>`);
+				break;
+			case Chars:
+				linkified.push(escapeText(token.chars));
+				break;
+			case Comment:
+				linkified.push(`<!--${escapeText(token.chars)}-->`);
+				break;
+			case Doctype: {
+				let doctype = `<!DOCTYPE ${token.name}`;
+				if (token.publicIdentifier) {
+					doctype += ` PUBLIC "${token.publicIdentifier}"`;
+				}
+				if (token.systemIdentifier) {
+					doctype += ` "${token.systemIdentifier}"`;
+				}
+				doctype += '>';
+				linkified.push(doctype);
+				break;
+			}
 		}
 	}
 
@@ -104,14 +112,14 @@ function linkifyChars(str, options) {
 				type: StartTag,
 				tagName: 'br',
 				attributes: [],
-				selfClosing: true
+				selfClosing: true,
 			});
 		} else if (!token.isLink || !options.check(token)) {
 			result.push({ type: Chars, chars: token.toString() });
 		} else {
 			result.push({
 				type: LinkifyResult,
-				rendered: options.render(token)
+				rendered: options.render(token),
 			});
 		}
 	}
@@ -134,7 +142,6 @@ function linkifyChars(str, options) {
 	* Will track whether there is a nested tag of the same type
 */
 function skipTagTokens(tagName, tokens, i, skippedTokens) {
-
 	// number of tokens of this type on the [fictional] stack
 	let stackCount = 1;
 
@@ -162,10 +169,7 @@ function defaultRender({ tagName, attributes, content }) {
 }
 
 function escapeText(text) {
-	return text
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;');
+	return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function escapeAttr(attr) {
