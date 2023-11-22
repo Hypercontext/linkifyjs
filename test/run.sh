@@ -8,8 +8,10 @@ if [[ "$1" == "--dist" ]]; then
 	npm run test:coverage
 	npm run build:ci
 	npm run copy
-	npm run test:ci
-	sleep 3  # Wait for threads to exit?
+	if [[ "${BROWSERSTACK_USERNAME}" != "" ]] && [[ "${BROWSERSTACK_ACCESS_KEY}" != "" ]]; then
+		npm run test:ci
+		sleep 3  # Wait for threads to exit?
+	fi
 else
 	# Run basic tests
 	echo "Running basic tests..."
