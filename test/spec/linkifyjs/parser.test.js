@@ -272,6 +272,14 @@ const tests = [
 		'This Url www.drive1.com with www and digits also www.500px.com',
 		[Text, Url, Text, Url],
 		['This Url ', 'www.drive1.com', ' with www and digits also ', 'www.500px.com']
+	], [
+		'Link 1(http://foo.com/blah_blah) Link 2(http://foo.com/blah_blah_(wikipedia)_(again))',
+		[Text, Url, Text, Url, Text],
+		['Link 1(', 'http://foo.com/blah_blah', ') Link 2(', 'http://foo.com/blah_blah_(wikipedia)_(again)', ')']
+	], [
+		'Link 1（http://foo.com/blah_blah） Link 2（http://foo.com/blah_blah_(wikipedia)_(again)）',
+		[Text, Url, Text, Url, Text],
+		['Link 1（', 'http://foo.com/blah_blah', '） Link 2（', 'http://foo.com/blah_blah_(wikipedia)_(again)', '）']
 	],
 ];
 

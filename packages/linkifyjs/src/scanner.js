@@ -58,10 +58,12 @@ export function init(customSchemes = []) {
 	tt(Start, '[', tk.OPENBRACKET);
 	tt(Start, '<', tk.OPENANGLEBRACKET);
 	tt(Start, '(', tk.OPENPAREN);
+	tt(Start, '（', tk.FULLWIDTH_OPENPAREN);
 	tt(Start, '}', tk.CLOSEBRACE);
 	tt(Start, ']', tk.CLOSEBRACKET);
 	tt(Start, '>', tk.CLOSEANGLEBRACKET);
 	tt(Start, ')', tk.CLOSEPAREN);
+	tt(Start, '）', tk.FULLWIDTH_CLOSEPAREN);
 	tt(Start, '&', tk.AMPERSAND);
 	tt(Start, '*', tk.ASTERISK);
 	tt(Start, '@', tk.AT);
