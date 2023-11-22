@@ -51,23 +51,29 @@ export function init({ groups }) {
 	// Characters that cannot appear in the URL at all should be excluded
 	const qsNonAccepting = [
 		tk.APOSTROPHE,
-		tk.CLOSEANGLEBRACKET,
-		tk.CLOSEBRACE,
-		tk.CLOSEBRACKET,
-		tk.CLOSEPAREN,
-		tk.FULLWIDTHCLOSEPAREN,
 		tk.COLON,
 		tk.COMMA,
 		tk.DOT,
 		tk.EXCLAMATION,
-		tk.OPENANGLEBRACKET,
-		tk.OPENBRACE,
-		tk.OPENBRACKET,
-		tk.OPENPAREN,
-		tk.FULLWIDTHOPENPAREN,
 		tk.QUERY,
 		tk.QUOTE,
 		tk.SEMI,
+		tk.OPENANGLEBRACKET,
+		tk.CLOSEANGLEBRACKET,
+		tk.OPENBRACE,
+		tk.CLOSEBRACE,
+		tk.CLOSEBRACKET,
+		tk.OPENBRACKET,
+		tk.OPENPAREN,
+		tk.CLOSEPAREN,
+		tk.FULLWIDTHLEFTPAREN,
+		tk.FULLWIDTHRIGHTPAREN,
+		tk.LEFTCORNERBRACKET,
+		tk.RIGHTCORNERBRACKET,
+		tk.LEFTWHITECORNERBRACKET,
+		tk.RIGHTWHITECORNERBRACKET,
+		tk.FULLWIDTHLESSTHAN,
+		tk.FULLWIDTHGREATERTHAN,
 	];
 
 	// For addresses without the mailto prefix
@@ -79,11 +85,11 @@ export function init({ groups }) {
 		tk.BACKSLASH,
 		tk.BACKTICK,
 		tk.CARET,
-		tk.CLOSEBRACE,
 		tk.DOLLAR,
 		tk.EQUALS,
 		tk.HYPHEN,
 		tk.OPENBRACE,
+		tk.CLOSEBRACE,
 		tk.PERCENT,
 		tk.PIPE,
 		tk.PLUS,
@@ -213,7 +219,10 @@ export function init({ groups }) {
 		[tk.OPENBRACKET, tk.CLOSEBRACKET], // []
 		[tk.OPENPAREN, tk.CLOSEPAREN], // ()
 		[tk.OPENANGLEBRACKET, tk.CLOSEANGLEBRACKET], // <>
-		[tk.FULLWIDTHOPENPAREN, tk.FULLWIDTHCLOSEPAREN], // （）
+		[tk.FULLWIDTHLEFTPAREN, tk.FULLWIDTHRIGHTPAREN], // （）
+		[tk.LEFTCORNERBRACKET, tk.RIGHTCORNERBRACKET], // 「」
+		[tk.LEFTWHITECORNERBRACKET, tk.RIGHTWHITECORNERBRACKET], // 『』
+		[tk.FULLWIDTHLESSTHAN, tk.FULLWIDTHGREATERTHAN], // ＜＞
 	];
 
 	for (let i = 0; i < bracketPairs.length; i++) {

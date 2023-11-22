@@ -308,6 +308,11 @@ const tests = [
 		[Text, Url, Text, Url, Text],
 		['Link 1（', 'http://foo.com/blah_blah', '） Link 2（', 'http://foo.com/blah_blah_(wikipedia)_(again)', '）'],
 	],
+	[
+		'Link 1『http://foo.com/blah_blah』 Link 2『http://foo.com/blah_blah_(wikipedia)_(again)』',
+		[Text, Url, Text, Url, Text],
+		['Link 1『', 'http://foo.com/blah_blah', '』 Link 2『', 'http://foo.com/blah_blah_(wikipedia)_(again)', '』'],
+	],
 ];
 
 describe('linkifyjs/parser#run()', () => {

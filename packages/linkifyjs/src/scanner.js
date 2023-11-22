@@ -56,15 +56,21 @@ export function init(customSchemes = []) {
 	// States for special URL symbols that accept immediately after start
 	tt(Start, "'", tk.APOSTROPHE);
 	tt(Start, '{', tk.OPENBRACE);
-	tt(Start, '[', tk.OPENBRACKET);
-	tt(Start, '<', tk.OPENANGLEBRACKET);
-	tt(Start, '(', tk.OPENPAREN);
-	tt(Start, '（', tk.FULLWIDTHOPENPAREN);
 	tt(Start, '}', tk.CLOSEBRACE);
+	tt(Start, '[', tk.OPENBRACKET);
 	tt(Start, ']', tk.CLOSEBRACKET);
-	tt(Start, '>', tk.CLOSEANGLEBRACKET);
+	tt(Start, '(', tk.OPENPAREN);
 	tt(Start, ')', tk.CLOSEPAREN);
-	tt(Start, '）', tk.FULLWIDTHCLOSEPAREN);
+	tt(Start, '<', tk.OPENANGLEBRACKET);
+	tt(Start, '>', tk.CLOSEANGLEBRACKET);
+	tt(Start, '（', tk.FULLWIDTHLEFTPAREN);
+	tt(Start, '）', tk.FULLWIDTHRIGHTPAREN);
+	tt(Start, '「', tk.LEFTCORNERBRACKET);
+	tt(Start, '」', tk.RIGHTCORNERBRACKET);
+	tt(Start, '『', tk.LEFTWHITECORNERBRACKET);
+	tt(Start, '』', tk.RIGHTWHITECORNERBRACKET);
+	tt(Start, '＜', tk.FULLWIDTHLESSTHAN);
+	tt(Start, '＞', tk.FULLWIDTHGREATERTHAN);
 	tt(Start, '&', tk.AMPERSAND);
 	tt(Start, '*', tk.ASTERISK);
 	tt(Start, '@', tk.AT);
