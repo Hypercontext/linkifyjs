@@ -94,6 +94,7 @@ export function init(customSchemes = []) {
 	tt(Start, '~', tk.TILDE);
 	tt(Start, '_', tk.UNDERSCORE);
 	tt(Start, '\\', tk.BACKSLASH);
+	tt(Start, '・', tk.FULLWIDTHMIDDLEDOT);
 
 	const Num = tr(Start, re.DIGIT, tk.NUM, { [fsm.numeric]: true });
 	tr(Num, re.DIGIT, Num);

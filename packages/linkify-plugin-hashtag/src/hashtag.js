@@ -6,9 +6,9 @@ const HashtagToken = createTokenClass('hashtag', { isLink: true });
 /**
  * @type {import('linkifyjs').Plugin}
  */
- export default function hashtag({ scanner, parser }) {
+export default function hashtag({ scanner, parser }) {
 	// Various tokens that may compose a hashtag
-	const { POUND, UNDERSCORE } = scanner.tokens;
+	const { POUND, UNDERSCORE, FULLWIDTHMIDDLEDOT } = scanner.tokens;
 	const { alpha, numeric, alphanumeric, emoji } = scanner.tokens.groups;
 
 	// Take or create a transition from start to the '#' sign (non-accepting)
@@ -21,11 +21,14 @@ const HashtagToken = createTokenClass('hashtag', { isLink: true });
 	Hash.ta(numeric, HashPrefix);
 	Hash.ta(alpha, Hashtag);
 	Hash.ta(emoji, Hashtag);
+	Hash.ta(FULLWIDTHMIDDLEDOT, Hashtag);
 	HashPrefix.ta(alpha, Hashtag);
 	HashPrefix.ta(emoji, Hashtag);
+	HashPrefix.ta(FULLWIDTHMIDDLEDOT, Hashtag);
 	HashPrefix.ta(numeric, HashPrefix);
 	HashPrefix.tt(UNDERSCORE, HashPrefix);
 	Hashtag.ta(alphanumeric, Hashtag);
 	Hashtag.ta(emoji, Hashtag);
+	Hashtag.tt(FULLWIDTHMIDDLEDOT, Hashtag);
 	Hashtag.tt(UNDERSCORE, Hashtag); // Trailing underscore is okay
 }
