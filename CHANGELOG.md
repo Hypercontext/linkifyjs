@@ -1,5 +1,9 @@
 # Linkify Changelog
 
+## v4.1.4
+
+- Add support for full width middle dot `・` in hashtag plugin
+
 ## v4.1.3
 
 - Fix HTML entity `&` symbol double-encoding in linkify-html

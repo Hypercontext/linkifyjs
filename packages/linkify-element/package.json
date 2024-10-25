@@ -1,6 +1,6 @@
 {
   "name": "linkify-element",
-  "version": "4.1.3",
+  "version": "4.1.4",
   "description": "Browser DOM element interface for linkifyjs",
   "main": "dist/linkify-element.cjs.js",
   "module": "dist/linkify-element.es.js",
