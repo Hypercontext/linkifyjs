@@ -3,6 +3,7 @@ import hashtag from 'linkify-plugin-hashtag/src/hashtag';
 
 describe('linkify-plugin-hashtag', () => {
 	before(() => { linkify.reset(); });
+
 	after(() => { linkify.reset(); });
 
 	it('cannot parse hashtags before applying the plugin', () => {

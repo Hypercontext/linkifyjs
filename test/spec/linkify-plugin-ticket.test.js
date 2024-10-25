@@ -3,6 +3,7 @@ import ticket from 'linkify-plugin-ticket/src/ticket';
 
 describe('linkify-plugin-ticket', () => {
 	before(() => { linkify.reset(); });
+
 	after(() => { linkify.reset(); });
 
 	it('cannot parse tickets before applying the plugin', () => {

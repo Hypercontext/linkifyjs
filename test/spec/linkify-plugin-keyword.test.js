@@ -4,6 +4,7 @@ import { expect } from 'chai';
 
 describe('linkify-plugin-keyword', () => {
 	before(() => { linkify.reset(); });
+
 	after(() => { linkify.reset(); });
 
 	it('cannot parse keywords before applying the plugin', () => {

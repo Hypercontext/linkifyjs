@@ -97,6 +97,7 @@ describe('linkifyjs/multi', () => {
 			it('Tests true when there is a protocol', () => {
 				expect(url1.hasProtocol()).to.be.ok;
 			});
+
 			it('Tests false when there is no protocol', () => {
 				expect(url2.hasProtocol()).to.not.be.ok;
 			});
@@ -106,9 +107,11 @@ describe('linkifyjs/multi', () => {
 			it('Formats with default options', () => {
 				expect(url1.toFormattedString(defaultOpts)).to.eql('Ftps://www.github.com/Hypercontext/linkify');
 			});
+
 			it('Formats short link', () => {
 				expect(url1.toFormattedString(opts)).to.eql('github.com/Hypercontext/linkify');
 			});
+
 			it('Formats long link', () => {
 				expect(url3.toFormattedString(opts)).to.eql('google.com/maps/place/The+DMZ/@43.657898…');
 			});
@@ -118,6 +121,7 @@ describe('linkifyjs/multi', () => {
 			it('Formats href with scheme', () => {
 				expect(url1.toFormattedHref(opts)).to.eql('Ftps://www.github.com/Hypercontext/linkify');
 			});
+
 			it('Formats href without scheme', () => {
 				expect(url2.toFormattedHref(opts)).to.eql('https://co.co/?o=%2D&p=@gc#wat');
 			});
@@ -151,6 +155,7 @@ describe('linkifyjs/multi', () => {
 					eventListeners: null
 				});
 			});
+
 			it('Works with overriden options', () => {
 				expect(url1.render(opts)).to.eql({
 					tagName: 'Link',

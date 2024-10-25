@@ -79,6 +79,7 @@ describe('linkify-html', () => {
 	];
 
 	let options;
+
 	before(() => {
 		options = {
 			tagName: 'span',

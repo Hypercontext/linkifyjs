@@ -75,6 +75,7 @@ describe('linkifyjs', () => {
 		it('is a function', () => {
 			expect(linkify.tokenize).to.be.a('function');
 		});
+
 		it('takes a single argument', () => {
 			expect(linkify.tokenize.length).to.be.eql(1);
 		});

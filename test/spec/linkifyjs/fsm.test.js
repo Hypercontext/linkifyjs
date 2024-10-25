@@ -55,15 +55,19 @@ describe('linkifyjs/fsm/State', () => {
 		it('Does not have # transition', () => {
 			expect(Start.has('#')).to.not.be.ok;
 		});
+
 		it('Has . transition', () => {
 			expect(Start.has('.')).to.be.ok;
 		});
+
 		it('Has exact . transition', () => {
 			expect(Start.has('.', true)).to.be.ok;
 		});
+
 		it('Has x transition', () => {
 			expect(Start.has('x')).to.be.ok;
 		});
+
 		it('Does not have exact # transition', () => {
 			expect(Start.has('#', true)).to.not.be.ok;
 		});
@@ -82,6 +86,7 @@ describe('linkifyjs/fsm/State', () => {
 			expect(State.groups.ascii).contains('https');
 			expect(State.groups.ascii).not.contains('view-source');
 		});
+
 		it('Adds tokens to domain group', () => {
 			expect(State.groups.domain).not.contains('htt');
 			expect(State.groups.domain).contains('http');

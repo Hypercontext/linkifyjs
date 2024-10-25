@@ -127,7 +127,7 @@ function getDefaultRender(doc) {
 export default function linkifyElement(element, opts = null, doc = null) {
 	try {
 		doc = doc || document || window && window.document || global && global.document;
-	} catch (e) { /* do nothing for now */ }
+	} catch (_) { /* do nothing for now */ }
 
 	if (!doc) {
 		throw new Error(

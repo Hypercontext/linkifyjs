@@ -4,6 +4,7 @@ import mention from 'linkify-plugin-mention/src/mention';
 
 describe('linkify-plugin-mention', () => {
 	before(() => { linkify.reset(); });
+
 	after(() => { linkify.reset(); });
 
 	it('Cannot parse mentions before applying the plugin', () => {

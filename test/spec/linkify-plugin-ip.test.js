@@ -5,6 +5,7 @@ import { expect } from 'chai';
 
 describe('linkify-plugin-ip', () => {
 	before(() => { linkify.reset(); });
+
 	after(() => { linkify.reset(); });
 
 	it('cannot parse IP addresse before applying the plugin', () => {
@@ -15,6 +16,7 @@ describe('linkify-plugin-ip', () => {
 
 	describe('scanner', () => {
 		let scanner;
+
 		beforeEach(() => {
 			scanner = initScanner();
 			ipv4Tokens({ scanner });

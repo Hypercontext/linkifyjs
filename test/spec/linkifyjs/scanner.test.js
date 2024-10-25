@@ -120,6 +120,7 @@ const customSchemeTests = [
 
 describe('linkifyjs/scanner', () => {
 	let start, tokens;
+
 	before(() => {
 		const result = scanner.init();
 		start = result.start;
