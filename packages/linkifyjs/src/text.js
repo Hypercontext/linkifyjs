@@ -76,6 +76,7 @@ export const PLUS = 'PLUS'; // +
 export const POUND = 'POUND'; // #
 export const QUERY = 'QUERY'; // ?
 export const QUOTE = 'QUOTE'; // "
+export const FULLWIDTHMIDDLEDOT = 'FULLWIDTHMIDDLEDOT'; // ・
 
 export const SEMI = 'SEMI'; // ;
 export const SLASH = 'SLASH'; // /

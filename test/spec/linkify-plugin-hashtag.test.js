@@ -80,6 +80,14 @@ describe('linkify-plugin-hashtag', () => {
 			expect(linkify.test('#سلام', 'hashtag')).to.be.ok;
 		});
 
+		it('Works with Japanese characters', () => {
+			expect(linkify.test('#おはよう', 'hashtag')).to.be.ok;
+		});
+
+		it('Works with Japanese characters and full width middle dot', () => {
+			expect(linkify.test('#おは・よう', 'hashtag')).to.be.ok;
+		});
+
 		it('Works with emojis', () => {
 			expect(linkify.test('#🍭', 'hashtag')).to.be.ok;
 		});

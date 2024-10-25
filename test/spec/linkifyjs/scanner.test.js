@@ -27,6 +27,7 @@ const tests = [
 	['$', [t.DOLLAR], ['$']],
 	['=', [t.EQUALS], ['=']],
 	['-', [t.HYPHEN], ['-']],
+	['・', [t.FULLWIDTHMIDDLEDOT], ['・']],
 	['&?<>(', [t.AMPERSAND, t.QUERY, t.OPENANGLEBRACKET, t.CLOSEANGLEBRACKET, t.OPENPAREN], ['&', '?', '<', '>', '(']],
 	['([{}])', [t.OPENPAREN, t.OPENBRACKET, t.OPENBRACE, t.CLOSEBRACE, t.CLOSEBRACKET, t.CLOSEPAREN], ['(', '[', '{', '}', ']', ')']],
 	['!,;\'', [t.EXCLAMATION, t.COMMA, t.SEMI, t.APOSTROPHE], ['!', ',', ';', '\'']],
@@ -82,6 +83,11 @@ const tests = [
 		'#АБВ_бв #한글 #سلام',
 		[t.POUND, t.UWORD, t.UNDERSCORE, t.UWORD, t.WS, t.POUND, t.UWORD, t.WS, t.POUND, t.UWORD],
 		['#', 'АБВ', '_', 'бв', ' ', '#', '한글', ' ', '#', 'سلام']
+	],
+	[
+		'#おは・よう',
+		[t.POUND, t.UWORD, t.FULLWIDTHMIDDLEDOT, t.UWORD],
+		['#', 'おは', '・', 'よう']
 	],
 	[
 		'テストexample.comテスト',
